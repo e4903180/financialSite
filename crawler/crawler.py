@@ -20,12 +20,12 @@ class Crawler:
         Id, name, date, time, place, message, ch_file, en_file, more_information, video_address, attention = [[] for x in range(11)]
         rootPath = self.path
         
+        dic_name = datetime.now().strftime("%Y_%m_%d")
+
         # Create log file
         FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-        logging.basicConfig(level = logging.INFO, filename = rootPath + 'crawler.log', filemode = 'w', format = FORMAT)
+        logging.basicConfig(level = logging.INFO, filename = rootPath + 'crawler_' + dic_name + '.log', filemode = 'w', format = FORMAT)
         logging.info('Updating data start')
-        
-        dic_name = datetime.now().strftime("%Y_%m_%d")
         
         # Initialize params
         payload = {

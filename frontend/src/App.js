@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import HomeComp from './component/homePage/homeComp';
+import LoginComp from './component/loginPage/loginComp';
+import CalendarComp from './component/calendarPage/calendarComp';
+import PrivateRoute from './privateRoute';
 
 function App() {
+  const [isUserAuthenticated, setisUserAuthenticated] = useState(false)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path = "*" element = { isUserAuthenticated ? <Navigate to = "/home" /> : <Navigate to = "/login" /> } ></Route>
+          <Route exact path = "/login" element = { <LoginComp /> }></Route>
+
+          <Route element = { <PrivateRoute /> } >
+            <Route path = "/home" element = { <HomeComp /> }></Route>
+            <Route path = "/calendar" element = { <CalendarComp /> }></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

@@ -1,0 +1,12 @@
+2022-03-18 15:52:34,492 INFO: Updating email start
+2022-03-18 15:53:03,117 INFO: file_cache is only supported with oauth2client<4.0.0
+2022-03-18 15:53:03,355 INFO: Updating email start
+2022-03-18 16:00:08,935 INFO: Updating email end
+2022-03-18 16:13:01,974 INFO: file_cache is only supported with oauth2client<4.0.0
+2022-03-18 16:13:02,123 INFO: Updating email start
+2022-03-18 16:20:56,595 INFO: "GET /?state=07fGiVSSoY8Q7Yt94Lk9TfCnqgnp5C&code=4/0AX4XfWiMnrwM7iODKtDoOouMKp4UlQd81NfSJ4IasgKRwV6F2Zqqsnm_xfDbL8Qe37b-Bw&scope=https://www.googleapis.com/auth/gmail.readonly%20https://www.googleapis.com/auth/gmail.modify HTTP/1.1" 200 65
+2022-03-18 16:20:56,693 INFO: file_cache is only supported with oauth2client<4.0.0
+2022-03-18 16:20:56,842 INFO: Updating email start
+2022-03-18 16:21:08,159 INFO: file_cache is only supported with oauth2client<4.0.0
+2022-03-18 16:21:08,485 INFO: Updating email start
+2022-03-18 16:28:25,785 INFO: Updating email end

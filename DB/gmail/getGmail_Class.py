@@ -19,6 +19,8 @@ from apiclient import errors
 import re
 from datetime import datetime
 import logging
+import requests
+from six.moves import urllib
 
 
 # In[69]:
@@ -157,11 +159,11 @@ class Email:
         self.check_pdf_dir()
         
         try:
-            span_tags = content.find_all('span')
+            span_tags = content.find_all('a')
             for span in range(1, len(span_tags)):
-                if re.findall(r"http://research2014.yuanta.com/DL.aspx\?r\=\d{6}", str(span_tags[span])):
+                if re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", span_tags[span].string):
                     try:
-                        url = re.findall(r"http://research2014.yuanta.com/DL.aspx\?r\=\d{6}", str(span_tags[span]))
+                        url = re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", span_tags[span].string)
                         pdfurl = requests.get(url[0], allow_redirects = True).url
                         filename = urllib.parse.unquote(pdfurl.split("/")[-1])
 
@@ -174,7 +176,7 @@ class Email:
                         print("link error")
                         return "null", "null", "null"
         except:
-            a_tags = soup.find_all('a', target = "_blank")
+            a_tags = content.find_all('a', target = "_blank")
             
             for a in a_tags:
                 if re.findall(r"http://www\.wls\.com\.tw/CancelLegal/.+Email=.+EpaperID=.+EpaperClassID=[a-zA-Z0-9\-]+",str(a)):
@@ -215,10 +217,19 @@ class Email:
                     print("-----" * 20)
                 subject = d['value']
         
-        if len(re.findall(r'^\d{4}\.(?=[A-Z])', subject)) != 0 or len(re.findall(r'^\d{4}(?=[^\d\/\年\.])|(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)) != 0:
-            return True
+        # \d{4}(?=\.[A-Z] 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
+        # (?<=[^\d])\d{4}(?=[^\d\/]) 4個數字(\d{4}) 前面為非數字(?<=[^\d]) 後面不能接數字(\d) or/ or 年 or .
+        temp1 = re.findall(r'\d{4}(?=\.[A-Z])', subject)
+        temp2 = re.findall(r'^\d{4}(?=[^\d\/\年\.])|(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)
+        
+        if len(temp1) != 0 and len(temp2) == 0:
+            return temp1
+        
+        elif len(temp1) == 0 and len(temp2) != 0:
+            return temp2
+        
         else:
-            return False
+            return []
             
     def getDate(self, header, display = False):
         """Get the mail date
@@ -260,16 +271,10 @@ class Email:
                 (list)Num, Name, Path
         """
         Num, Name, Path = [[] for i in range(3)]
-        # \d{4}(?=[^\d\/]) 返回(^)4個數字(\d{4})但後面不能接數字(\d) 或 / 或 年 或 .
-        # (?<=[^\d])\d{4}(?=[^\d\/]) 4個數字(\d{4}) 前面不能為數字(?<=[^\d]) 後面不能接數字(\d) or\ or /
         investment_company_res = [key for key, value in self.dict_investment_company.items() if key in subject]
-        filter_subject_stock_num = re.findall(r'^\d{4}\.(?=[A-Z])', subject)
         
-        if len(filter_subject_stock_num) == 0:
-            filter_subject_stock_num = re.findall(r'^\d{4}(?=[^\d\/\年\.])|(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)
-        
-        stock_res = [[str(key), value] for key, value in self.dict_stock_num2name.items() if str(key) in filter_subject_stock_num]
-        stock_res_key = [value for key, value in self.dict_stock_num2name.items() if str(key) in filter_subject_stock_num]            
+        stock_res = [[str(key), value] for key, value in self.dict_stock_num2name.items() if str(key) in subject]
+        stock_res_key = [value for key, value in self.dict_stock_num2name.items() if str(key) in subject]            
         investment_company_res = [x for x in investment_company_res if x not in stock_res_key]
 
         if len(investment_company_res) == 0:
@@ -280,12 +285,17 @@ class Email:
         # Get email attachment
         try:
             for j in range(1, len(payload['parts'])):
-                num, name, path = self.getAttachments(payload['parts'][j], id, stock_res)
-            
-            if path != "null":
-                Num.append(num)
-                Name.append(name)
-                Path.append(path)
+                if payload['parts'][j]['mimeType'] != 'text/html':
+                    num, name, path = self.getAttachments(payload['parts'][j], id, stock_res)
+                    
+                else:
+                    content = self.getMessages(payload['parts'][j]['body']['data'])
+                    num, name, path = self.getAttachmentsURL(content, stock_res)
+
+                if path != "null":
+                    Num.append(num)
+                    Name.append(name)
+                    Path.append(path)
         except:
             content = self.getMessages(payload["body"]["data"])
             num, name, path = self.getAttachmentsURL(content, stock_res)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[81]:
+# In[1]:
 
 
 from googleapiclient.discovery import build
@@ -20,13 +20,13 @@ import re
 from datetime import datetime
 import logging
 import requests
-from six.moves import urllib
+import urllib
 
 
-# In[69]:
+# In[2]:
 
 
-class Email:
+class gmailService:
     def __init__(self):
         # Define the SCOPES. If modifying it, delete the token.pickle file.
         self.SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']
@@ -105,12 +105,13 @@ class Email:
                 if not os.path.isdir(rootPath + "/file/" + str(key)):
                     os.mkdir(rootPath + "/file/" + str(key))
     
-    def getAttachments(self, encodedFile, msgID, stock_num_name):
+    def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res):
         """Get the mail attachments already existed in mail 
         
             Args:
                 encodedFile: (dictionary) dictionary contains file base64
                 stock_num_name: (dictionary) key is stock numbers and value is stock name
+                investment_company_res: (list) investment_company
             
             Return:
                 If success
@@ -127,14 +128,20 @@ class Email:
             for num, name in stock_num_name:
                 if num in fileName:
                     try:
-                        att = self.service.users().messages().attachments().get(userId = 'me', messageId = msgID, id = encodedFile['body']['attachmentId']).execute()
+                        att = self.service.users().messages().attachments().get(userId = 'me', messageId = ID, id = encodedFile['body']['attachmentId']).execute()
                         file = att['data']
                         file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
+                        
+                        if investment_company_res != "":
+                            with open("./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName, 'wb') as f:
+                                f.write(file_data)
 
-                        with open("./file/" + num + "/" + fileName, 'wb') as f:
-                            f.write(file_data)
+                            return num, name, "./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName
+                        else:
+                            with open("./file/" + num + "/" + name + "_" + fileName, 'wb') as f:
+                                f.write(file_data)
 
-                        return num, name, "./file/" + num + "/" + fileName
+                            return num, name, "./file/" + num + "/" + name + "_" + fileName
 
                     except errors.HttpError:
                         print('An error occurred: %s' % error)
@@ -158,45 +165,24 @@ class Email:
         
         self.check_pdf_dir()
         
-        try:
-            span_tags = content.find_all('a')
-            for span in range(1, len(span_tags)):
-                if re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", span_tags[span].string):
-                    try:
-                        url = re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", span_tags[span].string)
-                        pdfurl = requests.get(url[0], allow_redirects = True).url
-                        filename = urllib.parse.unquote(pdfurl.split("/")[-1])
+        a_tags = content.find_all('a')
 
-                        for num, name in stock_num_name:
-                            if num in str(filename):
-                                file_rename = "./file/" + num + "/" + "元大_" + name + "_" + filename
-                                urllib.request.urlretrieve(pdfurl, file_rename)
-                                return num, name, file_rename
-                    except:
-                        print("link error")
-                        return "null", "null", "null"
-        except:
-            a_tags = content.find_all('a', target = "_blank")
-            
-            for a in a_tags:
-                if re.findall(r"http://www\.wls\.com\.tw/CancelLegal/.+Email=.+EpaperID=.+EpaperClassID=[a-zA-Z0-9\-]+",str(a)):
-                    try:
-                        url = re.findall(r"http://www\.wls\.com\.tw/CancelLegal/.+Email=.+EpaperID=.+EpaperClassID=[a-zA-Z0-9\-]+",str(a).replace("&amp;","&"))
-                        checkpage = re.search(r'checkpage\d?', url[0]).group()
-                        EpaperID = re.search(r'EpaperID=[a-zA-Z0-9\-]+', url[0]).group()
-                        redirectURL = "http://www.wls.com.tw/CancelLegal/{}.aspx?EpaperID={}".format(
-                            checkpage.replace("checkpage", "check"), EpaperID.replace("EpaperID=", ''))
-                        pdfurl = requests.get(redirectURL, allow_redirects = True).url
-                        filename = urllib.parse.unquote(pdfurl.split("/")[-1])
-                        
-                        for num, name in stock_num_name:
-                            if str(num) in str(filename):
-                                file_rename = "./file/" + num + "/" + name + "_" + filename
-                                urllib.request.urlretrieve(pdfurl, file_rename)
-                                return num, name, file_rename
-                    except:            
-                        print("link error")
-                        return "null", "null", "null"
+        for a in range(len(a_tags)):
+            if re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText()):
+                try:
+                    url = re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText())
+                    pdfurl = requests.get(url[0], allow_redirects = True).url
+                    filename = urllib.parse.unquote(pdfurl.split("/")[-1])
+
+                    for num, name in stock_num_name:
+                        if num in str(filename):
+                            file_rename = "./file/" + num + "/" + "元大_" + name + "_" + filename
+                            urllib.request.urlretrieve(pdfurl, file_rename)
+                            return num, name, file_rename
+                except:
+                    print("link error: ", a_tags[a].getText())
+                    return "null", "null", "null"
+                
         return "null", "null", "null"
     
     def verifySubject(self, header, display = False):
@@ -218,6 +204,7 @@ class Email:
                 subject = d['value']
         
         # \d{4}(?=\.[A-Z] 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
+        # ^\d{4}(?=[^\d\/\年\.]) 4個數字(\d{4}) 後面不能接數字 or / or 年 or .
         # (?<=[^\d])\d{4}(?=[^\d\/]) 4個數字(\d{4}) 前面為非數字(?<=[^\d]) 後面不能接數字(\d) or/ or 年 or .
         temp1 = re.findall(r'\d{4}(?=\.[A-Z])', subject)
         temp2 = re.findall(r'^\d{4}(?=[^\d\/\年\.])|(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)
@@ -261,22 +248,28 @@ class Email:
                     print("-----" * 20)
                 return date
     
-    def getResearch_report(self, subject, payload, id):
+    def getResearch_report(self, header, subject, payload, ID):
         """Get the research report
             Args:
-                header: (list) Header of the Message
-                display: (bool) print date or not
+                header: (string) mail header
+                subject: (list) company number
+                payload: (string) mail payload
+                ID: (string) mail ID
 
             Return:
                 (list)Num, Name, Path
         """
-        Num, Name, Path = [[] for i in range(3)]
-        investment_company_res = [key for key, value in self.dict_investment_company.items() if key in subject]
+        for d in header:
+            if d['name'] == 'Subject':
+                title = d['value']
+                
+        Num, Name, Path, mimeType = [[] for i in range(4)]
+        investment_company_res = [key for key, value in self.dict_investment_company.items() if key in title]
         
         stock_res = [[str(key), value] for key, value in self.dict_stock_num2name.items() if str(key) in subject]
-        stock_res_key = [value for key, value in self.dict_stock_num2name.items() if str(key) in subject]            
-        investment_company_res = [x for x in investment_company_res if x not in stock_res_key]
-
+        stock_res_value = [value for key, value in self.dict_stock_num2name.items() if str(key) in subject]            
+        investment_company_res = [x for x in investment_company_res if x not in stock_res_value]
+        
         if len(investment_company_res) == 0:
             investment_company_res = ""
         else:
@@ -285,33 +278,42 @@ class Email:
         # Get email attachment
         try:
             for j in range(1, len(payload['parts'])):
-                if payload['parts'][j]['mimeType'] != 'text/html':
-                    num, name, path = self.getAttachments(payload['parts'][j], id, stock_res)
+                mimeType.append(payload['parts'][j]['mimeType'])
+        except:
+            return Num, Name, investment_company_res, Path
+        
+        if 'application/pdf' in mimeType:
+            for i in range(len(mimeType)):
+                if mimeType[i] == 'application/pdf':
+                    num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_res, investment_company_res)
                     
-                else:
-                    content = self.getMessages(payload['parts'][j]['body']['data'])
+                    if path != "null":
+                        Num.append(num)
+                        Name.append(name)
+                        Path.append(path)
+                
+        else:
+            for i in range(len(mimeType)):
+                if mimeType[i] == 'text/html':
+                    try:
+                        content = self.getMessages(payload['parts'][i + 1]['body']['data'])
+                    except:
+                        content = self.getMessages(payload["body"]["data"])
+                        
                     num, name, path = self.getAttachmentsURL(content, stock_res)
 
-                if path != "null":
-                    Num.append(num)
-                    Name.append(name)
-                    Path.append(path)
-        except:
-            content = self.getMessages(payload["body"]["data"])
-            num, name, path = self.getAttachmentsURL(content, stock_res)
-
-            if path != "null":
-                Num.append(num)
-                Name.append(name)
-                Path.append(path)
+                    if path != "null":
+                        Num.append(num)
+                        Name.append(name)
+                        Path.append(path)
         
         return Num, Name, investment_company_res, Path
     
-    def modifyLabels(self, msgID, formats):
+    def modifyLabels(self, ID, formats):
         """Modify mail from INBOX to label2 or label3
         
           Args:
-            msgID: (String) The ID of the Message required
+            ID: (String) The ID of the Message required
             formats: (String) modify from INBOX to label
         """
         
@@ -321,5 +323,5 @@ class Email:
         elif formats == "Label3":
             Body = { "addLabelIds": ["Label_3"], "removeLabelIds" : ["INBOX"] }
             
-        self.service.users().messages().modify(userId = 'me', id = msgID, body = Body).execute()
+        self.service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
 

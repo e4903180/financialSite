@@ -185,29 +185,21 @@ class gmailService:
                 
         return "null", "null", "null"
     
-    def verifySubject(self, header, display = False):
+    def verifySubject(self, subject):
         """Get the mail subject
         
             Args:
-                header: (list) Header of the Message
-                display: (bool) print subject or not
+                subject: (string) Mail title
             
             Return:
-                (Bool) True, False
+                (list) temp1 || temp2 || []
         """
         
-        for d in header:
-            if d['name'] == 'Subject':
-                if display:
-                    print("Subject: ", d['value'])
-                    print("-----" * 20)
-                subject = d['value']
-        
         # \d{4}(?=\.[A-Z] 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
-        # ^\d{4}(?=[^\d\/\年\.]) 4個數字(\d{4}) 後面不能接數字 or / or 年 or .
         # (?<=[^\d])\d{4}(?=[^\d\/]) 4個數字(\d{4}) 前面為非數字(?<=[^\d]) 後面不能接數字(\d) or/ or 年 or .
+        
         temp1 = re.findall(r'\d{4}(?=\.[A-Z])', subject)
-        temp2 = re.findall(r'^\d{4}(?=[^\d\/\年\.])|(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)
+        temp2 = re.findall(r'(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)
         
         if len(temp1) != 0 and len(temp2) == 0:
             return temp1
@@ -247,28 +239,34 @@ class gmailService:
                     print("Date: ", date)
                     print("-----" * 20)
                 return date
+            
+    def getSubject(self, header, display = False):
+        for d in header:
+            if d['name'] == 'Subject':
+                if display:
+                    print("Subject: ", d['value'])
+                    print("-----" * 20)
+                subject = d['value']
+                return subject
     
-    def getResearch_report(self, header, subject, payload, ID):
+    def getResearch_report(self, subject, stock_num, payload, ID):
         """Get the research report
+        
             Args:
-                header: (string) mail header
-                subject: (list) company number
+                subject: (string) mail title
+                stock_num: (list) stock number
                 payload: (string) mail payload
                 ID: (string) mail ID
 
             Return:
                 (list)Num, Name, Path
-        """
-        for d in header:
-            if d['name'] == 'Subject':
-                title = d['value']
-                
+        """     
         Num, Name, Path, mimeType = [[] for i in range(4)]
-        investment_company_res = [key for key, value in self.dict_investment_company.items() if key in title]
+        investment_company_res = [key for key, value in self.dict_investment_company.items() if key in subject]
         
-        stock_res = [[str(key), value] for key, value in self.dict_stock_num2name.items() if str(key) in subject]
-        stock_res_value = [value for key, value in self.dict_stock_num2name.items() if str(key) in subject]            
-        investment_company_res = [x for x in investment_company_res if x not in stock_res_value]
+        stock_num_name = [[str(key), value] for key, value in self.dict_stock_num2name.items() if str(key) in stock_num]
+        stock_name = [value for key, value in self.dict_stock_num2name.items() if str(key) in stock_num_name]            
+        investment_company_res = [x for x in investment_company_res if x not in stock_name]
         
         if len(investment_company_res) == 0:
             investment_company_res = ""
@@ -285,7 +283,7 @@ class gmailService:
         if 'application/pdf' in mimeType:
             for i in range(len(mimeType)):
                 if mimeType[i] == 'application/pdf':
-                    num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_res, investment_company_res)
+                    num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_num_name, investment_company_res)
                     
                     if path != "null":
                         Num.append(num)
@@ -300,7 +298,7 @@ class gmailService:
                     except:
                         content = self.getMessages(payload["body"]["data"])
                         
-                    num, name, path = self.getAttachmentsURL(content, stock_res)
+                    num, name, path = self.getAttachmentsURL(content, stock_num_name)
 
                     if path != "null":
                         Num.append(num)
@@ -324,4 +322,16 @@ class gmailService:
             Body = { "addLabelIds": ["Label_3"], "removeLabelIds" : ["INBOX"] }
             
         self.service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
+
+
+# In[13]:
+
+
+re.findall(r'(?<=[^\d])\d{4}(?=[^\d\/\年\.])', "台新投顧20200812新聞評析-定穎(6251)-電動車、ADAS應用復甦快 定穎3Q營運持續好轉")
+
+
+# In[ ]:
+
+
+
 

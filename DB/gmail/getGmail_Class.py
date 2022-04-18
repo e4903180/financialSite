@@ -323,15 +323,3 @@ class gmailService:
             
         self.service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
 
-
-# In[13]:
-
-
-re.findall(r'(?<=[^\d])\d{4}(?=[^\d\/\年\.])', "台新投顧20200812新聞評析-定穎(6251)-電動車、ADAS應用復甦快 定穎3Q營運持續好轉")
-
-
-# In[ ]:
-
-
-
-

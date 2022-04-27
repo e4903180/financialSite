@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[15]:
 
 
 from googleapiclient.discovery import build
@@ -21,6 +21,12 @@ from datetime import datetime
 import logging
 import requests
 import urllib
+
+
+# In[19]:
+
+
+requests.get("https://report.yuanta-consulting.com.tw/DL.aspx?r=298713", allow_redirects = True).url
 
 
 # In[2]:
@@ -92,18 +98,15 @@ class gmailService:
         except:
             return "Null"
         
-    def check_pdf_dir(self):
+    def check_pdf_dir(self, dirName):
         """Create the file dir
         
         """
+        rootPath = os.path.abspath(os.getcwd())
+        dirPath = rootPath + "/file/" + dirName
         
-        if not os.path.isdir("file"):
-            rootPath = os.path.abspath(os.getcwd())
-            os.mkdir("file")
-            
-            for key, val in self.dict_stock_num2name.items():
-                if not os.path.isdir(rootPath + "/file/" + str(key)):
-                    os.mkdir(rootPath + "/file/" + str(key))
+        if not os.path.isdir(dirPath):
+            os.mkdir(rootPath + "/file/" + dirName)
     
     def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res):
         """Get the mail attachments already existed in mail 
@@ -119,35 +122,40 @@ class gmailService:
                 If failed
                     (string) Null, (string) Null, (string) Null
         """
-        
-        self.check_pdf_dir()
+        numList, nameList, pathList = [[] for i in range(3)]
         
         fileName = encodedFile["filename"]
         
-        if ".pdf" in fileName:
-            for num, name in stock_num_name:
-                if num in fileName:
-                    try:
-                        att = self.service.users().messages().attachments().get(userId = 'me', messageId = ID, id = encodedFile['body']['attachmentId']).execute()
-                        file = att['data']
-                        file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
+        for num, name in stock_num_name:
+            try:
+                att = self.service.users().messages().attachments().get(userId = 'me', messageId = ID, id = encodedFile['body']['attachmentId']).execute()
+                file = att['data']
+                file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
+
+                if investment_company_res != "":
+                    self.check_pdf_dir(num)
+
+                    with open("./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName, 'wb') as f:
+                        f.write(file_data)
+                    
+                    numList.append(num)
+                    nameList.append(name)
+                    pathList.append("./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName)
+                else:
+                    self.check_pdf_dir(num)
+                    with open("./file/" + num + "/" + name + "_" + fileName, 'wb') as f:
+                        f.write(file_data)
                         
-                        if investment_company_res != "":
-                            with open("./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName, 'wb') as f:
-                                f.write(file_data)
+                    numList.append(num)
+                    nameList.append(name)
+                    pathList.append("./file/" + num + "/" + name + "_" + fileName)
 
-                            return num, name, "./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName
-                        else:
-                            with open("./file/" + num + "/" + name + "_" + fileName, 'wb') as f:
-                                f.write(file_data)
-
-                            return num, name, "./file/" + num + "/" + name + "_" + fileName
-
-                    except errors.HttpError:
-                        print('An error occurred: %s' % error)
-            return "null", "null", "null"
-        else:
-            return "null", "null", "null"
+            except errors.HttpError:
+                numList.append("null")
+                nameList.append("null")
+                pathList.append("null")
+                
+        return numList, nameList, pathList
     
     def getAttachmentsURL(self, content, stock_num_name):
         """Get the attachments from url
@@ -162,23 +170,22 @@ class gmailService:
                 If failed
                     (string) Null, (string) Null, (string) Null
         """
-        
-        self.check_pdf_dir()
-        
+
         a_tags = content.find_all('a')
 
         for a in range(len(a_tags)):
             if re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText()):
                 try:
                     url = re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText())
+                    # 取得url的response 並解析 filename
                     pdfurl = requests.get(url[0], allow_redirects = True).url
                     filename = urllib.parse.unquote(pdfurl.split("/")[-1])
 
                     for num, name in stock_num_name:
-                        if num in str(filename):
-                            file_rename = "./file/" + num + "/" + "元大_" + name + "_" + filename
-                            urllib.request.urlretrieve(pdfurl, file_rename)
-                            return num, name, file_rename
+                        self.check_pdf_dir(num)
+                        file_rename = "./file/" + num + "/" + "元大_" + name + "_" + filename
+                        urllib.request.urlretrieve(pdfurl, file_rename)
+                        return num, name, file_rename
                 except:
                     print("link error: ", a_tags[a].getText())
                     return "null", "null", "null"
@@ -286,9 +293,9 @@ class gmailService:
                     num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_num_name, investment_company_res)
                     
                     if path != "null":
-                        Num.append(num)
-                        Name.append(name)
-                        Path.append(path)
+                        Num.extend(num)
+                        Name.extend(name)
+                        Path.extend(path)
                 
         else:
             for i in range(len(mimeType)):
@@ -322,4 +329,22 @@ class gmailService:
             Body = { "addLabelIds": ["Label_3"], "removeLabelIds" : ["INBOX"] }
             
         self.service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
+    
+    def recommend(self, subject, stockNum):
+        result = []
+        
+        for i in stockNum:
+            offset = subject.find(i + ".TT")
+            
+            if offset != -1:
+                start = offset + 8
+                end = start + 2
+                
+                while(subject[end] != ")"):
+                    end += 1
+                    
+                result.append(subject[start:end])
+            else:
+            	result.append("null")
+        return result
 

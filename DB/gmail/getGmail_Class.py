@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[15]:
+# In[20]:
 
 
 from googleapiclient.discovery import build
@@ -23,13 +23,7 @@ import requests
 import urllib
 
 
-# In[19]:
-
-
-requests.get("https://report.yuanta-consulting.com.tw/DL.aspx?r=298713", allow_redirects = True).url
-
-
-# In[2]:
+# In[21]:
 
 
 class gmailService:
@@ -341,10 +335,14 @@ class gmailService:
                 end = start + 2
                 
                 while(subject[end] != ")"):
+                    if end == len(subject) - 1:
+                        result.append("null")
+                        break
+
                     end += 1
                     
                 result.append(subject[start:end])
             else:
-            	result.append("null")
+                result.append("null")
         return result
 

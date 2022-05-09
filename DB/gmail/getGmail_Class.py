@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[20]:
+# In[1]:
 
 
 from googleapiclient.discovery import build
@@ -23,7 +23,7 @@ import requests
 import urllib
 
 
-# In[21]:
+# In[42]:
 
 
 class gmailService:
@@ -37,6 +37,7 @@ class gmailService:
         self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", index_col = 0, names = ['name'], sheet_name = 1)
         self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['name']
         self.dict_investment_company = self.df_investment_company.to_dict(orient = 'dict')['name']
+        self.rootPath = "/home/cosbi/桌面/financialData/gmailData/data/"
     
     def getCreds(self):
         """Get the token from google api before accesing gmail api
@@ -96,19 +97,17 @@ class gmailService:
         """Create the file dir
         
         """
-        rootPath = os.path.abspath(os.getcwd())
-        dirPath = rootPath + "/file/" + dirName
-        
-        if not os.path.isdir(dirPath):
-            os.mkdir(rootPath + "/file/" + dirName)
+        if not os.path.isdir(self.rootPath + dirName):
+            os.mkdir(self.rootPath + dirName)
     
-    def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res):
+    def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res, date):
         """Get the mail attachments already existed in mail 
         
             Args:
                 encodedFile: (dictionary) dictionary contains file base64
                 stock_num_name: (dictionary) key is stock numbers and value is stock name
                 investment_company_res: (list) investment_company
+                date: (string) mail date
             
             Return:
                 If success
@@ -117,8 +116,6 @@ class gmailService:
                     (string) Null, (string) Null, (string) Null
         """
         numList, nameList, pathList = [[] for i in range(3)]
-        
-        fileName = encodedFile["filename"]
         
         for num, name in stock_num_name:
             try:
@@ -129,20 +126,20 @@ class gmailService:
                 if investment_company_res != "":
                     self.check_pdf_dir(num)
 
-                    with open("./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName, 'wb') as f:
+                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + ".pdf", 'wb') as f:
                         f.write(file_data)
                     
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append("./file/" + num + "/" + investment_company_res + "_" + name + "_" + fileName)
+                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + ".pdf")
                 else:
                     self.check_pdf_dir(num)
-                    with open("./file/" + num + "/" + name + "_" + fileName, 'wb') as f:
+                    with open(self.rootPath + "/" + num + "-" + name + "-" + date + "-NULL.pdf", 'wb') as f:
                         f.write(file_data)
                         
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append("./file/" + num + "/" + name + "_" + fileName)
+                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL.pdf")
 
             except errors.HttpError:
                 numList.append("null")
@@ -151,12 +148,13 @@ class gmailService:
                 
         return numList, nameList, pathList
     
-    def getAttachmentsURL(self, content, stock_num_name):
+    def getAttachmentsURL(self, content, stock_num_name, date):
         """Get the attachments from url
         
             Args:
                 content: (html.parser) Decoded message data
                 stock_num_name: (dictionary) Key is stock numbers and value is stock name
+                date: (string) mail date
             
             Return:
                 If success
@@ -173,15 +171,13 @@ class gmailService:
                     url = re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText())
                     # 取得url的response 並解析 filename
                     pdfurl = requests.get(url[0], allow_redirects = True).url
-                    filename = urllib.parse.unquote(pdfurl.split("/")[-1])
 
                     for num, name in stock_num_name:
                         self.check_pdf_dir(num)
-                        file_rename = "./file/" + num + "/" + "元大_" + name + "_" + filename
+                        file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大.pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
                         return num, name, file_rename
                 except:
-                    print("link error: ", a_tags[a].getText())
                     return "null", "null", "null"
                 
         return "null", "null", "null"
@@ -250,7 +246,7 @@ class gmailService:
                 subject = d['value']
                 return subject
     
-    def getResearch_report(self, subject, stock_num, payload, ID):
+    def getResearch_report(self, subject, stock_num, payload, ID, date):
         """Get the research report
         
             Args:
@@ -258,6 +254,7 @@ class gmailService:
                 stock_num: (list) stock number
                 payload: (string) mail payload
                 ID: (string) mail ID
+                date: (string) mail date
 
             Return:
                 (list)Num, Name, Path
@@ -284,7 +281,7 @@ class gmailService:
         if 'application/pdf' in mimeType:
             for i in range(len(mimeType)):
                 if mimeType[i] == 'application/pdf':
-                    num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_num_name, investment_company_res)
+                    num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_num_name, investment_company_res, date)
                     
                     if path != "null":
                         Num.extend(num)
@@ -299,7 +296,7 @@ class gmailService:
                     except:
                         content = self.getMessages(payload["body"]["data"])
                         
-                    num, name, path = self.getAttachmentsURL(content, stock_num_name)
+                    num, name, path = self.getAttachmentsURL(content, stock_num_name, date)
 
                     if path != "null":
                         Num.append(num)

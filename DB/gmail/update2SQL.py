@@ -40,4 +40,5 @@ try:
     logging.info('Updating complete')
 except Exception as e:
     logging.info(e)
+    logging.info('Updating failed')
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 function LoginComp() {
     const nav = useNavigate()
@@ -9,13 +10,14 @@ function LoginComp() {
     const [password, setPassword] = useState("");
 
     function login(){
-        axios.post("http://localhost:3000/user/login", {
+        axios.post("http://140.116.214.154:3000/api/login", {
             userName : userName,
             password : password
         }).then(res => {
-            alert("Send edit email")// eslint-disable-next-line
-        }).catch(res => {
-            alert("error")// eslint-disable-next-line
+            alert("Log in")// eslint-disable-next-line
+            nav("/home");
+        }).catch(err => {
+            alert("Username or password error")// eslint-disable-next-line
         });
     };
 
@@ -26,20 +28,26 @@ function LoginComp() {
     }
 
     return (
-        <div className = 'container h-100 d-flex flex-column justify-content-center' >
-            <div className = "row justify-content-center" >
-                <div className = "col-md-4" style = {{ border : "3px solid #fff", borderRadius: "10px" }}>
-                    <form onSubmit = { submit }>
-                        <h2 className = "text-center display-4 mt-2" style = {{ color : "white" }}>Welcome</h2>
-
-                        <div className = "form-group mx-5" style = {{ padding : "1rem" }}>
-                            <label htmlFor = "account" style = {{ color : "white" }}>Username</label>
-                            <input type = "text" className = "form-control" id = "account" placeholder = "username" onChange = { event => setUsername(event.target.value) }/>
+        <div className = 'container-fluid h-100 d-flex flex-column justify-content-center' >
+            <div className = "row justify-content-center">
+                <div className = "col-sm-4" style = {{ border : "3px solid #fff", borderRadius: "10px" }}>
+                    <form className = "row g-3 needs-validation" onSubmit = { submit } noValidate>
+                        <div className = "col-12">
+                            <h2 className = "text-center display-4 mt-2" style = {{ color : "white" }}>Welcome</h2>
                         </div>
 
-                        <div className = "form-group mx-5" style = {{ padding : "1rem" }}>
-                            <label htmlFor = "password" style = {{ color : "white" }}>Password</label>
-                            <input type = "password" className = "form-control" id = "password" onChange = { event => setPassword(event.target.value) }/>
+                        <div className = "col-12">
+                            <div className = "form-group mx-5">
+                                <label htmlFor = "account" style = {{ color : "white" }}>Username</label>
+                                <input type = "text" className = "form-control" id = "account" placeholder = "username" onChange = { event => setUsername(event.target.value) } required/>
+                            </div>
+                        </div>
+
+                        <div className = "col-12">
+                            <div className = "form-group mx-5">
+                                <label htmlFor = "password" style = {{ color : "white" }}>Password</label>
+                                <input type = "password" className = "form-control" id = "password" onChange = { event => setPassword(event.target.value) }/>
+                            </div>
                         </div>
 
                         <div className = "text-center" style = {{ padding : "1rem" }}>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -10,7 +9,7 @@ function LoginComp() {
     const [password, setPassword] = useState("");
 
     function login(){
-        axios.post("http://140.116.214.154:3000/api/login", {
+        axios.post("http://140.116.214.154:3000/api/user/login", {
             userName : userName,
             password : password
         }).then(res => {
@@ -27,31 +26,46 @@ function LoginComp() {
         login();
     }
 
+    function register(e){
+        e.preventDefault()
+
+        nav("/register")
+    }
+
     return (
         <div className = 'container-fluid h-100 d-flex flex-column justify-content-center' >
             <div className = "row justify-content-center">
-                <div className = "col-sm-4" style = {{ border : "3px solid black", borderRadius: "10px" }}>
+                <div className = "col-sm-4 p-3" style = {{ border : "3px solid black", borderRadius: "10px" }}>
                     <form className = "row g-3 needs-validation" onSubmit = { submit } noValidate>
-                        <div className = "col-12">
+                        <div className = "form-row">
                             <h2 className = "text-center display-4 mt-2">Welcome</h2>
                         </div>
 
-                        <div className = "col-12">
-                            <div className = "form-group mx-5">
+                        <div className = "form-row px-4">
+                            <div className = "form-group">
                                 <label htmlFor = "account">Username</label>
                                 <input type = "text" className = "form-control" id = "account" onChange = { event => setUsername(event.target.value) } required/>
                             </div>
                         </div>
 
-                        <div className = "col-12">
-                            <div className = "form-group mx-5">
+                        <div className = "form-row px-4">
+                            <div className = "form-group">
                                 <label htmlFor = "password">Password</label>
                                 <input type = "password" className = "form-control" id = "password" onChange = { event => setPassword(event.target.value) }/>
                             </div>
                         </div>
 
-                        <div className = "text-center" style = {{ padding : "1rem" }}>
-                            <Button type = "submit" className = "btn btn-primary">Login</Button>
+                        <div className = 'form-row px-4'>
+                            <hr style = {{ color : "black" }}/>
+                        </div>
+
+                        <div className = 'd-grid px-4'>
+                            <button type = "submit" className = "btn btn-primary">Login</button>
+                        </div>
+
+                        <div className = 'd-grid px-4'>
+                            <p className = "text-center" style = {{ color : "red" }}>Doesn't have an account?</p>
+                            <button className = "btn btn-primary btn-block" onClick = { register }>Register</button>
                         </div>
                     </form>
                 </div>

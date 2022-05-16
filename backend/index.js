@@ -10,7 +10,7 @@ app.use(session({
     rolling: true,
     saveUninitialized: false,
     resave: true, 
-    cookie: { maxAge: 100 * 60 * 1000 }
+    cookie: { maxAge: 15 * 60 * 1000 }
 }));
 
 app.use(express.json());

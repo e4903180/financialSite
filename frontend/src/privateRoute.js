@@ -8,11 +8,11 @@ function PrivateRoute() {
 
     useEffect(() => {
         async function state(){
-            await axios.get("http://140.116.214.154:3000/api/homePage")
+            await axios.get("http://140.116.214.154:3000/api/home")
             .then(res => {
                 setIsAuth(true)
             }).catch(res => {
-                alert("You don't have auth to access please login again")
+                alert("Session expired, please logon again")
                 setIsAuth(false)
             })
         }
@@ -22,7 +22,7 @@ function PrivateRoute() {
 
     if (isAuth === undefined) return null
 
-    return isAuth ? <div><NavbarComp /> <Outlet /></div> : <Navigate to = "/" />;
+    return isAuth ? <div><NavbarComp /> <Outlet /></div> : <Navigate to = "/login" />;
 }
 
 export default PrivateRoute;

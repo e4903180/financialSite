@@ -1,10 +1,14 @@
 var express = require('express')
 var router = express.Router();
 var homeRouter = express.Router();
+var userRouter = express.Router();
 const User = require('./Controller/userController');
 
-router.post('/login', User.login)
-router.use('/homePage', homeRouter)
+router.use("/user", userRouter)
+router.use('/home', homeRouter)
+
+userRouter.post('/login', User.login)
+userRouter.post('/register', User.register)
 
 homeRouter.use(function (req, res, next) {
     if(req.session.user){

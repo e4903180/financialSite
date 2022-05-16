@@ -4,7 +4,7 @@ import NavbarComp from './component/navbar/navbar';
 import axios from "axios";
 
 function PrivateRoute() {
-    const [isAuth, setIsAuth] = useState(true)
+    const [isAuth, setIsAuth] = useState()
 
     useEffect(() => {
         async function state(){

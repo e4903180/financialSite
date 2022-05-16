@@ -227,7 +227,7 @@ class gmailService:
                 date = date.replace(" ", ",")
                 temp = date.split(",")
                 day = temp[0].zfill(2)
-                month = str(monthMap[temp[1]].zfill(2))
+                month = str(monthMap[temp[1]]).zfill(2)
                 year = temp[2]
 
                 date = year + "_" + month + "_" + day

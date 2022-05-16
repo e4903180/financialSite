@@ -13,7 +13,7 @@ exports.login = async function(req, res){
     var userName = req.body.userName
     var password = req.body.password
 
-    con.connect(function(err) {
+    con.connect(function(err){
         if (err) throw err
         con.query("SELECT `password` FROM `user` WHERE `userName` = ?", [userName], function(err, result, field){
             if(bcrypt.compareSync(password, result[0].password)){

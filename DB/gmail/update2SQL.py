@@ -25,7 +25,16 @@ logging.info('Updating gmail data to sql')
 try:
     csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
     df = pd.read_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName)
-    df = df.fillna("")
+    df = df.fillna("NULL")
+    path = list(df["File path"])
+    Recommend = list(df["Recommend"])
+
+    for i in range(len(path)):
+        temp = path[i].split(".pdf")
+        path[i] = temp[0] + "-" + Recommend[i] + temp[1] + ".pdf"
+    
+    df["File path"] = path
+
     db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint",
                      passwd = "CEMj8ptYHraxNxFt", db = "financial", charset = "utf8")
 

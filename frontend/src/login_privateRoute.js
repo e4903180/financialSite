@@ -7,7 +7,7 @@ function LoginRoute() {
 
     useEffect(() => {
         async function state(){
-            axios.get("http://140.116.214.154:3000/api/home")
+            axios.get("http://140.116.214.154:3000/api/data/isAuth")
             .then(res => {
                 setIsAuth(true)
             }).catch(res => {

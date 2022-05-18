@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import HomeComp from './component/homePage/homeComp';
 import LoginComp from './component/loginPage/loginComp';
@@ -12,7 +12,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route exact path = "*" element = { <Navigate to = "/home" /> } ></Route>
+          <Route exact path = "*" element = { <p>Error</p> } ></Route>
 
           <Route element = { <LoginRoute /> } >
             <Route exact path = "/login" element = { <LoginComp /> }></Route>

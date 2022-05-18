@@ -31,14 +31,14 @@ logging.info('Updating email start')
 result = gGC.service.users().messages().list(userId = 'me', maxResults = 500, labelIds = ["INBOX"]).execute()
 messages = result.get('messages')
 
-# get mail ID from messages
-for i in range(len(messages)):
-    ID.append(messages[i]['id'])
-
-if len(ID) == 0:
+if messages == None:
     logging.info('Inbox quantity is 0')
     logging.info('Updating email end')
     sys.exit(0)
+
+# get mail ID from messages
+for i in range(len(messages)):
+    ID.append(messages[i]['id'])
 
 # iterate through all the messages
 for i in trange(len(ID)):

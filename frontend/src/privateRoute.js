@@ -8,7 +8,7 @@ function PrivateRoute() {
 
     useEffect(() => {
         async function state(){
-            await axios.get("http://140.116.214.154:3000/api/home")
+            await axios.get("http://140.116.214.154:3000/api/data/isAuth")
             .then(res => {
                 setIsAuth(true)
             }).catch(res => {

@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import bgimage from "../../image/coins_on_chart.jpg"
+import { DataGrid } from '@mui/x-data-grid';
 axios.defaults.withCredentials = true;
 
 function HomeComp() {
     let [data, setData] = useState([]);
+
+    const columns = [
+        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'recommand', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>download</a> },
+    ];
 
     useEffect(() => {
         axios.get("http://140.116.214.154:3000/api/data/first")
@@ -21,40 +26,22 @@ function HomeComp() {
     }, [])
 
     return (
-        <div className = 'container-fluid'>
-            <div className = 'col-md-8 offset-md-2'>
-                <h3 className = "display-4 text-center">最新15筆資料</h3>
-                <TableContainer component = { Paper }>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>股票代號</TableCell>
-                                <TableCell>股票名稱</TableCell>
-                                <TableCell>資料日期</TableCell>
-                                <TableCell>提供者</TableCell>
-                                <TableCell>推薦</TableCell>
-                                <TableCell>檔案下載</TableCell>
-                            </TableRow>
-                        </TableHead>
-
-                        <TableBody>
-                            { 
-                                data.map((row) => (
-                                    <TableRow key = { row.ID }>
-                                        <TableCell>{ row.stockNum }</TableCell>
-                                        <TableCell>{ row.stockName }</TableCell>
-                                        <TableCell>{ row.date }</TableCell>
-                                        <TableCell>{ row.investmentCompany }</TableCell>
-                                        <TableCell>{ row.recommand }</TableCell>
-                                        <TableCell><a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + row.filePath } download = { row.filePath.split("/")[-1]}>download</a></TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+        <>
+            <div className = 'jumbotron jumbotron-fluid d-flex' style = {{ backgroundImage : `url(${bgimage})`, opacity : "0.8", backgroundAttachment : "fixed", backgroundSize : "cover", height : "40vh", justifyContent : "center", alignItems : "center" }}>
+                <div className = 'text-center'>
+                    <h1 className = "display-4" style = {{ color : "white" }}>Financial Database</h1>
+                    <p className = 'lead' style = {{ color : "white" }}>Easily and quickly</p>
+                </div>
             </div>
-        </div>
+            
+
+            <div className = 'container-fluid'>
+                <div className = 'col-md-10 offset-md-1'>
+                    <h3 className = "display-4 text-center">最新15筆資料</h3>
+                    <DataGrid columns = { columns } rows = { data } pageSize = { 5 } rowsPerPageOptions = {[5]} getRowId = { row => row.ID } autoHeight />
+                </div>
+            </div>
+        </>
     );
 }
 

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function NavbarComp() {
     const nav = useNavigate()
+
     function logout(e){
         e.preventDefault()
 
@@ -20,7 +21,7 @@ function NavbarComp() {
     return (
         <div>
             <Navbar bg = "dark" variant = "dark" expand = "lg">
-                <Container>
+                <Container fluid>
                     <Navbar.Brand href = "/home">Financial</Navbar.Brand>
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
                     <Navbar.Collapse id =" basic-navbar-nav">
@@ -34,9 +35,9 @@ function NavbarComp() {
                             <Nav.Link href = "/7">產業分析上傳</Nav.Link>
                             <Nav.Link href = "/8">個人檔案</Nav.Link>
                         </Nav>
-                    </Navbar.Collapse>
 
-                    <button className = "btn btn-primary" onClick= { logout }>登出</button>
+                        <button className = "btn btn-outline-light" onClick= { logout }>登出</button>
+                    </Navbar.Collapse>
                 </Container>
             </Navbar>
         </div>

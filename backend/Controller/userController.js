@@ -29,6 +29,15 @@ exports.login = async function(req, res){
     });
 }
 
+exports.logout = async function(req, res){
+    try {
+        req.session.destroy();
+        res.status(200).send("success");
+    } catch (error) {
+        res.status(400).send("error");
+    }
+}
+
 exports.register = async function(req, res){
     var name = req.body.name
     var userName = req.body.userName

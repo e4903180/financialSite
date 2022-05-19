@@ -10,10 +10,10 @@ router.use('/data', dataRouter)
 
 userRouter.post('/login', User.login)
 userRouter.post('/register', User.register)
+userRouter.get("/logout", User.logout)
 
 dataRouter.use(function (req, res, next) {
     if(!req.session.user){
-        console.log("session expired")
         req.session.destroy();
 
         return res.status(400).send('error')

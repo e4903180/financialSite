@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 axios.defaults.withCredentials = true;
 
 function HomeComp() {
@@ -23,7 +24,7 @@ function HomeComp() {
         <div className = 'container-fluid'>
             <div className = 'col-md-8 offset-md-2'>
                 <h3 className = "display-4 text-center">最新15筆資料</h3>
-                <TableContainer>
+                <TableContainer component = { Paper }>
                     <Table>
                         <TableHead>
                             <TableRow>

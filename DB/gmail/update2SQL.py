@@ -26,6 +26,8 @@ try:
     csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
     df = pd.read_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/2022_05_18.csv")
     df = df.fillna("NULL")
+    df.drop_duplicates(inplace = True)
+    df.reset_index(drop = True, inplace = True) 
 
     db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint",
                      passwd = "CEMj8ptYHraxNxFt", db = "financial", charset = "utf8")

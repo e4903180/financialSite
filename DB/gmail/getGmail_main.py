@@ -13,15 +13,10 @@ import re
 
 
 # In[2]:
-
-
 gGC = getGmail_Class.gmailService()
 
-
 # In[3]:
-
-
-Num, Name, investment_company, Date, Path, ID, recommendResult = [[] for i in range(7)]
+Num, Name, investment_company, Date, Path, ID, Recommend = [[] for i in range(7)]
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(level = logging.INFO, filename = "/home/cosbi/桌面/financialData/gmailData/log/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
@@ -31,14 +26,14 @@ logging.info('Updating email start')
 result = gGC.service.users().messages().list(userId = 'me', maxResults = 500, labelIds = ["INBOX"]).execute()
 messages = result.get('messages')
 
-if messages == None:
-    logging.info('Inbox quantity is 0')
-    logging.info('Updating email end')
-    sys.exit(0)
-
 # get mail ID from messages
 for i in range(len(messages)):
     ID.append(messages[i]['id'])
+
+if len(ID) == 0:
+    logging.info('Inbox quantity is 0')
+    logging.info('Updating email end')
+    sys.exit(0)
 
 # iterate through all the messages
 for i in trange(len(ID)):
@@ -51,9 +46,7 @@ for i in trange(len(ID)):
     stock_num = gGC.verifySubject(subject)
 
     if len(stock_num) != 0:
-        tempNum, tempName, tempInvestment_company, tempPath = gGC.getResearch_report(subject, stock_num, payload, ID[i], date)
-        temp_recommendResult = gGC.recommend(subject, tempNum)
-        recommendResult.extend(temp_recommendResult)
+        tempNum, tempName, tempInvestment_company, tempPath, tempRecommend = gGC.getResearch_report(subject, stock_num, payload, ID[i], date)
         
         if len(tempNum) != 0:
             for j in range(len(tempNum)):
@@ -62,6 +55,7 @@ for i in trange(len(ID)):
                 Date.append(date)
                 investment_company.append(tempInvestment_company)
                 Path.append(tempPath[j])
+                Recommend.append(tempRecommend[j])
                 
         # Modify labels
         gGC.modifyLabels(ID[i], "Label2")
@@ -69,14 +63,11 @@ for i in trange(len(ID)):
         # Modify labels
         gGC.modifyLabels(ID[i], "Label3")
 
-df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : investment_company, "Date" : Date, "File path" : Path, "Recommend" : recommendResult })
+df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : investment_company, "Date" : Date, "File path" : Path, "Recommend" : Recommend })
 
 logging.info('Updating email end')
 
-
 # In[6]:
-
-
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
 df.to_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName, index = False)
 

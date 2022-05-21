@@ -14,8 +14,8 @@ function HomeComp() {
         { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'recommand', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>download</a> },
+        { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>download</a> },
     ];
 
     useEffect(() => {
@@ -28,16 +28,15 @@ function HomeComp() {
 
     return (
         <>
-            <div className = 'jumbotron jumbotron-fluid d-flex' style = {{ backgroundImage : `url(${bgimage})`, opacity : "0.8", backgroundAttachment : "fixed", backgroundSize : "cover", height : "40vh", justifyContent : "center", alignItems : "center" }}>
+            <div className = 'jumbotron jumbotron-fluid d-flex' style = {{ backgroundImage : `url(${bgimage})`, opacity : "0.8", backgroundAttachment : "fixed", backgroundSize : "cover", height : "60vh", justifyContent : "center", alignItems : "center" }}>
                 <div className = 'text-center'>
                     <h1 className = "display-4" style = {{ color : "white" }}>Financial Database</h1>
                     <p className = 'lead' style = {{ color : "white" }}>Easily and quickly</p>
                 </div>
             </div>
-            
 
             <div className = 'container-fluid'>
-                <div className = 'col-md-10 offset-md-1'>
+                <div className = 'col-md-10 mx-auto py-3'>
                     <h3 className = "display-4 text-center">最新15筆資料</h3>
 
                     <DataGrid

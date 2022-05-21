@@ -30,4 +30,6 @@ dataRouter.get("/first", Data.first)
 
 dataRouter.get("/download", Data.download)
 
+dataRouter.get("/allData", Data.allData)
+
 module.exports = {router};

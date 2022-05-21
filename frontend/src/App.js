@@ -6,6 +6,7 @@ import RegisterComp from './component/registerPage/registerComp';
 import CalendarComp from './component/calendarPage/calendarComp';
 import PrivateRoute from './privateRoute';
 import LoginRoute from './login_privateRoute';
+import DatabaseComp from './component/databasePage/databaseComp';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route element = { <PrivateRoute /> } >
             <Route path = "/home" element = { <HomeComp /> }></Route>
             <Route path = "/calendar" element = { <CalendarComp /> }></Route>
+            <Route path = "/database" element = { <DatabaseComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

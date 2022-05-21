@@ -26,7 +26,7 @@ function NavbarComp() {
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
                     <Navbar.Collapse id =" basic-navbar-nav">
                         <Nav className = "me-auto">
-                            <Nav.Link href = "/1">個股綜合資料</Nav.Link>
+                            <Nav.Link href = "/database">個股綜合資料</Nav.Link>
                             <Nav.Link href = "/2">個股推薦</Nav.Link>
                             <Nav.Link href = "/3">Line memo</Nav.Link>
                             <Nav.Link href = "/calendar">Calendar</Nav.Link>

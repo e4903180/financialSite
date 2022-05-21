@@ -26,12 +26,6 @@ function LoginComp() {
         login();
     }
 
-    function register(e){
-        e.preventDefault()
-
-        nav("/register")
-    }
-
     return (
         <div className = 'container-fluid h-100 d-flex flex-column justify-content-center' >
             <div className = "row justify-content-center">
@@ -64,8 +58,7 @@ function LoginComp() {
                         </div>
 
                         <div className = 'd-grid px-4'>
-                            <p className = "text-center" style = {{ color : "red" }}>Doesn't have an account?</p>
-                            <button className = "btn btn-primary btn-block" onClick = { register }>Register</button>
+                            <p className = "text-center" style = {{ color : "red" }}>Don't have an account? <a href = '/register'>Register</a></p>
                         </div>
                     </form>
                 </div>

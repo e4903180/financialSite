@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 axios.defaults.withCredentials = true;
 
 function HomeComp() {
     let [data, setData] = useState([]);
+    const [pageSize, setPageSize] = useState(5);
 
     const columns = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center' },
+        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
         { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
@@ -38,7 +39,22 @@ function HomeComp() {
             <div className = 'container-fluid'>
                 <div className = 'col-md-10 offset-md-1'>
                     <h3 className = "display-4 text-center">最新15筆資料</h3>
-                    <DataGrid columns = { columns } rows = { data } pageSize = { 5 } rowsPerPageOptions = {[5]} getRowId = { row => row.ID } autoHeight />
+
+                    <DataGrid
+                        columns = { columns } 
+                        rows = { data }
+                        pageSize = { pageSize }
+                        onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
+                        rowsPerPageOptions = {[5, 10]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        autoHeight
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter 
+                    />
                 </div>
             </div>
         </>
@@ -46,5 +62,3 @@ function HomeComp() {
 }
 
 export default HomeComp;
-
-// /home/cosbi/桌面/financialData/gmailData/data/2887/2887-台新金-2022_5_05-統一投顧.pdf

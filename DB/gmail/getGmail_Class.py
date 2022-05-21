@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
+# %%
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -22,10 +17,7 @@ import logging
 import requests
 import urllib
 
-
-# In[42]:
-
-
+# %%
 class gmailService:
     def __init__(self):
         # Define the SCOPES. If modifying it, delete the token.pickle file.
@@ -100,7 +92,7 @@ class gmailService:
         if not os.path.isdir(self.rootPath + dirName):
             os.mkdir(self.rootPath + dirName)
     
-    def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res, date):
+    def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res, date, recommend):
         """Get the mail attachments already existed in mail 
         
             Args:
@@ -115,7 +107,8 @@ class gmailService:
                 If failed
                     (string) Null, (string) Null, (string) Null
         """
-        numList, nameList, pathList = [[] for i in range(3)]
+        numList, nameList, pathList, recommendList = [[] for i in range(4)]
+        i = 0
         
         for num, name in stock_num_name:
             try:
@@ -126,29 +119,34 @@ class gmailService:
                 if investment_company_res != "":
                     self.check_pdf_dir(num)
 
-                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + ".pdf", 'wb') as f:
+                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf", 'wb') as f:
                         f.write(file_data)
                     
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + ".pdf")
+                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf")
+                    recommendList.append(recommend[i])
+                    i += 1
                 else:
                     self.check_pdf_dir(num)
-                    with open(self.rootPath + "/" + num + "-" + name + "-" + date + "-NULL.pdf", 'wb') as f:
+                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL" + recommend[i] + ".pdf", 'wb') as f:
                         f.write(file_data)
                         
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL.pdf")
+                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL" + recommend[i] + ".pdf")
+                    recommendList.append(recommend[i])
+                    i += 1
 
             except errors.HttpError:
                 numList.append("null")
                 nameList.append("null")
                 pathList.append("null")
+                recommendList.append("null")
                 
-        return numList, nameList, pathList
+        return numList, nameList, pathList, recommendList
     
-    def getAttachmentsURL(self, content, stock_num_name, date):
+    def getAttachmentsURL(self, content, stock_num_name, date, recommend):
         """Get the attachments from url
         
             Args:
@@ -174,9 +172,9 @@ class gmailService:
 
                     for num, name in stock_num_name:
                         self.check_pdf_dir(num)
-                        file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大.pdf"
+                        file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
-                        return num, name, file_rename
+                        return num, name, file_rename, recommend[0]
                 except:
                     return "null", "null", "null"
                 
@@ -259,12 +257,18 @@ class gmailService:
             Return:
                 (list)Num, Name, Path
         """     
-        Num, Name, Path, mimeType = [[] for i in range(4)]
+        Num, Name, Path, mimeType, Recommend, stock_num_name, _stock_num, _stock_name = [[] for i in range(8)]
         investment_company_res = [key for key, value in self.dict_investment_company.items() if key in subject]
         
-        stock_num_name = [[str(key), value] for key, value in self.dict_stock_num2name.items() if str(key) in stock_num]
-        stock_name = [value for key, value in self.dict_stock_num2name.items() if str(key) in stock_num_name]            
-        investment_company_res = [x for x in investment_company_res if x not in stock_name]
+        for i in range(len(stock_num)):
+            if int(stock_num[i]) in self.dict_stock_num2name.keys():
+                stock_num_name.append([stock_num[i], self.dict_stock_num2name[int(stock_num[i])]])
+                _stock_num.append(stock_num[i])
+                _stock_name.append(self.dict_stock_num2name[int(stock_num[i])])
+         
+        investment_company_res = [x for x in investment_company_res if x not in _stock_name]
+
+        temp_recommendResult = self.recommend(subject, _stock_num)
         
         if len(investment_company_res) == 0:
             investment_company_res = ""
@@ -281,12 +285,13 @@ class gmailService:
         if 'application/pdf' in mimeType:
             for i in range(len(mimeType)):
                 if mimeType[i] == 'application/pdf':
-                    num, name, path = self.getAttachments(payload['parts'][i + 1], ID, stock_num_name, investment_company_res, date)
+                    num, name, path, recommend = self.getAttachments(payload['parts'][i + 1], ID, stock_num_name, investment_company_res, date, temp_recommendResult)
                     
                     if path != "null":
                         Num.extend(num)
                         Name.extend(name)
                         Path.extend(path)
+                        Recommend.extend(recommend)
                 
         else:
             for i in range(len(mimeType)):
@@ -296,14 +301,15 @@ class gmailService:
                     except:
                         content = self.getMessages(payload["body"]["data"])
                         
-                    num, name, path = self.getAttachmentsURL(content, stock_num_name, date)
+                    num, name, path, recommend = self.getAttachmentsURL(content, stock_num_name, date, temp_recommendResult)
 
                     if path != "null":
                         Num.append(num)
                         Name.append(name)
                         Path.append(path)
+                        Recommend.extend(recommend)
         
-        return Num, Name, investment_company_res, Path
+        return Num, Name, investment_company_res, Path, Recommend
     
     def modifyLabels(self, ID, formats):
         """Modify mail from INBOX to label2 or label3
@@ -325,7 +331,12 @@ class gmailService:
         result = []
         
         for i in stockNum:
-            offset = subject.find(i + ".TT")
+            if i + ".TT" in subject:
+                offset = subject.find(i + ".TT")
+            elif i + " TT" in subject:
+                offset = subject.find(i + " TT")
+            else:
+                offset = -1
             
             if offset != -1:
                 start = offset + 8
@@ -333,13 +344,12 @@ class gmailService:
                 
                 while(subject[end] != ")"):
                     if end == len(subject) - 1:
-                        result.append("null")
+                        result.append("Null")
                         break
 
                     end += 1
                     
                 result.append(subject[start:end])
             else:
-                result.append("null")
+                result.append("Null")
         return result
-

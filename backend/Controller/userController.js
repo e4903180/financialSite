@@ -16,13 +16,15 @@ exports.login = async function(req, res){
     con.connect(function(err){
         if (err) throw err
         con.query("SELECT `password` FROM `user` WHERE `userName` = ?", [userName], function(err, result, field){
-            try {
+            if(result.length !== 0){
                 if(bcrypt.compareSync(password, result[0].password)){
                     req.session.user = userName;
     
                     res.status(200).send("success");
+                }else{
+                    res.status(400).send("Username or password error");
                 }
-            } catch (error) {
+            }else{
                 res.status(400).send("Username or password error");
             }
         });

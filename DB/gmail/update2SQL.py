@@ -24,7 +24,7 @@ logging.info('Updating gmail data to sql')
 
 try:
     csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
-    df = pd.read_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/2022_05_18.csv")
+    df = pd.read_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName)
     df = df.fillna("NULL")
     df.drop_duplicates(inplace = True)
     df.reset_index(drop = True, inplace = True) 

@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
+# %%
 import getGmail_Class
 import os, sys, logging
 from tqdm import trange
@@ -11,11 +6,10 @@ from datetime import datetime
 import pandas as pd
 import re
 
-
-# In[2]:
+# %%
 gGC = getGmail_Class.gmailService()
 
-# In[3]:
+# %%
 Num, Name, investment_company, Date, Path, ID, Recommend = [[] for i in range(7)]
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
@@ -67,7 +61,8 @@ df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : invest
 
 logging.info('Updating email end')
 
-# In[6]:
+# %%
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
 df.to_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName, index = False)
+
 

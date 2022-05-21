@@ -176,9 +176,9 @@ class gmailService:
                         urllib.request.urlretrieve(pdfurl, file_rename)
                         return num, name, file_rename, recommend[0]
                 except:
-                    return "null", "null", "null"
+                    return "null", "null", "null", "null"
                 
-        return "null", "null", "null"
+        return "null", "null", "null", "null"
     
     def verifySubject(self, subject):
         """Get the mail subject
@@ -280,7 +280,7 @@ class gmailService:
             for j in range(1, len(payload['parts'])):
                 mimeType.append(payload['parts'][j]['mimeType'])
         except:
-            return Num, Name, investment_company_res, Path
+            return Num, Name, investment_company_res, Path, Recommend
         
         if 'application/pdf' in mimeType:
             for i in range(len(mimeType)):
@@ -353,3 +353,5 @@ class gmailService:
             else:
                 result.append("Null")
         return result
+
+

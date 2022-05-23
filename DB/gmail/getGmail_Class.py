@@ -129,12 +129,12 @@ class gmailService:
                     i += 1
                 else:
                     self.check_pdf_dir(num)
-                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL" + recommend[i] + ".pdf", 'wb') as f:
+                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf", 'wb') as f:
                         f.write(file_data)
                         
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL" + recommend[i] + ".pdf")
+                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf")
                     recommendList.append(recommend[i])
                     i += 1
 
@@ -331,12 +331,7 @@ class gmailService:
         result = []
         
         for i in stockNum:
-            if i + ".TT" in subject:
-                offset = subject.find(i + ".TT")
-            elif i + " TT" in subject:
-                offset = subject.find(i + " TT")
-            else:
-                offset = -1
+            offset = subject.find(i + ".TT")
             
             if offset != -1:
                 start = offset + 8
@@ -353,5 +348,4 @@ class gmailService:
             else:
                 result.append("Null")
         return result
-
 

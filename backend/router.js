@@ -32,4 +32,6 @@ dataRouter.get("/download", Data.download)
 
 dataRouter.get("/allData", Data.allData)
 
+dataRouter.post("/dbsearch", Data.dbsearch)
+
 module.exports = {router};

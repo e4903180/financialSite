@@ -13,10 +13,10 @@ function LoginComp() {
             userName : userName,
             password : password
         }).then(res => {
-            alert("Log in")// eslint-disable-next-line
+            alert("Log in")
             nav("/home");
         }).catch(err => {
-            alert("Username or password error")// eslint-disable-next-line
+            alert("Username or password error")
         });
     };
 

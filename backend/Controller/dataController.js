@@ -93,7 +93,7 @@ exports.financialData2csv_download = function(req, res){
         if(result !== undefined){
             const csvWriter = createCsvWriter({
   
-                path: '/home/cosbi/桌面/financialData.csv',
+                path: '/home/cosbi/桌面/financialData/financialData.csv',
                 header: [
                     {id: 'stockNum', title: '股票代號'},
                     {id: 'stockName', title: '股票名稱'},
@@ -106,7 +106,7 @@ exports.financialData2csv_download = function(req, res){
 
             csvWriter
                 .writeRecords(result)
-                .then(()=> res.download("/home/cosbi/桌面/financialData.csv"));
+                .then(()=> res.download("/home/cosbi/桌面/financialData/financialData.csv"));
         }
     });
 };
@@ -116,7 +116,7 @@ exports.post_board_memo2csv_download = function(req, res){
         if(result !== undefined){
             const csvWriter = createCsvWriter({
 
-                path: '/home/cosbi/桌面/post_board_memo.csv',
+                path: '/home/cosbi/桌面/financialData/post_board_memo.csv',
                 header: [
                     {id: 'date', title: '日期'},
                     {id: 'username', title: 'Username'},
@@ -131,7 +131,7 @@ exports.post_board_memo2csv_download = function(req, res){
 
             csvWriter
                 .writeRecords(result)
-                .then(()=> res.download("/home/cosbi/桌面/post_board_memo.csv"));
+                .then(()=> res.download("/home/cosbi/桌面/financialData/post_board_memo.csv"));
         }
     });
 };
@@ -141,7 +141,7 @@ exports.lineMemo2csv_download = function(req, res){
         if(result !== undefined){
             const csvWriter = createCsvWriter({
 
-                path: '/home/cosbi/桌面/lineMemo.csv',
+                path: '/home/cosbi/桌面/financialData/lineMemo.csv',
                 header: [
                     {id: 'stockNum', title: '股票代號'},
                     {id: 'stockName', title: '股票名稱'},
@@ -154,7 +154,7 @@ exports.lineMemo2csv_download = function(req, res){
 
             csvWriter
                 .writeRecords(result)
-                .then(()=> res.download("/home/cosbi/桌面/lineMemo.csv"));
+                .then(()=> res.download("/home/cosbi/桌面/financialData/lineMemo.csv"));
         }
     });
 };

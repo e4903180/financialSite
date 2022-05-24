@@ -1,25 +1,37 @@
 import axios from 'axios';
-import { CSVLink } from "react-csv";
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import CustomA from '../customA';
+import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 
 function DatabaseComp() {
     let [data, setData] = useState([]);
     let [data1, setData1] = useState([]);
     const [search, setSearch] = useState(false);
+    const [autocom, setAutocom] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pageSize, setPageSize] = useState(5);
-    const [input1, setInput1] = useState("");
+    const [columnTable, set_colume_table] = useState([]);
+    const [input1, setInput1] = useState([]);
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
     const [input4, setInput4] = useState("");
     const [input5, setInput5] = useState("");
 
+    const checkNULL = (value) => {
+        if(value === "NULL"){
+            return <> </>
+        }else{
+            return <CustomA value = { value } />
+        }
+    }
+
     const columns = [
         { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'allData', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <CSVLink data = { rowData.value } filename = { "financial.csv" }>Download</CSVLink> , sortable: false},
+        { field: 'downloadUrl', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { rowData.value } download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
     ];
 
     const columns1 = [
@@ -29,7 +41,29 @@ function DatabaseComp() {
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>Download</a> },
+        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/singleFile?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>Download</a> },
+    ];
+
+    const columns2 = [
+        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
+        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+        { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+        { field: 'reason', headerName: '理由', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (checkNULL(rowData.value))},
+    ];
+
+    const columns3 = [
+        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
+        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (checkNULL(rowData.value)) },
+        { field: 'inputTime', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
     ];
 
     function submit(e){
@@ -43,6 +77,24 @@ function DatabaseComp() {
             "investmentCompany" : input4,
             "dbTable" : input5
         }).then(res => {
+            switch(input5){
+                case "financialData":{
+                    set_colume_table(columns1)
+                    break
+                }
+
+                case "post_board_memo":{
+                    set_colume_table(columns2)
+                    break
+                }
+
+                case "lineMemo":{
+                    set_colume_table(columns3)
+                    break
+                }
+
+                default : break
+            }
             setData1(res.data)
             setSearch(true)
             setLoading(false)
@@ -57,8 +109,15 @@ function DatabaseComp() {
             setData(res.data);
         }).catch(res => {
         })
+
+        axios.get("http://140.116.214.154:3000/api/data/autoCom")
+        .then(res => {
+            setAutocom(res.data);
+        }).catch(res => {
+        })
     }, [])
 
+    // eslint-disable-next-line
     return (
         <>
             <div className = 'row mx-auto py-3' style = {{ width : "40vw" }}>
@@ -70,7 +129,6 @@ function DatabaseComp() {
                         rows = { data }
                         getRowId = { row => row.dbName }
                         autoHeight
-                        rowsPerPageOptions = {[1]}
                         disableColumnMenu
                         disableColumnSelector
                         disableDensitySelector
@@ -88,7 +146,14 @@ function DatabaseComp() {
                         <div className = 'form-group row'>
                             <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號或名稱:</label>
                             <div className = 'col-md-3'>
-                                <input type = "text" id = "stockNum_or_Name" className = "form-control" placeholder = '請輸入股票代號或名稱' onChange = {e => setInput1(e.target.value)}></input>
+                                <Typeahead
+                                    id = "stockNum_or_Name"
+                                    labelKey = "stock_num_name"
+                                    onChange = { setInput1 }
+                                    options = { autocom }
+                                    placeholder = "請輸入股票代號或名稱"
+                                    selected = { input1 }
+                                />
                             </div>
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>
@@ -125,8 +190,8 @@ function DatabaseComp() {
                                 <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)}>
                                     <option defaultValue value = "">請選擇資料表</option>
                                     <option value = "financialData">個股研究資料</option>
-                                    <option value = "個股推薦">個股推薦</option>
-                                    <option value = "Line Memo">Line Memo</option>
+                                    <option value = "post_board_memo">個股推薦</option>
+                                    <option value = "lineMemo">Line Memo</option>
                                 </select>
                             </div>
                         </div>
@@ -143,7 +208,7 @@ function DatabaseComp() {
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
-                    columns = { columns1 }
+                    columns = { columnTable }
                     rows = { data1 }
                     pageSize = { pageSize }
                     onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }

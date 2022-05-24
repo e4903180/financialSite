@@ -1,42 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-// import CustomTable from '../../customTable/customTable'
 
 axios.defaults.withCredentials = true;
 
 function HomeComp() {
     let [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(5);
-    
-    // const columns = useMemo(() => [
-    //     {
-    //         Header : '股票代號',
-    //         accessor : 'stockNum',
-    //     },
-    //     {
-    //         Header : '股票名稱',
-    //         accessor : 'stockName'
-    //     },
-    //     {
-    //         Header : '資料日期',
-    //         accessor : 'date'
-    //     },
-    //     {
-    //         Header : '提供者',
-    //         accessor : 'investmentCompany'
-    //     },
-    //     {
-    //         Header : '推薦',
-    //         accessor : 'recommend'
-    //     },
-    //     {
-    //         Header : '檔案下載',
-    //         accessor : 'filePath',
-    //         Cell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>download</a>
-    //     },
-    // ], [])
 
     const columns = [
         { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
@@ -45,11 +16,11 @@ function HomeComp() {
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>Download</a> },
+        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/singleFile?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>Download</a> },
     ];
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/first")
+        axios.get("http://140.116.214.154:3000/api/data/newest15")
         .then(res => {
             setData(res.data);
         }).catch(res => {
@@ -68,7 +39,6 @@ function HomeComp() {
             <div className = 'container-fluid'>
                 <div className = 'col-md-10 mx-auto py-3'>
                     <h3 className = "display-4 text-center">最新15筆資料</h3>
-                    {/* <CustomTable columns = { columns } data = { data } /> */}
                     <DataGrid
                         columns = { columns } 
                         rows = { data }

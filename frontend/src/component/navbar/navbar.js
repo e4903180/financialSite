@@ -1,10 +1,19 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function NavbarComp() {
     const nav = useNavigate()
+    const [username, setUsername] = useState("")
+
+    useEffect(() => {
+        axios.get("http://140.116.214.154:3000/api/data/username")
+        .then(res => {
+            setUsername(res.data)
+        }).catch(res => {
+        })
+    }, [])
 
     function logout(e){
         e.preventDefault()
@@ -27,7 +36,7 @@ function NavbarComp() {
                     <Navbar.Collapse id =" basic-navbar-nav">
                         <Nav className = "me-auto">
                             <Nav.Link href = "/database">個股綜合資料</Nav.Link>
-                            <Nav.Link href = "/2">個股推薦</Nav.Link>
+                            <Nav.Link href = "/post_board">個股推薦</Nav.Link>
                             <Nav.Link href = "/3">Line memo</Nav.Link>
                             <Nav.Link href = "/calendar">Calendar</Nav.Link>
                             <Nav.Link href = "/5">Meeting data</Nav.Link>
@@ -36,7 +45,10 @@ function NavbarComp() {
                             <Nav.Link href = "/8">個人檔案</Nav.Link>
                         </Nav>
 
-                        <button className = "btn btn-outline-light" onClick= { logout }>登出</button>
+                        <div className = 'd-flex'>
+                            <p className = 'text-center my-auto' style = {{ color : "white" }}>{username}您已經登入囉 &emsp;</p>
+                            <button className = "btn btn-outline-light" onClick= { logout }>登出</button>
+                        </div>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

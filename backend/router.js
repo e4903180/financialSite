@@ -21,20 +21,19 @@ dataRouter.use(function (req, res, next) {
     next()
 })
 
-
 dataRouter.get("/isAuth", function(req, res){
     res.status(200).send('success')
 })
-
-dataRouter.get("/newest15", Data.newest15)
 
 dataRouter.get("/download/singleFile", Data.download)
 dataRouter.get("/download/financialData", Data.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Data.post_board_memo2csv_download)
 dataRouter.get("/download/lineMemo", Data.lineMemo2csv_download)
 
+dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
 dataRouter.get("/autoCom", Data.autoCom)
+dataRouter.get("/username", Data.retrnUsername)
 
 dataRouter.post("/dbsearch", Data.dbsearch)
 

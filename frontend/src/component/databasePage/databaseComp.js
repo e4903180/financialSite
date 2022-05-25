@@ -4,6 +4,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import CustomA from '../customA';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
+import { withStyles } from '@mui/styles';
 
 function DatabaseComp() {
     let [data, setData] = useState([]);
@@ -26,6 +27,22 @@ function DatabaseComp() {
             return <CustomA value = { value } />
         }
     }
+
+    const StyledDataGrid = withStyles({
+        root: {
+          "& .MuiDataGrid-renderingZone": {
+            maxHeight: "none !important"
+          },
+          "& .MuiDataGrid-cell": {
+            lineHeight: "unset !important",
+            maxHeight: "none !important",
+            whiteSpace: "normal"
+          },
+          "& .MuiDataGrid-row": {
+            maxHeight: "none !important"
+          }
+        }
+      })(DataGrid);
 
     const columns = [
         { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -52,8 +69,8 @@ function DatabaseComp() {
         { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'reason', headerName: '理由', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (checkNULL(rowData.value))},
+        { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 400 },
+        { field: 'filePath', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (checkNULL(rowData.value))},
     ];
 
     const columns3 = [
@@ -99,7 +116,9 @@ function DatabaseComp() {
             setSearch(true)
             setLoading(false)
         }).catch(res => {
-
+            setData1({})
+            setSearch(true)
+            setLoading(false)
         })
     }
 
@@ -117,7 +136,6 @@ function DatabaseComp() {
         })
     }, [])
 
-    // eslint-disable-next-line
     return (
         <>
             <div className = 'row mx-auto py-3' style = {{ width : "40vw" }}>
@@ -207,7 +225,7 @@ function DatabaseComp() {
             { search &&  <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
-                <DataGrid
+                <StyledDataGrid
                     columns = { columnTable }
                     rows = { data1 }
                     pageSize = { pageSize }

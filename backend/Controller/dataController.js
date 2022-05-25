@@ -1,7 +1,21 @@
 var mysql2 = require('mysql2');
-var csvwriter = require('csv-writer')
-  
-var createCsvWriter = csvwriter.createObjectCsvWriter
+const { Parser } = require('json2csv');
+const iconv = require('iconv-lite');
+const fs = require('fs');
+
+function createCSV(path, data, res){
+    const fields = Object.keys(data[0])
+    const opts = { fields };
+
+    const parser = new Parser(opts);
+    const csv = parser.parse(data);
+    var newCsv = iconv.encode(csv, 'BIG5');
+
+    fs.writeFile(path, newCsv, function(err) {
+        if (err) throw err;
+        res.download(path)
+    });
+}
 
 var con = mysql2.createConnection({
   host : "localhost",
@@ -11,6 +25,10 @@ var con = mysql2.createConnection({
   charset : "utf8",
   multipleStatements : true
 });
+
+exports.retrnUsername = async function(req, res){
+    return res.status(200).send(req.session.userName)
+}
 
 exports.newest15 = async function(req, res){
     con.connect(function(err){
@@ -41,7 +59,7 @@ exports.allData = async function(req, res){
 };
 
 exports.dbsearch = async function(req, res){
-    if(req.body.dbTable == "") return res.status(400)
+    if(req.body.dbTable == "") return res.status(400).json({})
 
     if(req.body.stockName_or_Num == "" && req.body.startDate == "" && req.body.endDate == "" && req.body.investmentCompany == ""){
         let sql = `SELECT * FROM ${req.body.dbTable} LIMIT 100`
@@ -61,8 +79,8 @@ exports.dbsearch = async function(req, res){
         let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
     
         if(req.body.stockName_or_Num.length !== 0){
-            if(pattern.test(req.body.stockName_or_Num[0])){
-                sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0])[0]}'`
+            if(pattern.test(req.body.stockName_or_Num[0].stock_num_name)){
+                sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
             }else{
                 sql += ` AND stockNum='${req.body.stockName_or_Num}'`
             }
@@ -77,7 +95,7 @@ exports.dbsearch = async function(req, res){
                 if(result != undefined){
                     return res.status(200).json(result)
                 }else{
-                    return res.status(400).send("error")
+                    return res.status(400).json({})
                 }
             });
         });
@@ -91,22 +109,7 @@ exports.download = function(req, res){
 exports.financialData2csv_download = function(req, res){
     con.query("select * from financialData", function(err, result, field){
         if(result !== undefined){
-            const csvWriter = createCsvWriter({
-  
-                path: '/home/cosbi/桌面/financialData/financialData.csv',
-                header: [
-                    {id: 'stockNum', title: '股票代號'},
-                    {id: 'stockName', title: '股票名稱'},
-                    {id: 'date', title: '日期'},
-                    {id: 'investmentCompany', title: '投顧公司'},
-                    {id: 'filePath', title: '檔案路徑'},
-                    {id: 'recommend', title: '推薦'},
-                ]
-            });
-
-            csvWriter
-                .writeRecords(result)
-                .then(()=> res.download("/home/cosbi/桌面/financialData/financialData.csv"));
+            createCSV('/home/cosbi/桌面/financialData/financialData.csv', result, res)
         }
     });
 };
@@ -114,24 +117,7 @@ exports.financialData2csv_download = function(req, res){
 exports.post_board_memo2csv_download = function(req, res){
     con.query("select * from post_board_memo", function(err, result, field){
         if(result !== undefined){
-            const csvWriter = createCsvWriter({
-
-                path: '/home/cosbi/桌面/financialData/post_board_memo.csv',
-                header: [
-                    {id: 'date', title: '日期'},
-                    {id: 'username', title: 'Username'},
-                    {id: 'stockName', title: '股票名稱'},
-                    {id: 'stockNum', title: '股票代號'},
-                    {id: 'evaluation', title: '評價'},
-                    {id: 'price', title: '目標價'},
-                    {id: 'reason', title: '原因'},
-                    {id: 'filePath', title: '檔案路徑'},
-                ]
-            });
-
-            csvWriter
-                .writeRecords(result)
-                .then(()=> res.download("/home/cosbi/桌面/financialData/post_board_memo.csv"));
+            createCSV('/home/cosbi/桌面/financialData/post_board_memo.csv', result, res)
         }
     });
 };
@@ -139,22 +125,7 @@ exports.post_board_memo2csv_download = function(req, res){
 exports.lineMemo2csv_download = function(req, res){
     con.query("select * from lineMemo", function(err, result, field){
         if(result !== undefined){
-            const csvWriter = createCsvWriter({
-
-                path: '/home/cosbi/桌面/financialData/lineMemo.csv',
-                header: [
-                    {id: 'stockNum', title: '股票代號'},
-                    {id: 'stockName', title: '股票名稱'},
-                    {id: 'date', title: '日期'},
-                    {id: 'filePath', title: '檔案路徑'},
-                    {id: 'inputTime', title: '輸入時間'},
-                    {id: 'username', title: 'Username'},
-                ]
-            });
-
-            csvWriter
-                .writeRecords(result)
-                .then(()=> res.download("/home/cosbi/桌面/financialData/lineMemo.csv"));
+            createCSV('/home/cosbi/桌面/financialData/lineMemo.csv', result, res)
         }
     });
 };

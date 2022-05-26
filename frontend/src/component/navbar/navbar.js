@@ -1,19 +1,19 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Nav, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function NavbarComp() {
     const nav = useNavigate()
-    const [username, setUsername] = useState("")
+    // const [username, setUsername] = useState("")
 
-    useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/username")
-        .then(res => {
-            setUsername(res.data)
-        }).catch(res => {
-        })
-    }, [])
+    // useEffect(() => {
+    //     axios.get("http://140.116.214.154:3000/api/data/username")
+    //     .then(res => {
+    //         setUsername(res.data)
+    //     }).catch(res => {
+    //     })
+    // }, [])
 
     function logout(e){
         e.preventDefault()
@@ -46,7 +46,7 @@ function NavbarComp() {
                         </Nav>
 
                         <div className = 'd-flex'>
-                            <p className = 'text-center my-auto' style = {{ color : "white" }}>{username}您已經登入囉 &emsp;</p>
+                            {/* <p className = 'text-center my-auto' style = {{ color : "white", fontSize : "15px" }}>{username}您已經登入囉 &emsp;</p> */}
                             <button className = "btn btn-outline-light" onClick= { logout }>登出</button>
                         </div>
                     </Navbar.Collapse>

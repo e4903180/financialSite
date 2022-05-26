@@ -1,16 +1,57 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+var FormData = require('form-data');
 
 function InputBlockComp() {
     const [input1, setInput1] = useState([])
+    const [input1Validation, set_input1Validation] = useState(false)
     const [input2, setInput2] = useState("")
     const [input3, setInput3] = useState("")
     const [input4, setInput4] = useState("")
-    const [input5, setInput5] = useState("")
+    const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState("");
     const [autocom, setAutocom] = useState([])
     const [username, setUsername] = useState("")
     var Today = new Date();
+
+    function submit(e){
+        e.preventDefault()
+
+        if(input1.length === 0 || !autocom.map(item => item.stock_num_name).includes(input1[0].stock_num_name)){
+            set_input1Validation(true)
+        }else{
+            set_input1Validation(false)
+
+            const formData = new FormData();
+            formData.append("stock_num_name", input1[0].stock_num_name);
+            formData.append("date", Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate())
+            formData.append("recommend", input2);
+            formData.append("price", input3);
+            formData.append("reason", input4);
+            formData.append("selectFile", file);
+            formData.append("filename", fileName);
+
+
+            axios.post("http://140.116.214.154:3000/api/data/upload/post_board_upload", formData, {
+                headers : { "Content-Type": "multipart/form-data" }
+            }).then(res => {
+                alert("上傳成功")
+            }).catch(res => {
+                
+            })
+        }
+    }
+    
+    const saveFile = (e) => {
+        if(e.target.files.length !== 0){
+            setFile(e.target.files[0]);
+            setFileName(e.target.files[0].name);
+        }else{
+            setFile(null);
+            setFileName("");
+        }
+    };
 
     useEffect(() => {
         axios.get("http://140.116.214.154:3000/api/data/autoCom")
@@ -28,7 +69,7 @@ function InputBlockComp() {
 
     return (
         <>
-            <form className = 'row'>
+            <form className = 'row' onSubmit = { submit } noValidate>
                 <div className = "form-row">
                         <h3 className = "text-center mt-2">個股推薦資料輸入</h3>
 
@@ -42,14 +83,16 @@ function InputBlockComp() {
                                     options = { autocom }
                                     placeholder = "請輸入股票代號或名稱"
                                     selected = { input1 }
+                                    inputProps = {{ required : true }}
                                 />
+                                { input1Validation ? <div style = {{ color : "red" }}>此欄位為必填或格式錯誤</div> : <></> }
                             </div>
                         </div>
 
                         <div className = "form-row px-5 pt-4">
                             <div className = "form-group">
                                 <label htmlFor = "date">日期</label>
-                                <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + Today.getMonth() + "_" + Today.getDate() } disabled style = {{ opacity : 0.8 }}/>
+                                <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate() } disabled style = {{ opacity : 0.8 }}/>
                             </div>
                         </div>
 
@@ -62,9 +105,9 @@ function InputBlockComp() {
 
                         <div className = "form-row px-5 pt-4">
                             <div className = "form-group">
-                                <label htmlFor = "username">評價</label>
+                                <label htmlFor = "recommend">評價</label>
 
-                                <select className = "form-select" onChange = { event => setInput2(event.target.value) }>
+                                <select id = "recommend" className = "form-select" onChange = { event => setInput2(event.target.value) }>
                                     <option value = "" defaultValue>請選擇評價</option>
                                     <option value = "買進">買進</option>
                                     <option value = "中立">中立</option>
@@ -76,7 +119,7 @@ function InputBlockComp() {
                         <div className = "form-row px-5 pt-4">
                             <div className = "form-group">
                                 <label htmlFor = "targetPrice">目標價</label>
-                                <input type = "text" className = "form-control" id = "targetPrice" placeholder = '請輸入預估價位' onChange = { event => setInput3(event.target.value) }/>
+                                <input type = "number" className = "form-control" id = "targetPrice" placeholder = '請輸入預估價位' onChange = { event => setInput3(event.target.value) }/>
                             </div>
                         </div>
 
@@ -90,7 +133,7 @@ function InputBlockComp() {
                         <div className = "form-row px-5 pt-4">
                             <div className = "form-group">
                                 <label htmlFor = "upload">檔案上傳(Optional)</label>
-                                <input type = "file" className = "form-control" id = "upload" onChange = { event => setInput5(event.target.value) }/>
+                                <input type = "file" className = "form-control" id = "upload" onChange = { saveFile }/>
                             </div>
                         </div>
 

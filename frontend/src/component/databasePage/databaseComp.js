@@ -4,7 +4,6 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import CustomA from '../customA';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
-import { withStyles } from '@mui/styles';
 
 function DatabaseComp() {
     let [data, setData] = useState([]);
@@ -27,22 +26,6 @@ function DatabaseComp() {
             return <CustomA value = { value } />
         }
     }
-
-    const StyledDataGrid = withStyles({
-        root: {
-          "& .MuiDataGrid-renderingZone": {
-            maxHeight: "none !important"
-          },
-          "& .MuiDataGrid-cell": {
-            lineHeight: "unset !important",
-            maxHeight: "none !important",
-            whiteSpace: "normal"
-          },
-          "& .MuiDataGrid-row": {
-            maxHeight: "none !important"
-          }
-        }
-    })(DataGrid);
 
     const columns = [
         { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -225,7 +208,7 @@ function DatabaseComp() {
             { search &&  <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
-                <StyledDataGrid
+                <DataGrid
                     columns = { columnTable }
                     rows = { data1 }
                     pageSize = { pageSize }

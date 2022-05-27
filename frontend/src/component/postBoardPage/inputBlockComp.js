@@ -69,7 +69,7 @@ function InputBlockComp() {
 
     return (
         <>
-            <form className = 'row' onSubmit = { submit } noValidate>
+            <form className = 'row mx-auto' onSubmit = { submit } noValidate style = {{ width : "80%" }}>
                 <div className = "form-row">
                         <h3 className = "text-center mt-2">個股推薦資料輸入</h3>
 

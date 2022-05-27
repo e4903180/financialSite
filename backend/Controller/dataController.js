@@ -29,7 +29,7 @@ exports.allData = async function(req, res){
 exports.dbsearch = async function(req, res){
     if(req.body.dbTable == "") return res.status(400).json({})
 
-    if(req.body.stockName_or_Num.length !== 0 && req.body.startDate == "" && req.body.endDate == "" && req.body.investmentCompany == ""){
+    if(req.body.stockName_or_Num.length == 0 && req.body.startDate == "" && req.body.endDate == "" && req.body.investmentCompany == ""){
         let sql = `SELECT * FROM ${req.body.dbTable} LIMIT 100`
 
         con.query(sql,function(err, result, field){

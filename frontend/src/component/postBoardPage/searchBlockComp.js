@@ -1,4 +1,3 @@
-import { withStyles } from '@mui/styles';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -19,30 +18,16 @@ function SearchBlockComp() {
     const [search, setSearch] = useState(false);
     const [pageSize, setPageSize] = useState(5);
 
-    const StyledDataGrid = withStyles({
-        root: {
-          "& .MuiDataGrid-renderingZone": {
-            maxHeight: "none !important"
-          },
-          "& .MuiDataGrid-cell": {
-            lineHeight: "unset !important",
-            maxHeight: "none !important",
-            whiteSpace: "normal"
-          },
-          "& .MuiDataGrid-row": {
-            maxHeight: "none !important"
-          }
-        }
-    })(DataGrid);
-
     const columns = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: "ID", headerName : "ID", headerAlign: 'center', align: 'center', hide : 'true' },
+        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'username', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'evaluation', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (checkNULL(rowData.value)) },
+        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+        { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+        { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 200 },
+        { field: 'filePath', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (checkNULL(rowData.value))},
     ];
 
     const checkNULL = (value) => {
@@ -64,7 +49,6 @@ function SearchBlockComp() {
             "recommend" : input4,
             "provider" : input5
         }).then(res => {
-            console.log(res.data)
             setData(res.data)
             setSearch(true)
             setLoading(false)
@@ -148,10 +132,10 @@ function SearchBlockComp() {
                 </div>
             </form>
 
-            { search &&  <div className = 'row mx-auto py-4' style = {{ width : "100%" }}>
+            { search &&  <div className = 'row mx-auto py-4'>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
-                <StyledDataGrid
+                <DataGrid
                     columns = { columns }
                     rows = { data }
                     pageSize = { pageSize }

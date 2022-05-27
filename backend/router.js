@@ -6,6 +6,7 @@ var userRouter = express.Router();
 const User = require('./Controller/userController');
 const Data = require('./Controller/dataController');
 const PostUp = require('./Controller/post_board_uploadController');
+const Download = require('./Controller/downloadController');
 
 router.use("/user", userRouter)
 router.use('/data', dataRouter)
@@ -27,10 +28,10 @@ dataRouter.get("/isAuth", function(req, res){
     res.status(200).send('success')
 })
 
-dataRouter.get("/download/singleFile", Data.download)
-dataRouter.get("/download/financialData", Data.financialData2csv_download)
-dataRouter.get("/download/post_board_memo", Data.post_board_memo2csv_download)
-dataRouter.get("/download/lineMemo", Data.lineMemo2csv_download)
+dataRouter.get("/download/singleFile", Download.download)
+dataRouter.get("/download/financialData", Download.financialData2csv_download)
+dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
+dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
 
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
 
@@ -38,7 +39,9 @@ dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
 dataRouter.get("/autoCom", Data.autoCom)
 dataRouter.get("/username", Data.retrnUsername)
+dataRouter.get("/post_board_state", Data.post_board_state)
 
 dataRouter.post("/dbsearch", Data.dbsearch)
+dataRouter.post("/post_board_search", Data.post_board_search)
 
 module.exports = {router};

@@ -42,7 +42,7 @@ function DatabaseComp() {
             maxHeight: "none !important"
           }
         }
-      })(DataGrid);
+    })(DataGrid);
 
     const columns = [
         { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },

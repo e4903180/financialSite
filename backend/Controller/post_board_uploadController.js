@@ -25,7 +25,7 @@ exports.post_board_middleWare = function(req, res, next){
 }
 
 exports.post_board_upload = function(req, res){
-    let filePath = ""
+    let filePath = "NULL"
     const date = req.body.date
     const username = req.session.userName
     const stockName = req.body.stock_num_name.slice(4)

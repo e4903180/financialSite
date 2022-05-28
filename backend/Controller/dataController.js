@@ -30,7 +30,7 @@ exports.dbsearch = async function(req, res){
     if(req.body.dbTable == "") return res.status(400).json({})
 
     if(req.body.stockName_or_Num.length == 0 && req.body.startDate == "" && req.body.endDate == "" && req.body.investmentCompany == ""){
-        let sql = `SELECT * FROM ${req.body.dbTable} LIMIT 100`
+        let sql = `SELECT * FROM ${req.body.dbTable}`
 
         con.query(sql,function(err, result, field){
             if(err === null){
@@ -80,7 +80,7 @@ exports.post_board_state = function(req, res){
 
 exports.post_board_search = function(req, res){
     if(req.body.stockName_or_Num == "" && req.body.startDate == "" && req.body.endDate == "" && req.body.recommend == "" && req.body.provider == ""){
-        let sql = `SELECT * FROM post_board_memo LIMIT 100`
+        let sql = `SELECT * FROM post_board_memo`
 
         con.query(sql,function(err, result, field){
             if(err === null){

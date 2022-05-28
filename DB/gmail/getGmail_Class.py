@@ -174,7 +174,7 @@ class gmailService:
                         self.check_pdf_dir(num)
                         file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
-                        return num, name, file_rename, recommend[0]
+                        return num, name, file_rename, recommend
                 except:
                     return "null", "null", "null", "null"
                 

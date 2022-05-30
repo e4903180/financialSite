@@ -20,6 +20,14 @@ function SearchBlockComp() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
 
+    const check_single_post_board_memo_NULL = (value) => {
+        if(value === "NULL"){
+            return <> </>
+        }else{
+            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_post_board_memo?filename=" + value } />
+        }
+    }
+
     const columns = [
         { field: "ID", headerName : "ID", headerAlign: 'center', align: 'center', hide : 'true' },
         { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
@@ -29,26 +37,18 @@ function SearchBlockComp() {
         { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 200 },
-        { field: 'filePath', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (checkNULL(rowData.value))},
+        { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
     ];
-
-    const checkNULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { value } />
-        }
-    }
 
     function submit(e){
         e.preventDefault();
         setLoading(true)
-        setPage(0)
 
         if(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "" && !autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)){
             set_input1Error(true)
             setLoading(false)
             setData([])
+            setPage(0)
         }else{
             set_input1Error(false)
 
@@ -62,10 +62,12 @@ function SearchBlockComp() {
                 setData(res.data)
                 setSearch(true)
                 setLoading(false)
+                setPage(0)
             }).catch(res => {
                 setData([])
                 setSearch(true)
                 setLoading(false)
+                setPage(0)
             })
         }
     }

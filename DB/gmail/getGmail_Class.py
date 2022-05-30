@@ -107,7 +107,7 @@ class gmailService:
                 If failed
                     (string) Null, (string) Null, (string) Null
         """
-        numList, nameList, pathList, recommendList = [[] for i in range(4)]
+        numList, nameList, filenameList, recommendList = [[] for i in range(4)]
         i = 0
         
         for num, name in stock_num_name:
@@ -124,7 +124,7 @@ class gmailService:
                     
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf")
+                    filenameList.append(num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf")
                     recommendList.append(recommend[i])
                     i += 1
                 else:
@@ -134,17 +134,17 @@ class gmailService:
                         
                     numList.append(num)
                     nameList.append(name)
-                    pathList.append(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf")
+                    filenameList.append(num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf")
                     recommendList.append(recommend[i])
                     i += 1
 
             except errors.HttpError:
                 numList.append("null")
                 nameList.append("null")
-                pathList.append("null")
+                filenameList.append("null")
                 recommendList.append("null")
                 
-        return numList, nameList, pathList, recommendList
+        return numList, nameList, filenameList, recommendList
     
     def getAttachmentsURL(self, content, stock_num_name, date, recommend):
         """Get the attachments from url
@@ -174,7 +174,7 @@ class gmailService:
                         self.check_pdf_dir(num)
                         file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
-                        return num, name, file_rename, recommend
+                        return num, name,  num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf", recommend
                 except:
                     return "null", "null", "null", "null"
                 
@@ -348,4 +348,5 @@ class gmailService:
             else:
                 result.append("Null")
         return result
+
 

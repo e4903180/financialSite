@@ -35,8 +35,8 @@ try:
     cursor = db.cursor()
 
     for i in trange(len(df)):
-        cursor.execute('INSERT INTO financialData (stockNum, stockName, date, investmentCompany, filePath, recommend) '
-                'VALUES (%s, %s, %s, %s, %s, %s);', (str(df.iloc[i]["Number"]), df.iloc[i]["Name"], df.iloc[i]["Date"], df.iloc[i]["Investment company"], df.iloc[i]["File path"], df.iloc[i]["Recommend"]))
+        cursor.execute('INSERT INTO financialData (stockNum, stockName, date, investmentCompany, filename, recommend) '
+                'VALUES (%s, %s, %s, %s, %s, %s);', (str(df.iloc[i]["Number"]), df.iloc[i]["Name"], df.iloc[i]["Date"], df.iloc[i]["Investment company"], df.iloc[i]["Filename"], df.iloc[i]["Recommend"]))
         db.commit()
 
     db.close()

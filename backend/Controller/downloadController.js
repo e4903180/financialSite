@@ -16,8 +16,23 @@ function createCSV(path, data){
     return path
 }
 
-exports.download = function(req, res){
-    res.download(req.query.filePath)
+exports.single_financialData_download = function(req, res){
+    const filename = req.query.filename;
+    let sql = `SELECT stockNum FROM financialData WHERE filename='${filename}'`
+
+    con.query(sql, function(err, result, field){
+        if(err === null){
+            res.download("/home/cosbi/桌面/financialData/gmailData/data/" + result[0].stockNum + "/" + filename)
+        }
+    });
+};
+
+exports.single_post_board_memo_download = function(req, res){
+    res.download("/home/cosbi/桌面/financialData/post_board_data/" + req.query.filename)
+};
+
+exports.single_line_memo_download = function(req, res){
+    res.download("/home/cosbi/桌面/financialData/lineMemo_data/" + req.query.filename)
 };
 
 exports.financialData2csv_download = function(req, res){

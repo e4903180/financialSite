@@ -28,7 +28,10 @@ dataRouter.get("/isAuth", function(req, res){
     res.status(200).send('success')
 })
 
-dataRouter.get("/download/singleFile", Download.download)
+dataRouter.get("/download/single_financialData", Download.single_financialData_download)
+dataRouter.get("/download/single_post_board_memo", Download.single_post_board_memo_download)
+dataRouter.get("/download/single_line_memo", Download.single_line_memo_download)
+
 dataRouter.get("/download/financialData", Download.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
 dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)

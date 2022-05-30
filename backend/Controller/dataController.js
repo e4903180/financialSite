@@ -48,7 +48,7 @@ exports.dbsearch = async function(req, res){
         if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
         if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
     
-        con.query(sql,function(err, result, field){
+        con.query(sql, function(err, result, field){
             if(err === null){
                 return res.status(200).json(result)
             }else{

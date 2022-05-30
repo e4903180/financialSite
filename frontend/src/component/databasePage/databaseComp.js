@@ -21,11 +21,19 @@ function DatabaseComp() {
     const [input4, setInput4] = useState("");
     const [input5, setInput5] = useState("");
 
-    const checkNULL = (value) => {
+    const check_single_post_board_memo_NULL = (value) => {
         if(value === "NULL"){
             return <> </>
         }else{
-            return <CustomA value = { value } />
+            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_post_board_memo?filename=" + value } />
+        }
+    }
+
+    const check_single_lineMemo_memo_NULL = (value) => {
+        if(value === "NULL"){
+            return <> </>
+        }else{
+            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_line_memo?filename=" + value } />
         }
     }
 
@@ -43,7 +51,7 @@ function DatabaseComp() {
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/singleFile?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>Download</a> },
+        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
     ];
 
     const columns2 = [
@@ -55,7 +63,7 @@ function DatabaseComp() {
         { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 400 },
-        { field: 'filePath', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (checkNULL(rowData.value))},
+        { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
     ];
 
     const columns3 = [
@@ -63,7 +71,7 @@ function DatabaseComp() {
         { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (checkNULL(rowData.value)) },
+        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
         { field: 'inputTime', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
         { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
     ];
@@ -71,12 +79,12 @@ function DatabaseComp() {
     function submit(e){
         e.preventDefault()
         setLoading(true)
-        setPage(0)
 
         if(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "" && !autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)){
             set_input1Error(true)
             setLoading(false)
             setData([])
+            setPage(0)
         }else{
             set_input1Error(false)
             axios.post("http://140.116.214.154:3000/api/data/dbsearch", {
@@ -107,10 +115,12 @@ function DatabaseComp() {
                 setData1(res.data)
                 setSearch(true)
                 setLoading(false)
+                setPage(0)
             }).catch(res => {
                 setData1([])
                 setSearch(true)
                 setLoading(false)
+                setPage(0)
             })
         }
     }

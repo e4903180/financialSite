@@ -16,7 +16,7 @@ function HomeComp() {
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filePath', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/singleFile?filePath=" + rowData.value } download = { rowData.value.split("/")[-1]}>Download</a> },
+        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
     ];
 
     useEffect(() => {

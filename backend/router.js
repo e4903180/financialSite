@@ -6,6 +6,7 @@ var userRouter = express.Router();
 const User = require('./Controller/userController');
 const Data = require('./Controller/dataController');
 const PostUp = require('./Controller/post_board_uploadController');
+const LineMemoUp = require('./Controller/lineMemo_uploadController')
 const Download = require('./Controller/downloadController');
 
 router.use("/user", userRouter)
@@ -37,14 +38,17 @@ dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_downloa
 dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
 
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
+dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 
 dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
 dataRouter.get("/autoCom", Data.autoCom)
 dataRouter.get("/username", Data.retrnUsername)
 dataRouter.get("/post_board_state", Data.post_board_state)
+dataRouter.get("/lineMemo_state", Data.lineMemo_state)
 
 dataRouter.post("/dbsearch", Data.dbsearch)
 dataRouter.post("/post_board_search", Data.post_board_search)
+dataRouter.post("/lineMemo_search", Data.lineMemo_search)
 
 module.exports = {router};

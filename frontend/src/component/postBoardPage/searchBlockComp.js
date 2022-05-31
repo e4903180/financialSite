@@ -90,7 +90,7 @@ function SearchBlockComp() {
 
     return (
         <>
-            <form onSubmit = { submit }>
+            <form className = 'mx-auto' onSubmit = { submit } style = {{ width : "70%" }}>
                 <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = 'http://140.116.214.154:3000/api/data/download/post_board_memo' download = {"post_board_memo.csv"}>點此</a></p>
 
                 <div className = 'form-group row my-2'>

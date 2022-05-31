@@ -23,16 +23,12 @@ function PostBoardComp() {
     return (
         <>
             <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "100%" }}>
-                <div className = 'col-md-3'>
-                    <div className = 'list-group mt-2'>
-                        { function1 ? <button className = 'list-group-item list-group-item-action active' onClick = { button1 }>個股推薦資料輸入</button>:<button className = 'list-group-item list-group-item-action' onClick = { button1 }>個股推薦資料輸入</button>}
-                        { function2 ? <button className = 'list-group-item list-group-item-action active' onClick = { button2 }>個股推薦資料查詢</button>:<button className = 'list-group-item list-group-item-action' onClick = { button2 }>個股推薦資料查詢</button>}
-                    </div>
+                <div className = 'list-group list-group-horizontal mt-2 mx-auto text-center' style = {{ width : "80%" }}>
+                    { function1 ? <button className = 'list-group-item list-group-item-action active' onClick = { button1 }>個股推薦資料輸入</button>:<button className = 'list-group-item list-group-item-action' onClick = { button1 }>個股推薦資料輸入</button>}
+                    { function2 ? <button className = 'list-group-item list-group-item-action active' onClick = { button2 }>個股推薦資料查詢</button>:<button className = 'list-group-item list-group-item-action' onClick = { button2 }>個股推薦資料查詢</button>}
                 </div>
 
-                <div className = 'col-md-9'>
-                    { function1 ? <InputBlockComp /> : <SearchBlockComp /> }
-                </div>
+                { function1 ? <InputBlockComp /> : <SearchBlockComp /> }
             </div>
         </>
     );

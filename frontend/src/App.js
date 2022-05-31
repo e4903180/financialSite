@@ -8,6 +8,7 @@ import PrivateRoute from './privateRoute';
 import LoginRoute from './login_privateRoute';
 import DatabaseComp from './component/databasePage/databaseComp';
 import PostBoardComp from './component/postBoardPage/postBoardComp';
+import LineMemoComp from './component/lineMemoPage/lineMemoComp';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path = "/calendar" element = { <CalendarComp /> }></Route>
             <Route path = "/database" element = { <DatabaseComp /> } ></Route>
             <Route path = "/post_board" element = { <PostBoardComp /> } ></Route>
+            <Route path = "/line_memo" element = { <LineMemoComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

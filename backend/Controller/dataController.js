@@ -109,3 +109,41 @@ exports.post_board_search = function(req, res){
     }
 }
 
+exports.lineMemo_state = function(req, res){
+    con.query("select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;", function(err, result, field){
+        if(err === null){
+            return res.status(200).json(Object.assign(result[0][0], result[1][0]))
+        }else{
+            return res.status(400).send("error")
+        }
+    })
+}
+
+exports.lineMemo_search = function(req, res){
+    if(req.body.stock_num_name.length == 0 && req.body.startDate == "" && req.body.endDate == "" && req.body.recommend == "" && req.body.provider == ""){
+        let sql = `SELECT * FROM lineMemo`
+
+        con.query(sql, function(err, result, field){
+            if(err === null){
+                return res.status(200).json(result)
+            }else{
+                return res.status(400).send("error")
+            }
+        });
+    }else{
+        let sql = `SELECT * FROM lineMemo WHERE 1=1`
+
+        if(req.body.stock_num_name.length != 0)sql += ` AND stockNum='${req.body.stock_num_name[0].stock_num_name.slice(0, 4)}'`
+        if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+    
+        con.query(sql, function(err, result, field){
+            if(err === null){
+                return res.status(200).json(result)
+            }else{
+                return res.status(400).json({})
+            }
+        });
+
+    }
+}
+

@@ -5,15 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 function NavbarComp() {
     const nav = useNavigate()
-    // const [username, setUsername] = useState("")
-
-    // useEffect(() => {
-    //     axios.get("http://140.116.214.154:3000/api/data/username")
-    //     .then(res => {
-    //         setUsername(res.data)
-    //     }).catch(res => {
-    //     })
-    // }, [])
 
     function logout(e){
         e.preventDefault()
@@ -37,7 +28,7 @@ function NavbarComp() {
                         <Nav className = "me-auto">
                             <Nav.Link href = "/database">個股綜合資料</Nav.Link>
                             <Nav.Link href = "/post_board">個股推薦</Nav.Link>
-                            <Nav.Link href = "/3">Line memo</Nav.Link>
+                            <Nav.Link href = "/line_memo">Line memo</Nav.Link>
                             <Nav.Link href = "/calendar">Calendar</Nav.Link>
                             <Nav.Link href = "/5">Meeting data</Nav.Link>
                             <Nav.Link href = "/6">Plot</Nav.Link>

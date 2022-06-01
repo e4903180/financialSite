@@ -14,7 +14,7 @@ function InputBlockComp() {
     const [autocom, setAutocom] = useState([])
     const [username, setUsername] = useState("")
     var Today = new Date();
-
+    
     function submit(e){
         e.preventDefault()
 
@@ -25,13 +25,12 @@ function InputBlockComp() {
 
             const formData = new FormData();
             formData.append("stock_num_name", input1[0].stock_num_name);
-            formData.append("date", Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate())
+            formData.append("date", Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'))
             formData.append("recommend", input2);
             formData.append("price", input3);
             formData.append("reason", input4);
             formData.append("selectFile", file);
             formData.append("filename", fileName);
-
 
             axios.post("http://140.116.214.154:3000/api/data/upload/post_board_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
@@ -91,7 +90,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5 pt-4">
                     <div className = "form-group">
                         <label htmlFor = "date">日期:</label>
-                        <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate() } disabled style = {{ opacity : 0.8 }}/>
+                        <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0') } disabled style = {{ opacity : 0.8 }}/>
                     </div>
                 </div>
 

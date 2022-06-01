@@ -7,7 +7,7 @@ var storage = multer.diskStorage({
         callBack(null, '/home/cosbi/桌面/financialData/post_board_data')
     },
     filename: (req, file, callBack) => {
-        callBack(null, Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate() + "-" + file.originalname)
+        callBack(null, Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0') + "_" + file.originalname)
     }
 })
 

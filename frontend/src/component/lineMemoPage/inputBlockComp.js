@@ -20,7 +20,7 @@ function InputBlockComp() {
 
             axios.post("http://140.116.214.154:3000/api/data/upload/line_memo_upload", {
                 stock_num_name : input1[0].stock_num_name,
-                date : Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate(),
+                date : Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'),
                 content : input2
             }).then(res => {
                 alert("上傳成功")
@@ -76,7 +76,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5 pt-4">
                     <div className = "form-group">
                         <label htmlFor = "date">日期:</label>
-                        <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + Today.getDate() } disabled style = {{ opacity : 0.8 }}/>
+                        <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0') } disabled style = {{ opacity : 0.8 }}/>
                     </div>
                 </div>
 

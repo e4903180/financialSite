@@ -30,9 +30,9 @@ function NavbarComp() {
                             <Nav.Link href = "/post_board">個股推薦</Nav.Link>
                             <Nav.Link href = "/line_memo">Line memo</Nav.Link>
                             <Nav.Link href = "/calendar">Calendar</Nav.Link>
-                            <Nav.Link href = "/5">Meeting data</Nav.Link>
+                            <Nav.Link href = "/meeting_data">Meeting data</Nav.Link>
                             <Nav.Link href = "/6">Plot</Nav.Link>
-                            <Nav.Link href = "/7">產業分析上傳</Nav.Link>
+                            <Nav.Link href = "/industry_analysis">產業分析上傳</Nav.Link>
                             <Nav.Link href = "/8">個人檔案</Nav.Link>
                         </Nav>
 

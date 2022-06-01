@@ -61,3 +61,11 @@ exports.lineMemo2csv_download = function(req, res){
         }
     });
 };
+
+exports.single_meetingData_memo_download = function(req, res){
+    res.download("/home/cosbi/桌面/financialData/meeting_data/" + req.query.filename)
+};
+
+exports.single_industry_analysis_download = function(req, res){
+    res.download("/home/cosbi/桌面/financialData/Industry_analysis/" + req.query.filename)
+};

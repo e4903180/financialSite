@@ -147,3 +147,42 @@ exports.lineMemo_search = function(req, res){
     }
 }
 
+exports.superUser = async function(req, res){
+    con.query("SELECT superUser from user WHERE userName=?", [req.session.userName], function(err, result, field){
+        if(err === null){
+            return res.status(200).send(result)
+        }else{
+            return res.status(400).send("error")
+        }
+    })    
+}
+
+exports.meetingData = async function(req, res){
+    con.query("SELECT * from meetingData;SELECT filename as fileName from meetingData", function(err, result, field){
+        let re = [];
+        for(let i = 0; i < result[0].length; i++){
+            re.push(Object.assign(result[0][i], result[1][i]))
+        };
+
+        if(err === null){
+            return res.status(200).json(re)
+        }else{
+            return res.status(400).send("error")
+        }
+    })    
+}
+
+exports.industry_analysis = async function(req, res){
+    con.query("SELECT * from industry_analysis;SELECT filename as fileName from industry_analysis", function(err, result, field){
+        let re = [];
+        for(let i = 0; i < result[0].length; i++){
+            re.push(Object.assign(result[0][i], result[1][i]))
+        };
+
+        if(err === null){
+            return res.status(200).json(re)
+        }else{
+            return res.status(400).send("error")
+        }
+    })    
+}

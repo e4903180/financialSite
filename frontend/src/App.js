@@ -9,6 +9,8 @@ import LoginRoute from './login_privateRoute';
 import DatabaseComp from './component/databasePage/databaseComp';
 import PostBoardComp from './component/postBoardPage/postBoardComp';
 import LineMemoComp from './component/lineMemoPage/lineMemoComp';
+import MeetingDataComp from './component/meetingDataPage/meetingDataComp';
+import IndustryAnalysisComp from './component/Industry_analysisPage/Industry_analysisComp';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
             <Route path = "/database" element = { <DatabaseComp /> } ></Route>
             <Route path = "/post_board" element = { <PostBoardComp /> } ></Route>
             <Route path = "/line_memo" element = { <LineMemoComp /> } ></Route>
+            <Route path = "/meeting_data" element = { <MeetingDataComp /> } ></Route>
+            <Route path = "/industry_analysis" element = { <IndustryAnalysisComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

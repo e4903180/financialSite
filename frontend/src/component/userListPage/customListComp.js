@@ -17,6 +17,7 @@ function CustomListComp(props) {
 
     const useStyles = makeStyles(theme => ({
         alignItemsAndJustifyContent: {
+            marginTop: '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

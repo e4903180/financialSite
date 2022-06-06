@@ -11,6 +11,7 @@ import PostBoardComp from './component/postBoardPage/postBoardComp';
 import LineMemoComp from './component/lineMemoPage/lineMemoComp';
 import MeetingDataComp from './component/meetingDataPage/meetingDataComp';
 import IndustryAnalysisComp from './component/Industry_analysisPage/Industry_analysisComp';
+import UserListComp from './component/userListPage/userListComp';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path = "/line_memo" element = { <LineMemoComp /> } ></Route>
             <Route path = "/meeting_data" element = { <MeetingDataComp /> } ></Route>
             <Route path = "/industry_analysis" element = { <IndustryAnalysisComp /> } ></Route>
+            <Route path = "/userList" element = { <UserListComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

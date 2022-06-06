@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import MeetingDataUploadComp from './meetingDataUploadComp';
 
 function MeetingDataComp() {
-    const [superUser, setSuperUser] = useState(0)
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
@@ -18,13 +17,6 @@ function MeetingDataComp() {
     ];
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/superUser")
-        .then((res) => {
-            setSuperUser(res.data[0].superUser)
-        }).catch((res) => {
-
-        })
-
         axios.get("http://140.116.214.154:3000/api/data/meetingData")
         .then(res => {
             setData(res.data);
@@ -34,7 +26,7 @@ function MeetingDataComp() {
 
     return (
         <>
-            { superUser === 1 ? <MeetingDataUploadComp /> : <></> }
+            <MeetingDataUploadComp />
 
             <div className = 'row mx-auto mt-5 text-center' style = {{ width : "80%" }}>
                 <DataGrid

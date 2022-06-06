@@ -186,3 +186,25 @@ exports.industry_analysis = async function(req, res){
         }
     })    
 }
+
+exports.userList = async function(req, res){
+    con.query("SELECT name from user;SELECT userName from user;SELECT email from user", function(err, result, field){
+        let re = [];
+        for(let i = 0; i < result[0].length; i++){
+            re.push(Object.assign(result[0][i], result[1][i], result[2][i]))
+        };
+
+        // if(re.length % 8 != 0){
+        //     const range = 8 - (re.length % 8)
+        //     for(let i = 0; i < range; i++){
+        //         re.push({"name" : "", "userName" : "", "email" : ""})
+        //     };
+        // }
+
+        if(err === null){
+            return res.status(200).json(re)
+        }else{
+            return res.status(400).send("error")
+        }
+    })    
+}

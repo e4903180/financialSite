@@ -56,6 +56,7 @@ dataRouter.get("/superUser", Data.superUser)
 dataRouter.get("/meetingData", Data.meetingData)
 dataRouter.get("/industry_analysis", Data.industry_analysis)
 dataRouter.get("/userList", Data.userList)
+dataRouter.get("/calender", Data.calender)
 
 dataRouter.post("/dbsearch", Data.dbsearch)
 dataRouter.post("/post_board_search", Data.post_board_search)

@@ -208,3 +208,18 @@ exports.userList = async function(req, res){
         }
     })    
 }
+
+exports.calender = async function(req, res){
+    con.query("SELECT stockNum from calender;SELECT stockName from calender;SELECT Date from calender", function(err, result, field){
+        let re = [];
+        for(let i = 0; i < result[0].length; i++){
+            re.push(Object.assign({"title" : result[0][i].stockNum + result[1][i].stockName}, {"date" : result[2][i].Date}))
+        };
+
+        if(err === null){
+            return res.status(200).json(re)
+        }else{
+            return res.status(400).send("error")
+        }
+    })    
+}

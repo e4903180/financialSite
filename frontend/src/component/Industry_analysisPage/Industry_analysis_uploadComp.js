@@ -39,7 +39,7 @@ function IndustryAnalysisUploadComp() {
 
     return (
         <>
-            <div className = 'row text-center mt-3'>
+            <div className = 'row text-center mt-3 mx-auto'>
                 <h3>產業分析上傳</h3>
 
                 <div className = 'mt-3'>

@@ -26,40 +26,46 @@ function CustomListComp(props) {
 
     return (
         <>
-            <div className = 'card-group'>
+            <div className = 'row' style = {{ minHeight : "200px" }}>
                 { data.slice(0 , 4).map((d, i) => (
-                    <div key = { i } className = 'card'>
-                        <div className = "card-body">
-                            <h5 className = "card-title">{ d.name }</h5>
-                            <hr />
-                            <p className = "card-text">Username: { d.userName }</p>
-                            <p className = "card-text">Email: { d.email }</p>
+                    <div key = { i } className = 'col-md-3'>
+                        <div className = 'card h-100'>
+                            <div className = "card-body">
+                                <h5 className = "card-title">{ d.name }</h5>
+                                <hr />
+                                <p className = "card-text">Username: { d.userName }</p>
+                                <p className = "card-text">Email: { d.email }</p>
+                            </div>
                         </div>
                     </div>
                 )) }
             </div>
-
-            <div className = 'card-group mt-3'>
+            
+            <div className = 'row mt-3' style = {{ minHeight : "200px" }}>
                 { data.slice(4 , 8).map((d, i) => (
-                    <div key = { i } className = 'card'>
-                        <div className = "card-body">
-                            <h5 className = "card-title">{ d.name }</h5>
-                            <hr />
-                            <p className = "card-text">Username: { d.userName }</p>
-                            <p className = "card-text">Email: { d.email }</p>
+                    <div key = { i + 4 } className = 'col-md-3'>
+                        <div className = 'card h-100'>
+                            <div className = "card-body">
+                                <h5 className = "card-title">{ d.name }</h5>
+                                <hr />
+                                <p className = "card-text">Username: { d.userName }</p>
+                                <p className = "card-text">Email: { d.email }</p>
+                            </div>
                         </div>
                     </div>
                 )) }
             </div>
-
-            <Pagination
-                className = { useStyles().alignItemsAndJustifyContent }
-                count = { Math.ceil(props.data.length / 8) }
-                page = { page }
-                onChange = { handleChange }
-                showFirstButton
-                showLastButton
-            />
+            
+            <div className = 'row'>
+                <Pagination
+                    className = { useStyles().alignItemsAndJustifyContent }
+                    count = { Math.ceil(props.data.length / 8) }
+                    page = { page }
+                    onChange = { handleChange }
+                    showFirstButton
+                    showLastButton
+                />
+            </div>
         </>
     );
 }

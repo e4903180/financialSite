@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { rootApiIP } from '../../constant'
 
 function MeetingDataUploadComp() {
     const [file, setFile] = useState(null);
@@ -23,7 +24,7 @@ function MeetingDataUploadComp() {
             formData.append("selectFile", file);
             formData.append("filename", fileName);
 
-            axios.post("http://140.116.214.154:3000/api/data/upload/meeting_data_upload", formData, {
+            axios.post(rootApiIP + "/data/upload/meeting_data_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 alert("上傳成功")

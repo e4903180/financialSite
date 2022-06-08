@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import CustomA from '../customA';
+import { rootApiIP } from '../../constant'
 
 function SearchBlockComp() {
     const [dataQuantity, set_dataQuantity] = useState(0)
@@ -24,7 +25,7 @@ function SearchBlockComp() {
         if(value === "NULL"){
             return <> </>
         }else{
-            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_post_board_memo?filename=" + value } />
+            return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
         }
     }
 
@@ -52,7 +53,7 @@ function SearchBlockComp() {
         }else{
             set_input1Error(false)
 
-            axios.post("http://140.116.214.154:3000/api/data/post_board_search", {
+            axios.post(rootApiIP + "/data/post_board_search", {
                 "stockName_or_Num" : input1,
                 "startDate" : input2,
                 "endDate" : input3,
@@ -73,13 +74,13 @@ function SearchBlockComp() {
     }
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/autoCom")
+        axios.get(rootApiIP + "/data/autoCom")
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
         })
 
-        axios.get("http://140.116.214.154:3000/api/data/post_board_state")
+        axios.get(rootApiIP + "/data/post_board_state")
         .then(res => {
             set_dataQuantity(res.data.dataQuantity)
             set_newestDate(res.data.newestDate)
@@ -91,7 +92,7 @@ function SearchBlockComp() {
     return (
         <>
             <form className = 'mx-auto' onSubmit = { submit } style = {{ width : "70%" }}>
-                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = 'http://140.116.214.154:3000/api/data/download/post_board_memo' download = {"post_board_memo.csv"}>點此</a></p>
+                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = {rootApiIP + '/data/download/post_board_memo'} download = {"post_board_memo.csv"}>點此</a></p>
 
                 <div className = 'form-group row my-2'>
                     <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>

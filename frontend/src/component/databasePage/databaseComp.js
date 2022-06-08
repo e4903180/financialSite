@@ -4,6 +4,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import CustomA from '../customA';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
+import { rootApiIP } from '../../constant'
 
 function DatabaseComp() {
     let [data, setData] = useState([]);
@@ -25,7 +26,7 @@ function DatabaseComp() {
         if(value === "NULL"){
             return <> </>
         }else{
-            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_post_board_memo?filename=" + value } />
+            return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
         }
     }
 
@@ -33,7 +34,7 @@ function DatabaseComp() {
         if(value === "NULL"){
             return <> </>
         }else{
-            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_line_memo?filename=" + value } />
+            return <CustomA value = { rootApiIP + "/data/download/single_line_memo?filename=" + value } />
         }
     }
 
@@ -51,7 +52,7 @@ function DatabaseComp() {
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
+        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
     ];
 
     const columns2 = [
@@ -87,7 +88,7 @@ function DatabaseComp() {
             setPage(0)
         }else{
             set_input1Error(false)
-            axios.post("http://140.116.214.154:3000/api/data/dbsearch", {
+            axios.post(rootApiIP + "/data/dbsearch", {
                 "stockName_or_Num" : input1,
                 "startDate" : input2,
                 "endDate" : input3,
@@ -126,13 +127,13 @@ function DatabaseComp() {
     }
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/allData")
+        axios.get(rootApiIP + "/data/allData")
         .then(res => {
             setData(res.data);
         }).catch(res => {
         })
 
-        axios.get("http://140.116.214.154:3000/api/data/autoCom")
+        axios.get(rootApiIP + "/data/autoCom")
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {

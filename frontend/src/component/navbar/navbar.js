@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { Nav, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { rootApiIP } from '../../constant'
 
 function NavbarComp() {
     const nav = useNavigate()
@@ -9,7 +10,7 @@ function NavbarComp() {
     function logout(e){
         e.preventDefault()
 
-        axios.get("http://140.116.214.154:3000/api/user/logout")
+        axios.get(rootApiIP + "/user/logout")
         .then(res => {
             alert("Logout")
             nav("/login")

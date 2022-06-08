@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { rootApiIP } from '../../constant'
 
 axios.defaults.withCredentials = true;
 
@@ -16,11 +17,11 @@ function HomeComp() {
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { "http://140.116.214.154:3000/api/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
+        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP +"/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
     ];
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/newest15")
+        axios.get(rootApiIP + "/data/newest15")
         .then(res => {
             setData(res.data);
         }).catch(res => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { rootApiIP } from '../../constant'
 axios.defaults.withCredentials = true;
 
 function RegisterComp() {
@@ -16,7 +17,7 @@ function RegisterComp() {
     const [confirmpasswordError, setconfirmpasswordError] = useState(false);
 
     function register(){
-        axios.post("http://140.116.214.154:3000/api/user/register", {
+        axios.post(rootApiIP + "/user/register", {
             name : name,
             userName : userName,
             email : email,

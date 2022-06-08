@@ -12,6 +12,7 @@ import LineMemoComp from './component/lineMemoPage/lineMemoComp';
 import MeetingDataComp from './component/meetingDataPage/meetingDataComp';
 import IndustryAnalysisComp from './component/Industry_analysisPage/Industry_analysisComp';
 import UserListComp from './component/userListPage/userListComp';
+import AllSearchPageComp from './component/allSearchPage/allSearchPageComp';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path = "/meeting_data" element = { <MeetingDataComp /> } ></Route>
             <Route path = "/industry_analysis" element = { <IndustryAnalysisComp /> } ></Route>
             <Route path = "/userList" element = { <UserListComp /> } ></Route>
+            <Route path = "/allSearch/:stockNum" element = { <AllSearchPageComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

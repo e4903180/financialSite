@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { rootApiIP } from '../../constant'
 
 function InputBlockComp() {
     const [input1, setInput1] = useState([])
@@ -18,7 +19,7 @@ function InputBlockComp() {
             set_input1Validation(false)
             set_input2Validation(false)
 
-            axios.post("http://140.116.214.154:3000/api/data/upload/line_memo_upload", {
+            axios.post(rootApiIP + "/data/upload/line_memo_upload", {
                 stock_num_name : input1[0].stock_num_name,
                 date : Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'),
                 content : input2
@@ -32,13 +33,13 @@ function InputBlockComp() {
     }
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/autoCom")
+        axios.get(rootApiIP + "/data/autoCom")
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
         })
 
-        axios.get("http://140.116.214.154:3000/api/data/username")
+        axios.get(rootApiIP + "/data/username")
         .then(res => {
             setUsername(res.data)
         }).catch(res => {

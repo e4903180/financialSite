@@ -9,15 +9,17 @@ import { Backdrop, CircularProgress } from '@mui/material';
 function AllSearchPageComp() {
     const { stockNum } = useParams();
     const [data1, setData1] = useState([]);
+    const [loading1, setLoading1] = useState(true)
     const [data2, setData2] = useState([]);
+    const [loading2, setLoading2] = useState(true)
     const [data3, setData3] = useState([]);
+    const [loading3, setLoading3] = useState(true)
     const [page1, setPage1] = useState(0);
     const [pageSize1, setPage1Size] = useState(5);
     const [page2, setPage2] = useState(0);
     const [pageSize2, setPage2Size] = useState(5);
     const [page3, setPage3] = useState(0);
     const [pageSize3, setPage3Size] = useState(5);
-    const [loading, setloading] = useState(true);
 
     const check_single_post_board_memo_NULL = (value) => {
         if(value === "NULL"){
@@ -76,6 +78,7 @@ function AllSearchPageComp() {
             "dbTable" : "financialData"
         }).then(res => {
             setData1(res.data)
+            setLoading1(false)
         }).catch(res => {
 
         })
@@ -88,6 +91,7 @@ function AllSearchPageComp() {
             "dbTable" : "post_board_memo"
         }).then(res => {
             setData2(res.data)
+            setLoading2(false)
         }).catch(res => {
 
         })
@@ -100,7 +104,7 @@ function AllSearchPageComp() {
             "dbTable" : "lineMemo"
         }).then(res => {
             setData3(res.data)
-            setloading(false)
+            setLoading3(false)
         }).catch(res => {
 
         })
@@ -108,9 +112,9 @@ function AllSearchPageComp() {
 
     return (
         <>
-            { loading ? <Backdrop
+            { loading1 || loading2 || loading3 ? <Backdrop
                 sx = {{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open = {loading}
+                open = { true }
             >
                 <CircularProgress color = "inherit" />
             </Backdrop> : 

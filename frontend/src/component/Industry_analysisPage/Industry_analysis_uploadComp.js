@@ -31,7 +31,7 @@ function IndustryAnalysisUploadComp() {
             }).then(res => {
                 alert("上傳成功")
             }).catch(res => {
-                
+                if(res.response.data === "Session expired") window.location.reload()
             })
         }else{
             alert("請選擇檔案")

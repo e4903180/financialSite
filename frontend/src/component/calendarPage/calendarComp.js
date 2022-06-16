@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import axios from 'axios';
 import { rootApiIP } from '../../constant'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { columns4 } from '../column/column';
 
 function CalendarComp() {
     const [data, setData] = useState([])
@@ -15,7 +16,10 @@ function CalendarComp() {
     useEffect(() => {
         axios.post(rootApiIP + "/data/calenderData", { "year" : year1, "month" : month1 })
         .then(res => {
+            setPage(0)
             setData(res.data)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [year1, month1])
 
@@ -48,25 +52,9 @@ function CalendarComp() {
                 })
             );
         } catch (error) {
-          console.log(error);
+            if(error.response.data === "Session expired") window.location.reload()
         }
     }
-
-    const columns = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'Date', headerName: '法說會日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'Time', headerName: '法說會時間', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'Form', headerName: '法說會形式', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'Message', headerName: '法說會訊息', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'chPDF', headerName: '中文檔案', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'enPDF', headerName: '英文檔案', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'More information', headerName: '相關資訊', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'Video address', headerName: '影音連結資訊', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'Attention', headerName: '其他應敘明事項', flex: 1, headerAlign: 'center', align: 'center' },
-        // { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
-    ];
 
     return (
         <>
@@ -90,9 +78,9 @@ function CalendarComp() {
                 </div>
             </div>
 
-            <div className = 'row mt-5 mx-auto' style = {{ width : "90%" }}>
+            <div className = 'row mt-5 mx-auto'>
                 <DataGrid
-                    columns = { columns }
+                    columns = { columns4 }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}
@@ -102,8 +90,8 @@ function CalendarComp() {
                     getRowId = { row => row.ID }
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                    pagination
                     autoHeight
+                    pagination
                     disableColumnMenu
                     disableColumnSelector
                     disableDensitySelector

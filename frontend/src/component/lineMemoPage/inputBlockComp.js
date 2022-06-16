@@ -25,6 +25,8 @@ function InputBlockComp() {
                 content : input2
             }).then(res => {
                 alert("上傳成功")
+            }).catch(res => {
+                if(res.response.data === "Session expired") window.location.reload()
             })
         }else{
             input1.length === 0 ? set_input1Validation(true) : set_input1Validation(false)
@@ -37,12 +39,14 @@ function InputBlockComp() {
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
 
         axios.get(rootApiIP + "/data/username")
         .then(res => {
             setUsername(res.data)
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
 

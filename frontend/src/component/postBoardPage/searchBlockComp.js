@@ -2,8 +2,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import CustomA from '../customA';
 import { rootApiIP } from '../../constant'
+import { columns2 } from '../column/column';
 
 function SearchBlockComp() {
     const [dataQuantity, set_dataQuantity] = useState(0)
@@ -20,26 +20,6 @@ function SearchBlockComp() {
     const [search, setSearch] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
-
-    const check_single_post_board_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
-        }
-    }
-
-    const columns = [
-        { field: "ID", headerName : "ID", headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 200 },
-        { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
-    ];
 
     function submit(e){
         e.preventDefault();
@@ -65,6 +45,7 @@ function SearchBlockComp() {
                 setLoading(false)
                 setPage(0)
             }).catch(res => {
+                if(res.response.data === "Session expired") window.location.reload()
                 setData([])
                 setSearch(true)
                 setLoading(false)
@@ -78,6 +59,7 @@ function SearchBlockComp() {
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
 
         axios.get(rootApiIP + "/data/post_board_state")
@@ -85,7 +67,7 @@ function SearchBlockComp() {
             set_dataQuantity(res.data.dataQuantity)
             set_newestDate(res.data.newestDate)
         }).catch(res => {
-
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
 
@@ -151,7 +133,7 @@ function SearchBlockComp() {
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
-                    columns = { columns }
+                    columns = { columns2 }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}

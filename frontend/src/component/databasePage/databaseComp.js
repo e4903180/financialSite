@@ -2,18 +2,28 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import CustomA from '../customA';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 import { rootApiIP } from '../../constant'
+import { columns, columns1, columns2, columns3 } from '../column/column';
 
 function DatabaseComp() {
-    let [data, setData] = useState([]);
-    let [data1, setData1] = useState([]);
+    const [data, setData] = useState([]);
+    const [data1, setData1] = useState([]);
+    const [data2, setData2] = useState([]);
+    const [data3, setData3] = useState([]);
+    const [data4, setData4] = useState([]);
     const [search, setSearch] = useState(false);
+    const [search1, setSearch1] = useState(false);
     const [autocom, setAutocom] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
+    const [page1, setPage1] = useState(0);
+    const [pageSize1, setPageSize1] = useState(5);
+    const [page2, setPage2] = useState(0);
+    const [pageSize2, setPageSize2] = useState(5);
+    const [page3, setPage3] = useState(0);
+    const [pageSize3, setPageSize3] = useState(5);
     const [columnTable, set_colume_table] = useState([]);
     const [input1, setInput1] = useState([]);
     const [input1Error, set_input1Error] = useState(false);
@@ -21,61 +31,6 @@ function DatabaseComp() {
     const [input3, setInput3] = useState("");
     const [input4, setInput4] = useState("");
     const [input5, setInput5] = useState("");
-
-    const check_single_post_board_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
-        }
-    }
-
-    const check_single_lineMemo_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { rootApiIP + "/data/download/single_line_memo?filename=" + value } />
-        }
-    }
-
-    const columns = [
-        { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'downloadUrl', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { rowData.value } download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
-    ];
-
-    const columns1 = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
-    ];
-
-    const columns2 = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 400 },
-        { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
-    ];
-
-    const columns3 = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
-        { field: 'inputTime', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-    ];
 
     function submit(e){
         e.preventDefault()
@@ -88,41 +43,97 @@ function DatabaseComp() {
             setPage(0)
         }else{
             set_input1Error(false)
-            axios.post(rootApiIP + "/data/dbsearch", {
-                "stockName_or_Num" : input1,
-                "startDate" : input2,
-                "endDate" : input3,
-                "investmentCompany" : input4,
-                "dbTable" : input5
-            }).then(res => {
-                switch(input5){
-                    case "financialData":{
-                        set_colume_table(columns1)
-                        break
+
+            if(input5 === "綜合查詢"){
+                setSearch(false)
+                axios.post(rootApiIP + "/data/dbsearch", {
+                    "stockName_or_Num" : input1,
+                    "startDate" : input2,
+                    "endDate" : input3,
+                    "investmentCompany" : input4,
+                    "dbTable" : "financialData"
+                }).then(res => {
+                    setData2(res.data)
+                    setSearch1(true)
+                    setLoading(false)
+                    setPage1(0)
+                }).catch(res => {
+                    if(res.response.data === "Session expired") window.location.reload()
+
+                    setData2([])
+                    setPage1(0)
+                })
+
+                axios.post(rootApiIP + "/data/dbsearch", {
+                    "stockName_or_Num" : input1,
+                    "startDate" : input2,
+                    "endDate" : input3,
+                    "investmentCompany" : input4,
+                    "dbTable" : "post_board_memo"
+                }).then(res => {
+                    setData3(res.data)
+                    setSearch1(true)
+                    setLoading(false)
+                    setPage2(0)
+                }).catch(res => {
+                    if(res.response.data === "Session expired") window.location.reload()
+                    setData2([])
+                    setPage2(0)
+                })
+
+                axios.post(rootApiIP + "/data/dbsearch", {
+                    "stockName_or_Num" : input1,
+                    "startDate" : input2,
+                    "endDate" : input3,
+                    "investmentCompany" : input4,
+                    "dbTable" : "lineMemo"
+                }).then(res => {
+                    setData4(res.data)
+                    setPage3(0)
+                }).catch(res => {
+                    if(res.response.data === "Session expired") window.location.reload()
+                    setData2([])
+                    setPage3(0)
+                })
+            }else{
+                setSearch1(false)
+                axios.post(rootApiIP + "/data/dbsearch", {
+                    "stockName_or_Num" : input1,
+                    "startDate" : input2,
+                    "endDate" : input3,
+                    "investmentCompany" : input4,
+                    "dbTable" : input5
+                }).then(res => {
+                    switch(input5){
+                        case "financialData":{
+                            set_colume_table(columns1)
+                            break
+                        }
+        
+                        case "post_board_memo":{
+                            set_colume_table(columns2)
+                            break
+                        }
+        
+                        case "lineMemo":{
+                            set_colume_table(columns3)
+                            break
+                        }
+        
+                        default : break
                     }
-    
-                    case "post_board_memo":{
-                        set_colume_table(columns2)
-                        break
-                    }
-    
-                    case "lineMemo":{
-                        set_colume_table(columns3)
-                        break
-                    }
-    
-                    default : break
-                }
-                setData1(res.data)
-                setSearch(true)
-                setLoading(false)
-                setPage(0)
-            }).catch(res => {
-                setData1([])
-                setSearch(true)
-                setLoading(false)
-                setPage(0)
-            })
+                    setData1(res.data)
+                    setSearch(true)
+                    setLoading(false)
+                    setPage(0)
+                }).catch(res => {
+                    if(res.response.data === "Session expired") window.location.reload()
+                    setData1([])
+                    setSearch(true)
+                    setLoading(false)
+                    setPage(0)
+                })
+            }
         }
     }
 
@@ -131,12 +142,14 @@ function DatabaseComp() {
         .then(res => {
             setData(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
 
         axios.get(rootApiIP + "/data/autoCom")
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
 
@@ -211,6 +224,7 @@ function DatabaseComp() {
                             <div className = 'col-md-3'>
                                 <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)}>
                                     <option defaultValue value = "">請選擇資料表</option>
+                                    <option value = "綜合查詢">綜合查詢</option>
                                     <option value = "financialData">個股研究資料</option>
                                     <option value = "post_board_memo">個股推薦</option>
                                     <option value = "lineMemo">Line Memo</option>
@@ -229,6 +243,7 @@ function DatabaseComp() {
 
             { search &&  <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
+                <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
                 <DataGrid
                     columns = { columnTable }
@@ -250,6 +265,84 @@ function DatabaseComp() {
                     disableSelectionOnClick = { true }
                 />
             </div>}
+
+            { search1 &&  <>
+                <h3 className = "display-6 text-center">查詢結果</h3>
+
+                <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
+
+                <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                    <h4 className = "text-center">個股研究資料</h4>
+
+                    <DataGrid
+                        columns = { columns1 }
+                        rows = { data2 }
+                        page = { page1 }
+                        onPageChange={(newPage) => setPage1(newPage)}
+                        pageSize = { pageSize1 }
+                        onPageSizeChange={ (newPageSize) => setPageSize1(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        autoHeight
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                    />
+                </div>
+
+                <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                    <h4 className = "text-center">Post board memo</h4>
+
+                    <DataGrid
+                        columns = { columns2 }
+                        rows = { data3 }
+                        page = { page2 }
+                        onPageChange={(newPage) => setPage2(newPage)}
+                        pageSize = { pageSize2 }
+                        onPageSizeChange={ (newPageSize) => setPageSize2(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        autoHeight
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                    />
+                </div>
+
+                <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                    <h4 className = "text-center">Line memo</h4>
+
+                    <DataGrid
+                        columns = { columns3 }
+                        rows = { data4 }
+                        page = { page3 }
+                        onPageChange={(newPage) => setPage3(newPage)}
+                        pageSize = { pageSize3 }
+                        onPageSizeChange={ (newPageSize) => setPageSize3(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        autoHeight
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                    />
+                </div>
+            </>}
         </>
     );
 }

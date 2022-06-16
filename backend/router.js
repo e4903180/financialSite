@@ -22,7 +22,7 @@ dataRouter.use(function (req, res, next) {
     if(!req.session.userName){
         req.session.destroy();
 
-        return res.status(400).send('error')
+        return res.status(400).send('Session expired')
     }
     next()
 })
@@ -36,6 +36,8 @@ dataRouter.get("/download/single_post_board_memo", Download.single_post_board_me
 dataRouter.get("/download/single_line_memo", Download.single_line_memo_download)
 dataRouter.get("/download/single_meetingData", Download.single_meetingData_memo_download)
 dataRouter.get("/download/single_industry_analysis", Download.single_industry_analysis_download)
+dataRouter.get("/download/single_twse_chPDF_download", Download.single_twse_chPDF_download)
+dataRouter.get("/download/single_twse_enPDF_download", Download.single_twse_enPDF_download)
 
 dataRouter.get("/download/financialData", Download.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)

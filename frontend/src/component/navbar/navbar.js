@@ -15,6 +15,7 @@ function NavbarComp() {
             alert("Logout")
             nav("/login")
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
             alert("something error, please try again")
         })
     }

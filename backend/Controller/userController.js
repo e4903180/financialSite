@@ -6,7 +6,7 @@ exports.login = async function(req, res){
     var password = req.body.password
 
     con.query("SELECT `password` FROM `user` WHERE `userName` = ?", [userName], function(err, result, field){
-        if(result.length !== 0){
+        if(err === null){
             if(bcrypt.compareSync(password, result[0].password)){
                 req.session.userName = userName;
 

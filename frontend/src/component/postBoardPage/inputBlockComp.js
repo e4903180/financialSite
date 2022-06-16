@@ -38,7 +38,7 @@ function InputBlockComp() {
             }).then(res => {
                 alert("上傳成功")
             }).catch(res => {
-                
+                if(res.response.data === "Session expired") window.location.reload()
             })
         }
     }

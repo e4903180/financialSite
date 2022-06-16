@@ -22,6 +22,7 @@ function MeetingDataComp() {
         .then(res => {
             setData(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
 

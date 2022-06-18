@@ -207,7 +207,7 @@ function DatabaseComp() {
                             
                             <div className = 'col-md-3'>
                                 <select id = "provider" className = "form-select" onChange = {e => setInput4(e.target.value)}>
-                                    <option defaultValue value = "">請選擇券商</option>
+                                    <option value = "">請選擇券商</option>
                                     <option value = "台新投顧">台新投顧</option>
                                     <option value = "中信投顧">中信投顧</option>
                                     <option value = "元富">元富</option>
@@ -223,7 +223,7 @@ function DatabaseComp() {
                             <label htmlFor = "db" className = "col-md-1 col-form-label text-center">資料表:</label>
                             <div className = 'col-md-3'>
                                 <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)}>
-                                    <option defaultValue value = "">請選擇資料表</option>
+                                    <option value = "">請選擇資料表</option>
                                     <option value = "綜合查詢">綜合查詢</option>
                                     <option value = "financialData">個股研究資料</option>
                                     <option value = "post_board_memo">個股推薦</option>
@@ -241,7 +241,7 @@ function DatabaseComp() {
                 </div>
             </div>
 
-            { search &&  <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            { search &&  <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
@@ -257,7 +257,6 @@ function DatabaseComp() {
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
                     pagination
-                    autoHeight
                     disableColumnMenu
                     disableColumnSelector
                     disableDensitySelector
@@ -271,7 +270,7 @@ function DatabaseComp() {
 
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
-                <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
                     <h4 className = "text-center">個股研究資料</h4>
 
                     <DataGrid
@@ -286,7 +285,6 @@ function DatabaseComp() {
                         components = {{ Toolbar: GridToolbar }}
                         componentsProps = {{ toolbar: { showQuickFilter: true },}}
                         pagination
-                        autoHeight
                         disableColumnMenu
                         disableColumnSelector
                         disableDensitySelector
@@ -295,7 +293,7 @@ function DatabaseComp() {
                     />
                 </div>
 
-                <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
                     <h4 className = "text-center">Post board memo</h4>
 
                     <DataGrid
@@ -310,7 +308,6 @@ function DatabaseComp() {
                         components = {{ Toolbar: GridToolbar }}
                         componentsProps = {{ toolbar: { showQuickFilter: true },}}
                         pagination
-                        autoHeight
                         disableColumnMenu
                         disableColumnSelector
                         disableDensitySelector
@@ -319,7 +316,7 @@ function DatabaseComp() {
                     />
                 </div>
 
-                <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
                     <h4 className = "text-center">Line memo</h4>
 
                     <DataGrid
@@ -334,7 +331,6 @@ function DatabaseComp() {
                         components = {{ Toolbar: GridToolbar }}
                         componentsProps = {{ toolbar: { showQuickFilter: true },}}
                         pagination
-                        autoHeight
                         disableColumnMenu
                         disableColumnSelector
                         disableDensitySelector

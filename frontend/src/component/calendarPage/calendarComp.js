@@ -5,8 +5,10 @@ import axios from 'axios';
 import { rootApiIP } from '../../constant'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { columns4 } from '../column/column';
+import { useNavigate } from 'react-router-dom';
 
 function CalendarComp() {
+    const nav = useNavigate()
     const [data, setData] = useState([])
     const [year1, setYear1] = useState(new Date().getFullYear())
     const [month1, setMonth1] = useState(new Date().getMonth() + 1)
@@ -24,7 +26,7 @@ function CalendarComp() {
     }, [year1, month1])
 
     function clickEvent(info){
-        window.open("http://140.116.214.154:8080/allSearch/" + info.event.title.slice(0, 4))
+        nav("/database/search/" + info.event.title)
     }
 
     async function getCalendarData(fetchInfo, successCallback) {
@@ -78,7 +80,7 @@ function CalendarComp() {
                 </div>
             </div>
 
-            <div className = 'row mt-5 mx-auto'>
+            <div className = 'row mt-5 mx-auto' style = {{height : "400px"}}>
                 <DataGrid
                     columns = { columns4 }
                     rows = { data }
@@ -90,7 +92,6 @@ function CalendarComp() {
                     getRowId = { row => row.ID }
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                    autoHeight
                     pagination
                     disableColumnMenu
                     disableColumnSelector

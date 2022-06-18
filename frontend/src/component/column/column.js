@@ -49,11 +49,28 @@ export const columns4 = [
     { field: 'Time', headerName: '法說會時間', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'Form', headerName: '法說會形式', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Message', headerName: '法說會訊息', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'chPDF', headerName: '中文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + rowData.value } download = { rowData.value}>Download</a> },
-    { field: 'enPDF', headerName: '英文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_twse_enPDF_download?filename=" + rowData.value } download = { rowData.value}>Download</a> },
+    { field: 'chPDF', headerName: '中文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
+    { field: 'enPDF', headerName: '英文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
     { field: 'More information', headerName: '相關資訊', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Video address', headerName: '影音連結資訊', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Attention', headerName: '其他應敘明事項', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
+];
+
+export const columns5 = [
+    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
+    { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'title', headerName: '上傳檔案標題', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
+    { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_industry_analysis?filename=" + rowData.value } download = { rowData.value }>Download</a>  },
+];
+
+export const columns6 = [
+    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
+    { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } download = { rowData.value }>Download</a>  },
 ];
 
 const check_single_post_board_memo_NULL = (value) => {
@@ -69,5 +86,21 @@ const check_single_lineMemo_memo_NULL = (value) => {
         return <> </>
     }else{
         return <CustomA value = { rootApiIP + "/data/download/single_line_memo?filename=" + value } />
+    }
+}
+
+const check_single_twse_chPDF_NULL = (value) => {
+    if(value === "NULL"){
+        return <> </>
+    }else{
+        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value}>Download</a>
+    }
+}
+
+const check_single_twse_enPDF_NULL = (value) => {
+    if(value === "NULL"){
+        return <> </>
+    }else{
+        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value}>Download</a>
     }
 }

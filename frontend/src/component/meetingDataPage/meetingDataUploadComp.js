@@ -38,7 +38,7 @@ function MeetingDataUploadComp() {
 
     return (
         <>
-            <div className = 'row text-center mt-3'>
+            <div className = 'row text-center mx-auto mt-3'>
                 <h3>會議紀錄上傳</h3>
 
                 <div className = 'mt-3'>

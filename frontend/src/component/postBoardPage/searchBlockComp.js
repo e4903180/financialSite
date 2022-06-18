@@ -107,7 +107,7 @@ function SearchBlockComp() {
 
                     <div className = 'col-md-2'>
                         <select id = "recommend" className = "form-select" style = {{ width : "auto" }} onChange = { event => setInput4(event.target.value) }>
-                            <option value = "" defaultValue>請選擇評價</option>
+                            <option value = "">請選擇評價</option>
                             <option value = "買進">買進</option>
                             <option value = "中立">中立</option>
                             <option value = "賣出">賣出</option>
@@ -129,7 +129,7 @@ function SearchBlockComp() {
                 </div>
             </form>
 
-            { search &&  <div className = 'row mx-auto py-4'>
+            { search &&  <div className = 'row mx-auto py-4' style = {{ height : "400px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
@@ -144,7 +144,6 @@ function SearchBlockComp() {
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
                     pagination
-                    autoHeight
                     disableColumnMenu
                     disableColumnSelector
                     disableDensitySelector

@@ -72,24 +72,12 @@ exports.single_industry_analysis_download = function(req, res){
 
 exports.single_twse_chPDF_download = function(req, res){
     const filename = req.query.filename;
-    let sql = `SELECT stockNum FROM calender WHERE chPDF='${filename}'`
 
-    con.query(sql, function(err, result, field){
-        if(err === null){
-            res.download("/home/cosbi/桌面/financialData/twseData/data/ch/" + result[0].stockNum + "/" + filename)
-        }
-    });
-    
+    res.download("/home/cosbi/桌面/financialData/twseData/data/ch/" + filename.slice(0, 4) + "/" + filename)
 };
 
 exports.single_twse_enPDF_download = function(req, res){
     const filename = req.query.filename;
-    let sql = `SELECT stockNum FROM calender WHERE enPDF='${filename}'`
 
-    con.query(sql, function(err, result, field){
-        if(err === null){
-            res.download("/home/cosbi/桌面/financialData/twseData/data/en/" + result[0].stockNum + "/" + filename)
-        }
-    });
-    
+    res.download("/home/cosbi/桌面/financialData/twseData/data/en/" + filename.slice(0, 4) + "/" + filename)
 };

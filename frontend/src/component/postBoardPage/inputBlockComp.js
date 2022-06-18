@@ -107,7 +107,7 @@ function InputBlockComp() {
                         <label htmlFor = "recommend">評價:</label>
 
                         <select id = "recommend" className = "form-select" onChange = { event => setInput2(event.target.value) }>
-                            <option value = "" defaultValue>請選擇評價</option>
+                            <option value = "">請選擇評價</option>
                             <option value = "買進">買進</option>
                             <option value = "中立">中立</option>
                             <option value = "賣出">賣出</option>

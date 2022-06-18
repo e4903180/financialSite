@@ -12,7 +12,7 @@ import LineMemoComp from './component/lineMemoPage/lineMemoComp';
 import MeetingDataComp from './component/meetingDataPage/meetingDataComp';
 import IndustryAnalysisComp from './component/Industry_analysisPage/Industry_analysisComp';
 import UserListComp from './component/userListPage/userListComp';
-import AllSearchPageComp from './component/allSearchPage/allSearchPageComp';
+import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 
 function App() {
   return (
@@ -31,12 +31,12 @@ function App() {
             <Route path = "/home" element = { <HomeComp /> }></Route>
             <Route path = "/calendar" element = { <CalendarComp /> }></Route>
             <Route path = "/database" element = { <DatabaseComp /> } ></Route>
+            <Route path = "/database/search/:stockNum_Name" element = { <DatabaseSearchComp /> } ></Route>
             <Route path = "/post_board" element = { <PostBoardComp /> } ></Route>
             <Route path = "/line_memo" element = { <LineMemoComp /> } ></Route>
             <Route path = "/meeting_data" element = { <MeetingDataComp /> } ></Route>
             <Route path = "/industry_analysis" element = { <IndustryAnalysisComp /> } ></Route>
             <Route path = "/userList" element = { <UserListComp /> } ></Route>
-            <Route path = "/allSearch/:stockNum" element = { <AllSearchPageComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

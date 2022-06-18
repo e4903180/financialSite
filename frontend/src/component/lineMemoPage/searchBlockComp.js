@@ -106,7 +106,7 @@ function SearchBlockComp() {
                 </div>
             </form>
 
-            { search &&  <div className = 'row mx-auto py-4'>
+            { search &&  <div className = 'row mx-auto py-4' style = {{ height : "400px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
@@ -121,7 +121,6 @@ function SearchBlockComp() {
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
                     pagination
-                    autoHeight
                     disableColumnMenu
                     disableColumnSelector
                     disableDensitySelector

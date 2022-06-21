@@ -270,7 +270,7 @@ function DatabaseComp() {
 
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
-                <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "400px" }}>
                     <h4 className = "text-center">個股研究資料</h4>
 
                     <DataGrid
@@ -293,7 +293,7 @@ function DatabaseComp() {
                     />
                 </div>
 
-                <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "400px" }}>
                     <h4 className = "text-center">Post board memo</h4>
 
                     <DataGrid
@@ -316,7 +316,7 @@ function DatabaseComp() {
                     />
                 </div>
 
-                <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "400px" }}>
                     <h4 className = "text-center">Line memo</h4>
 
                     <DataGrid

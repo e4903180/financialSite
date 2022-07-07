@@ -93,7 +93,7 @@ const check_single_twse_chPDF_NULL = (value) => {
     if(value === "NULL"){
         return <> </>
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value}>Download</a>
+        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value }>Download</a>
     }
 }
 
@@ -101,6 +101,6 @@ const check_single_twse_enPDF_NULL = (value) => {
     if(value === "NULL"){
         return <> </>
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value}>Download</a>
+        return <a href = { rootApiIP + "/data/download/single_twse_enPDF_download?filename=" + value } download = { value }>Download</a>
     }
 }

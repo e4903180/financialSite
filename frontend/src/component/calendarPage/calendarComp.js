@@ -80,7 +80,7 @@ function CalendarComp() {
                 </div>
             </div>
 
-            <div className = 'row mt-5 mx-auto' style = {{height : "400px"}}>
+            <div className = 'row mt-5 mx-auto' style = {{height : "600px"}}>
                 <DataGrid
                     columns = { columns4 }
                     rows = { data }

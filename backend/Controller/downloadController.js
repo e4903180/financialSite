@@ -69,3 +69,15 @@ exports.single_meetingData_memo_download = function(req, res){
 exports.single_industry_analysis_download = function(req, res){
     res.download("/home/cosbi/桌面/financialData/Industry_analysis/" + req.query.filename)
 };
+
+exports.single_twse_chPDF_download = function(req, res){
+    const filename = req.query.filename;
+
+    res.download("/home/cosbi/桌面/financialData/twseData/data/ch/" + filename.slice(0, 4) + "/" + filename)
+};
+
+exports.single_twse_enPDF_download = function(req, res){
+    const filename = req.query.filename;
+
+    res.download("/home/cosbi/桌面/financialData/twseData/data/en/" + filename.slice(0, 4) + "/" + filename)
+};

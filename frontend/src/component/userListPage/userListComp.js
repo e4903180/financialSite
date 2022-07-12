@@ -10,7 +10,7 @@ function UserListComp() {
         .then((res) => {
             setUsers(res.data)
         }).catch((res) => {
-            
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
     
@@ -20,7 +20,7 @@ function UserListComp() {
                 <h1 className = "display-5">成員列表</h1>
             </div>
 
-            <div className = 'mx-auto mt-5' style = {{ width : "90%" }}>
+            <div className = 'mx-auto mt-5' style = {{ width : "90vw" }}>
                 <CustomListComp data = { users } />
             </div>
         </>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { rootApiIP } from '../../constant'
 
 function IndustryAnalysisUploadComp() {
     const [file, setFile] = useState(null);
@@ -25,12 +26,12 @@ function IndustryAnalysisUploadComp() {
             formData.append("selectFile", file);
             formData.append("filename", fileName);
 
-            axios.post("http://140.116.214.154:3000/api/data/upload/industry_analysis_upload", formData, {
+            axios.post(rootApiIP + "/data/upload/industry_analysis_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 alert("上傳成功")
             }).catch(res => {
-                
+                if(res.response.data === "Session expired") window.location.reload()
             })
         }else{
             alert("請選擇檔案")
@@ -39,7 +40,7 @@ function IndustryAnalysisUploadComp() {
 
     return (
         <>
-            <div className = 'row text-center mt-3'>
+            <div className = 'row text-center mt-3 mx-auto'>
                 <h3>產業分析上傳</h3>
 
                 <div className = 'mt-3'>

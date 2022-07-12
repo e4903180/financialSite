@@ -2,7 +2,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import CustomA from '../customA';
+import { rootApiIP } from '../../constant'
+import { columns2 } from '../column/column';
 
 function SearchBlockComp() {
     const [dataQuantity, set_dataQuantity] = useState(0)
@@ -20,26 +21,6 @@ function SearchBlockComp() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
 
-    const check_single_post_board_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_post_board_memo?filename=" + value } />
-        }
-    }
-
-    const columns = [
-        { field: "ID", headerName : "ID", headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 200 },
-        { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
-    ];
-
     function submit(e){
         e.preventDefault();
         setLoading(true)
@@ -52,7 +33,7 @@ function SearchBlockComp() {
         }else{
             set_input1Error(false)
 
-            axios.post("http://140.116.214.154:3000/api/data/post_board_search", {
+            axios.post(rootApiIP + "/data/post_board_search", {
                 "stockName_or_Num" : input1,
                 "startDate" : input2,
                 "endDate" : input3,
@@ -64,6 +45,7 @@ function SearchBlockComp() {
                 setLoading(false)
                 setPage(0)
             }).catch(res => {
+                if(res.response.data === "Session expired") window.location.reload()
                 setData([])
                 setSearch(true)
                 setLoading(false)
@@ -73,25 +55,26 @@ function SearchBlockComp() {
     }
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/autoCom")
+        axios.get(rootApiIP + "/data/autoCom")
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get("http://140.116.214.154:3000/api/data/post_board_state")
+        axios.get(rootApiIP + "/data/post_board_state")
         .then(res => {
             set_dataQuantity(res.data.dataQuantity)
             set_newestDate(res.data.newestDate)
         }).catch(res => {
-
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
 
     return (
         <>
             <form className = 'mx-auto' onSubmit = { submit } style = {{ width : "70%" }}>
-                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = 'http://140.116.214.154:3000/api/data/download/post_board_memo' download = {"post_board_memo.csv"}>點此</a></p>
+                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = {rootApiIP + '/data/download/post_board_memo'} download = {"post_board_memo.csv"}>點此</a></p>
 
                 <div className = 'form-group row my-2'>
                     <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
@@ -124,7 +107,7 @@ function SearchBlockComp() {
 
                     <div className = 'col-md-2'>
                         <select id = "recommend" className = "form-select" style = {{ width : "auto" }} onChange = { event => setInput4(event.target.value) }>
-                            <option value = "" defaultValue>請選擇評價</option>
+                            <option value = "">請選擇評價</option>
                             <option value = "買進">買進</option>
                             <option value = "中立">中立</option>
                             <option value = "賣出">賣出</option>
@@ -146,11 +129,11 @@ function SearchBlockComp() {
                 </div>
             </form>
 
-            { search &&  <div className = 'row mx-auto py-4'>
+            { search &&  <div className = 'row mx-auto py-4' style = {{ height : "400px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
-                    columns = { columns }
+                    columns = { columns2 }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}
@@ -161,7 +144,6 @@ function SearchBlockComp() {
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
                     pagination
-                    autoHeight
                     disableColumnMenu
                     disableColumnSelector
                     disableDensitySelector

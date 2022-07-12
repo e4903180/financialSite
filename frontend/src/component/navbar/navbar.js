@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React from 'react';
-import { Nav, Navbar, Container } from 'react-bootstrap';
+import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { rootApiIP } from '../../constant'
 
 function NavbarComp() {
     const nav = useNavigate()
@@ -9,11 +10,12 @@ function NavbarComp() {
     function logout(e){
         e.preventDefault()
 
-        axios.get("http://140.116.214.154:3000/api/user/logout")
+        axios.get(rootApiIP + "/user/logout")
         .then(res => {
             alert("Logout")
             nav("/login")
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
             alert("something error, please try again")
         })
     }
@@ -25,21 +27,24 @@ function NavbarComp() {
                     <Navbar.Brand href = "/home">Financial</Navbar.Brand>
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
                     <Navbar.Collapse id =" basic-navbar-nav">
-                        <Nav className = "me-auto">
+                        <Nav className = "ms-auto">
                             <Nav.Link href = "/database">個股綜合資料</Nav.Link>
                             <Nav.Link href = "/post_board">個股推薦</Nav.Link>
                             <Nav.Link href = "/line_memo">Line memo</Nav.Link>
                             <Nav.Link href = "/calendar">Calendar</Nav.Link>
                             <Nav.Link href = "/meeting_data">Meeting data</Nav.Link>
-                            <Nav.Link href = "/6">Plot</Nav.Link>
+                            {/* <Nav.Link href = "/6">Plot</Nav.Link> */}
                             <Nav.Link href = "/industry_analysis">產業分析上傳</Nav.Link>
-                            <Nav.Link href = "/userList">成員檔案</Nav.Link>
-                        </Nav>
 
-                        <div className = 'd-flex'>
-                            {/* <p className = 'text-center my-auto' style = {{ color : "white", fontSize : "15px" }}>{username}您已經登入囉 &emsp;</p> */}
-                            <button className = "btn btn-outline-light" onClick= { logout }>登出</button>
-                        </div>
+                            <NavDropdown title = "工具" align = "end">
+                                <NavDropdown.Item href = "/stock_pricing_stratagy">股票定價策略</NavDropdown.Item>
+                            </NavDropdown>
+
+                            <NavDropdown title = "更多" align = "end">
+                                <NavDropdown.Item href = "/userList">成員檔案</NavDropdown.Item>
+                                <NavDropdown.Item onClick = { logout }>登出</NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

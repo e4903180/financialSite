@@ -13,4 +13,6 @@
     align-items: center;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
+    width: fit-content !important;
+    word-wrap: break-word !important;
 }

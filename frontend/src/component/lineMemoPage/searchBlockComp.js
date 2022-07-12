@@ -2,7 +2,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import CustomA from '../customA';
+import { rootApiIP } from '../../constant'
+import { columns3 } from '../column/column';
 
 function SearchBlockComp() {
     const [dataQuantity, set_dataQuantity] = useState(0)
@@ -17,25 +18,7 @@ function SearchBlockComp() {
     const [search, setSearch] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
-
-    const check_single_lineMemo_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { "http://140.116.214.154:3000/api/data/download/single_line_memo?filename=" + value } />
-        }
-    }
-
-    const columns = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
-        { field: 'inputTime', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-    ];
-
+    
     function submit(e){
         e.preventDefault();
         setLoading(true)
@@ -48,7 +31,7 @@ function SearchBlockComp() {
         }else{
             set_input1Error(false)
 
-            axios.post("http://140.116.214.154:3000/api/data/lineMemo_search", {
+            axios.post(rootApiIP + "/data/lineMemo_search", {
                 "stock_num_name" : input1,
                 "startDate" : input2,
                 "endDate" : input3,
@@ -58,6 +41,8 @@ function SearchBlockComp() {
                 setLoading(false)
                 setPage(0)
             }).catch(res => {
+                if(res.response.data === "Session expired") window.location.reload()
+
                 setData([])
                 setSearch(true)
                 setLoading(false)
@@ -67,25 +52,26 @@ function SearchBlockComp() {
     }
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/autoCom")
+        axios.get(rootApiIP + "/data/autoCom")
         .then(res => {
             setAutocom(res.data);
         }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get("http://140.116.214.154:3000/api/data/lineMemo_state")
+        axios.get(rootApiIP + "/data/lineMemo_state")
         .then(res => {
             set_dataQuantity(res.data.dataQuantity)
             set_newestDate(res.data.newestDate)
         }).catch(res => {
-
+            if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
 
     return (
         <>
             <form className = 'mx-auto' onSubmit = { submit } style = {{ width : "70%" }}>
-                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = 'http://140.116.214.154:3000/api/data/download/lineMemo' download = {"post_board_memo.csv"}>點此</a></p>
+                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = { rootApiIP + '/data/download/lineMemo' } download = {"post_board_memo.csv"}>點此</a></p>
 
                 <div className = 'form-group row my-2'>
                     <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
@@ -120,11 +106,11 @@ function SearchBlockComp() {
                 </div>
             </form>
 
-            { search &&  <div className = 'row mx-auto py-4'>
+            { search &&  <div className = 'row mx-auto py-4' style = {{ height : "400px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
-                    columns = { columns }
+                    columns = { columns3 }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}
@@ -135,7 +121,6 @@ function SearchBlockComp() {
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}
                     pagination
-                    autoHeight
                     disableColumnMenu
                     disableColumnSelector
                     disableDensitySelector

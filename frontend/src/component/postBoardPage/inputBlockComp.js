@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { rootApiIP } from '../../constant'
 var FormData = require('form-data');
 
 function InputBlockComp() {
@@ -32,12 +33,12 @@ function InputBlockComp() {
             formData.append("selectFile", file);
             formData.append("filename", fileName);
 
-            axios.post("http://140.116.214.154:3000/api/data/upload/post_board_upload", formData, {
+            axios.post(rootApiIP + "/data/upload/post_board_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 alert("上傳成功")
             }).catch(res => {
-                
+                if(res.response.data === "Session expired") window.location.reload()
             })
         }
     }
@@ -106,7 +107,7 @@ function InputBlockComp() {
                         <label htmlFor = "recommend">評價:</label>
 
                         <select id = "recommend" className = "form-select" onChange = { event => setInput2(event.target.value) }>
-                            <option value = "" defaultValue>請選擇評價</option>
+                            <option value = "">請選擇評價</option>
                             <option value = "買進">買進</option>
                             <option value = "中立">中立</option>
                             <option value = "賣出">賣出</option>

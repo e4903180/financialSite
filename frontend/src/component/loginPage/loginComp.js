@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { rootApiIP } from '../../constant'
 axios.defaults.withCredentials = true;
 
 function LoginComp() {
@@ -9,7 +10,7 @@ function LoginComp() {
     const [password, setPassword] = useState("");
 
     function login(){
-        axios.post("http://140.116.214.154:3000/api/user/login", {
+        axios.post(rootApiIP + "/user/login", {
             userName : userName,
             password : password
         }).then(res => {

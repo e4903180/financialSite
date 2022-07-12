@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { rootApiIP } from '../../constant'
 
 function MeetingDataUploadComp() {
     const [file, setFile] = useState(null);
@@ -23,12 +24,12 @@ function MeetingDataUploadComp() {
             formData.append("selectFile", file);
             formData.append("filename", fileName);
 
-            axios.post("http://140.116.214.154:3000/api/data/upload/meeting_data_upload", formData, {
+            axios.post(rootApiIP + "/data/upload/meeting_data_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 alert("上傳成功")
             }).catch(res => {
-                
+                if(res.response.data === "Session expired") window.location.reload()
             })
         }else{
             alert("請選擇檔案")
@@ -37,7 +38,7 @@ function MeetingDataUploadComp() {
 
     return (
         <>
-            <div className = 'row text-center mt-3'>
+            <div className = 'row text-center mx-auto mt-3'>
                 <h3>會議紀錄上傳</h3>
 
                 <div className = 'mt-3'>

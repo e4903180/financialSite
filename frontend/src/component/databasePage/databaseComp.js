@@ -39,7 +39,10 @@ function DatabaseComp() {
         if(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "" && !autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)){
             set_input1Error(true)
             setLoading(false)
-            setData([])
+            setData1([])
+            setData2([])
+            setData3([])
+            setData4([])
             setPage(0)
         }else{
             set_input1Error(false)

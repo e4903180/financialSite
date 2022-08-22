@@ -3,22 +3,13 @@ import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { rootApiIP } from '../../constant'
+import { columns1 } from '../column/column'
 
 axios.defaults.withCredentials = true;
 
 function HomeComp() {
     let [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(5);
-
-    const columns = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP +"/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
-    ];
 
     useEffect(() => {
         axios.get(rootApiIP + "/data/newest15")
@@ -42,7 +33,7 @@ function HomeComp() {
                 <div className = 'col-md-10 mx-auto py-3'>
                     <h3 className = "display-4 text-center">最新15筆資料</h3>
                     <DataGrid
-                        columns = { columns } 
+                        columns = { columns1 } 
                         rows = { data }
                         pageSize = { pageSize }
                         onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }

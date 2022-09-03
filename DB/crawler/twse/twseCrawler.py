@@ -19,7 +19,7 @@ import MySQLdb
 import time
 import datetime
 
-sys.stderr = open("/home/cosbi/桌面/financialData/twse/log/" + str(datetime.date.today()) + '.log', 'w')
+sys.stderr = open("/home/cosbi/桌面/financialData/twseData/log/" + str(datetime.date.today()) + '.log', 'w')
 
 # In[2]:
 

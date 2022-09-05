@@ -38,7 +38,7 @@ function DatabaseSearchComp() {
         e.preventDefault()
         setLoading(true)
 
-        if(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "" && !autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)){
+        if((!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)) && (input5 === "")){
             set_input1Error(true)
             setLoading(false)
             setData([])
@@ -69,7 +69,7 @@ function DatabaseSearchComp() {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "investmentCompany" : input4,
+                    "investmentCompany" : "",
                     "dbTable" : "post_board_memo"
                 }).then(res => {
                     setData3(res.data)
@@ -86,7 +86,7 @@ function DatabaseSearchComp() {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "investmentCompany" : input4,
+                    "investmentCompany" : "",
                     "dbTable" : "lineMemo"
                 }).then(res => {
                     setData4(res.data)
@@ -98,42 +98,82 @@ function DatabaseSearchComp() {
                 })
             }else{
                 setSearch1(false)
-                axios.post(rootApiIP + "/data/dbsearch", {
-                    "stockName_or_Num" : input1,
-                    "startDate" : input2,
-                    "endDate" : input3,
-                    "investmentCompany" : input4,
-                    "dbTable" : input5
-                }).then(res => {
-                    switch(input5){
-                        case "financialData":{
-                            set_colume_table(columns1)
-                            break
+
+                if(input5 !== "financialData"){
+                    axios.post(rootApiIP + "/data/dbsearch", {
+                        "stockName_or_Num" : input1,
+                        "startDate" : input2,
+                        "endDate" : input3,
+                        "investmentCompany" : "",
+                        "dbTable" : input5
+                    }).then(res => {
+                        switch(input5){
+                            case "financialData":{
+                                set_colume_table(columns1)
+                                break
+                            }
+            
+                            case "post_board_memo":{
+                                set_colume_table(columns2)
+                                break
+                            }
+            
+                            case "lineMemo":{
+                                set_colume_table(columns3)
+                                break
+                            }
+            
+                            default : break
                         }
-        
-                        case "post_board_memo":{
-                            set_colume_table(columns2)
-                            break
+                        setData1(res.data)
+                        setSearch(true)
+                        setLoading(false)
+                        setPage(0)
+                    }).catch(res => {
+                        if(res.response.data === "Session expired") window.location.reload()
+                        setData1([])
+                        setSearch(true)
+                        setLoading(false)
+                        setPage(0)
+                    })
+                }else{
+                    axios.post(rootApiIP + "/data/dbsearch", {
+                        "stockName_or_Num" : input1,
+                        "startDate" : input2,
+                        "endDate" : input3,
+                        "investmentCompany" : input4,
+                        "dbTable" : input5
+                    }).then(res => {
+                        switch(input5){
+                            case "financialData":{
+                                set_colume_table(columns1)
+                                break
+                            }
+            
+                            case "post_board_memo":{
+                                set_colume_table(columns2)
+                                break
+                            }
+            
+                            case "lineMemo":{
+                                set_colume_table(columns3)
+                                break
+                            }
+            
+                            default : break
                         }
-        
-                        case "lineMemo":{
-                            set_colume_table(columns3)
-                            break
-                        }
-        
-                        default : break
-                    }
-                    setData1(res.data)
-                    setSearch(true)
-                    setLoading(false)
-                    setPage(0)
-                }).catch(res => {
-                    if(res.response.data === "Session expired") window.location.reload()
-                    setData1([])
-                    setSearch(true)
-                    setLoading(false)
-                    setPage(0)
-                })
+                        setData1(res.data)
+                        setSearch(true)
+                        setLoading(false)
+                        setPage(0)
+                    }).catch(res => {
+                        if(res.response.data === "Session expired") window.location.reload()
+                        setData1([])
+                        setSearch(true)
+                        setLoading(false)
+                        setPage(0)
+                    })
+                }
             }
         }
     }
@@ -206,26 +246,9 @@ function DatabaseSearchComp() {
                         </div>
 
                         <div className = 'form-group row pt-1'>
-                            <label htmlFor = "provider" className = "col-md-2 col-form-label text-center">券商名稱:</label>
-                            
+                            <label htmlFor = "db" className = "col-md-2 col-form-label text-center">資料表:</label>
                             <div className = 'col-md-3'>
-                                <select id = "provider" className = "form-select" onChange = {e => setInput4(e.target.value)}>
-                                    <option value = "">請選擇券商</option>
-                                    <option value = "台新投顧">台新投顧</option>
-                                    <option value = "中信投顧">中信投顧</option>
-                                    <option value = "元富">元富</option>
-                                    <option value = "國票">國票</option>
-                                    <option value = "元大">元大</option>
-                                    <option value = "統一投顧">統一投顧</option>
-                                    <option value = "第一金">第一金</option>
-                                    <option value = "富邦台灣">富邦台灣</option>
-                                    <option value = "SinoPac">永豐金證券</option>
-                                </select>
-                            </div>
-
-                            <label htmlFor = "db" className = "col-md-1 col-form-label text-center">資料表:</label>
-                            <div className = 'col-md-3'>
-                                <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)} defaultValue = { "綜合查詢" }>
+                                <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)} defaultValue = "綜合查詢">
                                     <option value = "">請選擇資料表</option>
                                     <option value = "綜合查詢">綜合查詢</option>
                                     <option value = "financialData">個股研究資料</option>
@@ -233,12 +256,29 @@ function DatabaseSearchComp() {
                                     <option value = "lineMemo">Line Memo</option>
                                 </select>
                             </div>
+
+                            { input5 === "financialData" && <>
+                                <label htmlFor = "provider" className = "col-md-1 col-form-label text-center">券商名稱:</label>
+                                <div className = 'col-md-3'>
+                                    <select id = "provider" className = "form-select" onChange = {e => setInput4(e.target.value)}>
+                                        <option value = "">請選擇券商</option>
+                                        <option value = "台新投顧">台新投顧</option>
+                                        <option value = "中信投顧">中信投顧</option>
+                                        <option value = "元富">元富</option>
+                                        <option value = "國票">國票</option>
+                                        <option value = "元大">元大</option>
+                                        <option value = "統一投顧">統一投顧</option>
+                                        <option value = "第一金">第一金</option>
+                                        <option value = "富邦台灣">富邦台灣</option>
+                                        <option value = "SinoPac">永豐金證券</option>
+                                    </select>
+                                </div>
+                            </>}
                         </div>
 
                         <div className = 'form-group pt-4 text-center'>
-                            { input1Error ? <p style = {{ color : "red" }}>股票代號&名稱格式錯誤</p> : <></> }
-                            {loading && <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }} disabled><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button>}
-                            {!loading && <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }}>搜尋</button>}
+                            { input1Error ? <p style = {{ color : "red" }}>股票代號&名稱格式或資料表錯誤</p> : <></> }
+                            {loading ? <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }} disabled><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button> : <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }}>搜尋</button>}
                         </div>
                     </form>
                 </div>

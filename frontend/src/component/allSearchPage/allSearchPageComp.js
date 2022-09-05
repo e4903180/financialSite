@@ -5,6 +5,7 @@ import { rootApiIP } from '../../constant'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { columns1, columns2, columns3 } from '../column/column';
 
 function AllSearchPageComp() {
     const { stockNum } = useParams();
@@ -20,54 +21,6 @@ function AllSearchPageComp() {
     const [pageSize2, setPage2Size] = useState(5);
     const [page3, setPage3] = useState(0);
     const [pageSize3, setPage3Size] = useState(5);
-
-    const check_single_post_board_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
-        }
-    }
-
-    const check_single_lineMemo_memo_NULL = (value) => {
-        if(value === "NULL"){
-            return <> </>
-        }else{
-            return <CustomA value = { rootApiIP + "/data/download/single_line_memo?filename=" + value } />
-        }
-    }
-
-    const columns1 = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
-    ];
-
-    const columns2 = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 400 },
-        { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
-    ];
-
-    const columns3 = [
-        { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-        { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
-        { field: 'inputTime', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-        { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-    ];
 
     useEffect(() => {
         axios.post(rootApiIP + "/data/dbsearch", {

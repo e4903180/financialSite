@@ -1,4 +1,5 @@
 const con = require('../Model/connectMySQL')
+let { PythonShell } = require('python-shell')
 
 exports.retrnUsername = async function(req, res){
     return res.status(200).send(req.session.userName)
@@ -49,6 +50,7 @@ exports.dbsearch = async function(req, res){
         if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
     
         con.query(sql, function(err, result, field){
+            console.log(err)
             if(err === null){
                 return res.status(200).json(result)
             }else{
@@ -232,4 +234,23 @@ exports.calenderData = async function(req, res){
             return res.status(400).send("error")
         }
     })    
+}
+
+exports.pricingData = async function(req, res){
+    let options = {
+        args:[
+                req.body.stockNum,
+                req.body.year
+            ]
+    }
+    
+    const result = await new Promise((resolve, reject) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/StockPriceDecision.py', options, (err, data) => {
+            if (err) reject(err)
+            const parsedString = JSON.parse(data)
+            return resolve(parsedString);
+        })
+    })
+
+    return res.status(200).send(result)
 }

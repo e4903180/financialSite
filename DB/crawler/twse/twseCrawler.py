@@ -13,13 +13,18 @@ from selenium.webdriver.support.select import Select
 from tqdm import trange
 import pandas as pd
 import requests
-import os, sys
+import os
 from typing import Any, List
 import MySQLdb
 import time
 import datetime
 
-sys.stderr = open("/home/cosbi/桌面/financialData/twseData/log/" + str(datetime.date.today()) + '.log', 'w')
+
+# In[11]:
+
+
+sys.stderr = open(str(datetime.date.today()) + '.log', 'w')
+
 
 # In[2]:
 
@@ -73,7 +78,7 @@ class MySQL():
         
     def update(self, stockNum, Date, Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention) -> None:
         sql = "UPDATE calender SET `Time`='%s', `Form`='%s', `Message`='%s', `chPDF`='%s', `enPDF`='%s', `More information`='%s', `Video address`='%s', `Attention`='%s' WHERE `stockNum`='%s' AND `Date`='%s';" % (Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention, stockNum, Date)
-        
+
         self._cursor.execute(sql)
         self._db.commit()
         
@@ -81,7 +86,7 @@ class MySQL():
         _db.close()
 
 
-# In[9]:
+# In[10]:
 
 
 class Twse(TwseSelenium, MySQL):
@@ -140,20 +145,20 @@ class Twse(TwseSelenium, MySQL):
                 self._download_pdf("ch", data_td[0].getText(), data_td[6].getText())
                 self._download_pdf("en", data_td[0].getText(), data_td[7].getText())
                 
-                self.insert(data_td[0].getText(), data_td[1].getText(), row_date, data_td[3].getText(),
-                           data_td[4].getText(), data_td[5].getText(), data_td[6].getText(), data_td[7].getText(),
-                           data_td[8].getText(), data_td[9].getText(), data_td[10].getText())
+                self.insert(data_td[0].getText().replace("'", ""), data_td[1].getText().replace("'", ""), row_date, data_td[3].getText().replace("'", ""),
+                           data_td[4].getText().replace("'", ""), data_td[5].getText().replace("'", ""), data_td[6].getText().replace("'", ""), data_td[7].getText().replace("'", ""),
+                           data_td[8].getText().replace("'", ""), data_td[9].getText().replace("'", ""), data_td[10].getText().replace("'", ""))
                 
             else:
                 self._download_pdf("ch", data_td[0].getText(), data_td[6].getText())
                 self._download_pdf("en", data_td[0].getText(), data_td[7].getText())
                 
-                self.update(data_td[0].getText(), row_date, data_td[3].getText(),
-                           data_td[4].getText(), data_td[5].getText(), data_td[6].getText(), data_td[7].getText(),
-                           data_td[8].getText(), data_td[9].getText(), data_td[10].getText())
+                self.update(data_td[0].getText().replace("'", ""), row_date, data_td[3].getText().replace("'", ""),
+                           data_td[4].getText().replace("'", ""), data_td[5].getText().replace("'", ""), data_td[6].getText().replace("'", ""), data_td[7].getText().replace("'", ""),
+                           data_td[8].getText().replace("'", ""), data_td[9].getText().replace("'", ""), data_td[10].getText().replace("'", ""))
 
 
-# In[ ]:
+# In[5]:
 
 
 def run():
@@ -171,11 +176,9 @@ def run():
         twse.crawler(month = str(today.month))
 
 
-# In[ ]:
+# In[6]:
 
-if __name__ == "__main__":
+
+if __name__ == "main":
     run()
-
-
-
 

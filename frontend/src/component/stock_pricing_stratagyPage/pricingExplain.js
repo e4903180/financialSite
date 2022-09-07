@@ -1,17 +1,17 @@
 export const priceInit = {
-    "NewPrice" : "0",
-    "cheap1" : "0",
-    "reasonable1" : "0",
-    "expensive1" : "0",
-    "cheap2" : "0",
-    "reasonable2" : "0",
-    "expensive2" : "0",
-    "cheap3" : "0",
-    "reasonable3" : "0",
-    "expensive3" : "0",
-    "cheap4" : "0",
-    "reasonable4" : "0",
-    "expensive4" : "0"
+    "NewPrice" : 0,
+    "cheap1" : 0,
+    "reasonable1" : 0,
+    "expensive1" : 0,
+    "cheap2" : 0,
+    "reasonable2" : 0,
+    "expensive2" : 0,
+    "cheap3" : 0,
+    "reasonable3" : 0,
+    "expensive3" : 0,
+    "cheap4" : 0,
+    "reasonable4" : 0,
+    "expensive4" : 0
 }
 
 export function pricing1(year){

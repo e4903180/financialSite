@@ -7,11 +7,13 @@ exports.login = async function(req, res){
 
     con.query("SELECT `password` FROM `user` WHERE `userName` = ?", [userName], function(err, result, field){
         if(err === null){
-            if(bcrypt.compareSync(password, result[0].password)){
-                req.session.userName = userName;
-
-                res.status(200).send("success");
-            }else{
+            try {
+                if(bcrypt.compareSync(password, result[0].password)){
+                    req.session.userName = userName;
+    
+                    res.status(200).send("success");
+                }
+            } catch (error) {
                 res.status(400).send("Username or password error");
             }
         }else{

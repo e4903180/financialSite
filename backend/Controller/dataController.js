@@ -50,7 +50,6 @@ exports.dbsearch = async function(req, res){
         if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
     
         con.query(sql, function(err, result, field){
-            console.log(err)
             if(err === null){
                 return res.status(200).json(result)
             }else{

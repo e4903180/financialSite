@@ -65,8 +65,8 @@ function StockPricingStratagyComp() {
                             />
                         </div>
 
-                        <label htmlFor = "year" className = "col-md-1 col-form-label text-center">年:</label>
-                        <div className = 'col-md-2'>
+                        <label htmlFor = "year" className = "col-md-3 col-form-label text-center">歷史幾年資料:</label>
+                        <div className = 'col-md-3'>
                             <select id = "year" className = "form-select" onChange = {e => setYear(e.target.value)}>
                                 <option value = "">請選擇年份</option>
                                 <option value = "1">1</option>
@@ -81,30 +81,44 @@ function StockPricingStratagyComp() {
                                 <option value = "10">10</option>
                             </select>
                         </div>
+                    </div>
 
-                        { loading ? <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }} disabled><span className = "spinner-border spinner-border-sm" role = "status" aria-hidden = "true"></span></button> : <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }}>搜尋</button> }
+                    <div className = 'form-group row py-3'>
+                        <div className = 'col-md-12 text-center'>
+                            { loading ? <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }} disabled><span className = "spinner-border spinner-border-sm" role = "status" aria-hidden = "true"></span></button> : <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }}>搜尋</button> }
+                        </div>
                     </div>
                 </form>
                 { inputError ? <p className = 'text-center' style = {{ color : "red" }}>股票代號&名稱格式錯誤 或 年份錯誤</p> : <></> }
             </div>
+
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-12'>
+                    <div className = 'card'>
+                        <div className = 'card-body'>
+                            <h3 className = 'card-title'>最新價格: { price["NewPrice"] }</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-6'>
-                    <PricingComp pricingName = "股利法" pricingExplain = { pricing1(year) } lowPrice = { price["cheap1"] } resonablePrice = { price["reasonable1"] } highPrice = { price["expensive1"] }/>
+                    <PricingComp pricingName = "股利法" pricingExplain = { pricing1(year) } lowPrice = { price["cheap1"] } resonablePrice = { price["reasonable1"] } highPrice = { price["expensive1"] } NewPrice = { price["NewPrice"] }/>
                 </div>
 
                 <div className = 'col-md-6'>
-                    <PricingComp pricingName = "高低價法" pricingExplain = { pricing2(year) } lowPrice = { price["cheap2"] } resonablePrice = { price["reasonable2"] } highPrice = { price["expensive2"] }/>
+                    <PricingComp pricingName = "高低價法" pricingExplain = { pricing2(year) } lowPrice = { price["cheap2"] } resonablePrice = { price["reasonable2"] } highPrice = { price["expensive2"] } NewPrice = { price["NewPrice"] }/>
                 </div>
             </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-6'>
-                    <PricingComp pricingName = "本益比法" pricingExplain = { pricing3(year) } lowPrice = { price["cheap3"] } resonablePrice = { price["reasonable3"] } highPrice = { price["expensive3"] }/>
+                    <PricingComp pricingName = "本益比法" pricingExplain = { pricing3(year) } lowPrice = { price["cheap3"] } resonablePrice = { price["reasonable3"] } highPrice = { price["expensive3"] } NewPrice = { price["NewPrice"] }/>
                 </div>
                 
                 <div className = 'col-md-6'>
-                    <PricingComp pricingName = "本淨比法" pricingExplain = { pricing4(year) } lowPrice = { price["cheap4"] } resonablePrice = { price["reasonable4"] } highPrice = { price["expensive4"] }/>
+                    <PricingComp pricingName = "本淨比法" pricingExplain = { pricing4(year) } lowPrice = { price["cheap4"] } resonablePrice = { price["reasonable4"] } highPrice = { price["expensive4"] } NewPrice = { price["NewPrice"] }/>
                 </div>
             </div>
         </>

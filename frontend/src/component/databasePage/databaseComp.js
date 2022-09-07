@@ -36,7 +36,7 @@ function DatabaseComp() {
         e.preventDefault()
         setLoading(true)
 
-        if((!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)) && (input5 === "")){
+        if((input5 === "") && (!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
             set_input1Error(true)
             setLoading(false)
             setData1([])

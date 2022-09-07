@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { OverrideProps, Simplify } from '@mui/types';
+import { SlotComponentProps } from '../utils';
 export declare type NativeFormControlElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 export interface FormControlUnstyledComponentsPropsOverrides {
 }
@@ -21,7 +22,7 @@ export interface FormControlUnstyledOwnProps {
         Root?: React.ElementType;
     };
     componentsProps?: {
-        root?: React.HTMLAttributes<HTMLDivElement> & FormControlUnstyledComponentsPropsOverrides;
+        root?: SlotComponentProps<'div', FormControlUnstyledComponentsPropsOverrides, FormControlUnstyledOwnerState>;
     };
     defaultValue?: unknown;
     /**
@@ -47,16 +48,12 @@ export interface FormControlUnstyledTypeMap<P = {}, D extends React.ElementType 
     defaultComponent: D;
 }
 export declare type FormControlUnstyledProps<D extends React.ElementType = FormControlUnstyledTypeMap['defaultComponent'], P = {}> = OverrideProps<FormControlUnstyledTypeMap<P, D>, D> & {
-    /**
-     * The component used for the Root slot.
-     * Either a string to use a HTML element or a component.
-     * This is equivalent to `components.Root`. If both are provided, the `component` is used.
-     */
     component?: D;
 };
 declare type NonOptionalOwnerState = 'disabled' | 'error' | 'required';
 export declare type FormControlUnstyledOwnerState = Simplify<Omit<FormControlUnstyledOwnProps, NonOptionalOwnerState> & Required<Pick<FormControlUnstyledProps, NonOptionalOwnerState>> & {
     filled: boolean;
+    focused: boolean;
 }>;
 declare type ContextFromPropsKey = 'disabled' | 'error' | 'onChange' | 'required' | 'value';
 export declare type FormControlUnstyledState = Simplify<Pick<FormControlUnstyledProps, ContextFromPropsKey> & {
@@ -65,4 +62,9 @@ export declare type FormControlUnstyledState = Simplify<Pick<FormControlUnstyled
     onBlur: () => void;
     onFocus: () => void;
 }>;
+export declare type FormControlUnstyledRootSlotProps = {
+    children: React.ReactNode | ((state: FormControlUnstyledState) => React.ReactNode);
+    className?: string;
+    ownerState: FormControlUnstyledOwnerState;
+};
 export {};

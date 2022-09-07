@@ -2,14 +2,13 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutProperties from "@babel/runtime/helpers/esm/objectWithoutProperties";
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { elementAcceptingRef, HTMLElementType, unstable_ownerDocument as ownerDocument, unstable_useForkRef as useForkRef, unstable_createChainedFunction as createChainedFunction, unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import composeClasses from '../composeClasses';
-import isHostComponent from '../utils/isHostComponent';
 import Portal from '../Portal';
 import ModalManager, { ariaHidden } from './ModalManager';
 import TrapFocus from '../TrapFocus';
 import { getModalUtilityClass } from './modalUnstyledClasses';
+import { useSlotProps } from '../utils';
 import { jsx as _jsx } from "react/jsx-runtime";
 import { jsxs as _jsxs } from "react/jsx-runtime";
 
@@ -49,11 +48,10 @@ var defaultManager = new ModalManager();
  */
 
 var ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props, ref) {
-  var BackdropComponent = props.BackdropComponent,
-      BackdropProps = props.BackdropProps,
-      children = props.children,
+  var _props$ariaHidden;
+
+  var children = props.children,
       classesProp = props.classes,
-      className = props.className,
       _props$closeAfterTran = props.closeAfterTransition,
       closeAfterTransition = _props$closeAfterTran === void 0 ? false : _props$closeAfterTran,
       _props$component = props.component,
@@ -85,10 +83,9 @@ var ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props, 
       onClose = props.onClose,
       onKeyDown = props.onKeyDown,
       open = props.open,
-      theme = props.theme,
       onTransitionEnter = props.onTransitionEnter,
       onTransitionExited = props.onTransitionExited,
-      other = _objectWithoutProperties(props, ["BackdropComponent", "BackdropProps", "children", "classes", "className", "closeAfterTransition", "component", "components", "componentsProps", "container", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "manager", "onBackdropClick", "onClose", "onKeyDown", "open", "theme", "onTransitionEnter", "onTransitionExited"]);
+      other = _objectWithoutProperties(props, ["children", "classes", "closeAfterTransition", "component", "components", "componentsProps", "container", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "manager", "onBackdropClick", "onClose", "onKeyDown", "open", "onTransitionEnter", "onTransitionExited"]);
 
   var _React$useState = React.useState(true),
       exited = _React$useState[0],
@@ -99,6 +96,7 @@ var ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props, 
   var modalRef = React.useRef(null);
   var handleRef = useForkRef(modalRef, ref);
   var hasTransition = getHasTransition(props);
+  var ariaHiddenProp = (_props$ariaHidden = props['aria-hidden']) != null ? _props$ariaHidden : true;
 
   var getDoc = function getDoc() {
     return ownerDocument(mountNodeRef.current);
@@ -139,12 +137,12 @@ var ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props, 
     if (open && isTopModal()) {
       handleMounted();
     } else {
-      ariaHidden(modalRef.current, true);
+      ariaHidden(modalRef.current, ariaHiddenProp);
     }
   });
   var handleClose = React.useCallback(function () {
-    manager.remove(getModal());
-  }, [manager]);
+    manager.remove(getModal(), ariaHiddenProp);
+  }, [manager, ariaHiddenProp]);
   React.useEffect(function () {
     return function () {
       handleClose();
@@ -173,10 +171,6 @@ var ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props, 
   });
 
   var classes = useUtilityClasses(ownerState);
-
-  if (!keepMounted && !open && (!hasTransition || exited)) {
-    return null;
-  }
 
   var handleEnter = function handleEnter() {
     setExited(false);
@@ -250,26 +244,40 @@ var ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props, 
   }
 
   var Root = components.Root || component;
-  var rootProps = componentsProps.root || {};
+  var rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: componentsProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: handleRef,
+      role: 'presentation',
+      onKeyDown: handleKeyDown
+    },
+    className: classes.root,
+    ownerState: ownerState
+  });
+  var BackdropComponent = components.Backdrop;
+  var backdropProps = useSlotProps({
+    elementType: BackdropComponent,
+    externalSlotProps: componentsProps.backdrop,
+    additionalProps: {
+      'aria-hidden': true,
+      onClick: handleBackdropClick,
+      open: open
+    },
+    ownerState: ownerState
+  });
+
+  if (!keepMounted && !open && (!hasTransition || exited)) {
+    return null;
+  }
+
   return /*#__PURE__*/_jsx(Portal, {
     ref: handlePortalRef,
     container: container,
     disablePortal: disablePortal,
-    children: /*#__PURE__*/_jsxs(Root, _extends({
-      role: "presentation"
-    }, rootProps, !isHostComponent(Root) && {
-      as: component,
-      ownerState: _extends({}, ownerState, rootProps.ownerState),
-      theme: theme
-    }, other, {
-      ref: handleRef,
-      onKeyDown: handleKeyDown,
-      className: clsx(classes.root, rootProps.className, className),
-      children: [!hideBackdrop && BackdropComponent ? /*#__PURE__*/_jsx(BackdropComponent, _extends({
-        "aria-hidden": true,
-        open: open,
-        onClick: handleBackdropClick
-      }, BackdropProps)) : null, /*#__PURE__*/_jsx(TrapFocus, {
+    children: /*#__PURE__*/_jsxs(Root, _extends({}, rootProps, {
+      children: [!hideBackdrop && BackdropComponent ? /*#__PURE__*/_jsx(BackdropComponent, _extends({}, backdropProps)) : null, /*#__PURE__*/_jsx(TrapFocus, {
         disableEnforceFocus: disableEnforceFocus,
         disableAutoFocus: disableAutoFocus,
         disableRestoreFocus: disableRestoreFocus,
@@ -289,16 +297,6 @@ process.env.NODE_ENV !== "production" ? ModalUnstyled.propTypes
   // ----------------------------------------------------------------------
 
   /**
-   * A backdrop component. This prop enables custom backdrop rendering.
-   */
-  BackdropComponent: PropTypes.elementType,
-
-  /**
-   * Props applied to the backdrop element.
-   */
-  BackdropProps: PropTypes.object,
-
-  /**
    * A single child content element.
    */
   children: elementAcceptingRef.isRequired,
@@ -307,11 +305,6 @@ process.env.NODE_ENV !== "production" ? ModalUnstyled.propTypes
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
 
   /**
    * When set to true the Modal waits until a nested Transition is completed before closing.
@@ -331,6 +324,7 @@ process.env.NODE_ENV !== "production" ? ModalUnstyled.propTypes
    * @default {}
    */
   components: PropTypes.shape({
+    Backdrop: PropTypes.elementType,
     Root: PropTypes.elementType
   }),
 
@@ -339,7 +333,8 @@ process.env.NODE_ENV !== "production" ? ModalUnstyled.propTypes
    * @default {}
    */
   componentsProps: PropTypes.shape({
-    root: PropTypes.object
+    backdrop: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
   }),
 
   /**

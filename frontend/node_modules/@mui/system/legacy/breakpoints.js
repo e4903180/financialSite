@@ -92,7 +92,7 @@ export function createEmptyBreakpointObject() {
   var _breakpointsInput$key;
 
   var breakpointsInput = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var breakpointsInOrder = breakpointsInput == null ? void 0 : (_breakpointsInput$key = breakpointsInput.keys) == null ? void 0 : _breakpointsInput$key.reduce(function (acc, key) {
+  var breakpointsInOrder = (_breakpointsInput$key = breakpointsInput.keys) == null ? void 0 : _breakpointsInput$key.reduce(function (acc, key) {
     var breakpointStyleKey = breakpointsInput.up(key);
     acc[breakpointStyleKey] = {};
     return acc;
@@ -167,9 +167,11 @@ export function resolveBreakpointValues(_ref) {
     if (Array.isArray(breakpointValues)) {
       acc[breakpoint] = breakpointValues[i] != null ? breakpointValues[i] : breakpointValues[previous];
       previous = i;
-    } else {
-      acc[breakpoint] = breakpointValues[breakpoint] != null ? breakpointValues[breakpoint] : breakpointValues[previous] || breakpointValues;
+    } else if (_typeof(breakpointValues) === 'object') {
+      acc[breakpoint] = breakpointValues[breakpoint] != null ? breakpointValues[breakpoint] : breakpointValues[previous];
       previous = breakpoint;
+    } else {
+      acc[breakpoint] = breakpointValues;
     }
 
     return acc;

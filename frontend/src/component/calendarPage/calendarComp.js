@@ -65,13 +65,13 @@ function CalendarComp() {
             </div>
 
             <div className = 'row mt-3 mx-auto'>
-                <div className = 'col-md-6 mx-auto'>
+                <div className = 'col-md-8 mx-auto'>
                     <FullCalendar
-                        height = { 600 }
+                        height = { "auto" }
                         plugins={[ dayGridPlugin ]}
                         initialView = "dayGridMonth"
                         events = { (fetchInfo, successCallback, failureCallback) => getCalendarData(fetchInfo, successCallback, failureCallback) }
-                        dayMaxEventRows = { 2 }
+                        dayMaxEventRows = { 5 }
                         eventClick = { clickEvent }
                         eventMouseEnter = { info => info.el.style.cursor = "pointer" }
                         showNonCurrentDates = { false }

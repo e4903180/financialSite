@@ -107,7 +107,7 @@ function breakpoints(styleFunction) {
 function createEmptyBreakpointObject(breakpointsInput = {}) {
   var _breakpointsInput$key;
 
-  const breakpointsInOrder = breakpointsInput == null ? void 0 : (_breakpointsInput$key = breakpointsInput.keys) == null ? void 0 : _breakpointsInput$key.reduce((acc, key) => {
+  const breakpointsInOrder = (_breakpointsInput$key = breakpointsInput.keys) == null ? void 0 : _breakpointsInput$key.reduce((acc, key) => {
     const breakpointStyleKey = breakpointsInput.up(key);
     acc[breakpointStyleKey] = {};
     return acc;
@@ -180,9 +180,11 @@ function resolveBreakpointValues({
     if (Array.isArray(breakpointValues)) {
       acc[breakpoint] = breakpointValues[i] != null ? breakpointValues[i] : breakpointValues[previous];
       previous = i;
-    } else {
-      acc[breakpoint] = breakpointValues[breakpoint] != null ? breakpointValues[breakpoint] : breakpointValues[previous] || breakpointValues;
+    } else if (typeof breakpointValues === 'object') {
+      acc[breakpoint] = breakpointValues[breakpoint] != null ? breakpointValues[breakpoint] : breakpointValues[previous];
       previous = breakpoint;
+    } else {
+      acc[breakpoint] = breakpointValues;
     }
 
     return acc;

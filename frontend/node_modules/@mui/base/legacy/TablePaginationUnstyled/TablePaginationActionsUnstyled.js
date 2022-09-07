@@ -4,7 +4,7 @@ import _objectWithoutProperties from "@babel/runtime/helpers/esm/objectWithoutPr
 var _span, _span2, _span3, _span4;
 
 import * as React from 'react';
-import { appendOwnerState } from '../utils';
+import { useSlotProps } from '../utils';
 import { jsx as _jsx } from "react/jsx-runtime";
 import { jsxs as _jsxs } from "react/jsx-runtime";
 
@@ -81,51 +81,75 @@ var TablePaginationActionsUnstyled = /*#__PURE__*/React.forwardRef(function Tabl
   };
 
   var Root = (_ref = (_components$Root = components.Root) != null ? _components$Root : component) != null ? _ref : 'div';
-  var rootProps = appendOwnerState(Root, _extends({}, other, componentsProps.root), ownerState);
+  var rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: componentsProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState: ownerState
+  });
   var FirstButton = (_components$FirstButt = components.FirstButton) != null ? _components$FirstButt : 'button';
-  var firstButtonProps = appendOwnerState(FirstButton, componentsProps.firstButton, ownerState);
+  var firstButtonProps = useSlotProps({
+    elementType: FirstButton,
+    externalSlotProps: componentsProps.firstButton,
+    additionalProps: {
+      onClick: handleFirstPageButtonClick,
+      disabled: page === 0,
+      'aria-label': getItemAriaLabel('first', page),
+      title: getItemAriaLabel('first', page)
+    },
+    ownerState: ownerState
+  });
   var LastButton = (_components$LastButto = components.LastButton) != null ? _components$LastButto : 'button';
-  var lastButtonProps = appendOwnerState(LastButton, componentsProps.lastButton, ownerState);
+  var lastButtonProps = useSlotProps({
+    elementType: LastButton,
+    externalSlotProps: componentsProps.lastButton,
+    additionalProps: {
+      onClick: handleLastPageButtonClick,
+      disabled: page >= Math.ceil(count / rowsPerPage) - 1,
+      'aria-label': getItemAriaLabel('last', page),
+      title: getItemAriaLabel('last', page)
+    },
+    ownerState: ownerState
+  });
   var NextButton = (_components$NextButto = components.NextButton) != null ? _components$NextButto : 'button';
-  var nextButtonProps = appendOwnerState(NextButton, componentsProps.nextButton, ownerState);
+  var nextButtonProps = useSlotProps({
+    elementType: NextButton,
+    externalSlotProps: componentsProps.nextButton,
+    additionalProps: {
+      onClick: handleNextButtonClick,
+      disabled: count !== -1 ? page >= Math.ceil(count / rowsPerPage) - 1 : false,
+      'aria-label': getItemAriaLabel('next', page),
+      title: getItemAriaLabel('next', page)
+    },
+    ownerState: ownerState
+  });
   var BackButton = (_components$BackButto = components.BackButton) != null ? _components$BackButto : 'button';
-  var backButtonProps = appendOwnerState(BackButton, componentsProps.backButton, ownerState);
+  var backButtonProps = useSlotProps({
+    elementType: BackButton,
+    externalSlotProps: componentsProps.backButton,
+    additionalProps: {
+      onClick: handleBackButtonClick,
+      disabled: page === 0,
+      'aria-label': getItemAriaLabel('previous', page),
+      title: getItemAriaLabel('previous', page)
+    },
+    ownerState: ownerState
+  });
   var LastPageIcon = (_components$LastPageI = components.LastPageIcon) != null ? _components$LastPageI : LastPageIconDefault;
   var FirstPageIcon = (_components$FirstPage = components.FirstPageIcon) != null ? _components$FirstPage : FirstPageIconDefault;
   var NextPageIcon = (_components$NextPageI = components.NextPageIcon) != null ? _components$NextPageI : NextPageIconDefault;
   var BackPageIcon = (_components$BackPageI = components.BackPageIcon) != null ? _components$BackPageI : BackPageIconDefault;
-  return /*#__PURE__*/_jsxs(Root, _extends({
-    ref: ref
-  }, rootProps, {
-    children: [showFirstButton && /*#__PURE__*/_jsx(FirstButton, _extends({
-      onClick: handleFirstPageButtonClick,
-      disabled: page === 0,
-      "aria-label": getItemAriaLabel('first', page),
-      title: getItemAriaLabel('first', page)
-    }, firstButtonProps, {
+  return /*#__PURE__*/_jsxs(Root, _extends({}, rootProps, {
+    children: [showFirstButton && /*#__PURE__*/_jsx(FirstButton, _extends({}, firstButtonProps, {
       children: direction === 'rtl' ? /*#__PURE__*/_jsx(LastPageIcon, {}) : /*#__PURE__*/_jsx(FirstPageIcon, {})
-    })), /*#__PURE__*/_jsx(BackButton, _extends({
-      onClick: handleBackButtonClick,
-      disabled: page === 0,
-      color: "inherit",
-      "aria-label": getItemAriaLabel('previous', page),
-      title: getItemAriaLabel('previous', page)
-    }, backButtonProps, {
+    })), /*#__PURE__*/_jsx(BackButton, _extends({}, backButtonProps, {
       children: direction === 'rtl' ? /*#__PURE__*/_jsx(NextPageIcon, {}) : /*#__PURE__*/_jsx(BackPageIcon, {})
-    })), /*#__PURE__*/_jsx(NextButton, _extends({
-      onClick: handleNextButtonClick,
-      disabled: count !== -1 ? page >= Math.ceil(count / rowsPerPage) - 1 : false,
-      color: "inherit",
-      "aria-label": getItemAriaLabel('next', page),
-      title: getItemAriaLabel('next', page)
-    }, nextButtonProps, {
+    })), /*#__PURE__*/_jsx(NextButton, _extends({}, nextButtonProps, {
       children: direction === 'rtl' ? /*#__PURE__*/_jsx(BackPageIcon, {}) : /*#__PURE__*/_jsx(NextPageIcon, {})
-    })), showLastButton && /*#__PURE__*/_jsx(LastButton, _extends({
-      onClick: handleLastPageButtonClick,
-      disabled: page >= Math.ceil(count / rowsPerPage) - 1,
-      "aria-label": getItemAriaLabel('last', page),
-      title: getItemAriaLabel('last', page)
-    }, lastButtonProps, {
+    })), showLastButton && /*#__PURE__*/_jsx(LastButton, _extends({}, lastButtonProps, {
       children: direction === 'rtl' ? /*#__PURE__*/_jsx(FirstPageIcon, {}) : /*#__PURE__*/_jsx(LastPageIcon, {})
     }))]
   }));

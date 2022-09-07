@@ -1,6 +1,7 @@
 import React from 'react';
 import { OverrideProps, Simplify } from '@mui/types';
 import { UseButtonParameters, UseButtonRootSlotProps } from './useButton.types';
+import { SlotComponentProps } from '../utils';
 export interface ButtonUnstyledActions {
     focusVisible(): void;
 }
@@ -26,15 +27,10 @@ export interface ButtonUnstyledOwnProps extends Omit<UseButtonParameters, 'ref'>
      * @default {}
      */
     componentsProps?: {
-        root?: React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonUnstyledComponentsPropsOverrides;
+        root?: SlotComponentProps<'button', ButtonUnstyledComponentsPropsOverrides, ButtonUnstyledOwnerState>;
     };
 }
-export declare type ButtonUnstyledProps<D extends React.ElementType = ButtonUnstyledTypeMap['defaultComponent'], P = {}> = OverrideProps<ButtonUnstyledTypeMap<P, D>, D> & {
-    /**
-     * The component used for the Root slot.
-     * Either a string to use a HTML element or a component.
-     * This is equivalent to `components.Root`. If both are provided, the `component` is used.
-     */
+export declare type ButtonUnstyledProps<D extends React.ElementType = ButtonUnstyledTypeMap['defaultComponent']> = OverrideProps<ButtonUnstyledTypeMap<{}, D>, D> & {
     component?: D;
 };
 export interface ButtonUnstyledTypeMap<P = {}, D extends React.ElementType = 'button'> {
@@ -47,6 +43,6 @@ export declare type ButtonUnstyledOwnerState = ButtonUnstyledOwnProps & {
 };
 export declare type ButtonUnstyledRootSlotProps = Simplify<UseButtonRootSlotProps & {
     ownerState: ButtonUnstyledOwnerState;
-    className: string;
+    className?: string;
     children?: React.ReactNode;
 }>;

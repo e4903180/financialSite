@@ -33,8 +33,6 @@ chrome.get("https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID=%s"%(s
 
 #現在價格
 now_price = chrome.find_element(by = By.CSS_SELECTOR, value = '#divDetail > table > tbody > tr:nth-child(3) > td:nth-child(4) > nobr > a')
-# print('目前價格:'+ now_price.text)
-# print('\n')
 price_now = float(now_price.text)
 
 #填充表單_PER/PBR
@@ -45,8 +43,11 @@ s1.select_by_index(2)
 time.sleep(2)
 #提取表格資料
 form = chrome.find_element(by = By.ID, value = 'txtFinDetailData')
-df1 = pd.read_html(form.get_attribute('innerHTML'))[0]
-df1.drop([18, 19], inplace = True)
+df1 = pd.read_html(form.get_attribute('innerHTML'), header = 1)[0]
+
+for i in range(len(df1)):
+    if df1["年度"][i] == "年度":
+        df1.drop(i, inplace = True)
 df1.reset_index(drop = True, inplace = True)
 
 #填充表單_股利政策(發放年度)
@@ -58,9 +59,10 @@ time.sleep(2)
 form = chrome.find_element(by = By.ID, value = 'txtFinDetailData')
 
 df2 = pd.read_html(form.get_attribute('innerHTML'), header = 3)[0]
+for i in range(len(df2)):
+    if df2["股利發放年度"][i] == "股利發放年度" or df2["股利發放年度"][i] == "股利政策":
+        df2.drop(i, inplace = True)
 df2.reset_index(drop = True, inplace = True)
-df2.drop([16, 17, 18, 19], inplace = True)
-
 
 # In[5]:
 
@@ -73,68 +75,110 @@ df2.drop([16, 17, 18, 19], inplace = True)
 # In[7]:
 
 
-#10年歷年股利 
-dividend = df2["股利合計"][1:12]
-dividend.reset_index(drop = True, inplace = True)
-dividend.replace("-", "0", inplace = True)
-dividend = dividend.astype(float, errors = 'raise')
+#10年歷年股利
+dividend = []
+ptr = -1
+for i in range(len(df2)):
+    if(df2["股利合計"][i] == "-"):
+        df2["股利合計"][i] = "0"
+
+    if df2["股利發放年度"][i] != '∟':
+        dividend.append(float(df2["股利合計"][i]))
+        ptr += 1
+    else:
+        dividend[ptr] += float(df2["股利合計"][i])
 
 #10年歷年股價平均
-price_high = df1.loc[1:12, ('年度股價(元)', '最高')]
+try:
+    price_high = df1["最高"][1:12]
+except:
+    price_high = df1["最高"][1:]
+
 price_high.reset_index(drop = True, inplace = True)
 price_high.replace("-", "0", inplace = True)
 price_high = price_high.astype(float, errors = 'raise')
 
-price_low = df1.loc[1:12, ('年度股價(元)', '最低')]
+try:
+    price_low = df1["最低"][1:12]
+except:
+    price_low = df1["最低"][1:]
+
 price_low.reset_index(drop = True, inplace = True)
 price_low.replace("-", "0", inplace = True)
 price_low = price_low.astype(float, errors = 'raise')
 
-price_avg = df1.loc[1:12, ('年度股價(元)', '平均')]
+try:
+    price_avg = df1["平均"][1:12]
+except:
+    price_avg = df1["平均"][1:]
 price_avg.reset_index(drop = True, inplace = True)
 price_avg.replace("-", "0", inplace = True)
 price_avg = price_avg.astype(float, errors = 'raise')
 
 #10年歷年EPS
-EPS = df1.loc[1:12, ('本益比(PER)統計', 'EPS(元)')]
+try:
+    EPS = df1["EPS(元)"][1:12]
+except:
+    EPS = df1["EPS(元)"][1:]
 EPS.reset_index(drop = True, inplace = True)
 EPS.replace("-", "0", inplace = True)
 EPS = EPS.astype(float, errors = 'raise')
 
 #10年歷年PER
-PER_high = df1.loc[1:12, ('本益比(PER)統計',  '最高PER')]
+try:
+    PER_high = df1["最高PER"][1:12]
+except:
+    PER_high = df1["最高PER"][1:]
 PER_high.reset_index(drop = True, inplace = True)
 PER_high.replace("-", "0", inplace = True)
 PER_high = PER_high.astype(float, errors = 'raise')
 
-PER_low = df1.loc[1:12, ('本益比(PER)統計',  '最低PER')]
+try:
+    PER_low = df1["最低PER"][1:12]
+except:
+    PER_low = df1["最低PER"][1:]
 PER_low.reset_index(drop = True, inplace = True)
 PER_low.replace("-", "0", inplace = True)
 PER_low = PER_low.astype(float, errors = 'raise')
 
-PER_avg = df1.loc[1:12, ('本益比(PER)統計',  '平均PER')]
+try:
+    PER_avg = df1["平均PER"][1:12]
+except:
+    PER_avg = df1["平均PER"][1:]
 PER_avg.reset_index(drop = True, inplace = True)
 PER_avg.replace("-", "0", inplace = True)
 PER_avg = PER_avg.astype(float, errors = 'raise')
 
 #10年歷年PBR
-PBR_high = df1.loc[1:12, ('本淨比(PBR)統計',  '最高PBR')]
+try:
+    PBR_high = df1["最高PBR"][1:12]
+except:
+    PBR_high = df1["最高PBR"][1:]
 PBR_high.reset_index(drop = True, inplace = True)
 PBR_high.replace("-", "0", inplace = True)
 PBR_high = PBR_high.astype(float, errors = 'raise')
 
-PBR_low = df1.loc[1:12, ('本淨比(PBR)統計',  '最低PBR')]
+try:
+    PBR_low = df1["最低PBR"][1:12]
+except:
+    PBR_low = df1["最低PBR"][1:]
 PBR_low.reset_index(drop=True, inplace = True)
 PBR_low.replace("-", "0", inplace = True)
 PBR_low = PBR_low.astype(float, errors = 'raise')
 
-PBR_avg = df1.loc[1:12, ('本淨比(PBR)統計',  '平均PBR')]
+try:
+    PBR_avg = df1["平均PBR"][1:12]
+except:
+    PBR_avg = df1["平均PBR"][1:]
 PBR_avg.reset_index(drop = True, inplace = True)
 PBR_avg.replace("-", "0", inplace = True)
 PBR_avg = PBR_avg.astype(float, errors = 'raise')
 
 #歷10年年BPS
-BPS = df1.loc[1:12, ('本淨比(PBR)統計', 'BPS(元)')]
+try:
+    BPS = df1["BPS(元)"][1:12]
+except:
+    BPS = df1["BPS(元)"][1:]
 BPS.reset_index(drop = True, inplace = True)
 BPS.replace("-", "0", inplace = True)
 BPS = BPS.astype(float, errors = 'raise')
@@ -145,7 +189,7 @@ BPS = BPS.astype(float, errors = 'raise')
 
 
 #股利法
-dividend_avg = dividend[1:int(sys.argv[2])+1].mean()
+dividend_avg = sum(dividend[1:int(sys.argv[2])+1]) / int(sys.argv[2])
 cheap1= dividend_avg * 16
 reasonable1 = dividend_avg * 20
 expensive1 = dividend_avg * 32

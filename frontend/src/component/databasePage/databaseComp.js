@@ -56,6 +56,7 @@ function DatabaseComp() {
                     "investmentCompany" : input4,
                     "dbTable" : "financialData"
                 }).then(res => {
+                    console.log(res.data)
                     setData2(res.data)
                     setSearch1(true)
                     setLoading(false)

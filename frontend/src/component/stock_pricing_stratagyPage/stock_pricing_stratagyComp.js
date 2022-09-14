@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { rootApiIP } from '../../constant'
 import PricingComp from './pricingComp';
-import { priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingExplain';
+import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingExplain';
+import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '../column/column';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 function StockPricingStratagyComp() {
     const [stockNum, setStockNum] = useState([]);
@@ -48,6 +50,14 @@ function StockPricingStratagyComp() {
 
     return (
         <>
+            <Backdrop
+                sx = {{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open = { loading }
+            >
+                資料載入中&emsp;
+                <CircularProgress color = "inherit" />
+            </Backdrop>
+
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
                 <h3 className = "display-6 text-center">股票定價</h3>
                 
@@ -85,7 +95,7 @@ function StockPricingStratagyComp() {
 
                     <div className = 'form-group row py-3'>
                         <div className = 'col-md-12 text-center'>
-                            { loading ? <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }} disabled><span className = "spinner-border spinner-border-sm" role = "status" aria-hidden = "true"></span></button> : <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }}>搜尋</button> }
+                            <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }}>搜尋</button>
                         </div>
                     </div>
                 </form>
@@ -93,7 +103,7 @@ function StockPricingStratagyComp() {
             </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
-                <div className = 'col-md-12'>
+                <div className = 'col-md-8 mx-auto'>
                     <div className = 'card'>
                         <div className = 'card-body'>
                             <h3 className = 'card-title'>最新價格: { price["NewPrice"] }</h3>
@@ -103,22 +113,66 @@ function StockPricingStratagyComp() {
             </div>
             
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
-                <div className = 'col-md-6'>
-                    <PricingComp pricingName = "股利法" pricingExplain = { pricing1(year) } lowPrice = { price["cheap1"] } resonablePrice = { price["reasonable1"] } highPrice = { price["expensive1"] } NewPrice = { price["NewPrice"] }/>
-                </div>
-
-                <div className = 'col-md-6'>
-                    <PricingComp pricingName = "高低價法" pricingExplain = { pricing2(year) } lowPrice = { price["cheap2"] } resonablePrice = { price["reasonable2"] } highPrice = { price["expensive2"] } NewPrice = { price["NewPrice"] }/>
+                <div className = 'col-md-8 mx-auto'>
+                    <PricingComp
+                        pricingName = "股利法" 
+                        pricingExplain = { pricing1(year) } 
+                        lowPrice = { price["cheap1"] }
+                        resonablePrice = { price["reasonable1"] }
+                        highPrice = { price["expensive1"] }
+                        NewPrice = { price["NewPrice"] }
+                        data = { price["dividend_table"]["data"] } 
+                        label = { label.label1 }
+                        columns = { columns_dividend }
+                    />
                 </div>
             </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
-                <div className = 'col-md-6'>
-                    <PricingComp pricingName = "本益比法" pricingExplain = { pricing3(year) } lowPrice = { price["cheap3"] } resonablePrice = { price["reasonable3"] } highPrice = { price["expensive3"] } NewPrice = { price["NewPrice"] }/>
+                <div className = 'col-md-8 mx-auto'>
+                    <PricingComp
+                        pricingName = "高低價法" 
+                        pricingExplain = { pricing2(year) } 
+                        lowPrice = { price["cheap2"] }
+                        resonablePrice = { price["reasonable2"] }
+                        highPrice = { price["expensive2"] }
+                        NewPrice = { price["NewPrice"] }
+                        data = { price["high_low_table"]["data"] } 
+                        label = { label.label2 }
+                        columns = { columns_high_low }
+                    />
                 </div>
-                
-                <div className = 'col-md-6'>
-                    <PricingComp pricingName = "本淨比法" pricingExplain = { pricing4(year) } lowPrice = { price["cheap4"] } resonablePrice = { price["reasonable4"] } highPrice = { price["expensive4"] } NewPrice = { price["NewPrice"] }/>
+            </div>
+
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-8 mx-auto'>
+                    <PricingComp
+                        pricingName = "本益比法" 
+                        pricingExplain = { pricing3(year) } 
+                        lowPrice = { price["cheap3"] }
+                        resonablePrice = { price["reasonable3"] }
+                        highPrice = { price["expensive3"] }
+                        NewPrice = { price["NewPrice"] }
+                        data = { price["PER_table"]["data"] } 
+                        label = { label.label3 }
+                        columns = { columns_PER }
+                    />
+                </div>
+            </div>
+
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-8 mx-auto'>
+                    <PricingComp
+                        pricingName = "本淨比法" 
+                        pricingExplain = { pricing4(year) } 
+                        lowPrice = { price["cheap4"] }
+                        resonablePrice = { price["reasonable4"] }
+                        highPrice = { price["expensive4"] }
+                        NewPrice = { price["NewPrice"] }
+                        data = { price["PBR_table"]["data"] } 
+                        label = { label.label4 }
+                        columns = { columns_PBR }
+                    />
                 </div>
             </div>
         </>

@@ -73,6 +73,41 @@ export const columns6 = [
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } download = { rowData.value }>Download</a>  },
 ];
 
+export const columns_dividend = [
+    { field: "ID", headerName : "股利發放年度", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '1', headerName: '現金股利盈餘', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '2', headerName: '現金股利公積', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '3', headerName: '現金股利合計', flex: 1, headerAlign: 'center', align: 'center'},
+    { field: '4', headerName: '股票股利盈餘', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '5', headerName: '股票股利公積', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '6', headerName: '股票股利合計', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '7', headerName: '股利合計', flex: 1, headerAlign: 'center', align: 'center' },
+];
+
+export const columns_high_low = [
+    { field: "ID", headerName : "年度", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '1', headerName: '最高', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '2', headerName: '最低', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '3', headerName: '收盤', flex: 1, headerAlign: 'center', align: 'center'},
+    { field: '4', headerName: '平均', flex: 1, headerAlign: 'center', align: 'center' },
+];
+
+export const columns_PER = [
+    { field: "ID", headerName : "年度", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '1', headerName: 'EPS(元)', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '2', headerName: '最高PER', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '3', headerName: '最低PER', flex: 1, headerAlign: 'center', align: 'center'},
+    { field: '4', headerName: '平均PER', flex: 1, headerAlign: 'center', align: 'center' },
+];
+
+export const columns_PBR = [
+    { field: "ID", headerName : "年度", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '1', headerName: 'BPS(元)', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '2', headerName: '最高PBR', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: '3', headerName: '最低PBR', flex: 1, headerAlign: 'center', align: 'center'},
+    { field: '4', headerName: '平均PBR', flex: 1, headerAlign: 'center', align: 'center' },
+];
+
 const check_single_post_board_memo_NULL = (value) => {
     if(value === "NULL"){
         return <> </>

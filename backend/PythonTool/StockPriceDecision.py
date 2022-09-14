@@ -19,13 +19,11 @@ from selenium.webdriver.common.by import By
 
 # In[3]:
 
-
 options = webdriver.ChromeOptions()
 options.add_argument("--disable-notifications")
 options.add_argument("headless")
 s = Service(ChromeDriverManager().install())
 chrome = webdriver.Chrome(options = options,service = s)
-
 
 # In[4]:
 
@@ -49,10 +47,11 @@ for i in range(len(df1)):
     if df1["年度"][i] == "年度":
         df1.drop(i, inplace = True)
 df1.reset_index(drop = True, inplace = True)
+df1 = df1.replace("-", "0")
 
 #填充表單_股利政策(發放年度)
 s1 = Select(chrome.find_element(by = By.CSS_SELECTOR, value = 'body > table:nth-child(8) > tbody > tr > td:nth-child(3) > table.b1.r10_0 > tbody > tr > td > table > tbody > tr > td:nth-child(1) > nobr:nth-child(1) > select'))
-s1.select_by_index(3) 
+s1.select_by_index(3)
 #等待運行時間
 time.sleep(2)
 #提取表格資料
@@ -60,136 +59,69 @@ form = chrome.find_element(by = By.ID, value = 'txtFinDetailData')
 
 df2 = pd.read_html(form.get_attribute('innerHTML'), header = 3)[0]
 for i in range(len(df2)):
-    if df2["股利發放年度"][i] == "股利發放年度" or df2["股利發放年度"][i] == "股利政策":
+    if df2["股利發放年度"][i] == "股利發放年度" or df2["股利發放年度"][i] == "股 利 政 策" or df2["股利發放年度"][i] == "∟":
         df2.drop(i, inplace = True)
 df2.reset_index(drop = True, inplace = True)
-
-# In[5]:
-
-
-# In[6]:
-
-
-# 定義參數名稱
+df2 = df2.replace("-", "0")
 
 # In[7]:
 
-
 #10年歷年股利
-dividend = []
-ptr = -1
-for i in range(len(df2)):
-    if(df2["股利合計"][i] == "-"):
-        df2["股利合計"][i] = "0"
-
-    if df2["股利發放年度"][i] != '∟':
-        dividend.append(float(df2["股利合計"][i]))
-        ptr += 1
-    else:
-        dividend[ptr] += float(df2["股利合計"][i])
+dividend = df2["股利合計"][1:12]
+dividend = dividend.astype(float, errors = 'raise')
 
 #10年歷年股價平均
-try:
-    price_high = df1["最高"][1:12]
-except:
-    price_high = df1["最高"][1:]
+price_high = df1["最高"][1:12]
 
 price_high.reset_index(drop = True, inplace = True)
-price_high.replace("-", "0", inplace = True)
 price_high = price_high.astype(float, errors = 'raise')
 
-try:
-    price_low = df1["最低"][1:12]
-except:
-    price_low = df1["最低"][1:]
-
+price_low = df1["最低"][1:12]
 price_low.reset_index(drop = True, inplace = True)
-price_low.replace("-", "0", inplace = True)
 price_low = price_low.astype(float, errors = 'raise')
 
-try:
-    price_avg = df1["平均"][1:12]
-except:
-    price_avg = df1["平均"][1:]
+price_avg = df1["平均"][1:12]
 price_avg.reset_index(drop = True, inplace = True)
-price_avg.replace("-", "0", inplace = True)
 price_avg = price_avg.astype(float, errors = 'raise')
 
 #10年歷年EPS
-try:
-    EPS = df1["EPS(元)"][1:12]
-except:
-    EPS = df1["EPS(元)"][1:]
+EPS = df1["EPS(元)"][1:12]
 EPS.reset_index(drop = True, inplace = True)
-EPS.replace("-", "0", inplace = True)
 EPS = EPS.astype(float, errors = 'raise')
 
 #10年歷年PER
-try:
-    PER_high = df1["最高PER"][1:12]
-except:
-    PER_high = df1["最高PER"][1:]
+PER_high = df1["最高PER"][1:12]
 PER_high.reset_index(drop = True, inplace = True)
-PER_high.replace("-", "0", inplace = True)
 PER_high = PER_high.astype(float, errors = 'raise')
 
-try:
-    PER_low = df1["最低PER"][1:12]
-except:
-    PER_low = df1["最低PER"][1:]
+PER_low = df1["最低PER"][1:12]
 PER_low.reset_index(drop = True, inplace = True)
-PER_low.replace("-", "0", inplace = True)
 PER_low = PER_low.astype(float, errors = 'raise')
 
-try:
-    PER_avg = df1["平均PER"][1:12]
-except:
-    PER_avg = df1["平均PER"][1:]
+PER_avg = df1["平均PER"][1:12]
 PER_avg.reset_index(drop = True, inplace = True)
-PER_avg.replace("-", "0", inplace = True)
 PER_avg = PER_avg.astype(float, errors = 'raise')
 
 #10年歷年PBR
-try:
-    PBR_high = df1["最高PBR"][1:12]
-except:
-    PBR_high = df1["最高PBR"][1:]
+PBR_high = df1["最高PBR"][1:12]
 PBR_high.reset_index(drop = True, inplace = True)
-PBR_high.replace("-", "0", inplace = True)
 PBR_high = PBR_high.astype(float, errors = 'raise')
 
-try:
-    PBR_low = df1["最低PBR"][1:12]
-except:
-    PBR_low = df1["最低PBR"][1:]
+PBR_low = df1["最低PBR"][1:12]
 PBR_low.reset_index(drop=True, inplace = True)
-PBR_low.replace("-", "0", inplace = True)
 PBR_low = PBR_low.astype(float, errors = 'raise')
 
-try:
-    PBR_avg = df1["平均PBR"][1:12]
-except:
-    PBR_avg = df1["平均PBR"][1:]
+PBR_avg = df1["平均PBR"][1:12]
 PBR_avg.reset_index(drop = True, inplace = True)
-PBR_avg.replace("-", "0", inplace = True)
 PBR_avg = PBR_avg.astype(float, errors = 'raise')
 
 #歷10年年BPS
-try:
-    BPS = df1["BPS(元)"][1:12]
-except:
-    BPS = df1["BPS(元)"][1:]
+BPS = df1["BPS(元)"][1:12]
 BPS.reset_index(drop = True, inplace = True)
-BPS.replace("-", "0", inplace = True)
 BPS = BPS.astype(float, errors = 'raise')
 
-# In[8]:
-
-# In[9]:
-
-
 #股利法
-dividend_avg = sum(dividend[1:int(sys.argv[2])+1]) / int(sys.argv[2])
+dividend_avg = dividend[1:int(sys.argv[2])+1].mean()
 cheap1= dividend_avg * 16
 reasonable1 = dividend_avg * 20
 expensive1 = dividend_avg * 32
@@ -222,6 +154,44 @@ reasonable4 = PER_avg_avg * ((EPS_1year + EPS_xyear) / 2)
 expensive4 = PER_high_avg * ((EPS_1year + EPS_xyear) / 2)
 
 # In[10]:
+dividend_table_name = []
+dividend_table_name.append("ID")
+dividend_table_name.extend([str(x) for x in range(1, 8)])
+dividend_table = df2.drop(df2.columns[8:], axis = 1)
+dividend_table.drop(0, inplace = True)
+dividend_table.drop(len(dividend_table) - 1, inplace = True)
+dividend_table.reset_index(drop = True, inplace = True)
+dividend_table = dividend_table.set_axis(dividend_table_name, axis = 1, inplace = False)
+dividend_table_json = dividend_table[:int(sys.argv[2])].to_json(orient = 'records')
+
+high_low_table_name = []
+high_low_table_name.append("ID")
+high_low_table_name.extend([str(x) for x in range(1, 5)])
+high_low_table = df1.drop(df1.columns[7:], axis = 1)
+high_low_table = high_low_table.drop(high_low_table.columns[1:3], axis = 1)
+high_low_table.drop(0, inplace = True)
+high_low_table.reset_index(drop = True, inplace = True)
+high_low_table = high_low_table.set_axis(high_low_table_name, axis = 1, inplace = False)
+high_low_table_json = high_low_table[:int(sys.argv[2])].to_json(orient = 'records')
+
+PER_table_name = []
+PER_table_name.append("ID")
+PER_table_name.extend([str(x) for x in range(1, 5)])
+PER_table = df1.drop(df1.columns[1:9], axis = 1)
+PER_table = PER_table.drop(PER_table.columns[5:], axis = 1)
+PER_table.drop(0, inplace = True)
+PER_table.reset_index(drop = True, inplace = True)
+PER_table = PER_table.set_axis(PER_table_name, axis = 1, inplace = False)
+PER_table_json = PER_table[:int(sys.argv[2])].to_json(orient = 'records')
+
+PBR_table_name = []
+PBR_table_name.append("ID")
+PBR_table_name.extend([str(x) for x in range(1, 5)])
+PBR_table = df1.drop(df1.columns[1:13], axis = 1)
+PBR_table.drop(0, inplace = True)
+PBR_table.reset_index(drop = True, inplace = True)
+PBR_table = PER_table.set_axis(PBR_table_name, axis = 1, inplace = False)
+PBR_table_json = PER_table[:int(sys.argv[2])].to_json(orient = 'records')
 
 result = {
     "NewPrice" : str(round(price_now, 2)),
@@ -239,19 +209,12 @@ result = {
     "expensive4" : str(round(expensive4, 2)),
 }
 
-json = json.dumps(result)
+json1 = json.loads(json.dumps(result))
+json1.update({"dividend_table" : { "data" : dividend_table_json }})
+json1.update({"high_low_table" : { "data" : high_low_table_json }})
+json1.update({"PER_table" : { "data" : PER_table_json }})
+json1.update({"PBR_table" : { "data" : PBR_table_json }})
+json1 = json.dumps(json1)
 
-print(json)
+print(json1)
 sys.stdout.flush()
-
-# In[16]:
-
-
-# In[15]:
-
-
-# In[ ]:
-
-
-
-

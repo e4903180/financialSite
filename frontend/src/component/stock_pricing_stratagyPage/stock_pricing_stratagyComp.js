@@ -7,6 +7,7 @@ import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pric
 import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '../column/column';
 import { Backdrop, CircularProgress } from '@mui/material';
 
+
 function StockPricingStratagyComp() {
     const [stockNum, setStockNum] = useState([]);
     const [year, setYear] = useState("?");

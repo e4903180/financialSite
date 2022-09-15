@@ -66,5 +66,7 @@ dataRouter.post("/post_board_search", Data.post_board_search)
 dataRouter.post("/lineMemo_search", Data.lineMemo_search)
 
 dataRouter.post("/pricing", Data.pricingData)
+dataRouter.post("/Kline", Data.KlineData)
+dataRouter.post("/PER_River", Data.PER_river_Data)
 
 module.exports = {router};

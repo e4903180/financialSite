@@ -38,7 +38,7 @@ function DatabaseSearchComp() {
         e.preventDefault()
         setLoading(true)
 
-        if((input5 === "") && (!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
+        if((document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "") && (!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
             set_input1Error(true)
             setLoading(false)
             setData([])
@@ -249,7 +249,6 @@ function DatabaseSearchComp() {
                             <label htmlFor = "db" className = "col-md-2 col-form-label text-center">資料表:</label>
                             <div className = 'col-md-3'>
                                 <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)} defaultValue = "綜合查詢">
-                                    <option value = "">請選擇資料表</option>
                                     <option value = "綜合查詢">綜合查詢</option>
                                     <option value = "financialData">個股研究資料</option>
                                     <option value = "post_board_memo">個股推薦</option>

@@ -1,16 +1,13 @@
 var mysql2 = require('mysql2');
 
-var con = mysql2.createConnection({
+var con = mysql2.createPool({
     host : "localhost",
     user : "debian-sys-maint",
     password : "CEMj8ptYHraxNxFt",
     database : "financial",
     charset : "utf8",
-    multipleStatements : true
-});
-
-con.connect(function(err) {
-    if (err) throw err;
+    multipleStatements : true,
+    connectionLimit: 20,
 });
 
 module.exports = con

@@ -253,3 +253,51 @@ exports.pricingData = async function(req, res){
 
     return res.status(200).send(result)
 }
+
+exports.KlineData = async function(req, res){
+    let options = {
+        args:[
+                req.body.stockNum,
+                "MONTH"
+            ]
+    }
+    
+    const result = await new Promise((resolve, reject) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/KLine.py', options, (err, data) => {
+            if (err) reject(err)
+            const parsedString = JSON.parse(data)
+
+            try {
+                return resolve(parsedString);
+            } catch (error) {
+                reject(error)
+            }
+        })
+    })
+
+    return res.status(200).send(result)
+}
+
+exports.PER_river_Data = async function(req, res){
+    let options = {
+        args:[
+                req.body.stockNum,
+                "MONTH"
+            ]
+    }
+    
+    const result = await new Promise((resolve, reject) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/PER_River.py', options, (err, data) => {
+            if (err) reject(err)
+            const parsedString = JSON.parse(data)
+
+            try {
+                return resolve(parsedString);
+            } catch (error) {
+                reject(error)
+            }
+        })
+    })
+
+    return res.status(200).send(result)
+}

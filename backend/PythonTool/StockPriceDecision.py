@@ -216,5 +216,6 @@ json1.update({"PER_table" : { "data" : PER_table_json }})
 json1.update({"PBR_table" : { "data" : PBR_table_json }})
 json1 = json.dumps(json1)
 
+chrome.quit()
 print(json1)
 sys.stdout.flush()

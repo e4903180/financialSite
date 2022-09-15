@@ -14,7 +14,6 @@ function LoginComp() {
             userName : userName,
             password : password
         }).then(res => {
-            alert("Log in")
             nav("/home");
         }).catch(err => {
             alert("Username or password error")

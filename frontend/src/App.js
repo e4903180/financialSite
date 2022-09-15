@@ -14,6 +14,7 @@ import IndustryAnalysisComp from './component/Industry_analysisPage/Industry_ana
 import UserListComp from './component/userListPage/userListComp';
 import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 import StockPricingStratagyComp from './component/stock_pricing_stratagyPage/stock_pricing_stratagyComp';
+import PERRiverComp from './component/PER_RiverPage/PER_RiverComp';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path = "/industry_analysis" element = { <IndustryAnalysisComp /> } ></Route>
             <Route path = "/userList" element = { <UserListComp /> } ></Route>
             <Route path = "/stock_pricing_stratagy" element = { <StockPricingStratagyComp /> } ></Route>
+            <Route path = "/PER_River" element = { <PERRiverComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

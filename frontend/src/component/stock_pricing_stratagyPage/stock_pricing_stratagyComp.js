@@ -6,6 +6,7 @@ import PricingComp from './pricingComp';
 import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingExplain';
 import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '../column/column';
 import { Backdrop, CircularProgress } from '@mui/material';
+import HighchartBarComp from '../highchart/highchartBarComp';
 
 
 function StockPricingStratagyComp() {
@@ -15,6 +16,46 @@ function StockPricingStratagyComp() {
     const [price, setPrice] = useState(priceInit);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
+
+    const options = {
+        chart: {
+            type: 'bar',
+            height : 500
+        },
+        title: {
+            text: '股票定價結果'
+        },
+        accessibility: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['股利法', '高低價法', '本益比法', '本淨比法']
+        },
+        yAxis: {
+            title: 
+            {
+              text: '價格區間'
+            }
+        },
+        series: [
+            {
+                name: '昂貴價',
+                data: price["expensive"],
+            },
+            {
+                name: '合理價',
+                data: price["reasonable"],
+            },
+            {
+                name: '便宜價',
+                data: price["cheap"],
+            },
+            {
+                name: '最新價格',
+                data: [price["NewPrice"], price["NewPrice"], price["NewPrice"], price["NewPrice"]]
+            }
+        ]
+    }
 
     useEffect(() => {
         axios.get(rootApiIP + "/data/autoCom")
@@ -115,13 +156,16 @@ function StockPricingStratagyComp() {
             
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-8 mx-auto'>
+                    <HighchartBarComp options = { options }/>
+                </div>
+            </div>
+
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-8 mx-auto'>
                     <PricingComp
+                        cardKey = "data1"
                         pricingName = "股利法" 
                         pricingExplain = { pricing1(year) } 
-                        lowPrice = { price["cheap1"] }
-                        resonablePrice = { price["reasonable1"] }
-                        highPrice = { price["expensive1"] }
-                        NewPrice = { price["NewPrice"] }
                         data = { price["dividend_table"]["data"] } 
                         label = { label.label1 }
                         columns = { columns_dividend }
@@ -132,12 +176,9 @@ function StockPricingStratagyComp() {
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
+                        cardKey = "data2"
                         pricingName = "高低價法" 
                         pricingExplain = { pricing2(year) } 
-                        lowPrice = { price["cheap2"] }
-                        resonablePrice = { price["reasonable2"] }
-                        highPrice = { price["expensive2"] }
-                        NewPrice = { price["NewPrice"] }
                         data = { price["high_low_table"]["data"] } 
                         label = { label.label2 }
                         columns = { columns_high_low }
@@ -148,12 +189,9 @@ function StockPricingStratagyComp() {
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
+                        cardKey = "data3"
                         pricingName = "本益比法" 
                         pricingExplain = { pricing3(year) } 
-                        lowPrice = { price["cheap3"] }
-                        resonablePrice = { price["reasonable3"] }
-                        highPrice = { price["expensive3"] }
-                        NewPrice = { price["NewPrice"] }
                         data = { price["PER_table"]["data"] } 
                         label = { label.label3 }
                         columns = { columns_PER }
@@ -164,12 +202,9 @@ function StockPricingStratagyComp() {
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
+                        cardKey = "data4"
                         pricingName = "本淨比法" 
                         pricingExplain = { pricing4(year) } 
-                        lowPrice = { price["cheap4"] }
-                        resonablePrice = { price["reasonable4"] }
-                        highPrice = { price["expensive4"] }
-                        NewPrice = { price["NewPrice"] }
                         data = { price["PBR_table"]["data"] } 
                         label = { label.label4 }
                         columns = { columns_PBR }

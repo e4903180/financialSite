@@ -155,8 +155,6 @@ function PERRiverComp() {
                 <CircularProgress color = "inherit" />
             </Backdrop>
 
-            
-
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
                 <h3 className = "display-6 text-center">本益比河流圖</h3>
                 

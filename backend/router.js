@@ -12,7 +12,6 @@ const industry_analysisUp = require('./Controller/industry_analysis_uploadContro
 const LineMemoUp = require('./Controller/lineMemo_uploadController')
 const Download = require('./Controller/downloadController');
 
-
 const Limiter = rateLimit({
     windowMs: 60 * 1000,
     max: 3
@@ -72,8 +71,8 @@ dataRouter.post("/dbsearch", Data.dbsearch)
 dataRouter.post("/post_board_search", Data.post_board_search)
 dataRouter.post("/lineMemo_search", Data.lineMemo_search)
 
-dataRouter.post("/pricing", Limiter, Data.pricingData)
-dataRouter.post("/Kline", Limiter, Data.KlineData)
-dataRouter.post("/PER_River", Limiter, Data.PER_river_Data)
+dataRouter.post("/pricing", Data.pricingData)
+dataRouter.post("/Kline", Data.KlineData)
+dataRouter.post("/PER_River", Data.PER_river_Data)
 
 module.exports = {router};

@@ -1,5 +1,5 @@
 import React from 'react';
-import HighchartComp from '../highchart/highchatComp';
+import HighchartStockComp from '../highchart/highchatStockComp';
 
 function PerRiverComp(props) {
     return (
@@ -14,7 +14,7 @@ function PerRiverComp(props) {
                     </div>
                 </div>
 
-                <HighchartComp options = {props.options} />
+                <HighchartStockComp options = {props.options} />
             </div>
         </>
     );

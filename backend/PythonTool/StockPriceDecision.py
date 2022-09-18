@@ -7,6 +7,7 @@ import pandas as pd
 import time
 import sys 
 import json
+import twstock
 
 #使用selenium套件爬蟲
 from selenium import webdriver
@@ -30,8 +31,8 @@ chrome = webdriver.Chrome(options = options,service = s)
 chrome.get("https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID=%s"%(sys.argv[1]))
 
 #現在價格
-now_price = chrome.find_element(by = By.CSS_SELECTOR, value = '#divDetail > table > tbody > tr:nth-child(3) > td:nth-child(4) > nobr > a')
-price_now = float(now_price.text)
+stock_info = twstock.realtime.get('2330')
+price_now = float(stock_info["realtime"]["latest_trade_price"])
 
 #填充表單_PER/PBR
 s1 = Select(chrome.find_element(by = By.CSS_SELECTOR, value = 'body > table:nth-child(8) > tbody > tr > td:nth-child(3) > table.b1.r10_0 > tbody > tr > td > table > tbody > tr > td:nth-child(1) > nobr:nth-child(1) > select'))
@@ -194,19 +195,10 @@ PBR_table = PER_table.set_axis(PBR_table_name, axis = 1, inplace = False)
 PBR_table_json = PER_table[:int(sys.argv[2])].to_json(orient = 'records')
 
 result = {
-    "NewPrice" : str(round(price_now, 2)),
-    "cheap1" : str(round(cheap1, 2)),
-    "reasonable1" : str(round(reasonable1, 2)),
-    "expensive1" : str(round(expensive1, 2)),
-    "cheap2" : str(round(cheap2, 2)),
-    "reasonable2" : str(round(reasonable2, 2)),
-    "expensive2" : str(round(expensive2, 2)),
-    "cheap3" : str(round(cheap3, 2)),
-    "reasonable3" : str(round(reasonable3, 2)),
-    "expensive3" : str(round(expensive3, 2)),
-    "cheap4" : str(round(cheap4, 2)),
-    "reasonable4" : str(round(reasonable4, 2)),
-    "expensive4" : str(round(expensive4, 2)),
+    "NewPrice" : round(price_now, 2),
+    "cheap" : [round(cheap1, 2), round(cheap2, 2), round(cheap3, 2), round(cheap4, 2)],
+    "reasonable": [round(reasonable1, 2), round(reasonable2, 2), round(reasonable3, 2), round(reasonable4, 2)],
+    "expensive": [round(expensive1, 2), round(expensive2, 2), round(expensive3, 2), round(expensive4, 2)],
 }
 
 json1 = json.loads(json.dumps(result))

@@ -1,5 +1,5 @@
 import React from 'react';
-import "./highchart.css";
+import "./highchartStock.css";
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highstock'
 
@@ -9,7 +9,7 @@ import priceIndicator from "highcharts/modules/price-indicator";
 import fullScreen from "highcharts/modules/full-screen";
 import stockTools from "highcharts/modules/stock-tools";
 
-function HighchartComp(props) {
+function HighchartStockComp(props) {
     indicatorsAll(Highcharts);
     annotationsAdvanced(Highcharts);
     priceIndicator(Highcharts);
@@ -27,4 +27,4 @@ function HighchartComp(props) {
     );
 }
 
-export default HighchartComp;
+export default HighchartStockComp;

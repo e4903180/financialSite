@@ -65,7 +65,7 @@ function CalendarComp() {
             </div>
 
             <div className = 'row mt-3 mx-auto'>
-                <div className = 'col-md-8 mx-auto'>
+                <div className = 'col-md-6 mx-auto'>
                     <FullCalendar
                         height = { "auto" }
                         plugins={[ dayGridPlugin ]}
@@ -80,25 +80,31 @@ function CalendarComp() {
                 </div>
             </div>
 
-            <div className = 'row mt-5 mx-auto' style = {{height : "600px"}}>
-                <DataGrid
-                    columns = { columns4 }
-                    rows = { data }
-                    page = { page }
-                    onPageChange={(newPage) => setPage(newPage)}
-                    pageSize = { pageSize }
-                    onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
-                    rowsPerPageOptions = {[5, 10, 20]}
-                    getRowId = { row => row.ID }
-                    components = {{ Toolbar: GridToolbar }}
-                    componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                    pagination
-                    disableColumnMenu
-                    disableColumnSelector
-                    disableDensitySelector
-                    disableColumnFilter
-                    disableSelectionOnClick = { true }
-                />
+            <div className = 'row mt-5 mx-auto text-center'>
+                <h2>法說會詳細資訊</h2>
+            </div>
+
+            <div className = 'row mt-3 mx-auto' style = {{minheight : "600px", height : "900px"}}>
+                <div className = 'col-md-9 mx-auto'>
+                    <DataGrid
+                        columns = { columns4 }
+                        rows = { data }
+                        page = { page }
+                        onPageChange={(newPage) => setPage(newPage)}
+                        pageSize = { pageSize }
+                        onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                    />
+                </div>
             </div>
         </>
     );

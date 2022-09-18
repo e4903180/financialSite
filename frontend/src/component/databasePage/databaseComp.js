@@ -30,7 +30,7 @@ function DatabaseComp() {
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
     const [input4, setInput4] = useState("");
-    const [input5, setInput5] = useState("");
+    const [input5, setInput5] = useState("綜合查詢");
 
     async function submit(e){
         e.preventDefault()
@@ -46,7 +46,6 @@ function DatabaseComp() {
             setPage(0)
         }else{
             set_input1Error(false)
-            
             if(input5 === "綜合查詢"){
                 setSearch(false)
                 axios.post(rootApiIP + "/data/dbsearch", {
@@ -56,7 +55,6 @@ function DatabaseComp() {
                     "investmentCompany" : input4,
                     "dbTable" : "financialData"
                 }).then(res => {
-                    console.log(res.data)
                     setData2(res.data)
                     setSearch1(true)
                     setLoading(false)

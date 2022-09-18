@@ -4,7 +4,6 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import PerRiverComp from './PerRiverComp';
 import { PerRiverInit } from './PER_River_Explain';
 import { rootApiIP } from '../../constant'
-import HighchartComp from '../highchart/highchatComp';
 import axios from 'axios';
 
 function PERRiverComp() {
@@ -22,6 +21,12 @@ function PERRiverComp() {
     const [inputError, setInputError] = useState(false);
 
     const options = {
+        xAxis: {
+            type: "datetime",
+            labels: {
+                format: '{value:%Y-%m}'
+            }
+        },
         chart : {
             height : 600
         },
@@ -30,7 +35,7 @@ function PERRiverComp() {
         },
         series: [
             {
-                type : 'ohlc',
+                type : 'candlestick',
                 name : 'Kline',
                 data : Kline,
             },
@@ -54,7 +59,36 @@ function PERRiverComp() {
                 name : PER_rate[4],
                 data : data5
             }
-        ]
+        ],
+        tooltip : {
+            shape: 'square',
+            shadow: false,
+            positioner: function (width, height, point) {
+                var chart = this.chart, position;
+                
+                if (point.isHeader) {
+                    position = {
+                        x: Math.max(
+                            // Left side limit
+                            chart.plotLeft,
+                            Math.min(
+                                point.plotX + chart.plotLeft - width / 2,
+                                // Right side limit
+                                chart.chartWidth - width - chart.marginRight
+                            )
+                        ),
+                        y: point.plotY
+                    };
+                }else {
+                    position = {
+                        x: point.series.chart.plotLeft,
+                        y: point.series.yAxis.top - chart.plotTop
+                    };
+                }
+        
+                return position;
+              }
+        }
     }
 
     useEffect(() => {
@@ -77,7 +111,11 @@ function PERRiverComp() {
                 "stockNum" : stockNum[0]["stock_num_name"].slice(0, 4),
             })
             .then(res => {
-                setKline(res.data["data"])
+                if(res.data["error"] !== "Error"){
+                    setKline(res.data["data"])
+                }else{
+                    alert("Limit access")
+                }
                 setLoading(false)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -88,13 +126,14 @@ function PERRiverComp() {
                 "stockNum" : stockNum[0]["stock_num_name"].slice(0, 4),
             })
             .then(res => {
-                setPER_rate(res.data["PER_rate"])
-                setData1(res.data["data1"])
-                setData2(res.data["data2"])
-                setData3(res.data["data3"])
-                setData4(res.data["data4"])
-                setData5(res.data["data5"])
-
+                if(res.data["error"] !== "Error"){
+                    setPER_rate(res.data["PER_rate"])
+                    setData1(res.data["data1"])
+                    setData2(res.data["data2"])
+                    setData3(res.data["data3"])
+                    setData4(res.data["data4"])
+                    setData5(res.data["data5"])
+                }
                 setLoading(false)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -115,6 +154,8 @@ function PERRiverComp() {
                 資料載入中&emsp;
                 <CircularProgress color = "inherit" />
             </Backdrop>
+
+            
 
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
                 <h3 className = "display-6 text-center">本益比河流圖</h3>

@@ -267,10 +267,10 @@ exports.KlineData = async function(req, res){
             if (err) reject(err)
             const parsedString = JSON.parse(data)
 
-            try {
+            if(data["error"]){
+                reject(data["error"])
+            }else{
                 return resolve(parsedString);
-            } catch (error) {
-                reject(error)
             }
         })
     })
@@ -291,10 +291,10 @@ exports.PER_river_Data = async function(req, res){
             if (err) reject(err)
             const parsedString = JSON.parse(data)
 
-            try {
+            if(data["error"]){
+                reject(data["error"])
+            }else{
                 return resolve(parsedString);
-            } catch (error) {
-                reject(error)
             }
         })
     })

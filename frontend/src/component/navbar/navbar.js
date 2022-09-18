@@ -45,7 +45,7 @@ function NavbarComp() {
                 </Modal.Footer>
             </Modal>
 
-            <Navbar bg = "dark" variant = "dark" expand = "lg">
+            <Navbar bg = "dark" variant = "dark" expand = "lg" fixed = 'top'>
                 <Container fluid>
                     <Navbar.Brand href = "/home">Financial</Navbar.Brand>
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
@@ -60,7 +60,7 @@ function NavbarComp() {
                                 <NavDropdown.Item href = "/industry_analysis">產業分析上傳</NavDropdown.Item>
                             </NavDropdown>
 
-                            <NavDropdown title = "分析工具" align = "end">
+                            <NavDropdown title = "股票分析工具" align = "end">
                                 <NavDropdown.Item href = "/stock_pricing_stratagy">股票定價策略</NavDropdown.Item>
                                 <NavDropdown.Item href = "/PER_River">本益比河流圖</NavDropdown.Item>
                             </NavDropdown>

@@ -33,25 +33,33 @@ chrome = webdriver.Chrome(options = options,service = s)
 chrome.get("https://goodinfo.tw/tw/ShowK_ChartFlow.asp?RPT_CAT=PER&STOCK_ID=%s&CHT_CAT=%s" % (sys.argv[1], sys.argv[2]))
 # In[32]:
 
-PER_River_form = chrome.find_element(by = By.ID, value = 'divDetail')
+try :
+    PER_River_form = chrome.find_element(by = By.ID, value = 'divDetail')
+except Exception:
+    result = {
+        "error" : "Error"
+    }
+
+    json = json.dumps(result)
+    print(json)
+    sys.stdout.flush()
+    sys.exit()
+
 df1 = pd.read_html(PER_River_form.get_attribute('innerHTML'), header = 1)[0]
 df1 = df1.drop(df1.columns[[x for x in range(1, 6)]], axis = 1)
 
-
 # In[33]:
-
 
 for i in range(len(df1)):
     if df1["交易月份"][i] == "交易月份":
         df1.drop(i, inplace = True)
     else:
-        df1["交易月份"][i] = datetime.strptime(("20" + df1["交易月份"][i]).replace("M", "-"), "%Y-%m").timestamp() * 1000
-
+        df1["交易月份"][i] = datetime.strptime(("20" + df1["交易月份"][i]).replace("M", "-") + "-01 08:00", "%Y-%m-%d %H:%M").timestamp() * 1000
 
 # In[34]:
-
 df1.reset_index(drop = True, inplace = True)
 df1.replace("-", 0, inplace = True)
+
 df1 = df1.astype(float)
 
 date = df1[df1.columns[0]].to_list()

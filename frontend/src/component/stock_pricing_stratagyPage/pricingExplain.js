@@ -21,8 +21,8 @@ export const priceInit = {
 export const label = {
     "label1" : ["7"],
     "label2" : ["1", "2", "4"],
-    "label3" : ["2", "3", "4"],
-    "label4" : ["2", "3", "4"]
+    "label3" : ["1", "2", "3", "4"],
+    "label4" : ["1", "2", "3", "4"]
 }
 
 export function pricing1(year){

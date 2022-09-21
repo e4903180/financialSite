@@ -31,7 +31,7 @@ chrome = webdriver.Chrome(options = options,service = s)
 chrome.get("https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID=%s"%(sys.argv[1]))
 
 #現在價格
-stock_info = twstock.realtime.get('2330')
+stock_info = twstock.realtime.get(sys.argv[1])
 price_now = float(stock_info["realtime"]["latest_trade_price"])
 
 #填充表單_PER/PBR

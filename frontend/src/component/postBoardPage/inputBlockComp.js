@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
 var FormData = require('form-data');
 
@@ -12,9 +13,9 @@ function InputBlockComp() {
     const [input4, setInput4] = useState("")
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState("");
-    const [autocom, setAutocom] = useState([])
     const [username, setUsername] = useState("")
     var Today = new Date();
+    const autocom = AutoCom.AutoComList;
     
     function submit(e){
         e.preventDefault()
@@ -54,13 +55,7 @@ function InputBlockComp() {
     };
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/autoCom")
-        .then(res => {
-            setAutocom(res.data);
-        }).catch(res => {
-        })
-
-        axios.get("http://140.116.214.154:3000/api/data/username")
+        axios.get(rootApiIP + "/data/username")
         .then(res => {
             setUsername(res.data)
         }).catch(res => {

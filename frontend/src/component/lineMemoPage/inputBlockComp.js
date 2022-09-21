@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
 
 function InputBlockComp() {
@@ -8,9 +9,9 @@ function InputBlockComp() {
     const [input1Validation, set_input1Validation] = useState(false)
     const [input2, setInput2] = useState("")
     const [input2Validation, set_input2Validation] = useState(false)
-    const [autocom, setAutocom] = useState([])
     const [username, setUsername] = useState("")
     var Today = new Date();
+    const autocom = AutoCom.AutoComList;
 
     function submit(e){
         e.preventDefault()
@@ -35,13 +36,6 @@ function InputBlockComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/autoCom")
-        .then(res => {
-            setAutocom(res.data);
-        }).catch(res => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-
         axios.get(rootApiIP + "/data/username")
         .then(res => {
             setUsername(res.data)

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import NavbarComp from './component/navbar/navbar';
 import axios from "axios";
+import { rootApiIP } from './constant';
 
 function PrivateRoute() {
     const [isAuth, setIsAuth] = useState()
 
     useEffect(() => {
         async function state(){
-            await axios.get("http://140.116.214.154:3000/api/data/isAuth")
+            await axios.get(rootApiIP + "/data/isAuth")
             .then(res => {
                 setIsAuth(true)
             }).catch(res => {

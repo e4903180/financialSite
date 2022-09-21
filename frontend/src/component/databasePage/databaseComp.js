@@ -5,6 +5,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 import { rootApiIP } from '../../constant'
 import { columns, columns1, columns2, columns3 } from '../column/column';
+import { AutoCom } from '../../autoCom';
 
 function DatabaseComp() {
     const [data, setData] = useState([]);
@@ -14,7 +15,6 @@ function DatabaseComp() {
     const [data4, setData4] = useState([]);
     const [search, setSearch] = useState(false);
     const [search1, setSearch1] = useState(false);
-    const [autocom, setAutocom] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
@@ -31,6 +31,8 @@ function DatabaseComp() {
     const [input3, setInput3] = useState("");
     const [input4, setInput4] = useState("");
     const [input5, setInput5] = useState("綜合查詢");
+
+    const autocom = AutoCom.AutoComList;
 
     async function submit(e){
         e.preventDefault()
@@ -183,13 +185,6 @@ function DatabaseComp() {
         axios.get(rootApiIP + "/data/allData")
         .then(res => {
             setData(res.data);
-        }).catch(res => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-
-        axios.get(rootApiIP + "/data/autoCom")
-        .then(res => {
-            setAutocom(res.data);
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { rootApiIP } from '../../constant'
 import PricingComp from './pricingComp';
@@ -7,16 +7,16 @@ import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pric
 import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '../column/column';
 import { Backdrop, CircularProgress } from '@mui/material';
 import HighchartBarComp from '../highchart/highchartBarComp';
-
+import { AutoCom } from '../../autoCom';
 
 function StockPricingStratagyComp() {
     const [stockNum, setStockNum] = useState([]);
     const [year, setYear] = useState("?");
-    const [autocom, setAutocom] = useState([]);
     const [price, setPrice] = useState(priceInit);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
-
+    
+    const autocom = AutoCom.AutoComList;
     const options = {
         chart: {
             type: 'bar',
@@ -41,30 +41,25 @@ function StockPricingStratagyComp() {
             {
                 name: '昂貴價',
                 data: price["expensive"],
+                color: "#FF5F5F"
             },
             {
                 name: '合理價',
                 data: price["reasonable"],
+                color: "#59FF59"
             },
             {
                 name: '便宜價',
                 data: price["cheap"],
+                color: "#FFFF4F"
             },
             {
                 name: '最新價格',
-                data: [price["NewPrice"], price["NewPrice"], price["NewPrice"], price["NewPrice"]]
+                data: [price["NewPrice"], price["NewPrice"], price["NewPrice"], price["NewPrice"]],
+                color: "#787878"
             }
         ]
     }
-
-    useEffect(() => {
-        axios.get(rootApiIP + "/data/autoCom")
-        .then(res => {
-            setAutocom(res.data);
-        }).catch(res => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-    }, [])
 
     function submit(e){
         e.preventDefault();
@@ -111,7 +106,7 @@ function StockPricingStratagyComp() {
                                 id = "stockNum_or_Name"
                                 labelKey = "stock_num_name"
                                 onChange = { setStockNum }
-                                options = { autocom }
+                                options = { AutoCom.AutoComList }
                                 placeholder = "請輸入股票代號或名稱"
                                 selected = { stockNum }
                             />

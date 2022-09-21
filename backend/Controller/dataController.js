@@ -59,15 +59,15 @@ exports.dbsearch = async function(req, res){
     }
 };
 
-exports.autoCom = function(req, res){
-    con.query("select * from autocompletedSearch", function(err, result, field){
-        if(err === null){
-            return res.status(200).json(result)
-        }else{
-            return res.status(400).send("error")
-        }
-    });
-};
+// exports.autoCom = function(req, res){
+//     con.query("select * from autocompletedSearch", function(err, result, field){
+//         if(err === null){
+//             return res.status(200).json(result)
+//         }else{
+//             return res.status(400).send("error")
+//         }
+//     });
+// };
 
 exports.post_board_state = function(req, res){
     con.query("select count( * ) as dataQuantity from post_board_memo;select max(date) as newestDate from post_board_memo;", function(err, result, field){
@@ -248,30 +248,6 @@ exports.pricingData = async function(req, res){
             if (err) reject(err)
             const parsedString = JSON.parse(data)
             return resolve(parsedString);
-        })
-    })
-
-    return res.status(200).send(result)
-}
-
-exports.KlineData = async function(req, res){
-    let options = {
-        args:[
-                req.body.stockNum,
-                "MONTH"
-            ]
-    }
-    
-    const result = await new Promise((resolve, reject) => {
-        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/KLine.py', options, (err, data) => {
-            if (err) reject(err)
-            const parsedString = JSON.parse(data)
-
-            if(data["error"]){
-                reject(data["error"])
-            }else{
-                return resolve(parsedString);
-            }
         })
     })
 

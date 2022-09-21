@@ -1,7 +1,6 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { AiFillCaretDown } from "react-icons/ai";
-import "bootstrap/js/src/collapse.js";
 
 function PricingComp(props) {
     const [page, setPage] = useState(0);
@@ -20,7 +19,7 @@ function PricingComp(props) {
         <>
             <div className = 'card h-100'>
                 <div className = "card-header">
-                    <AiFillCaretDown data-bs-toggle = "collapse"  data-bs-target = {"#" + props.cardKey} aria-expanded = "false" aria-controls = {props.cardKey}/>
+                    <AiFillCaretDown style = {{ cursor : "pointer" }} data-bs-toggle = "collapse" data-bs-target = {"#" + props.cardKey} aria-expanded = "false" aria-controls = {props.cardKey}/>
                     { props.pricingName } 計算數據
                 </div>
             

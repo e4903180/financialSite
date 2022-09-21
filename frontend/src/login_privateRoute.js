@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import axios from "axios";
+import { rootApiIP } from './constant';
 
 function LoginRoute() {
     const [isAuth, setIsAuth] = useState()
 
     useEffect(() => {
         async function state(){
-            axios.get("http://140.116.214.154:3000/api/data/isAuth")
+            axios.get(rootApiIP + "/data/isAuth")
             .then(res => {
                 setIsAuth(true)
             }).catch(res => {

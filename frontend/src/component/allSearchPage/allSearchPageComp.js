@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CustomA from '../customA';
 import { rootApiIP } from '../../constant'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
@@ -150,9 +149,6 @@ function AllSearchPageComp() {
                     />
                 </div>
             </>}
-            
-
-            
         </>
     );
 }

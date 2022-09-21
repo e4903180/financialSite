@@ -15,7 +15,8 @@ import UserListComp from './component/userListPage/userListComp';
 import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 import StockPricingStratagyComp from './component/stock_pricing_stratagyPage/stock_pricing_stratagyComp';
 import PERRiverComp from './component/PER_RiverPage/PER_RiverComp';
-import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
+import "bootstrap/js/src/collapse.js";
+// import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 
 function App() {
   return (

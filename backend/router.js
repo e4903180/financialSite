@@ -56,7 +56,6 @@ dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 
 dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
-dataRouter.get("/autoCom", Data.autoCom)
 dataRouter.get("/username", Data.retrnUsername)
 dataRouter.get("/post_board_state", Data.post_board_state)
 dataRouter.get("/lineMemo_state", Data.lineMemo_state)
@@ -72,7 +71,6 @@ dataRouter.post("/post_board_search", Data.post_board_search)
 dataRouter.post("/lineMemo_search", Data.lineMemo_search)
 
 dataRouter.post("/pricing", Data.pricingData)
-dataRouter.post("/Kline", Data.KlineData)
 dataRouter.post("/PER_River", Data.PER_river_Data)
 
 module.exports = {router};

@@ -87,10 +87,44 @@ for i in range(len(date)):
     data4[i] = [date[i], data4[i]]
     data5[i] = [date[i], data5[i]]
 
+PER_rate_col = df1.columns[1:].to_list()
 # In[36]:
+chrome.get("https://goodinfo.tw/tw/ShowK_Chart.asp?STOCK_ID=%s&CHT_CAT2=%s&PRICE_ADJ=F" % (sys.argv[1], sys.argv[2]))
+
+try :
+    KLine = chrome.find_element(by = By.ID, value = 'divPriceDetail')
+except:
+    result = {
+        "error" : "Error"
+    }
+
+    json = json.dumps(result)
+    print(json)
+    sys.stdout.flush()
+    sys.exit()
+
+df1 = pd.read_html(KLine.get_attribute('innerHTML'), header = 1)[0]
+df1 = df1.drop(df1.columns[[x for x in range(6, len(df1.columns))]], axis = 1)
+
+for i in range(len(df1)):
+    if df1["交易月份"][i] == "交易月份":
+        df1.drop(i, inplace = True)
+    else:
+        df1["交易月份"][i] = datetime.strptime(("20" + df1["交易月份"][i]).replace("M", "-") + "-01 08:00", "%Y-%m-%d %H:%M").timestamp() * 1000
+
+df1 = df1.drop(df1.columns[1], axis = 1)
+df1.reset_index(drop = True, inplace = True)
+df1.replace("-", 0, inplace = True)
+df1 = df1.astype(float)
+
+kline = []
+for i in range(len(df1) - 1, -1, -1):
+    temp = df1.iloc[i].to_list()
+    kline.append(temp)
 
 result = {
-    "PER_rate" : df1.columns[1:].to_list(),
+    "PER_rate" : PER_rate_col,
+    "Kline" : kline,
     "data1" : data1,
     "data2" : data2,
     "data3" : data3,

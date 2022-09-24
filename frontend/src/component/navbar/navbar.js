@@ -55,7 +55,7 @@ function NavbarComp() {
                                 <NavDropdown.Item href = "/database">個股綜合資料</NavDropdown.Item>
                                 <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
                                 <NavDropdown.Item href = "/line_memo">Line memo</NavDropdown.Item>
-                                <NavDropdown.Item href = "/calendar">Calendar</NavDropdown.Item>
+                                <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>
                                 <NavDropdown.Item href = "/meeting_data">Meeting data</NavDropdown.Item>
                                 <NavDropdown.Item href = "/industry_analysis">產業分析上傳</NavDropdown.Item>
                             </NavDropdown>

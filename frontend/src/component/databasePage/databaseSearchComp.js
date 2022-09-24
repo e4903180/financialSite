@@ -187,6 +187,7 @@ function DatabaseSearchComp() {
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
+        document.getElementById("submit").click()
     }, [])
 
     return (

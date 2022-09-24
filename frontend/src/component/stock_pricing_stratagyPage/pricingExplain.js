@@ -30,7 +30,6 @@ export function pricing1(year){
 }
 
 export function pricing2(year){
-
     return({
         "explain1" : "透過歷史股價的平均估算股價",
         "explain2" : `股價 ＝ 平均 ${year} 年股價`,
@@ -41,7 +40,6 @@ export function pricing2(year){
 }
 
 export function pricing3(year){
-
     return({
         "explain1" : "透過近一年EPS和歷史平均EPS的平均乘上歷史平均PER估算股價",
         "explain2" : `股價 ＝ ((近一年EPS + 近 ${year} 年平均EPS) / 2) * 近 ${year} 年PER平均`,
@@ -52,7 +50,6 @@ export function pricing3(year){
 }
 
 export function pricing4(year){
-
     return({
         "explain1" : "透過歷史平均PBR乘上最新BPS估算股價",
         "explain2" : `股價 ＝ 近 ${year} 年PBR平均 * 最新淨值`,

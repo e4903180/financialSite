@@ -31,8 +31,11 @@ chrome = webdriver.Chrome(options = options,service = s)
 chrome.get("https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID=%s"%(sys.argv[1]))
 
 #現在價格
-stock_info = twstock.realtime.get(sys.argv[1])
-price_now = float(stock_info["realtime"]["latest_trade_price"])
+try:
+    stock_info = twstock.realtime.get(sys.argv[1])
+    price_now = float(stock_info["realtime"]["latest_trade_price"])
+except:
+    price_now = 0.0
 
 #填充表單_PER/PBR
 s1 = Select(chrome.find_element(by = By.CSS_SELECTOR, value = 'body > table:nth-child(8) > tbody > tr > td:nth-child(3) > table.b1.r10_0 > tbody > tr > td > table > tbody > tr > td:nth-child(1) > nobr:nth-child(1) > select'))

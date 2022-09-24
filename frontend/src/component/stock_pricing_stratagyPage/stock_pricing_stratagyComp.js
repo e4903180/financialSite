@@ -13,6 +13,7 @@ function StockPricingStratagyComp() {
     const [stockNum, setStockNum] = useState([]);
     const [year, setYear] = useState("?");
     const [price, setPrice] = useState(priceInit);
+    const [maxValue, setMaxValue] = useState(0);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
     
@@ -37,26 +38,57 @@ function StockPricingStratagyComp() {
               text: '價格區間'
             }
         },
+        plotOptions: {
+            series: {
+                stacking: 'normal',
+            },
+        },
+        tooltip: {
+            formatter: function() {
+                // console.log(this)
+                if(this.point.hasOwnProperty("stackY") && this.color === "red"){
+                    let offset = this.point.stackY - this.y
+                    return this.series.name + ': <b>'+ offset.toFixed(2) + '以上</b>';
+                };
+
+                if(this.point.hasOwnProperty("stackY") && this.color !== "black"){
+                    let offset = this.point.stackY - this.y
+                    return this.series.name + ': From <b>'+ offset.toFixed(2) + '</b> to <b>' + this.point.stackY.toFixed(2) + '</b>';
+                }else if(!this.point.hasOwnProperty("stackY") && this.color !== "black"){
+                    return "<b>資料尚未載入</b>";
+                }else{
+                    return this.series.name + "<b>: </b>" + this.y.toFixed(2);
+                }
+            }
+        },
         series: [
             {
-                name: '昂貴價',
-                data: price["expensive"],
-                color: "#FF5F5F"
+                name: '昂貴價區間',
+                data: [maxValue - price["expensive"][0], maxValue - price["expensive"][1], maxValue - price["expensive"][2], maxValue - price["expensive"][3]],
+                color: "red",
             },
             {
-                name: '合理價',
-                data: price["reasonable"],
+                name: '合理到昂貴價區間',
+                data: [price["expensive"][0] - price["reasonable"][0], price["expensive"][1] - price["reasonable"][1], price["expensive"][2] - price["reasonable"][2], price["expensive"][3] - price["reasonable"][3]],
+                color: "#FF5353",
+            },
+            {
+                name: '便宜到合理價區間',
+                data: [price["reasonable"][0] - price["cheap"][0], price["reasonable"][1] - price["cheap"][1], price["reasonable"][2] - price["cheap"][2], price["reasonable"][3] - price["cheap"][3]],
                 color: "#59FF59"
             },
             {
-                name: '便宜價',
+                name: '便宜價區間',
                 data: price["cheap"],
                 color: "#FFFF4F"
             },
             {
                 name: '最新價格',
+                type: "line",
                 data: [price["NewPrice"], price["NewPrice"], price["NewPrice"], price["NewPrice"]],
-                color: "#787878"
+                color: "black",
+                marker : false,
+                lineWidth : 4
             }
         ]
     }
@@ -73,7 +105,10 @@ function StockPricingStratagyComp() {
                 "year" : year
             })
             .then(res => {
+                // console.log(res.data.expensive)
+                setPrice(priceInit)
                 setPrice(res.data)
+                setMaxValue(Math.max(...res.data.expensive) * 1.5)
                 setLoading(false)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -161,7 +196,8 @@ function StockPricingStratagyComp() {
                         cardKey = "data1"
                         pricingName = "股利法" 
                         pricingExplain = { pricing1(year) } 
-                        data = { price["dividend_table"]["data"] } 
+                        data = { price["dividend_table"]["data"] }
+                        price_result = {[price["cheap"][0], price["reasonable"][0], price["expensive"][0], price["NewPrice"]]}
                         label = { label.label1 }
                         columns = { columns_dividend }
                     />
@@ -175,6 +211,7 @@ function StockPricingStratagyComp() {
                         pricingName = "高低價法" 
                         pricingExplain = { pricing2(year) } 
                         data = { price["high_low_table"]["data"] } 
+                        price_result = {[price["cheap"][1], price["reasonable"][1], price["expensive"][1], price["NewPrice"]]}
                         label = { label.label2 }
                         columns = { columns_high_low }
                     />
@@ -187,7 +224,8 @@ function StockPricingStratagyComp() {
                         cardKey = "data3"
                         pricingName = "本益比法" 
                         pricingExplain = { pricing3(year) } 
-                        data = { price["PER_table"]["data"] } 
+                        data = { price["PER_table"]["data"] }
+                        price_result = {[price["cheap"][2], price["reasonable"][2], price["expensive"][2], price["NewPrice"]]}
                         label = { label.label3 }
                         columns = { columns_PER }
                     />
@@ -201,6 +239,7 @@ function StockPricingStratagyComp() {
                         pricingName = "本淨比法" 
                         pricingExplain = { pricing4(year) } 
                         data = { price["PBR_table"]["data"] } 
+                        price_result = {[price["cheap"][3], price["reasonable"][3], price["expensive"][3], price["NewPrice"]]}
                         label = { label.label4 }
                         columns = { columns_PBR }
                     />

@@ -14,6 +14,7 @@ from tqdm import trange
 import pandas as pd
 import requests
 import os
+import sys
 from typing import Any, List
 import MySQLdb
 import time
@@ -22,9 +23,7 @@ import datetime
 
 # In[11]:
 
-
-sys.stderr = open(str(datetime.date.today()) + '.log', 'w')
-
+sys.stderr = open("/home/cosbi/桌面/financialData/twseData/log/" + str(datetime.date.today()) + '.log', 'w')
 
 # In[2]:
 
@@ -83,7 +82,7 @@ class MySQL():
         self._db.commit()
         
     def close(self) -> None:
-        _db.close()
+        self._db.close()
 
 
 # In[10]:
@@ -179,6 +178,5 @@ def run():
 # In[6]:
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     run()
-

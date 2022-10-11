@@ -104,8 +104,16 @@ export const columns_PBR = [
     { field: "ID", headerName : "年度", flex: 1, headerAlign: 'center', align: 'center' },
     { field: '1', headerName: 'BPS(元)', flex: 1, headerAlign: 'center', align: 'center' },
     { field: '2', headerName: '最高PBR', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: '3', headerName: '最低PBR', flex: 1, headerAlign: 'center', align: 'center'},
+    { field: '3', headerName: '最低PBR', flex: 1, headerAlign: 'center', align: 'center' },
     { field: '4', headerName: '平均PBR', flex: 1, headerAlign: 'center', align: 'center' },
+];
+
+export const columns_support_resistance = [
+    { field: "ID", headerName : "日期", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Open', headerName: 'Open', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'High', headerName: 'High', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Low', headerName: 'Low', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Close', headerName: 'Close', flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
 const check_single_post_board_memo_NULL = (value) => {

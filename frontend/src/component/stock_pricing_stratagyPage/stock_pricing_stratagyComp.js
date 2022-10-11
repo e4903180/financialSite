@@ -13,7 +13,6 @@ function StockPricingStratagyComp() {
     const [stockNum, setStockNum] = useState([]);
     const [year, setYear] = useState("?");
     const [price, setPrice] = useState(priceInit);
-    const [maxValue, setMaxValue] = useState(0);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
     
@@ -30,7 +29,7 @@ function StockPricingStratagyComp() {
             enabled: false
         },
         xAxis: {
-            categories: ['股利法', '高低價法', '本益比法', '本淨比法']
+            categories: ['股利法', '高低價法', '本淨比法', '本益比法']
         },
         yAxis: {
             title: 
@@ -45,11 +44,10 @@ function StockPricingStratagyComp() {
         },
         tooltip: {
             formatter: function() {
-                // console.log(this)
-                if(this.point.hasOwnProperty("stackY") && this.color === "red"){
+                if(this.point.hasOwnProperty("stackY") && this.color === "red" && this.point.stackY !== this.y){
                     let offset = this.point.stackY - this.y
                     return this.series.name + ': <b>'+ offset.toFixed(2) + '以上</b>';
-                };
+                }
 
                 if(this.point.hasOwnProperty("stackY") && this.color !== "black"){
                     let offset = this.point.stackY - this.y
@@ -64,22 +62,22 @@ function StockPricingStratagyComp() {
         series: [
             {
                 name: '昂貴價區間',
-                data: [maxValue - price["expensive"][0], maxValue - price["expensive"][1], maxValue - price["expensive"][2], maxValue - price["expensive"][3]],
+                data: price["up_expensive"],
                 color: "red",
             },
             {
                 name: '合理到昂貴價區間',
-                data: [price["expensive"][0] - price["reasonable"][0], price["expensive"][1] - price["reasonable"][1], price["expensive"][2] - price["reasonable"][2], price["expensive"][3] - price["reasonable"][3]],
+                data: price["reasonable_expensive"],
                 color: "#FF5353",
             },
             {
                 name: '便宜到合理價區間',
-                data: [price["reasonable"][0] - price["cheap"][0], price["reasonable"][1] - price["cheap"][1], price["reasonable"][2] - price["cheap"][2], price["reasonable"][3] - price["cheap"][3]],
+                data: price["cheap_reasonable"],
                 color: "#59FF59"
             },
             {
                 name: '便宜價區間',
-                data: price["cheap"],
+                data: price["down_cheap"],
                 color: "#FFFF4F"
             },
             {
@@ -105,10 +103,8 @@ function StockPricingStratagyComp() {
                 "year" : year
             })
             .then(res => {
-                // console.log(res.data.expensive)
                 setPrice(priceInit)
                 setPrice(res.data)
-                setMaxValue(Math.max(...res.data.expensive) * 1.5)
                 setLoading(false)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -151,7 +147,6 @@ function StockPricingStratagyComp() {
                         <div className = 'col-md-3'>
                             <select id = "year" className = "form-select" onChange = {e => setYear(e.target.value)}>
                                 <option value = "">請選擇年份</option>
-                                <option value = "1">1</option>
                                 <option value = "2">2</option>
                                 <option value = "3">3</option>
                                 <option value = "4">4</option>
@@ -187,6 +182,7 @@ function StockPricingStratagyComp() {
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'col-md-8 mx-auto'>
                     <HighchartBarComp options = { options }/>
+                    { price['Value lose'][0] | price['Value lose'][1] | price['Value lose'][2] | price['Value lose'][3]| price['Value lose'][4] ? <p className = 'text-center' style = {{ color : "red" }}>資料缺值部分定價法不適用</p> : <></> }
                 </div>
             </div>
 
@@ -200,6 +196,7 @@ function StockPricingStratagyComp() {
                         price_result = {[price["cheap"][0], price["reasonable"][0], price["expensive"][0], price["NewPrice"]]}
                         label = { label.label1 }
                         columns = { columns_dividend }
+                        val_lose = {price["Value lose"][1]}
                     />
                 </div>
             </div>
@@ -214,20 +211,7 @@ function StockPricingStratagyComp() {
                         price_result = {[price["cheap"][1], price["reasonable"][1], price["expensive"][1], price["NewPrice"]]}
                         label = { label.label2 }
                         columns = { columns_high_low }
-                    />
-                </div>
-            </div>
-
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
-                <div className = 'col-md-8 mx-auto'>
-                    <PricingComp
-                        cardKey = "data3"
-                        pricingName = "本益比法" 
-                        pricingExplain = { pricing3(year) } 
-                        data = { price["PER_table"]["data"] }
-                        price_result = {[price["cheap"][2], price["reasonable"][2], price["expensive"][2], price["NewPrice"]]}
-                        label = { label.label3 }
-                        columns = { columns_PER }
+                        val_lose = {price["Value lose"][2]}
                     />
                 </div>
             </div>
@@ -238,10 +222,26 @@ function StockPricingStratagyComp() {
                         cardKey = "data4"
                         pricingName = "本淨比法" 
                         pricingExplain = { pricing4(year) } 
-                        data = { price["PBR_table"]["data"] } 
+                        data = { price["PBR_table"]["data"] }
                         price_result = {[price["cheap"][3], price["reasonable"][3], price["expensive"][3], price["NewPrice"]]}
                         label = { label.label4 }
                         columns = { columns_PBR }
+                        val_lose = {price["Value lose"][3]}
+                    />
+                </div>
+            </div>
+
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-8 mx-auto'>
+                    <PricingComp
+                        cardKey = "data3"
+                        pricingName = "本益比法"
+                        pricingExplain = { pricing3(year) } 
+                        data = { price["PER_table"]["data"] } 
+                        price_result = {[price["cheap"][2], price["reasonable"][2], price["expensive"][2], price["NewPrice"]]}
+                        label = { label.label3 }
+                        columns = { columns_PER }
+                        val_lose = {price["Value lose"][4]}
                     />
                 </div>
             </div>

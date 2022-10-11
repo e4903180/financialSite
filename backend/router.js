@@ -72,5 +72,6 @@ dataRouter.post("/lineMemo_search", Data.lineMemo_search)
 
 dataRouter.post("/pricing", Data.pricingData)
 dataRouter.post("/PER_River", Data.PER_river_Data)
+dataRouter.post("/support_resistance", Data.support_resistance_data)
 
 module.exports = {router};

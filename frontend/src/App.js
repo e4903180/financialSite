@@ -16,6 +16,7 @@ import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 import StockPricingStratagyComp from './component/stock_pricing_stratagyPage/stock_pricing_stratagyComp';
 import PERRiverComp from './component/PER_RiverPage/PER_RiverComp';
 import "bootstrap/js/src/collapse.js";
+import SupportResistanceComp from './component/support_resistance_page/support_resistance_comp';
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path = "/userList" element = { <UserListComp /> } ></Route>
             <Route path = "/stock_pricing_stratagy" element = { <StockPricingStratagyComp /> } ></Route>
             <Route path = "/PER_River" element = { <PERRiverComp /> } ></Route>
+            <Route path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

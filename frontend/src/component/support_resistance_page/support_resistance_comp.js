@@ -24,7 +24,7 @@ function SupportResistanceComp() {
     const [data, setData] = useState(dataInit);
     const [maLen, setMaLen] = useState(20);
     const [maType, setMaType] = useState("sma");
-    const [overVolume, setOverVolume] = useState("");
+    const [overVolume, setOverVolume] = useState(-1);
 
     if(month === 0){
         year -= 1
@@ -115,7 +115,7 @@ function SupportResistanceComp() {
                         ]
                     })
                 }else{
-                    setOverVolume("")
+                    setOverVolume(-1)
                     setOverVolume(res.data["over"])
                     setOptions({
                         series : [
@@ -200,7 +200,10 @@ function SupportResistanceComp() {
                     <div className = 'form-group row py-3'>
                         <label htmlFor = "maLen" className = "col-md-3 col-form-label">MA長度:</label>
                         <div className = 'col-md-3'>
-                            <select id = "maLen" className = "form-select" onChange = {e => setMaLen(e.target.value)}>
+                            <select id = "maLen" className = "form-select" onChange = {e => {
+                                setMaLen(e.target.value)
+                                setOverVolume(-1)
+                            }}>
                                 <option value = "20">20</option>
                                 <option value = "30">30</option>
                                 <option value = "50">50</option>
@@ -209,7 +212,10 @@ function SupportResistanceComp() {
 
                         <label htmlFor = "ma" className = "col-md-3 col-form-label text-center">MA類型:</label>
                         <div className = 'col-md-3'>
-                            <select id = "ma" className = "form-select" onChange = {e => setMaType(e.target.value)}>
+                            <select id = "ma" className = "form-select" onChange = {e =>{
+                                setMaType(e.target.value)
+                                setOverVolume(-1)
+                            }}>
                                 <option value = "sma">sma</option>
                                 <option value = "wma">wma</option>
                             </select>
@@ -246,9 +252,9 @@ function SupportResistanceComp() {
                                 <h6 className = "card-subtitle text-muted">{ formatExplain(maLen, maType)[method]["explain1"] }</h6>
                                 <br/>
                                 <h6 className = "card-subtitle text-muted">{ formatExplain(maLen, maType)[method]["explain2"] }</h6>
-                                { method === "method3" && overVolume === "今日交易量超過" + maLen.toString() + "天均量" &&  <div className = "alert alert-success text-center" role = "alert">{overVolume}</div>}
-                                { method === "method3" && overVolume === "今日交易量未超過" + maLen.toString() + "天均量" &&  <div className = "alert alert-danger text-center" role = "alert">{overVolume}</div>}
-                                { method === "method3" && overVolume === "" &&  <div className = "alert alert-warning text-center" role = "alert">尚未計算</div>}
+                                { method === "method3" && overVolume === 1 &&  <div className = "alert alert-success text-center" role = "alert">今日交易量大於 {maLen.toString()}天均量</div>}
+                                { method === "method3" && overVolume === 0 &&  <div className = "alert alert-danger text-center" role = "alert">今日交易量小於 {maLen.toString()}天均量</div>}
+                                { method === "method3" && overVolume === -1 &&  <div className = "alert alert-warning text-center" role = "alert">尚未計算</div>}
                             </div>
                         </div>
 

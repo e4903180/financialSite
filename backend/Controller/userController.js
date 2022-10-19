@@ -4,22 +4,21 @@ const con = require('../Model/connectMySQL')
 exports.login = async function(req, res){
     var userName = req.body.userName
     var password = req.body.password
+    let sql = `SELECT password FROM user WHERE userName = "${userName}"`
 
-    con.query("SELECT `password` FROM `user` WHERE `userName` = ?", [userName], function(err, result, field){
-        if(err === null){
-            try {
-                if(bcrypt.compareSync(password, result[0].password)){
-                    req.session.userName = userName;
-    
-                    res.status(200).send("success");
-                }
-            } catch (error) {
-                res.status(400).send("Username or password error");
-            }
+    try {
+        const [row, field] = await con.promise().query(sql)
+
+        if(bcrypt.compareSync(password, row[0].password)){
+            req.session.userName = userName;
+
+            res.status(200).send("success");
         }else{
             res.status(400).send("Username or password error");
         }
-    });
+    } catch (error) {
+        res.status(400).send("error");
+    }
 }
 
 exports.logout = async function(req, res){
@@ -36,12 +35,36 @@ exports.register = async function(req, res){
     var userName = req.body.userName
     var email = req.body.email
     const hash_password = bcrypt.hashSync(req.body.password, 10);
+    let sql = "CREATE TABLE " + userName + "_notify" + " (`ID` INT PRIMARY KEY, `subTime` varchar(255), `endTime` varchar(255), `ticker` varchar(255), `type` text, `content` text)"
 
-    con.query("INSERT INTO `user` (`name`, `userName`, `password`, `superUser`, `email`) VALUES (?, ?, ?, ?, ?)", [ name, userName, hash_password, 0, email ], function(err, result, field){
-        if(err === null){
-            res.status(200).send("success");
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+    } catch (error) {
+        if(error.errno === 1050){
+            return res.status(401).send("You have registered already please try to login")
         }else{
-            res.status(400).send("error");
+            return res.status(400).send("error")
         }
-    });
+    }
+
+    sql = "CREATE TABLE " + userName + "_sublist" + " (`ID` INT PRIMARY KEY, `subTime` varchar(255), `endTime` varchar(255), `ticker` varchar(255), `type` text)"
+    
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+    } catch (error) {
+        if(error.errno === 1050){
+            return res.status(401).send("You have registered already please try to login")
+        }else{
+            return res.status(400).send("error")
+        }
+    }
+
+    try {
+        sql = `INSERT INTO user (name, userName, password, superUser, email) VALUES ("${name}", "${userName}", "${hash_password}", 0, "${email}")`
+        const [rows, fields] = await con.promise().query(sql);
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+
+    res.status(200).send("success")
 }

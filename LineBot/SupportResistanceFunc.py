@@ -23,17 +23,17 @@ def run(line_bot_api : object, stock_num : str, start_date : str, ma_type : str,
         elif result1["Kline"][-1][4] > result1["resistance"][-1][1]:
             return_msg += "Method1結果收盤價大於天花板線\n"
         else:
-            return_msg += "Method1結果收盤價位於天花板線及地板線中間"
+            return_msg += "Method1結果收盤價位於天花板線及地板線中間\n"
 
         if result2["Kline"][-1][4] < result2["support"][-1][1]:
-            return_msg += "Method2結果收盤價小於地板線"
+            return_msg += "Method2結果收盤價小於地板線\n"
         else:
-            return_msg += "Method2結果收盤價大於地板線"
+            return_msg += "Method2結果收盤價大於地板線\n"
 
         if result3["Kline"][-1][4] < result3["support1"][-1][1]:
-            return_msg += "Method3結果收盤價小於1%地板線"
+            return_msg += "Method3結果收盤價小於1%地板線\n"
         else:
-            return_msg += "Method3結果收盤價大於1%地板線"
+            return_msg += "Method3結果收盤價大於1%地板線\n"
         
         if result3["Kline"][-1][4] < result3["support2"][-1][1]:
             return_msg += "Method3結果收盤價小於5%地板線"
@@ -42,7 +42,7 @@ def run(line_bot_api : object, stock_num : str, start_date : str, ma_type : str,
 
         line_bot_api.broadcast(TextSendMessage(text = return_msg))
 
-        time.sleep(10)
+        time.sleep(60)
 
 if __name__ == "__main__":
     run("2330", "2017-01-01", "wma", 20)

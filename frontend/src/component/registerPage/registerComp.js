@@ -23,10 +23,15 @@ function RegisterComp() {
             email : email,
             password : password
         }).then(res => {
-            alert("Register successfully")// eslint-disable-next-line
+            alert("Register successfully")
             nav("/login");
         }).catch(err => {
-            alert("error")// eslint-disable-next-line
+            console.log(err)
+            if(err.response.status === 401){
+                alert(err.response.data)
+            }else{
+                alert("error")
+            }
         });
     };
 

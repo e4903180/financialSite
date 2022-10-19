@@ -53,6 +53,7 @@ class SupportResistance():
         support = []
         resistance = []
         ma_o = []
+        annotations_labels = []
 
         for i in range(self._maLen, len(self._ma), 1):
             temp = (float(self._df["Close"][i]) - self._ma[i]) / self._ma[i]
@@ -72,6 +73,21 @@ class SupportResistance():
             support.append([self._df["Date"][i], round((1 + neg_BIAS_val) * self._ma[i], 2)])
             ma_o.append([self._df["Date"][i], round(self._ma[i], 2)])
             resistance.append([self._df["Date"][i], round((1 + pos_BIAS_val) * self._ma[i], 2)])
+            
+            if float(self._df["Close"][i]) > resistance[i - self._maLen][1]:
+                annotations_labels.append({
+                    "x" : self._df["Date"][i],
+                    "title" : "X",
+                    "text" : "穿越天花板線"
+                })
+            
+            if float(self._df["Close"][i]) < support[i - self._maLen][1]:
+                annotations_labels.append({
+                    "x" : self._df["Date"][i],
+                    "title" : "X",
+                    "text" : "穿越地板線"
+                })
+
 
         self._df = self._df.drop(columns = ["Volume"])
 
@@ -80,7 +96,8 @@ class SupportResistance():
             "resistance" : resistance,
             "Kline" : self._df.values.tolist(),
             "volume": self._volume,
-            "ma" : ma_o
+            "ma" : ma_o,
+            "annotations_labels" : annotations_labels
         }
 
         json1 = json.loads(json.dumps(result))
@@ -93,6 +110,7 @@ class SupportResistance():
         neg_BIAS = []
         support = []
         ma_o = []
+        annotations_labels = []
 
         for i in range(self._maLen, len(self._ma), 1):
             if self._df["Close"][i] < self._ma[i]:
@@ -106,12 +124,20 @@ class SupportResistance():
             support.append([self._df["Date"][i], round(temp, 2)])
             ma_o.append([self._df["Date"][i], round(self._ma[i], 2)])
 
+            if float(self._df["Close"][i]) < support[i - self._maLen][1]:
+                annotations_labels.append({
+                    "x" : self._df["Date"][i],
+                    "title" : "X",
+                    "text" : "穿越地板線"
+                })
+
         result = {
             "support" : support,
             "resistance" : [],
             "Kline" : self._df.values.tolist(),
             "volume": self._volume,
-            "ma" : ma_o
+            "ma" : ma_o,
+            "annotations_labels" : annotations_labels
         }
 
         json1 = json.loads(json.dumps(result))
@@ -126,6 +152,7 @@ class SupportResistance():
         support1 = []
         support2 = []
         over_volume = 0
+        annotations_labels = []
 
         vol_avg = self._df["Volume"][len(self._df) - 2 - self._maLen - 1: len(self._df) - 2].sum() / self._maLen
 
@@ -148,13 +175,28 @@ class SupportResistance():
             support2.append([self._df["Date"][i], round(self._ma[i] + self._ma[i] * neg_BIAS_5, 2)])
             ma_o.append([self._df["Date"][i], round(self._ma[i], 2)])
 
+            if float(self._df["Close"][i]) < support1[i - self._maLen][1]:
+                annotations_labels.append({
+                    "x" : self._df["Date"][i],
+                    "title" : "X1",
+                    "text" : "穿越地板線1%"
+                })
+
+            if float(self._df["Close"][i]) < support2[i - self._maLen][1]:
+                annotations_labels.append({
+                    "x" : self._df["Date"][i],
+                    "title" : "X5",
+                    "text" : "穿越地板線5%"
+                })
+
         result = {
             "support1" : support1,
             "support2" : support2,
             "Kline" : self._df.values.tolist(),
             "volume": self._volume,
             "ma" : ma_o,
-            "over" : over_volume
+            "over" : over_volume,
+            "annotations_labels" : annotations_labels
         }
 
         json1 = json.loads(json.dumps(result))

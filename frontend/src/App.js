@@ -15,11 +15,14 @@ import UserListComp from './component/userListPage/userListComp';
 import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 import StockPricingStratagyComp from './component/stock_pricing_stratagyPage/stock_pricing_stratagyComp';
 import PERRiverComp from './component/PER_RiverPage/PER_RiverComp';
-import "bootstrap/js/src/collapse.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "@popperjs/core";
+import "bootstrap";
 import SupportResistanceComp from './component/support_resistance_page/support_resistance_comp';
+import ScreenComp from './component/screenPage/screenComp';
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 
-function App() {
+function App() {  
   return (
     <>
       <BrowserRouter>
@@ -45,6 +48,7 @@ function App() {
             <Route path = "/stock_pricing_stratagy" element = { <StockPricingStratagyComp /> } ></Route>
             <Route path = "/PER_River" element = { <PERRiverComp /> } ></Route>
             <Route path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
+            <Route path = "/screen" element = { <ScreenComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

@@ -13,11 +13,11 @@ function PrivateRoute() {
             .then(res => {
                 setIsAuth(true)
             }).catch(res => {
-                alert("Session expired, please logon again")
+                alert("Session expired, please login again")
                 setIsAuth(false)
             })
         }
-        
+
         state()
     }, [])
 

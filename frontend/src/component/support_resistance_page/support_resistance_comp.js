@@ -6,6 +6,7 @@ import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant';
 import { columns_support_resistance } from '../column/column';
 import HighchartStockComp from '../highchart/highchatStockComp';
+import SubButtonComp from '../subButton/subButtonComp';
 import SupportResistanceCard from './support_resistance_card';
 import { formatExplain } from './support_resistance_explain';
 import { dataInit, labels } from './support_resistance_param';
@@ -43,7 +44,7 @@ function SupportResistanceComp() {
         xAxis: {
             type : "datetime",
             labels : {
-                format : '{value:%Y-%m}'
+                format : '{value:%Y-%m-%d}'
             }
         },
         chart : {
@@ -63,6 +64,16 @@ function SupportResistanceComp() {
         tooltip: {
             valueDecimals: 2
         },
+        rangeSelector : {
+            selected: 4
+        },
+        plotOptions : {
+            series : {
+                dataGrouping : {
+                    enabled : false
+                }
+            }
+        }
     });
 
     const autocom = AutoCom.AutoComList;
@@ -107,12 +118,18 @@ function SupportResistanceComp() {
                                 data : res.data["ma"]
                             },
                             {
+                                type : "flags",
+                                name: "Crossover",
+                                data : res.data["annotations_labels"],
+                                allowOverlapX : true
+                            },
+                            {
                                 type: 'column',
                                 name: 'Volume',
                                 data: res.data["volume"],
                                 yAxis: 1
                             },
-                        ]
+                        ],
                     })
                 }else{
                     setOverVolume(-1)
@@ -140,12 +157,20 @@ function SupportResistanceComp() {
                                 data : res.data["ma"]
                             },
                             {
+                                type : "flags",
+                                name: "Crossover",
+                                data : res.data["annotations_labels"]
+                            },
+                            {
                                 type: 'column',
                                 name: 'Volume',
                                 data: res.data["volume"],
                                 yAxis: 1
                             },
-                        ]
+                        ],
+                        annotations : [{
+                            labels : res.data["annotations_labels"]
+                        }]
                     })
                 };
                 
@@ -187,6 +212,10 @@ function SupportResistanceComp() {
                                 placeholder = "請輸入股票代號或名稱"
                                 selected = { stockNum }
                             />
+                        </div>
+
+                        <div className = 'col-md-5 text-end'>
+                            <SubButtonComp />
                         </div>
                     </div>
 
@@ -248,12 +277,13 @@ function SupportResistanceComp() {
                     <div className = 'card h-100' style = {{ minHeight : "200px" }}>
                         <div className = 'card-body'>
                             <h3 className = 'card-title'>{ formatExplain(maLen, maType)[method]["explain0"] }</h3>
+                            <p className = 'card-subtitle' style = {{ color : "red" }}>此計算方式會參考現在最新價格，實際結果以收盤後為準</p>
+                            <br/>
                             <div className = 'row' style = {{ minHeight : "100px" }}>
                                 <h6 className = "card-subtitle text-muted">{ formatExplain(maLen, maType)[method]["explain1"] }</h6>
-                                <br/>
                                 <h6 className = "card-subtitle text-muted">{ formatExplain(maLen, maType)[method]["explain2"] }</h6>
-                                { method === "method3" && overVolume === 1 &&  <div className = "alert alert-success text-center" role = "alert">今日交易量大於 {maLen.toString()}天均量</div>}
-                                { method === "method3" && overVolume === 0 &&  <div className = "alert alert-danger text-center" role = "alert">今日交易量小於 {maLen.toString()}天均量</div>}
+                                { method === "method3" && overVolume === 1 &&  <div className = "alert alert-success text-center" role = "alert">今日交易量大於 2倍{maLen.toString()}天均量</div>}
+                                { method === "method3" && overVolume === 0 &&  <div className = "alert alert-danger text-center" role = "alert">今日交易量小於 2倍{maLen.toString()}天均量</div>}
                                 { method === "method3" && overVolume === -1 &&  <div className = "alert alert-warning text-center" role = "alert">尚未計算</div>}
                             </div>
                         </div>

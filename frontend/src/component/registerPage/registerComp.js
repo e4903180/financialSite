@@ -12,6 +12,8 @@ function RegisterComp() {
     const [password, setPassword] = useState("");
     const [confirmPassword, set_confirmPassword] = useState("");
 
+    const [nameError, setNameError] = useState(false)
+    const [userNameError, setUserNameError] = useState(false)
     const [emailError, setemailError] = useState(false);
     const [passwordError, setpasswordError] = useState(false);
     const [confirmpasswordError, setconfirmpasswordError] = useState(false);
@@ -26,7 +28,6 @@ function RegisterComp() {
             alert("Register successfully")
             nav("/login");
         }).catch(err => {
-            console.log(err)
             if(err.response.status === 401){
                 alert(err.response.data)
             }else{
@@ -72,13 +73,31 @@ function RegisterComp() {
         };
 
         function checkButton(){
-            if(emailError === false && passwordError === false && confirmpasswordError === false && name !== "" && userName !== "" && email !== "" && password !== "" && confirmPassword !== ""){
+            if(emailError === false && passwordError === false && confirmpasswordError === false && nameError === false && userNameError === false && name !== "" && userName !== "" && email !== "" && password !== "" && confirmPassword !== ""){
                 document.getElementById("registerButton").disabled = false
             }else{
                 document.getElementById("registerButton").disabled = true
             }
         };
 
+        function checkName(){
+            if(name.length > 20){
+                setNameError(true)
+            }else{
+                setNameError(false)
+            }
+        }
+
+        function checkUserName(){
+            if(userName.length > 20){
+                setUserNameError(true)
+            }else{
+                setUserNameError(false)
+            }
+        }
+
+        checkName(name);
+        checkUserName(userName);
         checkEmailFormat(email);
         checkpassword(password);
         checkConfirmpassword(confirmPassword);
@@ -106,6 +125,7 @@ function RegisterComp() {
                                 <label htmlFor = "name">Name <span style = {{ color : "red" }}>*</span></label>
                                 <input type = "text" className = "form-control" id = "name" onChange = { event => setName(event.target.value) } required/>
                                 <div className = "form-text">Length cannot over 20</div>
+                                { nameError ? <div className = "item"> <p style = {{ color : "red" }}>Name is too long</p> </div> : <div></div> }
                             </div>
                         </div>
 

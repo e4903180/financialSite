@@ -83,7 +83,7 @@ function SupportResistanceComp() {
         setLoading(true);
         setOptions({series : []})
 
-        if((autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value) === true) && (startDate !== "")){
+        if(autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value) === true){
             setInputError(false)
             
             axios.post(rootApiIP + "/data/support_resistance", {
@@ -215,7 +215,7 @@ function SupportResistanceComp() {
                         </div>
 
                         <div className = 'col-md-5 text-end'>
-                            <SubButtonComp />
+                            <SubButtonComp type = "SubSupportResistanceForm"/>
                         </div>
                     </div>
 

@@ -74,4 +74,8 @@ dataRouter.post("/pricing", Data.pricingData)
 dataRouter.post("/PER_River", Data.PER_river_Data)
 dataRouter.post("/support_resistance", Data.support_resistance_data)
 
+dataRouter.get("/get_support_resistance_sub", Data.get_support_resistance_sub)
+dataRouter.delete("/cancel_sub", Data.delete_sub)
+dataRouter.post("/handle_support_resistance_sub", Data.handle_support_resistance_sub)
+
 module.exports = {router};

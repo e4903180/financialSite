@@ -116,15 +116,6 @@ export const columns_support_resistance = [
     { field: 'Close', headerName: 'Close', flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
-export const column_sub_list = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-    { field: "subTime", headerName : "訂閱日期", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'ticker', headerName: '股票', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'type', headerName: '心法', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'endTime', headerName: '結束日期', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'type', headerName: '取消訂閱', flex: 1, headerAlign: 'center', align: 'center' },
-]
-
 const check_single_post_board_memo_NULL = (value) => {
     if(value === "NULL"){
         return <> </>

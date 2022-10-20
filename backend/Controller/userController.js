@@ -35,7 +35,7 @@ exports.register = async function(req, res){
     var userName = req.body.userName
     var email = req.body.email
     const hash_password = bcrypt.hashSync(req.body.password, 10);
-    let sql = "CREATE TABLE " + userName + "_notify" + " (`ID` INT PRIMARY KEY, `subTime` varchar(255), `endTime` varchar(255), `ticker` varchar(255), `type` text, `content` text)"
+    let sql = "CREATE TABLE " + userName + "_notify" + " (`ID` INT AUTO_INCREMENT PRIMARY KEY, `subTime` varchar(255), `endTime` varchar(255), `ticker` varchar(255), `subType` varchar(255), `content` text)"
 
     try {
         const [rows, fields] = await con.promise().query(sql);
@@ -47,7 +47,7 @@ exports.register = async function(req, res){
         }
     }
 
-    sql = "CREATE TABLE " + userName + "_sublist" + " (`ID` INT PRIMARY KEY, `subTime` varchar(255), `endTime` varchar(255), `ticker` varchar(255), `type` text)"
+    sql = "CREATE TABLE " + userName + "_sublist" + " (`ID` INT AUTO_INCREMENT PRIMARY KEY, `subTime` varchar(255),`endTime` varchar(255), `ticker` varchar(255), `subType` varchar(255), `content` text)"
     
     try {
         const [rows, fields] = await con.promise().query(sql);

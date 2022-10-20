@@ -19,7 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "@popperjs/core";
 import "bootstrap";
 import SupportResistanceComp from './component/support_resistance_page/support_resistance_comp';
-import ScreenComp from './component/screenPage/screenComp';
+import ScreenComp from './component/subListPage/subListComp';
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 
 function App() {  

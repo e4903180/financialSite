@@ -4,7 +4,7 @@ import axios from "axios";
 import { rootApiIP } from './constant';
 
 function LoginRoute() {
-    const [isAuth, setIsAuth] = useState()
+    const [isAuth, setIsAuth] = useState(undefined)
 
     useEffect(() => {
         async function state(){

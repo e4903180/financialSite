@@ -4,11 +4,11 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 import { rootApiIP } from '../../constant'
-import { columns, columns1, columns2, columns3 } from '../column/column';
+import { columns, columns1, columns2, columns3, columns4 } from '../column/column';
 import { AutoCom } from '../../autoCom';
 
 function DatabaseComp() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([])
     const [data1, setData1] = useState([]);
     const [data2, setData2] = useState([]);
     const [data3, setData3] = useState([]);
@@ -16,14 +16,14 @@ function DatabaseComp() {
     const [search, setSearch] = useState(false);
     const [search1, setSearch1] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
     const [page1, setPage1] = useState(0);
     const [pageSize1, setPageSize1] = useState(5);
     const [page2, setPage2] = useState(0);
     const [pageSize2, setPageSize2] = useState(5);
     const [page3, setPage3] = useState(0);
     const [pageSize3, setPageSize3] = useState(5);
+    const [page4, setPage4] = useState(0);
+    const [pageSize4, setPageSize4] = useState(10);
     const [columnTable, set_colume_table] = useState([]);
     const [input1, setInput1] = useState([]);
     const [input1Error, set_input1Error] = useState(false);
@@ -45,11 +45,13 @@ function DatabaseComp() {
             setData2([])
             setData3([])
             setData4([])
-            setPage(0)
+            setPage1(0)
         }else{
             set_input1Error(false)
+
             if(input5 === "綜合查詢"){
                 setSearch(false)
+
                 axios.post(rootApiIP + "/data/dbsearch", {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
@@ -57,14 +59,14 @@ function DatabaseComp() {
                     "investmentCompany" : input4,
                     "dbTable" : "financialData"
                 }).then(res => {
-                    setData2(res.data)
+                    setData1(res.data)
                     setSearch1(true)
                     setLoading(false)
                     setPage1(0)
                 }).catch(res => {
                     if(res.response.data === "Session expired") window.location.reload()
 
-                    setData2([])
+                    setData1([])
                     setPage1(0)
                 })
 
@@ -75,12 +77,13 @@ function DatabaseComp() {
                     "investmentCompany" : "",
                     "dbTable" : "post_board_memo"
                 }).then(res => {
-                    setData3(res.data)
+                    setData2(res.data)
                     setSearch1(true)
                     setLoading(false)
                     setPage2(0)
                 }).catch(res => {
                     if(res.response.data === "Session expired") window.location.reload()
+
                     setData2([])
                     setPage2(0)
                 })
@@ -92,12 +95,33 @@ function DatabaseComp() {
                     "investmentCompany" : "",
                     "dbTable" : "lineMemo"
                 }).then(res => {
-                    setData4(res.data)
+                    setData3(res.data)
+                    setSearch1(true)
+                    setLoading(false)
                     setPage3(0)
                 }).catch(res => {
                     if(res.response.data === "Session expired") window.location.reload()
-                    setData2([])
+
+                    setData3([])
                     setPage3(0)
+                })
+
+                axios.post(rootApiIP + "/data/dbsearch", {
+                    "stockName_or_Num" : input1,
+                    "startDate" : input2,
+                    "endDate" : input3,
+                    "investmentCompany" : "",
+                    "dbTable" : "calender"
+                }).then(res => {
+                    setData4(res.data)
+                    setSearch1(true)
+                    setLoading(false)
+                    setPage4(0)
+                }).catch(res => {
+                    if(res.response.data === "Session expired") window.location.reload()
+
+                    setData4([])
+                    setPage4(0)
                 })
             }else{
                 setSearch1(false)
@@ -111,11 +135,6 @@ function DatabaseComp() {
                         "dbTable" : input5
                     }).then(res => {
                         switch(input5){
-                            case "financialData":{
-                                set_colume_table(columns1)
-                                break
-                            }
-            
                             case "post_board_memo":{
                                 set_colume_table(columns2)
                                 break
@@ -125,19 +144,27 @@ function DatabaseComp() {
                                 set_colume_table(columns3)
                                 break
                             }
+
+                            case "calender":{
+                                set_colume_table(columns4)
+                                setPageSize1(10)
+                                break
+                            }
             
                             default : break
                         }
+
                         setData1(res.data)
                         setSearch(true)
                         setLoading(false)
-                        setPage(0)
+                        setPage1(0)
                     }).catch(res => {
                         if(res.response.data === "Session expired") window.location.reload()
+
                         setData1([])
                         setSearch(true)
                         setLoading(false)
-                        setPage(0)
+                        setPage1(0)
                     })
                 }else{
                     axios.post(rootApiIP + "/data/dbsearch", {
@@ -147,34 +174,17 @@ function DatabaseComp() {
                         "investmentCompany" : input4,
                         "dbTable" : input5
                     }).then(res => {
-                        switch(input5){
-                            case "financialData":{
-                                set_colume_table(columns1)
-                                break
-                            }
-            
-                            case "post_board_memo":{
-                                set_colume_table(columns2)
-                                break
-                            }
-            
-                            case "lineMemo":{
-                                set_colume_table(columns3)
-                                break
-                            }
-            
-                            default : break
-                        }
+                        set_colume_table(columns1)
                         setData1(res.data)
                         setSearch(true)
                         setLoading(false)
-                        setPage(0)
+                        setPage1(0)
                     }).catch(res => {
                         if(res.response.data === "Session expired") window.location.reload()
                         setData1([])
                         setSearch(true)
                         setLoading(false)
-                        setPage(0)
+                        setPage1(0)
                     })
                 }
             }
@@ -247,6 +257,7 @@ function DatabaseComp() {
                                     <option value = "financialData">個股研究資料</option>
                                     <option value = "post_board_memo">個股推薦</option>
                                     <option value = "lineMemo">Line Memo</option>
+                                    <option value = "calender">法說會</option>
                                 </select>
                             </div>
 
@@ -277,17 +288,17 @@ function DatabaseComp() {
                 </div>
             </div>
 
-            { search &&  <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "400px" }}>
+            { search  && <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "900px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
                 <DataGrid
                     columns = { columnTable }
                     rows = { data1 }
-                    page = { page }
-                    onPageChange={(newPage) => setPage(newPage)}
-                    pageSize = { pageSize }
-                    onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
+                    page = { page1 }
+                    onPageChange={(newPage) => setPage1(newPage)}
+                    pageSize = { pageSize1 }
+                    onPageSizeChange={ (newPageSize) => setPageSize1(newPageSize) }
                     rowsPerPageOptions = {[5, 10, 20]}
                     getRowId = { row => row.ID }
                     components = {{ Toolbar: GridToolbar }}
@@ -311,7 +322,7 @@ function DatabaseComp() {
 
                     <DataGrid
                         columns = { columns1 }
-                        rows = { data2 }
+                        rows = { data1 }
                         page = { page1 }
                         onPageChange={(newPage) => setPage1(newPage)}
                         pageSize = { pageSize1 }
@@ -334,7 +345,7 @@ function DatabaseComp() {
 
                     <DataGrid
                         columns = { columns2 }
-                        rows = { data3 }
+                        rows = { data2 }
                         page = { page2 }
                         onPageChange={(newPage) => setPage2(newPage)}
                         pageSize = { pageSize2 }
@@ -357,11 +368,35 @@ function DatabaseComp() {
 
                     <DataGrid
                         columns = { columns3 }
-                        rows = { data4 }
+                        rows = { data3 }
                         page = { page3 }
                         onPageChange={(newPage) => setPage3(newPage)}
                         pageSize = { pageSize3 }
                         onPageSizeChange={ (newPageSize) => setPageSize3(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                    />
+                </div>
+
+
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "900px" }}>
+                    <h4 className = "text-center">法說會</h4>
+
+                    <DataGrid
+                        columns = { columns4 }
+                        rows = { data4 }
+                        page = { page4 }
+                        onPageChange={(newPage) => setPage4(newPage)}
+                        pageSize = { pageSize4 }
+                        onPageSizeChange={ (newPageSize) => setPageSize4(newPageSize) }
                         rowsPerPageOptions = {[5, 10, 20]}
                         getRowId = { row => row.ID }
                         components = {{ Toolbar: GridToolbar }}

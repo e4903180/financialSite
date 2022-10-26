@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { rootApiIP } from '../../constant'
+import { rootApiIP, WSContext } from '../../constant'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FiDatabase } from "react-icons/fi";
@@ -20,12 +20,18 @@ function NavbarComp() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const nav = useNavigate()
+    const socket = useContext(WSContext);
+
+    const HandleNotifyQuantity = useCallback((arg) => {
+        setBadgeNumber(arg)
+    }, [])
 
     function logout(e){
         e.preventDefault()
 
         axios.get(rootApiIP + "/user/logout")
             .then(res => {
+                socket.disconnect()
                 nav("/login")
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -34,9 +40,15 @@ function NavbarComp() {
     }
 
     useEffect(() => {
-        setBadgeNumber(15)
-        setLoading(false)
-    }, [])
+        if(socket){
+            socket.on("REGISTER_NOTIFY_QUANTITY", (arg) => HandleNotifyQuantity(arg));
+            setLoading(false)
+
+            return () => {
+                socket.off("REGISTER_NOTIFY_QUANTITY", (arg) => HandleNotifyQuantity(arg));
+            };
+        }
+    }, [socket])
 
     return (
         <>
@@ -70,7 +82,7 @@ function NavbarComp() {
                                     &emsp;資料庫相關功能
                                 </>
                             } align = "end">
-                                <NavDropdown.Item href = "/database">個股綜合資料</NavDropdown.Item>
+                                <NavDropdown.Item href = "/database">資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
                                 <NavDropdown.Item href = "/line_memo">Line memo</NavDropdown.Item>
                                 <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>
@@ -89,7 +101,7 @@ function NavbarComp() {
                                 <NavDropdown.Item href = "/support_resistance">天花板地板線</NavDropdown.Item>
                             </NavDropdown>
 
-                            <Nav.Link href="/screen">訂閱清單</Nav.Link>
+                            <Nav.Link href="/subscibe_list">訂閱清單</Nav.Link>
 
                             <NavDropdown id = "notify" title = {
                                 <>

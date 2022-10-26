@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { rootApiIP } from '../../constant'
-axios.defaults.withCredentials = true;
 
 function RegisterComp() {
     const nav = useNavigate()
@@ -107,7 +106,9 @@ function RegisterComp() {
     function submit(e){
         e.preventDefault()
 
-        register();
+        if(emailError === false && passwordError === false && confirmpasswordError === false && nameError === false && userNameError === false && name !== "" && userName !== "" && email !== "" && password !== "" && confirmPassword !== ""){
+            register();
+        }
     }
 
     return (
@@ -134,6 +135,7 @@ function RegisterComp() {
                                 <label htmlFor = "account">Username <span style = {{ color : "red" }}>*</span></label>
                                 <input type = "text" className = "form-control" id = "account" onChange = { event => setUsername(event.target.value) } required/>
                                 <div className = "form-text">Length cannot over 20</div>
+                                { userNameError ? <div className = "item"> <p style = {{ color : "red" }}>username is too long</p> </div> : <div></div> }
                             </div>
                         </div>
 

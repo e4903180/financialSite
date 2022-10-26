@@ -19,10 +19,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "@popperjs/core";
 import "bootstrap";
 import SupportResistanceComp from './component/support_resistance_page/support_resistance_comp';
-import ScreenComp from './component/subListPage/subListComp';
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
+import axios from 'axios';
+import SubListComp from './component/subListPage/subListComp';
 
-function App() {  
+axios.defaults.withCredentials = true;
+
+function App() {
   return (
     <>
       <BrowserRouter>
@@ -48,7 +51,7 @@ function App() {
             <Route path = "/stock_pricing_stratagy" element = { <StockPricingStratagyComp /> } ></Route>
             <Route path = "/PER_River" element = { <PERRiverComp /> } ></Route>
             <Route path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
-            <Route path = "/screen" element = { <ScreenComp /> } ></Route>
+            <Route path = "/subscibe_list" element = { <SubListComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

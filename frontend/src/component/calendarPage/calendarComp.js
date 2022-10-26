@@ -30,7 +30,6 @@ function CalendarComp() {
     }
 
     async function getCalendarData(fetchInfo, successCallback) {
-
         try {
             let year = new Date().getFullYear();
             let month = new Date().getMonth() + 1;
@@ -71,7 +70,7 @@ function CalendarComp() {
                         plugins={[ dayGridPlugin ]}
                         initialView = "dayGridMonth"
                         events = { (fetchInfo, successCallback, failureCallback) => getCalendarData(fetchInfo, successCallback, failureCallback) }
-                        dayMaxEventRows = { 5 }
+                        dayMaxEventRows = { 3 }
                         eventClick = { clickEvent }
                         eventMouseEnter = { info => info.el.style.cursor = "pointer" }
                         showNonCurrentDates = { false }
@@ -85,7 +84,7 @@ function CalendarComp() {
             </div>
 
             <div className = 'row mt-3 mx-auto' style = {{minheight : "600px", height : "900px"}}>
-                <div className = 'col-md-9 mx-auto'>
+                <div className = 'col-md-10 mx-auto'>
                     <DataGrid
                         columns = { columns4 }
                         rows = { data }
@@ -103,6 +102,7 @@ function CalendarComp() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
+                        sx = {{ overflowX: 'scroll' }}
                     />
                 </div>
             </div>

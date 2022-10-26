@@ -1,10 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import { IconButton, Tooltip } from '@mui/material';
+import axios from 'axios';
+import { rootApiIP } from '../../constant';
 
 function NotifyCardComp(props) {
     const [hover, setHover] = useState(false)
-    const [read, setRead] = useState(false)
+    const [read, setRead] = useState(props.read)
+
+    const handleUnreadClick = useCallback((e, time) => {
+        e.preventDefault()
+
+        axios.patch(rootApiIP + "/data/notify_handle_unread", {
+            time : time
+        })
+        .then((res) => {
+            setRead(false)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+    }, [])
+
+    const handleReadClick = useCallback((e, time) => {
+        e.preventDefault()
+
+        axios.patch(rootApiIP + "/data/notify_handle_read", {
+            time : time
+        })
+        .then((res) => {
+            setRead(true)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+    }, [])
 
     useEffect(() => {
         setRead(props.read)
@@ -12,10 +42,10 @@ function NotifyCardComp(props) {
 
     return (
         <div className = 'card border-0' style = {{ cursor : "pointer", opacity : hover ? 0.7 : 1, color : read ? "gray" : "black" }} onMouseEnter = { () => setHover(true) } onMouseLeave = { () => setHover(false) }>
-            <div className = 'row' style = {{ width : "100%" }}>
+            <div className = 'row mx-auto' style = {{ width : "100%" }}>
                 <div className = 'col-md-4'>
                     <div className = 'card-body text-center'>
-                        <h5 className = 'card-title'>{props.ticker}</h5>
+                        <h5 className = 'card-title'>系統</h5>
                     </div>
                 </div>
 
@@ -30,15 +60,19 @@ function NotifyCardComp(props) {
                     <div className = 'col-md-2 offset-md-10 d-flex align-items-center text-center' style = {{ position : "absolute", zindex : 100, height : "100%" }}>
                         { read ? 
                             <Tooltip title = "標示為未讀">
-                                <IconButton>
-                                    <CheckIcon onClick = {() => setRead(false)}/>
-                                </IconButton>
+                                <div className = "icon-wrapper" onClick = { (e) => handleUnreadClick(e, props.time) }>
+                                    <IconButton>
+                                        <CheckIcon/>
+                                    </IconButton>
+                                </div>
                             </Tooltip>
                             :
                             <Tooltip title = "標示為已讀">
-                                <IconButton>
-                                    <CheckIcon onClick = {() => setRead(true)}/>
-                                </IconButton>
+                                <div className = "icon-wrapper" onClick = { (e) => handleReadClick(e, props.time) }>
+                                    <IconButton>
+                                        <CheckIcon/>
+                                    </IconButton>
+                                </div>
                             </Tooltip>
                         }
                     </div> 

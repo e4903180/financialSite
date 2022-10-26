@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { rootApiIP } from '../../constant';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-function subListComp() {
+function SubListComp() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [rows, setRows] = useState([]);
@@ -20,8 +20,6 @@ function subListComp() {
     ]
 
     function handle_sub_list_cancel(rowData){
-        console.log(rowData)
-
         axios.delete(rootApiIP + "/data/cancel_sub", {
             data : {
                 subTime : rowData.row.subTime
@@ -51,7 +49,7 @@ function subListComp() {
                 <h3 className = "display-6 text-center">訂閱清單</h3>
             </div>
 
-            <div className = 'row' style = {{ height : "50vh" }}>
+            <div className = 'row mx-auto' style = {{ height : "50vh" }}>
                 <div className = 'col-md-8 mx-auto'>
                     <DataGrid
                         columns = { column_sub_list }
@@ -77,4 +75,4 @@ function subListComp() {
     );
 }
 
-export default subListComp;
+export default SubListComp;

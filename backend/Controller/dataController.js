@@ -1,10 +1,6 @@
 const con = require('../Model/connectMySQL')
 let { PythonShell } = require('python-shell')
 
-exports.retrnUsername = async function(req, res){
-    return res.status(200).send(req.session.userName)
-}
-
 exports.newest15 = async function(req, res){
     con.query("SELECT * FROM financialData ORDER BY `date` DESC Limit 15", function(err, result, field){
         if(err === null){
@@ -16,12 +12,14 @@ exports.newest15 = async function(req, res){
 };
 
 exports.allData = async function(req, res){
-    con.query("select count( * ) as dataQuantity from financialData; select max(date) as newestDate from financialData;select count( * ) as dataQuantity from post_board_memo;select max(date) as newestDate from post_board_memo;select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;", function(err, result, field){
+    con.query("select count( * ) as dataQuantity from financialData; select max(date) as newestDate from financialData;select count( * ) as dataQuantity from post_board_memo;select max(date) as newestDate from post_board_memo;select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;select count( * ) as dataQuantity from calender;select max(date) as newestDate from calender;", function(err, result, field){
         if(err === null){
             return res.status(200).json([Object.assign({ "dbName" : "個股研究資料" }, result[0][0], result[1][0], {"downloadUrl" : "http://140.116.214.154:3000/api/data/download/financialData"}),
                                         Object.assign({ "dbName" : "個股推薦" }, result[2][0], result[3][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/post_board_memo" }),
-                                        Object.assign({ "dbName" : "Line memo" }, result[4][0], result[5][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/lineMemo" })])
+                                        Object.assign({ "dbName" : "Line memo" }, result[4][0], result[5][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/lineMemo" }), 
+                                        Object.assign({ "dbName" : "法說會" }, result[6][0], result[7][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/calender" })])
         }else{
+            console.log(err)
             return res.status(400).send("error")
         }
     });
@@ -46,9 +44,10 @@ exports.dbsearch = async function(req, res){
     
         if(req.body.stockName_or_Num.length !== 0) sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
     
-        if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+        if(req.body.startDate !== "" && req.body.endDate !== "" && req.body.dbTable !== "calender") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+        else sql += ` AND date BETWEEN '${(req.body.startDate)}' AND '${(req.body.endDate)}'`
         if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
-    
+        
         con.query(sql, function(err, result, field){
             if(err === null){
                 return res.status(200).json(result)
@@ -320,7 +319,7 @@ exports.handle_support_resistance_sub = async function(req, res){
     var seconds = Today.getSeconds().toString().padStart(2, '0');
     var Time = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
 
-    let sql = `SELECT * FROM ${userName}_sublist WHERE endTime = "${endDate}" AND ticker = "${stock_num}" AND subType = "${subType}" AND content = "天花板地板線_歷史資料起始日${startDate}_${maLen}${maType}_方法${method[6]}"`
+    let sql = `SELECT * FROM subscribe WHERE username = "${userName}" AND endTime = "${endDate}" AND ticker = "${stock_num}" AND subType = "${subType}" AND content = "天花板地板線_歷史資料起始日${startDate}_${maLen}${maType}_方法${method[6]}"`
     try {
         const [rows, fields] = await con.promise().query(sql);
 
@@ -331,11 +330,25 @@ exports.handle_support_resistance_sub = async function(req, res){
         return res.status(400).send("error")
     }
 
-    sql = `INSERT INTO ${userName}_sublist (subTime, endTime, ticker, subType, content) VALUES ("${Time}", "${endDate}", "${stock_num}", "${subType}", "天花板地板線_歷史資料起始日${startDate}_${maLen}${maType}_方法${method[6]}")`
+    sql = `SELECT * FROM user_sub WHERE username = "${userName}"`
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        if(rows.length == 0){
+            sql = `INSERT INTO user_sub (username, quantity) VALUES ("${userName}", 1)`
+        }else{
+            sql = `UPDATE user_sub SET quantity = ${rows[0]["quantity"] + 1} WHERE username = "${userName}"`
+        }
+
+        const [rows1, fields1] = await con.promise().query(sql);
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, subType, content) VALUES ("${userName}", "${Time}", "${endDate}", "${stock_num}", "${subType}", "天花板地板線_歷史資料起始日${startDate}_${maLen}${maType}_方法${method[6]}")`
     try {
         const [rows, fields] = await con.promise().query(sql);
     } catch (error) {
-        console.log(error)
         return res.status(400).send("error")
     }
 
@@ -345,7 +358,7 @@ exports.handle_support_resistance_sub = async function(req, res){
 exports.get_support_resistance_sub = async function(req, res){
     var userName = req.session.userName
 
-    let sql = `SELECT * FROM ${userName}_sublist`
+    let sql = `SELECT * FROM subscribe`
     try {
         const [rows, fields] = await con.promise().query(sql);
         return res.status(200).send(rows)
@@ -358,10 +371,81 @@ exports.delete_sub = async function(req, res){
     var userName = req.session.userName
     var subTime = req.body.subTime
 
-    let sql = `DELETE FROM ${userName}_sublist WHERE subTime = "${subTime}"`
+    let sql = `DELETE FROM subscribe WHERE username = "${userName}" AND subTime = "${subTime}"`
 
     try {
         const [rows, fields] = await con.promise().query(sql);
+
+        sql = `SELECT * FROM user_sub WHERE username = "${userName}"`
+        const [rows1, fields1] = await con.promise().query(sql);
+
+        if(rows1[0]["quantity"] == 1){
+            sql = `DELETE FROM user_sub WHERE username = "${userName}"`
+        }else{
+            sql = `UPDATE user_sub SET quantity = ${rows1[0]["quantity"] - 1} WHERE username = "${userName}"`
+        }
+
+        const [rows2, fields2] = await con.promise().query(sql);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+
+        return res.status(400).send("error")
+    }
+}
+
+exports.notify_all = async function(req, res){
+    var userName = req.session.userName
+
+    let sql = `SELECT * FROM notify WHERE username="${userName}"`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.notify_read = async function(req, res){
+    var userName = req.session.userName
+
+    let sql = "SELECT * FROM notify WHERE `username`= " + `"${userName}"` + " AND `read`=1" 
+    console.log(sql)
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.notify_handle_read = async function(req, res){
+    var userName = req.session.userName
+    const time = req.body.time
+
+    let sql = "UPDATE notify SET " + "`read`=1" + ` WHERE notifyTime="${time}" AND username=` + `"${userName}"`
+    console.log(sql)
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.notify_handle_unread = async function(req, res){
+    var userName = req.session.userName
+    const time = req.body.time
+
+    let sql = "UPDATE notify SET " + "`read`=0" + ` WHERE notifyTime="${time}" AND username=` + `"${userName}"`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
         return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")

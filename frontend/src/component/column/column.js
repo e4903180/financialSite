@@ -42,18 +42,18 @@ export const columns3 = [
 ];
 
 export const columns4 = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
-    { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'Date', headerName: '法說會日期', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'Time', headerName: '法說會時間', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'Form', headerName: '法說會形式', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Message', headerName: '法說會訊息', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'chPDF', headerName: '中文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
-    { field: 'enPDF', headerName: '英文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
-    { field: 'More information', headerName: '相關資訊', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Video address', headerName: '影音連結資訊', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Attention', headerName: '其他應敘明事項', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
+    { field: "ID", headerName : "ID", width: 300,headerAlign: 'center', align: 'center', hide : 'true' },
+    { field: 'stockNum', headerName: '股票代號', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'stockName', headerName: '股票名稱', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'date', headerName: '法說會日期', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'chPDF', headerName: '中文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
+    { field: 'enPDF', headerName: '英文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
+    { field: 'More information', headerName: '相關資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Video address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
 ];
 
 export const columns5 = [
@@ -135,6 +135,8 @@ const check_single_lineMemo_memo_NULL = (value) => {
 const check_single_twse_chPDF_NULL = (value) => {
     if(value === "NULL"){
         return <> </>
+    }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
+        return value
     }else{
         return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value }>Download</a>
     }
@@ -143,6 +145,8 @@ const check_single_twse_chPDF_NULL = (value) => {
 const check_single_twse_enPDF_NULL = (value) => {
     if(value === "NULL"){
         return <> </>
+    }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
+        return value
     }else{
         return <a href = { rootApiIP + "/data/download/single_twse_enPDF_download?filename=" + value } download = { value }>Download</a>
     }

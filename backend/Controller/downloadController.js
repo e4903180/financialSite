@@ -62,6 +62,15 @@ exports.lineMemo2csv_download = function(req, res){
     });
 };
 
+exports.calender2csv_download = function(req, res){
+    con.query("select * from calender", function(err, result, field){
+        if(err === null){
+            const path = createCSV('/home/cosbi/桌面/financialData/calender.csv', result)
+            res.download(path)
+        }
+    });
+};
+
 exports.single_meetingData_memo_download = function(req, res){
     res.download("/home/cosbi/桌面/financialData/meeting_data/" + req.query.filename)
 };

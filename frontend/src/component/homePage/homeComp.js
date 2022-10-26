@@ -5,8 +5,6 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { rootApiIP } from '../../constant'
 import { columns1 } from '../column/column'
 
-axios.defaults.withCredentials = true;
-
 function HomeComp() {
     let [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(5);

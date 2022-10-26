@@ -339,14 +339,11 @@ class gmailService:
                 
                 while(subject[end] != ")"):
                     if end == len(subject) - 1:
-                        result.append("Null")
                         break
 
                     end += 1
                     
                 result.append(subject[start:end])
-            else:
-                result.append("Null")
         return result
 
 

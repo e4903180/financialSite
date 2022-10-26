@@ -2,71 +2,76 @@ import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import NotifyCardComp from './notifyCardComp';
 import { rootApiIP } from '../../constant';
+import axios from 'axios';
 
-function NavbarNotifyComp(props) {
+function NavbarNotifyComp() {
     const [allRead, setAllRead] = useState("all")
     const [notifyList, setNotifyList] = useState([])
-    const [init, setInit] = useState(false)
 
     function handleAll(){
         if(allRead === "read"){
             setAllRead("all")
 
-            //update notifyList
-            let temp1 = []
+            axios.get(rootApiIP + "/data/notify_all")
+            .then((res) => {
+                setNotifyList([])
+                let temp = []
+                
+                for(let i = 0; i < res.data.length; i++){
 
-            for(let i = 0; i < 15; i++){
-                temp1.push(
-                    <NotifyCardComp ticker = "2330" key = {i} message = "2330穿越地板線" time = {"2022/10/0" + i} read = {false}/>
-                )
-        
-                if(i === 4){
-                    setNotifyList(temp1)
+                    temp.push(<NotifyCardComp key = {res.data[i].ID} message = { res.data[i].content } time = {res.data[i].notifyTime} read = {res.data[i].read}/>)
+    
+                    if(i === res.data.length - 1){
+                        setNotifyList(temp)
+                    }
                 }
-            };
+            })
+            .catch((res) => {
+                if(res.response.data === "Session expired") window.location.reload()
+            })
         }
     }
 
     function handleRead(){
         if(allRead === "all"){
             setAllRead("read")
-            //update notifyList
-            let temp2 = []
 
-            for(let i = 0; i < 15; i++){
-                temp2.push(
-                    <NotifyCardComp ticker = "2330" key = {i} message = "2330穿越地板線" time = {"2022/09/0" + i} read = {true}/>
-                )
-        
-                if(i === 4){
-                    setNotifyList(temp2)
+            //update notifyList
+            axios.get(rootApiIP + "/data/notify_read")
+            .then((res) => {
+                setNotifyList([])
+                let temp = []
+
+                for(let i = 0; i < res.data.length; i++){
+                    temp.push(<NotifyCardComp key = {res.data[i].ID} message = { res.data[i].content } time = {res.data[i].notifyTime} read = {res.data[i].read}/>)
+    
+                    if(i === res.data.length - 1){
+                        setNotifyList(temp)
+                    }
                 }
-            };
+            })
+            .catch((res) => {
+                if(res.response.data === "Session expired") window.location.reload()
+            })
         }
     }
 
     useEffect(() => {
-        if(init === false){
-            setInit(true)
-
+        axios.get(rootApiIP + "/data/notify_all")
+        .then((res) => {
             let temp = []
+            
+            for(let i = 0; i < res.data.length; i++){
+                temp.push(<NotifyCardComp key = {res.data[i].ID} message = { res.data[i].content } time = {res.data[i].notifyTime} read = {res.data[i].read}/>)
 
-            for(let i = 0; i < 15; i++){
-                temp.push(
-                    <NotifyCardComp ticker = "2330" key = {i} message = "2330穿越地板線" time = {"2022/10/0" + i} read = {false}/>
-                )
-        
-                if(i === 4){
+                if(i === res.data.length - 1){
                     setNotifyList(temp)
                 }
-            };
-        }else{
-            if(allRead === "all"){
-                handleAll()
-            }else{
-                handleRead()
             }
-        }
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
     }, [])
 
     return (

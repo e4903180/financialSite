@@ -34,7 +34,7 @@ dataRouter.use(function (req, res, next) {
 })
 
 dataRouter.get("/isAuth", function(req, res){
-    res.status(200).send('success')
+    res.status(200).send(req.session.userName)
 })
 
 dataRouter.get("/download/single_financialData", Download.single_financialData_download)
@@ -48,6 +48,7 @@ dataRouter.get("/download/single_twse_enPDF_download", Download.single_twse_enPD
 dataRouter.get("/download/financialData", Download.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
 dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
+dataRouter.get("/download/calender", Download.calender2csv_download)
 
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
 dataRouter.post("/upload/meeting_data_upload", meetingDataUp.meetingData_middleWare, meetingDataUp.meetingData_upload)
@@ -56,7 +57,6 @@ dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 
 dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
-dataRouter.get("/username", Data.retrnUsername)
 dataRouter.get("/post_board_state", Data.post_board_state)
 dataRouter.get("/lineMemo_state", Data.lineMemo_state)
 dataRouter.get("/superUser", Data.superUser)
@@ -77,5 +77,11 @@ dataRouter.post("/support_resistance", Data.support_resistance_data)
 dataRouter.get("/get_support_resistance_sub", Data.get_support_resistance_sub)
 dataRouter.delete("/cancel_sub", Data.delete_sub)
 dataRouter.post("/handle_support_resistance_sub", Data.handle_support_resistance_sub)
+
+dataRouter.get("/notify_all", Data.notify_all)
+dataRouter.get("/notify_read", Data.notify_read)
+
+dataRouter.patch("/notify_handle_read", Data.notify_handle_read)
+dataRouter.patch("/notify_handle_unread", Data.notify_handle_unread)
 
 module.exports = {router};

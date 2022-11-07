@@ -36,8 +36,7 @@ class SupportResistance():
         self._df1 = self._df1.rename(columns = {'Date': 'ID'})
         self._table_data = self._df1.to_json(orient = "records")
 
-        self._df["Date"] = pd.to_datetime(self._df["Date"]).astype(int)
-        self._df["Date"] = self._df["Date"].replace(self._df["Date"].to_list(), [i / 10**6 for i in self._df["Date"].tolist()])
+        self._df["Date"] = [i / 10**6 for i in pd.to_datetime(self._df["Date"]).astype(int)]
         self._df = self._df.astype(float)
 
         self._volume = self._df[["Date", "Volume"]].values.tolist()

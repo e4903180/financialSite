@@ -89,7 +89,7 @@ function CalendarComp() {
                         columns = { columns4 }
                         rows = { data }
                         page = { page }
-                        onPageChange={(newPage) => setPage(newPage)}
+                        onPageChange = {(newPage) => setPage(newPage)}
                         pageSize = { pageSize }
                         onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
                         rowsPerPageOptions = {[5, 10, 20]}
@@ -102,7 +102,7 @@ function CalendarComp() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
-                        sx = {{ overflowX: 'scroll' }}
+                        autoHeight = { true }
                     />
                 </div>
             </div>

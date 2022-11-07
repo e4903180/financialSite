@@ -24,6 +24,7 @@
     "mysql2": "^2.3.3",
     "mysql2-promise": "^0.1.4",
     "nodemon": "^2.0.16",
+    "pm2": "^5.2.2",
     "python-shell": "^3.0.1",
     "socket.io": "^4.5.3"
   }

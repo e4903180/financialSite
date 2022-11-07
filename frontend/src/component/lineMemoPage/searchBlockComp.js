@@ -2,6 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
 import { columns3 } from '../column/column';
 
@@ -9,7 +10,6 @@ function SearchBlockComp() {
     const [dataQuantity, set_dataQuantity] = useState(0)
     const [newestDate, set_newestDate] = useState("")
     const [loading, setLoading] = useState(false);
-    const [autocom, setAutocom] = useState([])
     const [input1, setInput1] = useState([])
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState("");
@@ -18,6 +18,8 @@ function SearchBlockComp() {
     const [search, setSearch] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
+
+    const autocom = AutoCom.AutoComList;
     
     function submit(e){
         e.preventDefault();
@@ -52,13 +54,6 @@ function SearchBlockComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/autoCom")
-        .then(res => {
-            setAutocom(res.data);
-        }).catch(res => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-
         axios.get(rootApiIP + "/data/lineMemo_state")
         .then(res => {
             set_dataQuantity(res.data.dataQuantity)

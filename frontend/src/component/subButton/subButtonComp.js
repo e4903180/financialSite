@@ -12,7 +12,7 @@ function SubButtonComp(props) {
         <>
             <div className = "dropdown">
                 <button className = "btn btn-danger dropdown-toggle" type = "button" data-bs-toggle = "dropdown" aria-expanded = "false">
-                    訂閱
+                    訂閱 警示
                 </button>
 
                 <ul className = "dropdown-menu dropdown-menu-end">

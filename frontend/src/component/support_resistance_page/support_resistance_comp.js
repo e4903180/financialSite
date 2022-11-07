@@ -8,8 +8,7 @@ import { columns_support_resistance } from '../column/column';
 import HighchartStockComp from '../highchart/highchatStockComp';
 import SubButtonComp from '../subButton/subButtonComp';
 import SupportResistanceCard from './support_resistance_card';
-import { formatExplain } from './support_resistance_explain';
-import { dataInit, labels } from './support_resistance_param';
+import { formatExplain, dataInit, labels } from './support_resistance_Init';
 
 function SupportResistanceComp() {
     var Today = new Date();
@@ -44,7 +43,8 @@ function SupportResistanceComp() {
         xAxis: {
             type : "datetime",
             labels : {
-                format : '{value:%Y-%m-%d}'
+                // format : '{value:%Y-%m-%d}',
+                // rotation : 45
             }
         },
         chart : {

@@ -2,6 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
 import { columns2 } from '../column/column';
 
@@ -15,11 +16,12 @@ function SearchBlockComp() {
     const [input4, setInput4] = useState("");
     const [input5, setInput5] = useState("");
     const [loading, setLoading] = useState(false);
-    const [autocom, setAutocom] = useState([])
     const [data, setData] = useState([]);
     const [search, setSearch] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
+
+    const autocom = AutoCom.AutoComList;
 
     function submit(e){
         e.preventDefault();
@@ -55,13 +57,6 @@ function SearchBlockComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/autoCom")
-        .then(res => {
-            setAutocom(res.data);
-        }).catch(res => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-
         axios.get(rootApiIP + "/data/post_board_state")
         .then(res => {
             set_dataQuantity(res.data.dataQuantity)

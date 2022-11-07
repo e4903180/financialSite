@@ -10,7 +10,6 @@ export const columns = [
 ];
 
 export const columns1 = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
     { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
@@ -20,7 +19,6 @@ export const columns1 = [
 ];
 
 export const columns2 = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
@@ -32,7 +30,6 @@ export const columns2 = [
 ];
 
 export const columns3 = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
     { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
@@ -42,7 +39,6 @@ export const columns3 = [
 ];
 
 export const columns4 = [
-    { field: "ID", headerName : "ID", width: 300,headerAlign: 'center', align: 'center', hide : 'true' },
     { field: 'stockNum', headerName: '股票代號', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'stockName', headerName: '股票名稱', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '法說會日期', width: 100, headerAlign: 'center', align: 'center' },
@@ -57,7 +53,6 @@ export const columns4 = [
 ];
 
 export const columns5 = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
     { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'title', headerName: '上傳檔案標題', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
@@ -66,7 +61,6 @@ export const columns5 = [
 ];
 
 export const columns6 = [
-    { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
     { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},

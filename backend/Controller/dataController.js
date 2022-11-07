@@ -25,38 +25,112 @@ exports.allData = async function(req, res){
     });
 };
 
-exports.dbsearch = async function(req, res){
-    if(req.body.dbTable == "") return res.status(400).json({})
+exports.DbFinancialSearch = async function(req, res){
+    let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
 
-    if(req.body.stockName_or_Num.length == 0 && req.body.startDate == "" && req.body.endDate == "" && req.body.investmentCompany == ""){
-        let sql = `SELECT * FROM ${req.body.dbTable}`
-
-        con.query(sql,function(err, result, field){
-            if(err === null){
-                return res.status(200).json(result)
-            }else{
-                return res.status(400).send("error")
-            }
-        });
-    }else{
+    if(req.body.stockName_or_Num.length !== 0){
         var pattern = new RegExp(/\d{4}/)
-        let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
-    
-        if(req.body.stockName_or_Num.length !== 0) sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
-    
-        if(req.body.startDate !== "" && req.body.endDate !== "" && req.body.dbTable !== "calender") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
-        else sql += ` AND date BETWEEN '${(req.body.startDate)}' AND '${(req.body.endDate)}'`
-        if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
-        
-        con.query(sql, function(err, result, field){
-            if(err === null){
-                return res.status(200).json(result)
-            }else{
-                return res.status(400).json({})
-            }
-        });
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
     }
-};
+
+    if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+    if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.Db_post_board_memoSearch = async function(req, res){
+    let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
+
+    if(req.body.stockName_or_Num.length !== 0){
+        var pattern = new RegExp(/\d{4}/)
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+    }
+
+    if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.DbLineMemoSearch = async function(req, res){
+    let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
+
+    if(req.body.stockName_or_Num.length !== 0){
+        var pattern = new RegExp(/\d{4}/)
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+    }
+
+    if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.DbCalenderSearch = async function(req, res){
+    let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
+
+    if(req.body.stockName_or_Num.length !== 0){
+        var pattern = new RegExp(/\d{4}/)
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+    }
+
+    if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate)}' AND '${(req.body.endDate)}'`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+// exports.dbSearch = async function(req, res){
+//     if(req.body.stockName_or_Num.length == 0 && req.body.startDate == "" && req.body.endDate == "" && req.body.investmentCompany == ""){
+//         let sql = `SELECT * FROM ${req.body.dbTable}`
+
+//         con.query(sql,function(err, result, field){
+//             if(err === null){
+//                 return res.status(200).json(result)
+//             }else{
+//                 return res.status(400).send("error")
+//             }
+//         });
+//     }else{
+//         var pattern = new RegExp(/\d{4}/)
+//         let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
+    
+//         if(req.body.stockName_or_Num.length !== 0) sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+        
+//         if(req.body.startDate !== "" && req.body.endDate !== ""){
+//             if(req.body.dbTable !== "calender") sql += ` AND date BETWEEN '${(req.body.startDate)}' AND '${(req.body.endDate)}'`
+//             else sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
+//         } 
+
+//         if(req.body.investmentCompany !== "") sql += ` AND investmentCompany='${req.body.investmentCompany}'`
+
+//         con.query(sql, function(err, result, field){
+//             if(err === null){
+//                 return res.status(200).json(result)
+//             }else{
+//                 return res.status(400).json({})
+//             }
+//         });
+//     }
+// };
 
 // exports.autoCom = function(req, res){
 //     con.query("select * from autocompletedSearch", function(err, result, field){
@@ -241,6 +315,7 @@ exports.pricingData = async function(req, res){
                 req.body.year
             ]
     }
+    console.log(options)
     
     const result = await new Promise((resolve, reject) => {
         PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/StockPriceDecision.py', options, (err, data) => {
@@ -412,7 +487,7 @@ exports.notify_read = async function(req, res){
     var userName = req.session.userName
 
     let sql = "SELECT * FROM notify WHERE `username`= " + `"${userName}"` + " AND `read`=1" 
-    console.log(sql)
+
     try {
         const [rows, fields] = await con.promise().query(sql);
 
@@ -427,7 +502,7 @@ exports.notify_handle_read = async function(req, res){
     const time = req.body.time
 
     let sql = "UPDATE notify SET " + "`read`=1" + ` WHERE notifyTime="${time}" AND username=` + `"${userName}"`
-    console.log(sql)
+
     try {
         const [rows, fields] = await con.promise().query(sql);
 
@@ -447,6 +522,39 @@ exports.notify_handle_unread = async function(req, res){
         const [rows, fields] = await con.promise().query(sql);
 
         return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.get_realtime_price = async function(req, res){
+    let options = {
+        args:[
+                req.query.tickerList.toString()
+        ]
+    }
+
+    const result = await new Promise((resolve, reject) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/RealTimePrice.py', options, (err, data) => {
+            if (err) reject(err)
+
+            const parsedString = JSON.parse(data)
+            return resolve(parsedString);
+        })
+    })
+
+    return res.status(200).send(result)
+}
+
+exports.get_notify_quantity = async function(req, res){
+    var userName = req.session.userName
+
+    let sql = "SELECT COUNT(*) FROM notify WHERE `username`= " + `"${userName}"` + "AND `read`=0"
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        return res.status(200).send(rows[0]['COUNT(*)'].toString())
     } catch (error) {
         return res.status(400).send("error")
     }

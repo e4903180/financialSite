@@ -22,7 +22,7 @@ function LineMemoComp() {
 
     return (
         <>
-            <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "100%" }}>
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <div className = 'list-group list-group-horizontal mt-2 mx-auto text-center' style = {{ width : "80%" }}>
                     { function1 ? <button className = 'list-group-item list-group-item-action active' onClick = { button1 }>Line memo資料輸入</button>:<button className = 'list-group-item list-group-item-action' onClick = { button1 }>Line memo資料輸入</button>}
                     { function2 ? <button className = 'list-group-item list-group-item-action active' onClick = { button2 }>Line memo資料查詢</button>:<button className = 'list-group-item list-group-item-action' onClick = { button2 }>Line memo資料查詢</button>}

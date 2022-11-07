@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { rootApiIP } from '../../constant'
 import PricingComp from './pricingComp';
-import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingExplain';
+import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingInit';
 import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '../column/column';
 import { Backdrop, CircularProgress } from '@mui/material';
 import HighchartBarComp from '../highchart/highchartBarComp';
@@ -11,7 +11,7 @@ import { AutoCom } from '../../autoCom';
 
 function StockPricingStratagyComp() {
     const [stockNum, setStockNum] = useState([]);
-    const [year, setYear] = useState("?");
+    const [year, setYear] = useState(10);
     const [price, setPrice] = useState(priceInit);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
@@ -105,6 +105,7 @@ function StockPricingStratagyComp() {
             .then(res => {
                 setPrice(priceInit)
                 setPrice(res.data)
+                console.log(res.data)
                 setLoading(false)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -145,8 +146,7 @@ function StockPricingStratagyComp() {
 
                         <label htmlFor = "year" className = "col-md-3 col-form-label text-center">歷史幾年資料:</label>
                         <div className = 'col-md-3'>
-                            <select id = "year" className = "form-select" onChange = {e => setYear(e.target.value)}>
-                                <option value = "">請選擇年份</option>
+                            <select id = "year" className = "form-select" onChange = {e => setYear(e.target.value)} defaultValue = {10}>
                                 <option value = "2">2</option>
                                 <option value = "3">3</option>
                                 <option value = "4">4</option>
@@ -169,7 +169,7 @@ function StockPricingStratagyComp() {
                 { inputError ? <p className = 'text-center' style = {{ color : "red" }}>股票代號&名稱格式錯誤 或 年份錯誤</p> : <></> }
             </div>
 
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
                     <div className = 'card'>
                         <div className = 'card-body'>
@@ -179,14 +179,14 @@ function StockPricingStratagyComp() {
                 </div>
             </div>
             
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
                     <HighchartBarComp options = { options }/>
                     { price['Value lose'][0] | price['Value lose'][1] | price['Value lose'][2] | price['Value lose'][3]| price['Value lose'][4] ? <p className = 'text-center' style = {{ color : "red" }}>資料缺值部分定價法不適用</p> : <></> }
                 </div>
             </div>
 
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
                         cardKey = "data1"
@@ -201,7 +201,7 @@ function StockPricingStratagyComp() {
                 </div>
             </div>
 
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
                         cardKey = "data2"
@@ -216,7 +216,7 @@ function StockPricingStratagyComp() {
                 </div>
             </div>
 
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
                         cardKey = "data4"
@@ -231,7 +231,7 @@ function StockPricingStratagyComp() {
                 </div>
             </div>
 
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
                     <PricingComp
                         cardKey = "data3"

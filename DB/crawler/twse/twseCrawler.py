@@ -162,18 +162,16 @@ def run():
     if today.day == 28:
         if today.month == 1:
             twse.crawler(month = "12")
-            twse.crawler(month = "1")
         else:
-            twse.crawler(month = str(today.month))
             twse.crawler(month = str(today.month - 1))
-    else:
-        current_month = today.month
-        next_moth = (current_month + 1) % 12
-        if next_moth == 0:
-            next_moth = 12
 
-        twse.crawler(month = str(current_month))
-        twse.crawler(month = str(next_moth))
+    current_month = today.month
+    next_moth = (current_month + 1) % 12
+    if next_moth == 0:
+        next_moth = 12
+
+    twse.crawler(month = str(current_month))
+    twse.crawler(month = str(next_moth))
 
 
 # In[6]:

@@ -37,6 +37,7 @@ dataRouter.get("/isAuth", function(req, res){
     res.status(200).send(req.session.userName)
 })
 
+/* Download files router */
 dataRouter.get("/download/single_financialData", Download.single_financialData_download)
 dataRouter.get("/download/single_post_board_memo", Download.single_post_board_memo_download)
 dataRouter.get("/download/single_line_memo", Download.single_line_memo_download)
@@ -45,11 +46,13 @@ dataRouter.get("/download/single_industry_analysis", Download.single_industry_an
 dataRouter.get("/download/single_twse_chPDF_download", Download.single_twse_chPDF_download)
 dataRouter.get("/download/single_twse_enPDF_download", Download.single_twse_enPDF_download)
 
+/* Download table router */
 dataRouter.get("/download/financialData", Download.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
 dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
 dataRouter.get("/download/calender", Download.calender2csv_download)
 
+/* Upload files router */
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
 dataRouter.post("/upload/meeting_data_upload", meetingDataUp.meetingData_middleWare, meetingDataUp.meetingData_upload)
 dataRouter.post("/upload/industry_analysis_upload", industry_analysisUp.industry_analysis_middleWare, industry_analysisUp.industry_analysis_upload)
@@ -66,7 +69,10 @@ dataRouter.get("/userList", Data.userList)
 dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 
-dataRouter.post("/dbsearch", Data.dbsearch)
+dataRouter.post("/DbFinancialSearch", Data.DbFinancialSearch)
+dataRouter.post("/Db_post_board_memoSearch", Data.Db_post_board_memoSearch)
+dataRouter.post("/DbLineMemoSearch", Data.DbLineMemoSearch)
+dataRouter.post("/DbCalenderSearch", Data.DbCalenderSearch)
 dataRouter.post("/post_board_search", Data.post_board_search)
 dataRouter.post("/lineMemo_search", Data.lineMemo_search)
 
@@ -83,5 +89,11 @@ dataRouter.get("/notify_read", Data.notify_read)
 
 dataRouter.patch("/notify_handle_read", Data.notify_handle_read)
 dataRouter.patch("/notify_handle_unread", Data.notify_handle_unread)
+
+/* Realtime price router */
+dataRouter.get("/realtime_price", Data.get_realtime_price)
+
+/* Notify quantity router */
+dataRouter.get("/get_notify_quantity", Data.get_notify_quantity)
 
 module.exports = {router};

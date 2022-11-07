@@ -37,22 +37,23 @@ function DatabaseComp() {
     async function submit(e){
         e.preventDefault()
         setLoading(true)
+        setData1([])
+        setData2([])
+        setData3([])
+        setData4([])
+        setPage1(0)
+        set_colume_table([])
 
         if((document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "") && (!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
             set_input1Error(true)
             setLoading(false)
-            setData1([])
-            setData2([])
-            setData3([])
-            setData4([])
-            setPage1(0)
         }else{
             set_input1Error(false)
 
             if(input5 === "綜合查詢"){
                 setSearch(false)
 
-                axios.post(rootApiIP + "/data/dbsearch", {
+                axios.post(rootApiIP + "/data/DbFinancialSearch", {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
                     "endDate" : input3,
@@ -70,11 +71,10 @@ function DatabaseComp() {
                     setPage1(0)
                 })
 
-                axios.post(rootApiIP + "/data/dbsearch", {
+                axios.post(rootApiIP + "/data/Db_post_board_memoSearch", {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "investmentCompany" : "",
                     "dbTable" : "post_board_memo"
                 }).then(res => {
                     setData2(res.data)
@@ -88,11 +88,10 @@ function DatabaseComp() {
                     setPage2(0)
                 })
 
-                axios.post(rootApiIP + "/data/dbsearch", {
+                axios.post(rootApiIP + "/data/DbLineMemoSearch", {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "investmentCompany" : "",
                     "dbTable" : "lineMemo"
                 }).then(res => {
                     setData3(res.data)
@@ -106,11 +105,10 @@ function DatabaseComp() {
                     setPage3(0)
                 })
 
-                axios.post(rootApiIP + "/data/dbsearch", {
+                axios.post(rootApiIP + "/data/DbCalenderSearch", {
                     "stockName_or_Num" : input1,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "investmentCompany" : "",
                     "dbTable" : "calender"
                 }).then(res => {
                     setData4(res.data)
@@ -126,66 +124,95 @@ function DatabaseComp() {
             }else{
                 setSearch1(false)
 
-                if(input5 !== "financialData"){
-                    axios.post(rootApiIP + "/data/dbsearch", {
-                        "stockName_or_Num" : input1,
-                        "startDate" : input2,
-                        "endDate" : input3,
-                        "investmentCompany" : "",
-                        "dbTable" : input5
-                    }).then(res => {
-                        switch(input5){
-                            case "post_board_memo":{
-                                set_colume_table(columns2)
-                                break
-                            }
-            
-                            case "lineMemo":{
-                                set_colume_table(columns3)
-                                break
-                            }
+                switch(input5){
+                    case "financialData" : {
+                        axios.post(rootApiIP + "/data/DbFinancialSearch", {
+                            "stockName_or_Num" : input1,
+                            "startDate" : input2,
+                            "endDate" : input3,
+                            "investmentCompany" : input4,
+                            "dbTable" : input5
+                        }).then(res => {
+                            set_colume_table(columns1)
+                            setData1(res.data)
+                            setSearch(true)
+                            setLoading(false)
+                        }).catch(res => {
+                            if(res.response.data === "Session expired") window.location.reload()
+        
+                            setData1([])
+                            setPage1(0)
+                        })
+                        break
+                    }
 
-                            case "calender":{
-                                set_colume_table(columns4)
-                                setPageSize1(10)
-                                break
-                            }
-            
-                            default : break
-                        }
+                    case "post_board_memo" : {
+                        axios.post(rootApiIP + "/data/Db_post_board_memoSearch", {
+                            "stockName_or_Num" : input1,
+                            "startDate" : input2,
+                            "endDate" : input3,
+                            "dbTable" : input5
+                        }).then(res => {
+                            set_colume_table(columns2)
+                            setData1(res.data)
+                            setSearch(true)
+                            setLoading(false)
+                        }).catch(res => {
+                            if(res.response.data === "Session expired") window.location.reload()
+    
+                            setData1([])
+                            setSearch(true)
+                            setLoading(false)
+                        })
 
-                        setData1(res.data)
-                        setSearch(true)
-                        setLoading(false)
-                        setPage1(0)
-                    }).catch(res => {
-                        if(res.response.data === "Session expired") window.location.reload()
+                        break
+                    }
 
-                        setData1([])
-                        setSearch(true)
-                        setLoading(false)
-                        setPage1(0)
-                    })
-                }else{
-                    axios.post(rootApiIP + "/data/dbsearch", {
-                        "stockName_or_Num" : input1,
-                        "startDate" : input2,
-                        "endDate" : input3,
-                        "investmentCompany" : input4,
-                        "dbTable" : input5
-                    }).then(res => {
-                        set_colume_table(columns1)
-                        setData1(res.data)
-                        setSearch(true)
-                        setLoading(false)
-                        setPage1(0)
-                    }).catch(res => {
-                        if(res.response.data === "Session expired") window.location.reload()
-                        setData1([])
-                        setSearch(true)
-                        setLoading(false)
-                        setPage1(0)
-                    })
+                    case "lineMemo" : {
+                        axios.post(rootApiIP + "/data/DbLineMemoSearch", {
+                            "stockName_or_Num" : input1,
+                            "startDate" : input2,
+                            "endDate" : input3,
+                            "dbTable" : input5
+                        }).then(res => {
+                            set_colume_table(columns3)
+                            setData1(res.data)
+                            setSearch(true)
+                            setLoading(false)
+                        }).catch(res => {
+                            if(res.response.data === "Session expired") window.location.reload()
+    
+                            setData1([])
+                            setSearch(true)
+                            setLoading(false)
+                        })
+
+                        break
+                    }
+
+                    case "calender" : {
+                        axios.post(rootApiIP + "/data/DbCalenderSearch", {
+                            "stockName_or_Num" : input1,
+                            "startDate" : input2,
+                            "endDate" : input3,
+                            "dbTable" : input5
+                        }).then(res => {
+                            set_colume_table(columns4)
+                            setData1(res.data)
+                            setSearch(true)
+                            setLoading(false)
+                        }).catch(res => {
+                            if(res.response.data === "Session expired") window.location.reload()
+    
+                            setData1([])
+                            setSearch(true)
+                            setLoading(false)
+                        })
+
+                        break
+                    }
+
+                    default: break
                 }
             }
         }
@@ -252,7 +279,7 @@ function DatabaseComp() {
                         <div className = 'form-group row pt-1'>
                             <label htmlFor = "db" className = "col-md-2 col-form-label text-center">資料表:</label>
                             <div className = 'col-md-3'>
-                                <select id = "db" className = "form-select" onChange = {e => setInput5(e.target.value)} defaultValue = { "綜合查詢" }>
+                                <select id = "db" className = "form-select" onChange = {e => {setInput5(e.target.value); setInput4("")}}>
                                     <option value = "綜合查詢">綜合查詢</option>
                                     <option value = "financialData">個股研究資料</option>
                                     <option value = "post_board_memo">個股推薦</option>
@@ -288,7 +315,7 @@ function DatabaseComp() {
                 </div>
             </div>
 
-            { search  && <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "900px" }}>
+            { search  && <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
@@ -309,6 +336,7 @@ function DatabaseComp() {
                     disableDensitySelector
                     disableColumnFilter
                     disableSelectionOnClick = { true }
+                    autoHeight = { true }
                 />
             </div>}
 
@@ -387,7 +415,7 @@ function DatabaseComp() {
                 </div>
 
 
-                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "900px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%"}}>
                     <h4 className = "text-center">法說會</h4>
 
                     <DataGrid
@@ -407,6 +435,7 @@ function DatabaseComp() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
+                        autoHeight = { true }
                     />
                 </div>
             </>}

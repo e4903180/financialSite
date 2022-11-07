@@ -22,7 +22,11 @@ exports.single_financialData_download = function(req, res){
 
     con.query(sql, function(err, result, field){
         if(err === null){
-            res.download("/home/cosbi/桌面/financialData/gmailData/data/" + result[0].stockNum + "/" + filename)
+            try {
+                res.download("/home/cosbi/桌面/financialData/gmailData/data/" + result[0].stockNum + "/" + filename)
+            } catch (error) {
+                return res.status(400).send("Not found")
+            }
         }
     });
 };

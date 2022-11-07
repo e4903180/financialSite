@@ -42,11 +42,12 @@ function PricingComp(props) {
                         <div className = "alert alert-danger text-center" role = "alert">
                             {props.pricingExplain["explain5"] + props.price_result[2]}
                         </div>
-
-                        { !props.val_lose && props.price_result[3] <= props.price_result[0] && <div className = 'card-text text-center'>評價: 目前價格({props.price_result[3]})＜便宜價({props.price_result[0]})</div> }
-                        { !props.val_lose && props.price_result[3] > props.price_result[0] && props.price_result[3] <= props.price_result[1] && <div className = 'card-text text-center'>評價: 合理價({props.price_result[1]})＞目前價格({props.price_result[3]})＞便宜價({props.price_result[0]})</div> }
-                        { !props.val_lose && props.price_result[3] > props.price_result[1] && props.price_result[3] <= props.price_result[2] && <div className = 'card-text text-center'>評價: 昂貴價({props.price_result[2]})＞目前價格({props.price_result[3]})＞合理價({props.price_result[1]})</div> }
-                        { !props.val_lose && props.price_result[3] > props.price_result[2] && <div className = 'card-text text-center'>評價: 目前價格({props.price_result[3]})＞昂貴價({props.price_result[2]})</div> }
+                        
+                        { !props.val_lose && props.price_result[3] === 0 && <p className = 'text-center'>確認股票代號後顯示評價</p> }
+                        { !props.val_lose && props.price_result[3] !== 0 && props.price_result[3] <= props.price_result[0] && <div className = 'card-text text-center'>評價: 目前價格({props.price_result[3]}) &#60; 便宜價({props.price_result[0]})</div> }
+                        { !props.val_lose && props.price_result[3] !== 0 && props.price_result[3] > props.price_result[0] && props.price_result[3] <= props.price_result[1] && <div className = 'card-text text-center'>評價: 合理價({props.price_result[1]}) &#62; 目前價格({props.price_result[3]}) &#62; 便宜價({props.price_result[0]})</div> }
+                        { !props.val_lose && props.price_result[3] !== 0 && props.price_result[3] > props.price_result[1] && props.price_result[3] <= props.price_result[2] && <div className = 'card-text text-center'>評價: 昂貴價({props.price_result[2]}) &#62; 目前價格({props.price_result[3]}) &#62; 合理價({props.price_result[1]})</div> }
+                        { !props.val_lose && props.price_result[3] !== 0 && props.price_result[3] > props.price_result[2] && <div className = 'card-text text-center'>評價: 目前價格({props.price_result[3]}) &#62; 昂貴價({props.price_result[2]})</div> }
                         { props.val_lose ? <p className = 'text-center' style = {{ color : "red" }}>資料缺值此定價法不適用</p> : <></> }
 
                         { props.data.length === 0 ? <div className = 'text-center'>確認股票代號後顯示數據</div> : <div className = 'row mx-auto py-2' style = {{height : "450px"}}>

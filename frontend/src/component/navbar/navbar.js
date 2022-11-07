@@ -40,12 +40,23 @@ function NavbarComp() {
     }
 
     useEffect(() => {
+        axios.get(rootApiIP + "/data/get_notify_quantity")
+            .then((res) => {
+                setBadgeNumber(res.data)
+                setLoading(false)
+            })
+            .catch((res) => {
+                if(res.response.data === "Session expired") window.location.reload()
+            })
+    }, [])
+
+    useEffect(() => {
         if(socket){
             socket.on("REGISTER_NOTIFY_QUANTITY", (arg) => HandleNotifyQuantity(arg));
-            setLoading(false)
 
             return () => {
-                socket.off("REGISTER_NOTIFY_QUANTITY", (arg) => HandleNotifyQuantity(arg));
+                console.log("123")
+                socket.off("REGISTER_NOTIFY_QUANTITY");
             };
         }
     }, [socket])
@@ -110,7 +121,7 @@ function NavbarComp() {
                                             <NotificationsNoneOutlinedIcon />
                                         </Badge>
                                         :
-                                        <Badge badgeContent = { badgeNumber } color = "success">
+                                        <Badge badgeContent = { badgeNumber } invisible = { badgeNumber === "0" ? true : false } color = "success">
                                             <NotificationsNoneOutlinedIcon />
                                         </Badge>
                                     } 

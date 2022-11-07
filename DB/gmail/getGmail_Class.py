@@ -221,19 +221,35 @@ class gmailService:
         
         for d in header:
             if d['name'] == 'Date':
-                date = d['value'][5:]
-                date = date.replace(" ", ",")
-                temp = date.split(",")
-                day = temp[0].zfill(2)
-                month = str(monthMap[temp[1]]).zfill(2)
-                year = temp[2]
+                try:
+                    date = d['value'][5:]
+                    date = date.replace(" ", ",")
+                    temp = date.split(",")
+                    day = temp[0].zfill(2)
+                    month = str(monthMap[temp[1]]).zfill(2)
+                    year = temp[2]
 
-                date = year + "_" + month + "_" + day
-                
-                if display:
-                    print("Date: ", date)
-                    print("-----" * 20)
-                return date
+                    date = year + "_" + month + "_" + day
+                    
+                    if display:
+                        print("Date: ", date)
+                        print("-----" * 20)
+                    return date
+                # 國票格式不一樣
+                except:
+                    date = d['value'][:11]
+                    date = date.replace(" ", ",")
+                    temp = date.split(",")
+                    day = temp[0].zfill(2)
+                    month = str(monthMap[temp[1]]).zfill(2)
+                    year = temp[2]
+
+                    date = year + "_" + month + "_" + day
+                    
+                    if display:
+                        print("Date: ", date)
+                        print("-----" * 20)
+                    return date
             
     def getSubject(self, header, display = False):
         for d in header:
@@ -309,6 +325,9 @@ class gmailService:
                         Path.append(path)
                         Recommend.extend(recommend)
         
+        if len(investment_company_res) == 0:
+            investment_company_res = "NULL"
+
         return Num, Name, investment_company_res, Path, Recommend
     
     def modifyLabels(self, ID, formats):
@@ -344,6 +363,8 @@ class gmailService:
                     end += 1
                     
                 result.append(subject[start:end])
+            else:
+                result.append("NULL")
         return result
 
 

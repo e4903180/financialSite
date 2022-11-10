@@ -55,7 +55,6 @@ function NavbarComp() {
             socket.on("REGISTER_NOTIFY_QUANTITY", (arg) => HandleNotifyQuantity(arg));
 
             return () => {
-                console.log("123")
                 socket.off("REGISTER_NOTIFY_QUANTITY");
             };
         }
@@ -113,6 +112,7 @@ function NavbarComp() {
                             </NavDropdown>
 
                             <Nav.Link href="/subscibe_list">訂閱清單</Nav.Link>
+                            <Nav.Link href="/choose_ticker">選股</Nav.Link>
 
                             <NavDropdown id = "notify" title = {
                                 <>

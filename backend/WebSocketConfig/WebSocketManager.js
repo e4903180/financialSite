@@ -2,7 +2,7 @@ const { HandleNotifyQuantity, HandleSessionExpired, HandleRealTimePrice, HandleD
 
 exports.WebSocketManager = (socket) => {
     console.log("socket ID: " + socket.id)
-    console.log("socket hanshake query username: " + socket.handshake.query.username)
+    console.log("socket handshake by: " + socket.handshake.query.username)
 
     HandleIntervalID(socket)
     HandleSessionExpired(socket)

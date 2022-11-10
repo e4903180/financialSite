@@ -6,10 +6,15 @@ var dataRouter = express.Router();
 var userRouter = express.Router();
 const User = require('./Controller/userController');
 const Data = require('./Controller/dataController');
+const Notify = require('./Controller/notifyController');
+const Sub = require('./Controller/subController');
+const dbSearch = require('./Controller/dbSearchController');
+const ChooseTicker = require('./Controller/chooseTickerController');
+const StockTool = require('./Controller/StockToolContrtoller');
 const meetingDataUp = require('./Controller/meeting_data_uploadController');
 const PostUp = require('./Controller/post_board_uploadController');
 const industry_analysisUp = require('./Controller/industry_analysis_uploadController')
-const LineMemoUp = require('./Controller/lineMemo_uploadController')
+const LineMemoUp = require('./Controller/lineMemo_uploadController');
 const Download = require('./Controller/downloadController');
 
 const Limiter = rateLimit({
@@ -20,6 +25,7 @@ const Limiter = rateLimit({
 router.use("/user", userRouter)
 router.use('/data', dataRouter)
 
+/* User router */
 userRouter.post('/login', User.login)
 userRouter.post('/register', User.register)
 userRouter.get("/logout", User.logout)
@@ -69,31 +75,33 @@ dataRouter.get("/userList", Data.userList)
 dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 
-dataRouter.post("/DbFinancialSearch", Data.DbFinancialSearch)
-dataRouter.post("/Db_post_board_memoSearch", Data.Db_post_board_memoSearch)
-dataRouter.post("/DbLineMemoSearch", Data.DbLineMemoSearch)
-dataRouter.post("/DbCalenderSearch", Data.DbCalenderSearch)
-dataRouter.post("/post_board_search", Data.post_board_search)
-dataRouter.post("/lineMemo_search", Data.lineMemo_search)
+/* DB search router */
+dataRouter.post("/DbFinancialSearch", dbSearch.DbFinancialSearch)
+dataRouter.post("/Db_post_board_memoSearch", dbSearch.Db_post_board_memoSearch)
+dataRouter.post("/DbLineMemoSearch", dbSearch.DbLineMemoSearch)
+dataRouter.post("/DbCalenderSearch", dbSearch.DbCalenderSearch)
+dataRouter.post("/post_board_search", dbSearch.post_board_search)
+dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
 
-dataRouter.post("/pricing", Data.pricingData)
-dataRouter.post("/PER_River", Data.PER_river_Data)
-dataRouter.post("/support_resistance", Data.support_resistance_data)
+/* StockTool router */
+dataRouter.post("/pricing", StockTool.pricingData)
+dataRouter.post("/PER_River", StockTool.PER_river_Data)
+dataRouter.post("/support_resistance", StockTool.support_resistance_data)
+dataRouter.get("/realtime_price", StockTool.get_realtime_price)
 
-dataRouter.get("/get_support_resistance_sub", Data.get_support_resistance_sub)
-dataRouter.delete("/cancel_sub", Data.delete_sub)
-dataRouter.post("/handle_support_resistance_sub", Data.handle_support_resistance_sub)
+/* Subscribe router */
+dataRouter.get("/get_support_resistance_sub", Sub.get_support_resistance_sub)
+dataRouter.delete("/cancel_sub", Sub.delete_sub)
+dataRouter.post("/handle_support_resistance_sub", Sub.handle_support_resistance_sub)
 
-dataRouter.get("/notify_all", Data.notify_all)
-dataRouter.get("/notify_read", Data.notify_read)
+/* Notify router */
+dataRouter.get("/notify_all", Notify.notify_all)
+dataRouter.get("/notify_read", Notify.notify_read)
+dataRouter.patch("/notify_handle_read", Notify.notify_handle_read)
+dataRouter.patch("/notify_handle_unread", Notify.notify_handle_unread)
+dataRouter.get("/get_notify_quantity", Notify.get_notify_quantity)
 
-dataRouter.patch("/notify_handle_read", Data.notify_handle_read)
-dataRouter.patch("/notify_handle_unread", Data.notify_handle_unread)
-
-/* Realtime price router */
-dataRouter.get("/realtime_price", Data.get_realtime_price)
-
-/* Notify quantity router */
-dataRouter.get("/get_notify_quantity", Data.get_notify_quantity)
+/* ChooseTicker */
+dataRouter.post("/choose_ticker", ChooseTicker.choose_ticker)
 
 module.exports = {router};

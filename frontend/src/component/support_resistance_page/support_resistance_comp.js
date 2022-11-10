@@ -99,6 +99,7 @@ function SupportResistanceComp() {
                         series : [
                             {
                                 type : 'candlestick',
+                                id : 'Kline',
                                 name : 'Kline',
                                 data : res.data["Kline"],
                             },

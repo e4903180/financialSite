@@ -105,7 +105,7 @@ function StockPricingStratagyComp() {
             .then(res => {
                 setPrice(priceInit)
                 setPrice(res.data)
-                console.log(res.data)
+
                 setLoading(false)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()

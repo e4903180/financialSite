@@ -22,6 +22,7 @@ import SupportResistanceComp from './component/support_resistance_page/support_r
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 import axios from 'axios';
 import SubListComp from './component/subListPage/subListComp';
+import ChooseTickerComp from './component/chooseTickerPage/chooseTikcerComp';
 
 axios.defaults.withCredentials = true;
 
@@ -52,6 +53,7 @@ function App() {
             <Route path = "/PER_River" element = { <PERRiverComp /> } ></Route>
             <Route path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
             <Route path = "/subscibe_list" element = { <SubListComp /> } ></Route>
+            <Route path = "/choose_ticker" element = { <ChooseTickerComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

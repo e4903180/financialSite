@@ -145,12 +145,12 @@ function SupportResistanceComp() {
                             {
                                 name : "support1%",
                                 id: 'support1',
-                                data : res.data["support1"]
+                                data : res.data["support"]["support1"]
                             },
                             {
                                 name : "support5%",
                                 id: 'support2',
-                                data : res.data["support2"]
+                                data : res.data["support"]["support2"]
                             },
                             {
                                 name : maLen + maType,

@@ -57,7 +57,7 @@ exports.support_resistance_data = async function(req, res){
     }
 
     const result = await new Promise((resolve, reject) => {
-        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/SupportResistance.py', options, (err, data) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/SupportResistance/SupportResistance.py', options, (err, data) => {
             if (err) reject(err)
 
             const parsedString = JSON.parse(data)

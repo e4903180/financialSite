@@ -14,7 +14,7 @@ function SupportResistanceComp() {
     var Today = new Date();
     let year = Today.getFullYear()
     let month = (Today.getMonth() + 1) - 1
-    const date = 1
+    let day = 1
 
     const [loading, setLoading] = useState(false);
     const [stockNum, setStockNum] = useState([]);
@@ -31,7 +31,7 @@ function SupportResistanceComp() {
         month = 12
     }
 
-    var TodayDate = year.toString() + "-" + month.toString().padStart(2, '0') + "-" + date.toString().padStart(2, '0')
+    var TodayDate = year.toString() + "-" + month.toString().padStart(2, '0') + "-" + day.toString().padStart(2, '0')
 
     const [options, setOptions] = useState({
         yAxis: [{

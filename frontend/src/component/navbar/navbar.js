@@ -16,6 +16,7 @@ function NavbarComp() {
     const [show, setShow] = useState(false);
     const [badgeNumber, setBadgeNumber] = useState(0)
     const [loading, setLoading] = useState(true)
+    const [superUser, setSuperUser] = useState(0)
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -41,13 +42,21 @@ function NavbarComp() {
 
     useEffect(() => {
         axios.get(rootApiIP + "/data/get_notify_quantity")
-            .then((res) => {
-                setBadgeNumber(res.data)
-                setLoading(false)
-            })
-            .catch((res) => {
-                if(res.response.data === "Session expired") window.location.reload()
-            })
+        .then((res) => {
+            setBadgeNumber(res.data)
+            setLoading(false)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+
+        axios.get(rootApiIP + "/data/superUser")
+        .then((res) => {
+            setSuperUser(res.data[0]["superUser"])
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
     }, [])
 
     useEffect(() => {
@@ -98,21 +107,18 @@ function NavbarComp() {
                                 <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>
                                 <NavDropdown.Item href = "/meeting_data">Meeting data</NavDropdown.Item>
                                 <NavDropdown.Item href = "/industry_analysis">產業分析上傳</NavDropdown.Item>
+                                { superUser === 1 && <NavDropdown.Item href = "/self_upload">自定義上傳</NavDropdown.Item> }
                             </NavDropdown>
-
-                            <NavDropdown title = {
+                            
+                            <Nav.Link href="/tool_nav">
                                 <>
                                     <AiOutlineTool />
-                                    &emsp;股票分析工具
+                                    &emsp;分析工具
                                 </>
-                            } align = "end">
-                                <NavDropdown.Item href = "/stock_pricing_stratagy">股票定價策略</NavDropdown.Item>
-                                <NavDropdown.Item href = "/PER_River">本益比河流圖</NavDropdown.Item>
-                                <NavDropdown.Item href = "/support_resistance">天花板地板線</NavDropdown.Item>
-                            </NavDropdown>
+                            </Nav.Link>
 
                             <Nav.Link href="/subscibe_list">訂閱清單</Nav.Link>
-                            <Nav.Link href="/choose_ticker">選股</Nav.Link>
+                            {/* <Nav.Link href="/choose_ticker">選股</Nav.Link> */}
 
                             <NavDropdown id = "notify" title = {
                                 <>

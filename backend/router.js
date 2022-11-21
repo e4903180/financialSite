@@ -15,6 +15,7 @@ const meetingDataUp = require('./Controller/meeting_data_uploadController');
 const PostUp = require('./Controller/post_board_uploadController');
 const industry_analysisUp = require('./Controller/industry_analysis_uploadController')
 const LineMemoUp = require('./Controller/lineMemo_uploadController');
+const SelfUp = require('./Controller/self_uploadController');
 const Download = require('./Controller/downloadController');
 
 const Limiter = rateLimit({
@@ -63,6 +64,7 @@ dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostU
 dataRouter.post("/upload/meeting_data_upload", meetingDataUp.meetingData_middleWare, meetingDataUp.meetingData_upload)
 dataRouter.post("/upload/industry_analysis_upload", industry_analysisUp.industry_analysis_middleWare, industry_analysisUp.industry_analysis_upload)
 dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
+dataRouter.post("/upload/self_upload", SelfUp.self_upload_middleWare, SelfUp.self_upload)
 
 dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
@@ -72,6 +74,7 @@ dataRouter.get("/superUser", Data.superUser)
 dataRouter.get("/meetingData", Data.meetingData)
 dataRouter.get("/industry_analysis", Data.industry_analysis)
 dataRouter.get("/userList", Data.userList)
+dataRouter.get("/username", Data.username)
 dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 
@@ -82,12 +85,14 @@ dataRouter.post("/DbLineMemoSearch", dbSearch.DbLineMemoSearch)
 dataRouter.post("/DbCalenderSearch", dbSearch.DbCalenderSearch)
 dataRouter.post("/post_board_search", dbSearch.post_board_search)
 dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
+dataRouter.post("/ticker_search", dbSearch.ticker_search)
 
 /* StockTool router */
 dataRouter.post("/pricing", StockTool.pricingData)
 dataRouter.post("/PER_River", StockTool.PER_river_Data)
 dataRouter.post("/support_resistance", StockTool.support_resistance_data)
 dataRouter.get("/realtime_price", StockTool.get_realtime_price)
+dataRouter.get("/cpi_fed", StockTool.cpi_fed)
 
 /* Subscribe router */
 dataRouter.get("/get_support_resistance_sub", Sub.get_support_resistance_sub)
@@ -100,8 +105,5 @@ dataRouter.get("/notify_read", Notify.notify_read)
 dataRouter.patch("/notify_handle_read", Notify.notify_handle_read)
 dataRouter.patch("/notify_handle_unread", Notify.notify_handle_unread)
 dataRouter.get("/get_notify_quantity", Notify.get_notify_quantity)
-
-/* ChooseTicker */
-dataRouter.post("/choose_ticker", ChooseTicker.choose_ticker)
 
 module.exports = {router};

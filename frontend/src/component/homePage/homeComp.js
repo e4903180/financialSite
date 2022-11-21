@@ -1,32 +1,32 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { rootApiIP, WSContext } from '../../constant'
+import { rootApiIP } from '../../constant'
 import { columns1 } from '../column/column'
 
 function HomeComp() {
     let [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(5);
     const [realTimePrice, setRealTimePrice] = useState([0.0, 0.0, 0.0])
-    const socket = useContext(WSContext);
+    // const socket = useContext(WSContext);
 
-    const HandleRealTimePrice = useCallback((arg) => {
-        setRealTimePrice(arg["RealTimePrice"])
-    }, [])
+    // const HandleRealTimePrice = useCallback((arg) => {
+    //     setRealTimePrice(arg["RealTimePrice"])
+    // }, [])
 
-    useEffect(() => {
-        axios.get(rootApiIP + "/data/realtime_price", {
-            params : {
-                "tickerList" : ["2330", "2881", "2603"]
-            }
-        })
-        .then((res) => {
-            setRealTimePrice(res.data["RealTimePrice"])
-        }).catch((res) => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-    }, [])
+    // useEffect(() => {
+    //     axios.get(rootApiIP + "/data/realtime_price", {
+    //         params : {
+    //             "tickerList" : ["2330", "2881", "2603"]
+    //         }
+    //     })
+    //     .then((res) => {
+    //         setRealTimePrice(res.data["RealTimePrice"])
+    //     }).catch((res) => {
+    //         if(res.response.data === "Session expired") window.location.reload()
+    //     })
+    // }, [])
 
     useEffect(() => {
         axios.get(rootApiIP + "/data/newest15")
@@ -37,12 +37,12 @@ function HomeComp() {
         })
     }, [])
 
-    useEffect(() => {
-        if(socket){
-            socket.emit("REQUEST_REAL_TIME_PRICE", { args : ["2330", "2881", "2603"] });
-            socket.on("REGISTER_REAL_TIME_PRICE", (arg) => HandleRealTimePrice(arg));
-        }
-    }, [socket])
+    // useEffect(() => {
+    //     if(socket){
+    //         socket.emit("REQUEST_REAL_TIME_PRICE", { args : ["2330", "2881", "2603"] });
+    //         socket.on("REGISTER_REAL_TIME_PRICE", (arg) => HandleRealTimePrice(arg));
+    //     }
+    // }, [socket])
 
     return (
         <>
@@ -53,7 +53,7 @@ function HomeComp() {
                 </div>
             </div>
 
-            <div className = 'row mx-auto'>
+            {/* <div className = 'row mx-auto'>
                 <div className = 'col-md-6 mx-auto'>
                     <h3 className = "display-4 text-center">即時價格</h3>
 
@@ -82,7 +82,7 @@ function HomeComp() {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> */}
 
             <div className = 'container-fluid'>
                 <div className = 'col-md-10 mx-auto py-3'>

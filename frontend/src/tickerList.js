@@ -1,5 +1,6 @@
 export const tickerList = {
     "tickerList" : [
+        '全部',
         '水泥',
         '食品',
         '塑膠',

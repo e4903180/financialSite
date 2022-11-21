@@ -1,5 +1,4 @@
 const con = require('../Model/connectMySQL')
-let { PythonShell } = require('python-shell')
 
 exports.newest15 = async function(req, res){
     con.query("SELECT * FROM financialData ORDER BY `date` DESC Limit 15", function(err, result, field){
@@ -34,8 +33,6 @@ exports.post_board_state = function(req, res){
         }
     })
 }
-
-
 
 exports.lineMemo_state = function(req, res){
     con.query("select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;", function(err, result, field){
@@ -132,4 +129,28 @@ exports.calenderData = async function(req, res){
             return res.status(400).send("error")
         }
     })    
+}
+
+exports.tickerList = async function(req, res){
+    con.query("SELECT ticker from ticker_list", function(err, result, field){
+        if(err === null){
+            let temp = []
+
+            for(let i = 0; i < result.length; i++){
+                temp.push(result[i]["ticker"])
+
+                if(i === result.length - 1){
+                    return res.status(200).json(temp)
+                }
+            }
+            
+        }else{
+            return res.status(400).send("error")
+        }
+    })    
+}
+
+
+exports.username = async function(req, res){
+    return res.status(200).send(req.session.userName)
 }

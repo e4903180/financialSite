@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 import { rootApiIP } from '../../constant'
 import { columns, columns1, columns2, columns3, columns4 } from '../column/column';
+import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
 
 function DatabaseComp() {
@@ -25,7 +25,6 @@ function DatabaseComp() {
     const [page4, setPage4] = useState(0);
     const [pageSize4, setPageSize4] = useState(10);
     const [columnTable, set_colume_table] = useState([]);
-    const [input1, setInput1] = useState([]);
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
@@ -37,6 +36,7 @@ function DatabaseComp() {
     async function submit(e){
         e.preventDefault()
         setLoading(true)
+
         setData1([])
         setData2([])
         setData3([])
@@ -44,7 +44,7 @@ function DatabaseComp() {
         setPage1(0)
         set_colume_table([])
 
-        if((document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "") && (!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
+        if((!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
             set_input1Error(true)
             setLoading(false)
         }else{
@@ -54,7 +54,7 @@ function DatabaseComp() {
                 setSearch(false)
 
                 axios.post(rootApiIP + "/data/DbFinancialSearch", {
-                    "stockName_or_Num" : input1,
+                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                     "startDate" : input2,
                     "endDate" : input3,
                     "investmentCompany" : input4,
@@ -72,7 +72,7 @@ function DatabaseComp() {
                 })
 
                 axios.post(rootApiIP + "/data/Db_post_board_memoSearch", {
-                    "stockName_or_Num" : input1,
+                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                     "startDate" : input2,
                     "endDate" : input3,
                     "dbTable" : "post_board_memo"
@@ -89,7 +89,7 @@ function DatabaseComp() {
                 })
 
                 axios.post(rootApiIP + "/data/DbLineMemoSearch", {
-                    "stockName_or_Num" : input1,
+                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                     "startDate" : input2,
                     "endDate" : input3,
                     "dbTable" : "lineMemo"
@@ -106,7 +106,7 @@ function DatabaseComp() {
                 })
 
                 axios.post(rootApiIP + "/data/DbCalenderSearch", {
-                    "stockName_or_Num" : input1,
+                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                     "startDate" : input2,
                     "endDate" : input3,
                     "dbTable" : "calender"
@@ -127,7 +127,7 @@ function DatabaseComp() {
                 switch(input5){
                     case "financialData" : {
                         axios.post(rootApiIP + "/data/DbFinancialSearch", {
-                            "stockName_or_Num" : input1,
+                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                             "startDate" : input2,
                             "endDate" : input3,
                             "investmentCompany" : input4,
@@ -148,7 +148,7 @@ function DatabaseComp() {
 
                     case "post_board_memo" : {
                         axios.post(rootApiIP + "/data/Db_post_board_memoSearch", {
-                            "stockName_or_Num" : input1,
+                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                             "startDate" : input2,
                             "endDate" : input3,
                             "dbTable" : input5
@@ -170,7 +170,7 @@ function DatabaseComp() {
 
                     case "lineMemo" : {
                         axios.post(rootApiIP + "/data/DbLineMemoSearch", {
-                            "stockName_or_Num" : input1,
+                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                             "startDate" : input2,
                             "endDate" : input3,
                             "dbTable" : input5
@@ -192,7 +192,7 @@ function DatabaseComp() {
 
                     case "calender" : {
                         axios.post(rootApiIP + "/data/DbCalenderSearch", {
-                            "stockName_or_Num" : input1,
+                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                             "startDate" : input2,
                             "endDate" : input3,
                             "dbTable" : input5
@@ -255,14 +255,7 @@ function DatabaseComp() {
                         <div className = 'form-group row'>
                             <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
                             <div className = 'col-md-3'>
-                                <Typeahead
-                                    id = "stockNum_or_Name"
-                                    labelKey = "stock_num_name"
-                                    onChange = { setInput1 }
-                                    options = { autocom }
-                                    placeholder = "請輸入股票代號或名稱"
-                                    selected = { input1 }
-                                />
+                                <TickerSearchComp init = ""/>
                             </div>
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>

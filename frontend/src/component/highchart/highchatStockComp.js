@@ -13,7 +13,9 @@ import FullScreen from "highcharts/modules/full-screen.js";
 import StockTools from "highcharts/modules/stock-tools.js";
 import HollowCandlestick from "highcharts/modules/hollowcandlestick.js";
 import Heikinashi from "highcharts/modules/heikinashi.js";
+import highchartsMore from 'highcharts/highcharts-more';
 
+highchartsMore(Highcharts);
 Indicators(Highcharts);
 DragPanes(Highcharts);
 AnnotationsAdvanced(Highcharts);

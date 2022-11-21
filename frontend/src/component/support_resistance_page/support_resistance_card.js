@@ -17,7 +17,7 @@ function SupportResistanceCard(props) {
 
     return (
         <>
-             <div className = 'card h-100'>
+            <div className = 'card h-100'>
                 <div className = "card-header">
                     <AiFillCaretDown style = {{ cursor : "pointer" }} data-bs-toggle = "collapse" data-bs-target = {"#" + props.cardKey} aria-expanded = "false" aria-controls = {props.cardKey}/>
                     { props.format } 計算數據

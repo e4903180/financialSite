@@ -1,12 +1,11 @@
 const con = require('../Model/connectMySQL')
-let { PythonShell } = require('python-shell')
 
 exports.DbFinancialSearch = async function(req, res){
     let sql = `SELECT * FROM ${req.body.dbTable} WHERE 1=1`
 
     if(req.body.stockName_or_Num.length !== 0){
         var pattern = new RegExp(/\d{4}/)
-        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num)[0]}'`
     }
 
     if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
@@ -25,7 +24,7 @@ exports.Db_post_board_memoSearch = async function(req, res){
 
     if(req.body.stockName_or_Num.length !== 0){
         var pattern = new RegExp(/\d{4}/)
-        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num)[0]}'`
     }
 
     if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
@@ -43,7 +42,7 @@ exports.DbLineMemoSearch = async function(req, res){
 
     if(req.body.stockName_or_Num.length !== 0){
         var pattern = new RegExp(/\d{4}/)
-        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num)[0]}'`
     }
 
     if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
@@ -61,7 +60,7 @@ exports.DbCalenderSearch = async function(req, res){
 
     if(req.body.stockName_or_Num.length !== 0){
         var pattern = new RegExp(/\d{4}/)
-        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+        sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num)[0]}'`
     }
 
     if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate)}' AND '${(req.body.endDate)}'`
@@ -89,7 +88,7 @@ exports.post_board_search = function(req, res){
         var pattern = new RegExp(/\d{4}/)
         let sql = `SELECT * FROM post_board_memo WHERE 1=1`
 
-        if(req.body.stockName_or_Num.length !== 0)sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num[0].stock_num_name)[0]}'`
+        if(req.body.stockName_or_Num.length !== 0)sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num)[0]}'`
         if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
         if(req.body.recommend !== "") sql += ` AND evaluation='${req.body.recommend}'`
         if(req.body.provider !== "") sql += ` AND username='${req.body.provider}'`
@@ -118,8 +117,9 @@ exports.lineMemo_search = function(req, res){
         });
     }else{
         let sql = `SELECT * FROM lineMemo WHERE 1=1`
+        var pattern = new RegExp(/\d{4}/)
 
-        if(req.body.stock_num_name.length != 0)sql += ` AND stockNum='${req.body.stock_num_name[0].stock_num_name.slice(0, 4)}'`
+        if(req.body.stock_num_name.length != 0)sql += ` AND stockNum='${pattern.exec(req.body.stockName_or_Num)[0]}'`
         if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${(req.body.startDate).replace(/-/g, "_")}' AND '${(req.body.endDate).replace(/-/g, "_")}'`
     
         con.query(sql, function(err, result, field){
@@ -129,6 +129,21 @@ exports.lineMemo_search = function(req, res){
                 return res.status(400).json({})
             }
         });
-
     }
+}
+
+exports.ticker_search = function(req, res){
+    if(req.body.pattern === ""){
+        res.status(200).json({})
+    }
+
+    let sql = `SELECT stock_name FROM ticker_list WHERE stock_name LIKE "%${req.body.pattern}%"`
+
+    con.query(sql, function(err, result, field){
+        if(err === null){
+            return res.status(200).json(result)
+        }else{
+            return res.status(400).json({})
+        }
+    });
 }

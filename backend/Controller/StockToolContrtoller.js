@@ -86,3 +86,20 @@ exports.get_realtime_price = async function(req, res){
 
     return res.status(200).send(result)
 }
+
+exports.cpi_fed = async function(req, res){
+    let options = {
+        args : []
+    }
+    
+    const result = await new Promise((resolve, reject) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/FRED/FRED.py', options, (err, data) => {
+            if (err) reject(err)
+
+            const parsedString = JSON.parse(data)
+            return resolve(parsedString);
+        })
+    })
+
+    return res.status(200).send(result)
+}

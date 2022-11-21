@@ -2,11 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { rootApiIP } from '../../constant';
 import { tickerList } from '../../tickerList';
+import AnalysisComp from './analysisComp';
 
 function ChooseTickerComp() {
     const [tickerClass, setTickerClass] = useState(tickerList.tickerList[0])
-    const [chooseTickerList, setChooseTickerList] = useState([{"ticker" : ""}])
-    const [ticker, setTicker] = useState("")
 
     function submit(e){
         e.preventDefault()
@@ -14,35 +13,7 @@ function ChooseTickerComp() {
 
     const handleTickerClass = (e) => {
         setTickerClass(e.target.value)
-        setChooseTickerList([])
-
-        axios.post(rootApiIP + "/data/choose_ticker", {
-            "class" : e.target.value
-        })
-        .then((res) => {
-            setChooseTickerList(res.data)
-            setTicker(res.data[0])
-        })
-        .catch((res) => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
     }
-
-    const handleTicker = (e) => {
-        setTicker(e.target.value)
-    }
-
-    useEffect(() => {
-        axios.post(rootApiIP + "/data/choose_ticker", {
-            "class" : tickerClass
-        })
-        .then((res) => {
-            setChooseTickerList(res.data)
-        })
-        .catch((res) => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-    }, [])
 
     return (
         <>
@@ -61,20 +32,12 @@ function ChooseTickerComp() {
                                 }
                             </select>
                         </div>
-
-                        <label htmlFor = "ticker" className = "col-md-3 col-form-label text-center">股票名稱&公司:</label>
-                        <div className = 'col-md-3'>
-                            <select className = "form-select" id = "ticker" onChange = {e => handleTicker(e)}>
-                                {
-                                    chooseTickerList.map(function(ele, i){
-                                        return <option key = { i } value = { ele.ticker }>{ ele.ticker }</option>
-                                    })
-                                }
-                            </select>
-                        </div>
                     </div>
-
                 </form> 
+            </div>
+
+            <div className = 'row mx-auto' style = {{ width : "60vw" }}>
+                <AnalysisComp />
             </div>
         </>
     );

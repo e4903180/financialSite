@@ -5,19 +5,12 @@
 
 
 import pandas as pd
-import time
-import seaborn as sns
-import matplotlib.pyplot as plt
 import sys
 import json
 import twstock
-from datetime import datetime
-
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
 
 

@@ -23,6 +23,9 @@ import SupportResistanceComp from './component/support_resistance_page/support_r
 import axios from 'axios';
 import SubListComp from './component/subListPage/subListComp';
 import ChooseTickerComp from './component/chooseTickerPage/chooseTikcerComp';
+import SelfUploadPage from './component/selfUploadPage/selfUploadPage';
+import ToolNavComp from './component/toolNavPage/toolNavComp';
+import InflationComp from './component/inflationPage/inflationComp';
 
 axios.defaults.withCredentials = true;
 
@@ -53,7 +56,10 @@ function App() {
             <Route path = "/PER_River" element = { <PERRiverComp /> } ></Route>
             <Route path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
             <Route path = "/subscibe_list" element = { <SubListComp /> } ></Route>
-            <Route path = "/choose_ticker" element = { <ChooseTickerComp /> } ></Route>
+            {/* <Route path = "/choose_ticker" element = { <ChooseTickerComp /> } ></Route> */}
+            <Route path = "/self_upload" element = { <SelfUploadPage /> } ></Route>
+            <Route path = "/tool_nav" element = { <ToolNavComp /> } ></Route>
+            <Route path = "/inflation" element = { <InflationComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

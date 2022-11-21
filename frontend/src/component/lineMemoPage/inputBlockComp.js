@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
+import TickerSearchComp from '../tickerSearchComp';
 
 function InputBlockComp() {
     const [input1, setInput1] = useState([])
@@ -16,12 +16,12 @@ function InputBlockComp() {
     function submit(e){
         e.preventDefault()
 
-        if(input1.length !== 0 && input2 !== ""){
+        if((autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)) && input2 !== ""){
             set_input1Validation(false)
             set_input2Validation(false)
 
             axios.post(rootApiIP + "/data/upload/line_memo_upload", {
-                stock_num_name : input1[0].stock_num_name,
+                stock_num_name : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
                 date : Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'),
                 content : input2
             }).then(res => {
@@ -52,15 +52,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5">
                     <div className = "form-group">
                         <label htmlFor = "stock_num_name">股票代號&名稱:</label>
-                        <Typeahead
-                            id = "stockNum_or_Name"
-                            labelKey = "stock_num_name"
-                            onChange = { setInput1 }
-                            options = { autocom }
-                            placeholder = "請輸入股票代號或名稱"
-                            selected = { input1 }
-                            inputProps = {{ required : true }}
-                        />
+                        <TickerSearchComp init = ""/>
                         { input1Validation ? <div style = {{ color : "red" }}>此欄位為必填或格式錯誤</div> : <></> }
                     </div>
                 </div>

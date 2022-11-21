@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import { rootApiIP } from '../../constant'
 import PricingComp from './pricingComp';
 import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingInit';
@@ -8,13 +7,14 @@ import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '..
 import { Backdrop, CircularProgress } from '@mui/material';
 import HighchartBarComp from '../highchart/highchartBarComp';
 import { AutoCom } from '../../autoCom';
+import TickerSearchComp from '../tickerSearchComp';
 
 function StockPricingStratagyComp() {
-    const [stockNum, setStockNum] = useState([]);
     const [year, setYear] = useState(10);
     const [price, setPrice] = useState(priceInit);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
+    const [ticker, setTicker] = useState("")
     
     const autocom = AutoCom.AutoComList;
     const options = {
@@ -95,11 +95,11 @@ function StockPricingStratagyComp() {
         e.preventDefault();
         setLoading(true);
 
-        if((autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value) === true) && (year !== "?")){
+        if(autocom.map(element => element.stock_num_name).includes(ticker)){
             setInputError(false)
 
             axios.post(rootApiIP + "/data/pricing", {
-                "stockNum" : stockNum[0]["stock_num_name"].slice(0, 4),
+                "stockNum" : ticker.split(" ")[0],
                 "year" : year
             })
             .then(res => {
@@ -134,14 +134,7 @@ function StockPricingStratagyComp() {
                     <div className = 'form-group row'>
                         <label htmlFor = "stockNum_or_Name" className = "col-md-3 col-form-label text-center">股票代號&名稱:&emsp;</label>
                         <div className = 'col-md-3'>
-                            <Typeahead
-                                id = "stockNum_or_Name"
-                                labelKey = "stock_num_name"
-                                onChange = { setStockNum }
-                                options = { AutoCom.AutoComList }
-                                placeholder = "請輸入股票代號或名稱"
-                                selected = { stockNum }
-                            />
+                            <TickerSearchComp init = "" setTicker = {setTicker} />
                         </div>
 
                         <label htmlFor = "year" className = "col-md-3 col-form-label text-center">歷史幾年資料:</label>

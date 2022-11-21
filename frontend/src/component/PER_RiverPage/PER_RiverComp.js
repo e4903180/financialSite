@@ -1,6 +1,5 @@
 import { Backdrop, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import PerRiverComp from './PerRiverComp';
 import { PerRiverExplain, PerRiverInit } from './PER_River_Init';
 import { rootApiIP } from '../../constant'
@@ -8,13 +7,14 @@ import { AutoCom } from '../../autoCom';
 import axios from 'axios';
 import HighchartBarComp from '../highchart/highchartBarComp';
 import HighchartStockComp from '../highchart/highchatStockComp';
+import TickerSearchComp from '../tickerSearchComp';
 
 function PERRiverComp() {
-    const [stockNum, setStockNum] = useState([]);
     const [loading, setLoading] = useState(false);
     const [inputError, setInputError] = useState(false);
     const [content, setContent] = useState(PerRiverInit);
-    const [label, setLabel] = useState(["0x", "0x", "0x"])
+    const [label, setLabel] = useState(["0x", "0x", "0x"]);
+    const [ticker, setTicker] = useState("")
 
     const optionsBarChart = {
         chart: {
@@ -117,11 +117,11 @@ function PERRiverComp() {
         e.preventDefault();
         setLoading(true);
 
-        if((autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value) === true)){
+        if((autocom.map(element => element.stock_num_name).includes(ticker))){
             setInputError(false)
 
             axios.post(rootApiIP + "/data/PER_River", {
-                "stockNum" : stockNum[0]["stock_num_name"].slice(0, 4),
+                "stockNum" : ticker.split(" ")[0],
             })
             .then(res => {
                 setContent(res.data)
@@ -190,14 +190,7 @@ function PERRiverComp() {
                     <div className = 'form-group row'>
                         <label htmlFor = "stockNum_or_Name" className = "col-md-3 col-form-label text-center">股票代號&名稱:&emsp;</label>
                         <div className = 'col-md-3'>
-                            <Typeahead
-                                id = "stockNum_or_Name"
-                                labelKey = "stock_num_name"
-                                onChange = { setStockNum }
-                                options = { autocom }
-                                placeholder = "請輸入股票代號或名稱"
-                                selected = { stockNum }
-                            />
+                            <TickerSearchComp init = "" setTicker = {setTicker} />
                         </div>
 
                         <div className = 'col-md-5 text-center'>

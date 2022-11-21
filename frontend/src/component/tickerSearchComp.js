@@ -1,11 +1,12 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { rootApiIP } from '../constant';
 
 function TickerSearchComp(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
+    const [ticker, setTicker] = useState("");
 
     const handleSearch = (pattern) => {
         setIsLoading(true);
@@ -22,6 +23,10 @@ function TickerSearchComp(props) {
         })
     };
 
+    useEffect(() => {
+        props.setTicker(ticker)
+    }, [ticker])
+
     return (
         <>
             <AsyncTypeahead
@@ -37,7 +42,14 @@ function TickerSearchComp(props) {
                         <span>{option.stock_name}</span>
                     </>
                 )}
-
+                
+                onChange = {(e) => {
+                    if(e[0]){
+                        setTicker(e[0]["stock_name"])
+                    }else{
+                        setTicker("")
+                    }
+                }}
                 defaultInputValue = {props.init}
             />
         </>

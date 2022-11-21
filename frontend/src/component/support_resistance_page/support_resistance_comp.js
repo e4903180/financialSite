@@ -1,12 +1,11 @@
 import { Backdrop, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant';
 import { columns_support_resistance } from '../column/column';
 import HighchartStockComp from '../highchart/highchatStockComp';
-import SubButtonComp from '../subButton/subButtonComp';
+import TickerSearchComp from '../tickerSearchComp';
 import SupportResistanceCard from './support_resistance_card';
 import { formatExplain, dataInit, labels } from './support_resistance_Init';
 
@@ -17,7 +16,7 @@ function SupportResistanceComp() {
     let day = 1
 
     const [loading, setLoading] = useState(false);
-    const [stockNum, setStockNum] = useState([]);
+    const [ticker, setTicker] = useState("")
     const [inputError, setInputError] = useState(false);
     const [startDate, setStartDate] = useState((year - 5).toString() + "-01-01");
     const [method, setMethod] = useState("method1");
@@ -80,100 +79,105 @@ function SupportResistanceComp() {
 
     function submit(e){
         e.preventDefault();
+
         setLoading(true);
         setOptions({series : []})
 
-        if(autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value) === true){
+        if(autocom.map(element => element.stock_num_name).includes(ticker)){
             setInputError(false)
             
             axios.post(rootApiIP + "/data/support_resistance", {
-                "stockNum" : stockNum[0]["stock_num_name"].slice(0, 4),
+                "stockNum" : ticker.split(" ")[0],
                 "startDate" : startDate,
                 "ma_type" : maType,
                 "maLen" : maLen,
                 "method" : method
             })
             .then(res => {
-                if (method !== "method3"){
-                    setOptions({
-                        series : [
-                            {
-                                type : 'candlestick',
-                                id : 'Kline',
-                                name : 'Kline',
-                                data : res.data["Kline"],
-                            },
-                            {
-                                name : "support",
-                                id: 'support',
-                                data : res.data["support"]
-                            },
-                            {
-                                name : "resistance",
-                                id: 'resistance',
-                                data : res.data["resistance"]
-                            },
-                            {
-                                name : maLen + maType,
-                                id: maLen + maType,
-                                data : res.data["ma"]
-                            },
-                            {
-                                type : "flags",
-                                name: "Crossover",
-                                data : res.data["annotations_labels"],
-                                allowOverlapX : true
-                            },
-                            {
-                                type: 'column',
-                                name: 'Volume',
-                                data: res.data["volume"],
-                                yAxis: 1
-                            },
-                        ],
-                    })
+                if(res.data["support"].length === 0){
+                    setInputError(true)
                 }else{
-                    setOverVolume(-1)
-                    setOverVolume(res.data["over"])
-                    setOptions({
-                        series : [
-                            {
-                                type : 'candlestick',
-                                name : 'Kline',
-                                data : res.data["Kline"],
-                            },
-                            {
-                                name : "support1%",
-                                id: 'support1',
-                                data : res.data["support"]["support1"]
-                            },
-                            {
-                                name : "support5%",
-                                id: 'support2',
-                                data : res.data["support"]["support2"]
-                            },
-                            {
-                                name : maLen + maType,
-                                id: maLen + maType,
-                                data : res.data["ma"]
-                            },
-                            {
-                                type : "flags",
-                                name: "Crossover",
-                                data : res.data["annotations_labels"]
-                            },
-                            {
-                                type: 'column',
-                                name: 'Volume',
-                                data: res.data["volume"],
-                                yAxis: 1
-                            },
-                        ],
-                        annotations : [{
-                            labels : res.data["annotations_labels"]
-                        }]
-                    })
-                };
+                    if (method !== "method3"){
+                        setOptions({
+                            series : [
+                                {
+                                    type : 'candlestick',
+                                    id : 'Kline',
+                                    name : 'Kline',
+                                    data : res.data["Kline"],
+                                },
+                                {
+                                    name : "support",
+                                    id: 'support',
+                                    data : res.data["support"]
+                                },
+                                {
+                                    name : "resistance",
+                                    id: 'resistance',
+                                    data : res.data["resistance"]
+                                },
+                                {
+                                    name : maLen + maType,
+                                    id: maLen + maType,
+                                    data : res.data["ma"]
+                                },
+                                {
+                                    type : "flags",
+                                    name: "Crossover",
+                                    data : res.data["annotations_labels"],
+                                    allowOverlapX : true
+                                },
+                                {
+                                    type: 'column',
+                                    name: 'Volume',
+                                    data: res.data["volume"],
+                                    yAxis: 1
+                                },
+                            ],
+                        })
+                    }else{
+                        setOverVolume(-1)
+                        setOverVolume(res.data["over"])
+                        setOptions({
+                            series : [
+                                {
+                                    type : 'candlestick',
+                                    name : 'Kline',
+                                    data : res.data["Kline"],
+                                },
+                                {
+                                    name : "support1%",
+                                    id: 'support1',
+                                    data : res.data["support"]["support1"]
+                                },
+                                {
+                                    name : "support5%",
+                                    id: 'support2',
+                                    data : res.data["support"]["support2"]
+                                },
+                                {
+                                    name : maLen + maType,
+                                    id: maLen + maType,
+                                    data : res.data["ma"]
+                                },
+                                {
+                                    type : "flags",
+                                    name: "Crossover",
+                                    data : res.data["annotations_labels"]
+                                },
+                                {
+                                    type: 'column',
+                                    name: 'Volume',
+                                    data: res.data["volume"],
+                                    yAxis: 1
+                                },
+                            ],
+                            annotations : [{
+                                labels : res.data["annotations_labels"]
+                            }]
+                        })
+                    };
+                }
                 
                 setData(dataInit)
                 setData(res.data)
@@ -205,18 +209,7 @@ function SupportResistanceComp() {
                     <div className = 'form-group row'>
                         <label htmlFor = "stockNum_or_Name" className = "col-md-3 col-form-label">股票代號&名稱:&emsp;</label>
                         <div className = 'col-md-4'>
-                            <Typeahead
-                                id = "stockNum_or_Name"
-                                labelKey = "stock_num_name"
-                                onChange = { setStockNum }
-                                options = { autocom }
-                                placeholder = "請輸入股票代號或名稱"
-                                selected = { stockNum }
-                            />
-                        </div>
-
-                        <div className = 'col-md-5 text-end'>
-                            <SubButtonComp type = "SubSupportResistanceForm"/>
+                            <TickerSearchComp init = "" setTicker = {setTicker}/>
                         </div>
                     </div>
 
@@ -270,7 +263,7 @@ function SupportResistanceComp() {
                     </div>
                 </form>
 
-                { inputError ? <p className = 'text-center' style = {{ color : "red" }}>股票代號&名稱格式錯誤</p> : <></> }
+                { inputError ? <p className = 'text-center' style = {{ color : "red" }}>股票代號格式錯誤或不適用</p> : <></> }
             </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>

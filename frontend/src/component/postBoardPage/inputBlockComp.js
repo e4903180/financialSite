@@ -10,22 +10,23 @@ function InputBlockComp() {
     const [input2, setInput2] = useState("")
     const [input3, setInput3] = useState("")
     const [input4, setInput4] = useState("")
-    const [file, setFile] = useState(null);
-    const [fileName, setFileName] = useState("");
+    const [file, setFile] = useState(null)
+    const [fileName, setFileName] = useState("")
     const [username, setUsername] = useState("")
+    const [ticker, setTicker] = useState("")
     var Today = new Date();
     const autocom = AutoCom.AutoComList;
     
     function submit(e){
         e.preventDefault()
 
-        if((!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
+        if((!autocom.map(element => element.stock_num_name).includes(ticker))){
             set_input1Validation(true)
         }else{
             set_input1Validation(false)
 
             const formData = new FormData();
-            formData.append("stock_num_name", document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value);
+            formData.append("stock_num_name", ticker);
             formData.append("date", Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'))
             formData.append("recommend", input2);
             formData.append("price", input3);
@@ -69,7 +70,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5">
                     <div className = "form-group">
                         <label htmlFor = "stock_num_name">股票代號&名稱:</label>
-                        <TickerSearchComp init = ""/>
+                        <TickerSearchComp init = "" setTicker = {setTicker}/>
                         { input1Validation ? <div style = {{ color : "red" }}>此欄位為必填或格式錯誤</div> : <></> }
                     </div>
                 </div>

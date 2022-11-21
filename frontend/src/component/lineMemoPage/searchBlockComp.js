@@ -1,16 +1,15 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
 import { columns3 } from '../column/column';
+import TickerSearchComp from '../tickerSearchComp';
 
 function SearchBlockComp() {
     const [dataQuantity, set_dataQuantity] = useState(0)
     const [newestDate, set_newestDate] = useState("")
     const [loading, setLoading] = useState(false);
-    const [input1, setInput1] = useState([])
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
@@ -18,6 +17,7 @@ function SearchBlockComp() {
     const [search, setSearch] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
+    const [ticker, setTicker] = useState("")
 
     const autocom = AutoCom.AutoComList;
     
@@ -25,7 +25,7 @@ function SearchBlockComp() {
         e.preventDefault();
         setLoading(true)
         
-        if(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value !== "" && !autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)){
+        if(ticker !== "" && !autocom.map(element => element.stock_num_name).includes(ticker)){
             set_input1Error(true)
             setLoading(false)
             setData([])
@@ -34,7 +34,7 @@ function SearchBlockComp() {
             set_input1Error(false)
 
             axios.post(rootApiIP + "/data/lineMemo_search", {
-                "stock_num_name" : input1,
+                "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
             }).then(res => {
@@ -71,14 +71,7 @@ function SearchBlockComp() {
                 <div className = 'form-group row my-2'>
                     <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
                     <div className = 'col-md-3'>
-                        <Typeahead
-                            id = "stockNum_or_Name"
-                            labelKey = "stock_num_name"
-                            onChange = { setInput1 }
-                            options = { autocom }
-                            placeholder = "請輸入股票代號或名稱"
-                            selected = { input1 }
-                        />
+                        <TickerSearchComp init = "" setTicker = {setTicker}/>
                     </div>
                 </div>
 

@@ -110,7 +110,7 @@ exports.calender = async function(req, res){
     con.query("SELECT stockNum from calender where year(date)=? AND month(date)=?;SELECT stockName from calender where year(date)=? AND month(date)=?;SELECT Date from calender where year(date)=? AND month(date)=?;", [req.body.year, req.body.month, req.body.year, req.body.month, req.body.year, req.body.month] , function(err, result, field){
         let re = [];
         for(let i = 0; i < result[0].length; i++){
-            re.push(Object.assign({"title" : result[0][i].stockNum + result[1][i].stockName}, {"date" : result[2][i].Date}))
+            re.push(Object.assign({"title" : result[0][i].stockNum + " " + result[1][i].stockName}, {"date" : result[2][i].Date}))
         };
 
         if(err === null){

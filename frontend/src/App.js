@@ -22,7 +22,7 @@ import SupportResistanceComp from './component/support_resistance_page/support_r
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 import axios from 'axios';
 import SubListComp from './component/subListPage/subListComp';
-import ChooseTickerComp from './component/chooseTickerPage/chooseTikcerComp';
+// import ChooseTickerComp from './component/chooseTickerPage/chooseTikcerComp';
 import SelfUploadPage from './component/selfUploadPage/selfUploadPage';
 import ToolNavComp from './component/toolNavPage/toolNavComp';
 import InflationComp from './component/inflationPage/inflationComp';
@@ -46,7 +46,7 @@ function App() {
             <Route path = "/home" element = { <HomeComp /> }></Route>
             <Route path = "/calendar" element = { <CalendarComp /> }></Route>
             <Route path = "/database" element = { <DatabaseComp /> } ></Route>
-            <Route path = "/database/search/:stockNum_Name" element = { <DatabaseSearchComp /> } ></Route>
+            <Route path = "/database/search/:stock_num_name" element = { <DatabaseSearchComp /> } ></Route>
             <Route path = "/post_board" element = { <PostBoardComp /> } ></Route>
             <Route path = "/line_memo" element = { <LineMemoComp /> } ></Route>
             <Route path = "/meeting_data" element = { <MeetingDataComp /> } ></Route>

@@ -25,6 +25,7 @@ function DatabaseComp() {
     const [page4, setPage4] = useState(0);
     const [pageSize4, setPageSize4] = useState(10);
     const [columnTable, set_colume_table] = useState([]);
+    const [ticker, setTicker] = useState("");
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
@@ -44,7 +45,7 @@ function DatabaseComp() {
         setPage1(0)
         set_colume_table([])
 
-        if((!autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value))){
+        if((ticker !== "") && (!autocom.map(element => element.stock_num_name).includes(ticker))){
             set_input1Error(true)
             setLoading(false)
         }else{
@@ -53,12 +54,11 @@ function DatabaseComp() {
             if(input5 === "綜合查詢"){
                 setSearch(false)
 
-                axios.post(rootApiIP + "/data/DbFinancialSearch", {
-                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                axios.post(rootApiIP + "/data/financial_search", {
+                    "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
                     "investmentCompany" : input4,
-                    "dbTable" : "financialData"
                 }).then(res => {
                     setData1(res.data)
                     setSearch1(true)
@@ -71,11 +71,12 @@ function DatabaseComp() {
                     setPage1(0)
                 })
 
-                axios.post(rootApiIP + "/data/Db_post_board_memoSearch", {
-                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                axios.post(rootApiIP + "/data/post_board_search", {
+                    "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "dbTable" : "post_board_memo"
+                    "recommend" : "",
+                    "provider" : ""
                 }).then(res => {
                     setData2(res.data)
                     setSearch1(true)
@@ -88,11 +89,10 @@ function DatabaseComp() {
                     setPage2(0)
                 })
 
-                axios.post(rootApiIP + "/data/DbLineMemoSearch", {
-                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                axios.post(rootApiIP + "/data/lineMemo_search", {
+                    "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "dbTable" : "lineMemo"
                 }).then(res => {
                     setData3(res.data)
                     setSearch1(true)
@@ -105,11 +105,10 @@ function DatabaseComp() {
                     setPage3(0)
                 })
 
-                axios.post(rootApiIP + "/data/DbCalenderSearch", {
-                    "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                axios.post(rootApiIP + "/data/calender_search", {
+                    "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
-                    "dbTable" : "calender"
                 }).then(res => {
                     setData4(res.data)
                     setSearch1(true)
@@ -126,12 +125,11 @@ function DatabaseComp() {
 
                 switch(input5){
                     case "financialData" : {
-                        axios.post(rootApiIP + "/data/DbFinancialSearch", {
-                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                        axios.post(rootApiIP + "/data/financial_search", {
+                            "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
                             "investmentCompany" : input4,
-                            "dbTable" : input5
                         }).then(res => {
                             set_colume_table(columns1)
                             setData1(res.data)
@@ -147,11 +145,12 @@ function DatabaseComp() {
                     }
 
                     case "post_board_memo" : {
-                        axios.post(rootApiIP + "/data/Db_post_board_memoSearch", {
-                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                        axios.post(rootApiIP + "/data/post_board_search", {
+                            "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
-                            "dbTable" : input5
+                            "recommend" : "",
+                            "provider" : ""
                         }).then(res => {
                             set_colume_table(columns2)
                             setData1(res.data)
@@ -169,11 +168,10 @@ function DatabaseComp() {
                     }
 
                     case "lineMemo" : {
-                        axios.post(rootApiIP + "/data/DbLineMemoSearch", {
-                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                        axios.post(rootApiIP + "/data/lineMemo_search", {
+                            "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
-                            "dbTable" : input5
                         }).then(res => {
                             set_colume_table(columns3)
                             setData1(res.data)
@@ -191,11 +189,10 @@ function DatabaseComp() {
                     }
 
                     case "calender" : {
-                        axios.post(rootApiIP + "/data/DbCalenderSearch", {
-                            "stockName_or_Num" : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                        axios.post(rootApiIP + "/data/calender_search", {
+                            "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
-                            "dbTable" : input5
                         }).then(res => {
                             set_colume_table(columns4)
                             setData1(res.data)
@@ -255,7 +252,7 @@ function DatabaseComp() {
                         <div className = 'form-group row'>
                             <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
                             <div className = 'col-md-3'>
-                                <TickerSearchComp init = ""/>
+                                <TickerSearchComp init = "" setTicker = {setTicker}/>
                             </div>
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>
@@ -285,7 +282,7 @@ function DatabaseComp() {
                                 <label htmlFor = "provider" className = "col-md-1 col-form-label text-center">券商名稱:</label>
                                 <div className = 'col-md-3'>
                                     <select id = "provider" className = "form-select" onChange = {e => setInput4(e.target.value)}>
-                                        <option value = "">請選擇券商</option>
+                                        <option value = "">全部</option>
                                         <option value = "台新投顧">台新投顧</option>
                                         <option value = "中信投顧">中信投顧</option>
                                         <option value = "元富">元富</option>

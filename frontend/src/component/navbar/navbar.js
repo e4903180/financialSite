@@ -107,7 +107,7 @@ function NavbarComp() {
                                 <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>
                                 <NavDropdown.Item href = "/meeting_data">Meeting data</NavDropdown.Item>
                                 <NavDropdown.Item href = "/industry_analysis">產業分析上傳</NavDropdown.Item>
-                                { superUser === 1 && <NavDropdown.Item href = "/self_upload">自定義上傳</NavDropdown.Item> }
+                                { superUser === 1 && <NavDropdown.Item href = "/self_upload">個股研究報告上傳</NavDropdown.Item> }
                             </NavDropdown>
                             
                             <Nav.Link href="/tool_nav">

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -8,7 +8,7 @@ import { columns1 } from '../column/column'
 function HomeComp() {
     let [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(5);
-    const [realTimePrice, setRealTimePrice] = useState([0.0, 0.0, 0.0])
+    // const [realTimePrice, setRealTimePrice] = useState([0.0, 0.0, 0.0])
     // const socket = useContext(WSContext);
 
     // const HandleRealTimePrice = useCallback((arg) => {

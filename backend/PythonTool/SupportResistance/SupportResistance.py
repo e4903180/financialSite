@@ -24,7 +24,7 @@ class SupportResistance():
             None
         """
         self._ma, self._volume = [[] for i in range(2)]
-        self._table_data = None
+        self._table_data = []
         self._df = None
 
         self._ma_len = ma_len
@@ -46,8 +46,18 @@ class SupportResistance():
 
         self._df = yf.download(self._stock_num + ".TWO", start = self._start_date, progress = False, show_errors = False)
 
-        if self._df.empty:
-            self._df = yf.download(self._stock_num + ".TW", start = self._start_date, progress = False, show_errors = False)
+        if self._df.empty: self._df = yf.download(self._stock_num + ".TW", start = self._start_date, progress = False, show_errors = False)
+        if (self._df.empty) or (len(self._df) < 2): 
+            print(self.handle_to_json({
+                "support" : [],
+                "resistance" : [],
+                "Kline" : [],
+                "volume": [],
+                "ma" : [],
+                "annotations_labels" : []
+            }))
+            sys.stdout.flush()
+            sys.exit(0)
 
         self._df = self._df.reset_index().drop(columns = ["Adj Close"])
         self._df["Open"] = self._df["Open"].round(2)
@@ -65,10 +75,8 @@ class SupportResistance():
 
         self._volume = self._df[["Date", "Volume"]].values.tolist()
 
-        if self._ma_type == "wma":
-            self._ma = talib.WMA(self._df["Close"], timeperiod = self._ma_len)
-        elif self._ma_type == "sma":
-            self._ma = talib.SMA(self._df["Close"], timeperiod = self._ma_len)
+        if self._ma_type == "wma": self._ma = talib.WMA(self._df["Close"], timeperiod = self._ma_len)
+        elif self._ma_type == "sma": self._ma = talib.SMA(self._df["Close"], timeperiod = self._ma_len)
 
     def handle_to_json(self, result : dict) -> json:
         """Transform support resistance dict data to json format

@@ -3,8 +3,9 @@ var Today = new Date();
 const fs = require('fs');
 
 exports.lineMemo_upload = function(req, res){
-    const stockName = req.body.stock_num_name.slice(4)
-    const stockNum = req.body.stock_num_name.slice(0, 4)
+    const temp = req.body.stock_num_name.split(" ")
+    const stockName = temp[1]
+    const stockNum = temp[0]
     const date = req.body.date
     const inputTime = String(Today.getHours()).padStart(2, '0') + ":" + String(Today.getMinutes()).padStart(2, '0') + ":" + String(Today.getSeconds()).padStart(2, '0')
     const filename = stockNum + "_" + stockName + "_" + date + "_" + inputTime + ".txt"

@@ -112,7 +112,7 @@ export const columns_support_resistance = [
 
 const check_single_post_board_memo_NULL = (value) => {
     if(value === "NULL"){
-        return <> </>
+        return <>沒有檔案</>
     }else{
         return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
     }

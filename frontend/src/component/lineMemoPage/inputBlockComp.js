@@ -5,23 +5,23 @@ import { rootApiIP } from '../../constant'
 import TickerSearchComp from '../tickerSearchComp';
 
 function InputBlockComp() {
-    const [input1, setInput1] = useState([])
     const [input1Validation, set_input1Validation] = useState(false)
     const [input2, setInput2] = useState("")
     const [input2Validation, set_input2Validation] = useState(false)
     const [username, setUsername] = useState("")
+    const [ticker, setTicker] = useState("")
     var Today = new Date();
     const autocom = AutoCom.AutoComList;
 
     function submit(e){
         e.preventDefault()
 
-        if((autocom.map(element => element.stock_num_name).includes(document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value)) && input2 !== ""){
+        if((autocom.map(element => element.stock_num_name).includes(ticker)) && input2 !== ""){
             set_input1Validation(false)
             set_input2Validation(false)
 
             axios.post(rootApiIP + "/data/upload/line_memo_upload", {
-                stock_num_name : document.getElementsByClassName('rbt-input-main form-control rbt-input')[0].value,
+                stock_num_name : ticker,
                 date : Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'),
                 content : input2
             }).then(res => {
@@ -30,7 +30,7 @@ function InputBlockComp() {
                 if(res.response.data === "Session expired") window.location.reload()
             })
         }else{
-            input1.length === 0 ? set_input1Validation(true) : set_input1Validation(false)
+            set_input1Validation(true)
             input2 === "" ? set_input2Validation(true) : set_input2Validation(false)
         }
     }
@@ -52,7 +52,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5">
                     <div className = "form-group">
                         <label htmlFor = "stock_num_name">股票代號&名稱:</label>
-                        <TickerSearchComp init = ""/>
+                        <TickerSearchComp init = "" setTicker = {setTicker}/>
                         { input1Validation ? <div style = {{ color : "red" }}>此欄位為必填或格式錯誤</div> : <></> }
                     </div>
                 </div>

@@ -79,10 +79,8 @@ dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 
 /* DB search router */
-dataRouter.post("/DbFinancialSearch", dbSearch.DbFinancialSearch)
-dataRouter.post("/Db_post_board_memoSearch", dbSearch.Db_post_board_memoSearch)
-dataRouter.post("/DbLineMemoSearch", dbSearch.DbLineMemoSearch)
-dataRouter.post("/DbCalenderSearch", dbSearch.DbCalenderSearch)
+dataRouter.post("/financial_search", dbSearch.financial_search)
+dataRouter.post("/calender_search", dbSearch.calender_search)
 dataRouter.post("/post_board_search", dbSearch.post_board_search)
 dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
 dataRouter.post("/ticker_search", dbSearch.ticker_search)

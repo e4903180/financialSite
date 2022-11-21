@@ -25,11 +25,12 @@ exports.post_board_middleWare = function(req, res, next){
 }
 
 exports.post_board_upload = function(req, res){
+    const temp = req.body.stock_num_name.split(" ")
     let filename = "NULL"
     const date = req.body.date
     const username = req.session.userName
-    const stockName = req.body.stock_num_name.slice(4)
-    const stockNum = req.body.stock_num_name.slice(0, 4)
+    const stockName = temp[1]
+    const stockNum = temp[0]
     const evaluation = req.body.evaluation
     const price = req.body.price
     const reason = req.body.reason

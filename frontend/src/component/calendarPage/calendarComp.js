@@ -26,7 +26,7 @@ function CalendarComp() {
     }, [year1, month1])
 
     function clickEvent(info){
-        nav("/database/search/" + info.event.title)
+        window.open("/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
     }
 
     async function getCalendarData(fetchInfo, successCallback) {

@@ -117,7 +117,7 @@ function NavbarComp() {
                                 </>
                             </Nav.Link>
 
-                            <Nav.Link href="/subscibe_list">訂閱清單</Nav.Link>
+                            <Nav.Link href="/subscibe_list">警示訂閱</Nav.Link>
                             {/* <Nav.Link href="/choose_ticker">選股</Nav.Link> */}
 
                             <NavDropdown id = "notify" title = {

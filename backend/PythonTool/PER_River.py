@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 import pandas as pd
 import sys
 import json
@@ -13,134 +7,141 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
+class PerRiver():
+    def __init__(self) -> None:
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-notifications")
+        options.add_argument("headless")
+        s = Service(ChromeDriverManager().install())
+        self.chrome = webdriver.Chrome(options = options, service = s)
 
-# In[3]:
+        self.data = {"data1" : [], "data2" : [], "data3" : [], "data4" : [], "data5" : [], "data6" : []}
+        self.PER_rate_col = None
+        self.EPS = 0.0
+        self.realtime_price = 0.0
 
-options = webdriver.ChromeOptions()
-options.add_argument("--disable-notifications")
-options.add_argument("headless")
-s = Service(ChromeDriverManager().install())
-chrome = webdriver.Chrome(options = options,service = s)
+        self.kline = None
 
-# In[31]:
+        self.evaluate = {"evaluate" : "", "cheap" : 0.0, "reasonable" : 0.0, "expensive" : 0.0}
 
-chrome.get("https://goodinfo.tw/tw/ShowK_ChartFlow.asp?RPT_CAT=PER&STOCK_ID=%s&CHT_CAT=%s" % (sys.argv[1], sys.argv[2]))
-# In[32]:
+    def get_realtime_price(self, ticker : str) -> None:
+        result = twstock.realtime.get(ticker)
 
-try :
-    PER_River_form = chrome.find_element(by = By.ID, value = 'divDetail')
-except Exception:
-    result = {
-        "error" : "Error"
-    }
+        if result["realtime"]["latest_trade_price"] == "-": self.realtime_price = 0.0
+        else: self.realtime_price = round(float(result["realtime"]["latest_trade_price"]), 2)
 
-    json = json.dumps(result)
-    print(json)
-    sys.stdout.flush()
-    sys.exit()
+    def get_EPS(self, ticker : str, period : str) -> None:
+        self.chrome.get("https://goodinfo.tw/tw/ShowK_ChartFlow.asp?RPT_CAT=PER&STOCK_ID=%s&CHT_CAT=%s" % (ticker, period))
 
-df1 = pd.read_html(PER_River_form.get_attribute('innerHTML'), header = 1)[0]
-EPS = float(df1[df1.columns[4]][0])
-df1 = df1.drop(df1.columns[[x for x in range(1, 6)]], axis = 1)
+        try :
+            PER_River_form = self.chrome.find_element(by = By.ID, value = 'divDetail')
+        except:
+            json = json.dumps({
+                "error" : "Error"
+            })
+            print(json)
+            sys.stdout.flush()
+            sys.exit()
 
-# In[33]:
+        PER_table = pd.read_html(PER_River_form.get_attribute('innerHTML'), header = 1)[0]
+        self.EPS = float(PER_table[PER_table.columns[4]][0])
+        PER_table = PER_table.drop(PER_table.columns[[x for x in range(1, 6)]], axis = 1)
 
-for i in range(len(df1)):
-    if df1["交易月份"][i] == "交易月份":
-        df1.drop(i, inplace = True)
-    else:
-        df1["交易月份"][i] = ("20" + df1["交易月份"][i]).replace("M", "-") + "-01"
+        for i in range(len(PER_table)):
+            if PER_table["交易月份"][i] == "交易月份": PER_table.drop(i, inplace = True)
+            else: PER_table["交易月份"][i] = ("20" + PER_table["交易月份"][i]).replace("M", "-") + "-01"
 
-df1["交易月份"] = [i / 10**6 for i in pd.to_datetime(df1["交易月份"]).astype(int)]
-# In[34]:
-df1.reset_index(drop = True, inplace = True)
-df1.replace("-", 0, inplace = True)
+        PER_table["交易月份"] = [i / 10**6 for i in pd.to_datetime(PER_table["交易月份"]).astype(int)]
+        PER_table.reset_index(drop = True, inplace = True)
+        PER_table.replace("-", 0, inplace = True)
+        PER_table = PER_table.astype(float)
 
-df1 = df1.astype(float)
+        for i in range(len(PER_table) - 1, -1, -1):
+            for idx, key in enumerate(self.data.keys()):
+                self.data[key].append([PER_table[PER_table.columns[0]][i], PER_table[PER_table.columns[idx + 1]][i]])
 
-data1, data2, data3, data4, data5, data6 = [[] for i in range(6)]
+        self.PER_rate_col = PER_table.columns[1:].to_list()
 
-for i in range(len(df1) - 1, -1, -1):
-    data1.append([df1[df1.columns[0]][i], df1[df1.columns[1]][i]])
-    data2.append([df1[df1.columns[0]][i], df1[df1.columns[2]][i]])
-    data3.append([df1[df1.columns[0]][i], df1[df1.columns[3]][i]])
-    data4.append([df1[df1.columns[0]][i], df1[df1.columns[4]][i]])
-    data5.append([df1[df1.columns[0]][i], df1[df1.columns[5]][i]])
-    data6.append([df1[df1.columns[0]][i], df1[df1.columns[6]][i]])
+    def get_Kline(self, ticker : str, period : str) -> None:
+        self.chrome.get("https://goodinfo.tw/tw/ShowK_Chart.asp?STOCK_ID=%s&CHT_CAT2=%s&PRICE_ADJ=F" % (ticker, period))
 
-PER_rate_col = df1.columns[1:].to_list()
-# In[36]:
-chrome.get("https://goodinfo.tw/tw/ShowK_Chart.asp?STOCK_ID=%s&CHT_CAT2=%s&PRICE_ADJ=F" % (sys.argv[1], sys.argv[2]))
+        try :
+            KLine = self.chrome.find_element(by = By.ID, value = 'divPriceDetail')
+        except:
+            json = json.dumps({
+                "error" : "Error"
+            })
+            print(json)
+            sys.stdout.flush()
+            sys.exit()
 
-try :
-    KLine = chrome.find_element(by = By.ID, value = 'divPriceDetail')
-except:
-    result = {
-        "error" : "Error"
-    }
+        Kline_table = pd.read_html(KLine.get_attribute('innerHTML'), header = 1)[0]
+        Kline_table = Kline_table.drop(Kline_table.columns[[x for x in range(6, len(Kline_table.columns))]], axis = 1)
 
-    json = json.dumps(result)
-    print(json)
-    sys.stdout.flush()
-    sys.exit()
+        for i in range(len(Kline_table)):
+            if Kline_table["交易月份"][i] == "交易月份": Kline_table.drop(i, inplace = True)
+            else: Kline_table["交易月份"][i] = ("20" + Kline_table["交易月份"][i]).replace("M", "-") + "-01"
 
-df1 = pd.read_html(KLine.get_attribute('innerHTML'), header = 1)[0]
-df1 = df1.drop(df1.columns[[x for x in range(6, len(df1.columns))]], axis = 1)
+        Kline_table["交易月份"] = [i / 10**6 for i in pd.to_datetime(Kline_table["交易月份"]).astype(int)]
 
-for i in range(len(df1)):
-    if df1["交易月份"][i] == "交易月份":
-        df1.drop(i, inplace = True)
-    else:
-        df1["交易月份"][i] = ("20" + df1["交易月份"][i]).replace("M", "-") + "-01"
+        Kline_table = Kline_table.drop(Kline_table.columns[1], axis = 1)
+        Kline_table.reset_index(drop = True, inplace = True)
+        Kline_table.replace("-", 0, inplace = True)
+        Kline_table = Kline_table.astype(float)
 
-df1["交易月份"] = [i / 10**6 for i in pd.to_datetime(df1["交易月份"]).astype(int)]
+        self.kline = Kline_table.values.tolist()
+        self.kline.reverse()
 
-df1 = df1.drop(df1.columns[1], axis = 1)
-df1.reset_index(drop = True, inplace = True)
-df1.replace("-", 0, inplace = True)
-df1 = df1.astype(float)
+    def get_evaluate(self):
+        self.evaluate["cheap"] = round(self.EPS * float(self.PER_rate_col[0][0:-1]), 2)
+        self.evaluate["reasonable"] = round(self.EPS * ((float(self.PER_rate_col[2][0:-1]) + float(self.PER_rate_col[3][0:-1])) / 2), 2)
+        self.evaluate["expensive"] = round(self.EPS * float(self.PER_rate_col[5][0:-1]), 2)
 
-kline = df1.values.tolist()
-kline.reverse()
+        if self.realtime_price <= self.evaluate["cheap"]:
+            self.evaluate["evaluate"] = "評價: 目前價格(" + str(self.realtime_price) + ") < 便宜價(" + str(self.evaluate["cheap"]) + ")"
+        
+        elif ((self.realtime_price > self.evaluate["cheap"]) and
+                (self.realtime_price <= self.evaluate["reasonable"])):
+            self.evaluate["evaluate"] = "評價: 便宜價(" + str(self.evaluate["cheap"]) + ")" + "< 目前價格(" + str(self.realtime_price) + ") < 合理價("+ str(self.evaluate["reasonable"]) + ")"
+        
+        elif ((self.realtime_price > self.evaluate["reasonable"]) and
+                (self.realtime_price <= self.evaluate["expensive"])):
+            self.evaluate["evaluate"] = "評價: 合理價(" + str(self.evaluate["reasonable"]) + ")" + "< 目前價格(" + str(self.realtime_price) + ") < 昂貴價(" + str(self.evaluate["expensive"]) + ")"
+        
+        else:
+            self.evaluate["evaluate"] = "評價: 目前價格(" + str(self.realtime_price) + ") > 昂貴價(" + str(self.evaluate["expensive"]) + ")"
 
-realtime_price = float(twstock.realtime.get(sys.argv[1])["realtime"]["latest_trade_price"])
+    def handle_to_json(self) -> None:
+        result = {
+            "NewPrice" : self.realtime_price,
+            "PER_rate" : self.PER_rate_col,
+            "EPS" : self.EPS,
+            "Kline" : self.kline,
+            "data1" : self.data["data1"],
+            "data2" : self.data["data2"],
+            "data3" : self.data["data3"],
+            "data4" : self.data["data4"],
+            "data5" : self.data["data5"],
+            "data6" : self.data["data6"],
+            "cheap" : self.evaluate["cheap"],
+            "reasonable" : self.evaluate["reasonable"],
+            "expensive" : self.evaluate["expensive"],
+            "evaluate" : self.evaluate["evaluate"],
+            "down_cheap" : [self.evaluate["cheap"]],
+            "cheap_reasonable" : [round(self.evaluate["reasonable"] - self.evaluate["cheap"], 2)],
+            "reasonable_expensive" : [round(self.evaluate["expensive"] - self.evaluate["reasonable"], 2)],
+            "up_expensive" : [round(self.evaluate["expensive"] * 1.5 - self.evaluate["expensive"], 2)]
+        }
 
-cheap = round(EPS * float(PER_rate_col[0][0:-1]), 2)
-reasonable = round(EPS * ((float(PER_rate_col[2][0:-1]) + float(PER_rate_col[3][0:-1])) / 2), 2)
-expensive = round(EPS * float(PER_rate_col[5][0:-1]), 2)
+        json1 = json.dumps(result)
+        print(json1)
+        sys.stdout.flush()
 
-if realtime_price <= cheap:
-    evaluate = "評價: 目前價格(" + str(realtime_price) + ") < 便宜價(" + str(cheap) + ")"
-elif (realtime_price > cheap) and (realtime_price <= reasonable):
-    evaluate = "評價: 便宜價(" + str(cheap) + ")" + "< 目前價格(" + str(realtime_price) + ") < 合理價(" + str(reasonable) + ")"
-elif (realtime_price > reasonable) and (realtime_price <= expensive):
-    evaluate = "評價: 合理價(" + str(reasonable) + ")" + "< 目前價格(" + str(realtime_price) + ") < 昂貴價(" + str(expensive) + ")"
-else:
-    evaluate = "評價: 目前價格(" + str(realtime_price) + ") > 昂貴價(" + str(expensive) + ")"
+if __name__ == "__main__":
+    per = PerRiver()
 
-result = {
-    "NewPrice" : realtime_price,
-    "PER_rate" : PER_rate_col,
-    "EPS" : EPS,
-    "Kline" : kline,
-    "data1" : data1,
-    "data2" : data2,
-    "data3" : data3,
-    "data4" : data4,
-    "data5" : data5,
-    "data6" : data6,
-    "cheap" : cheap,
-    "evaluate" : evaluate,
-    "reasonable" : reasonable,
-    "expensive" : expensive,
-    "down_cheap" : [cheap],
-    "cheap_reasonable" : [round(reasonable - cheap, 2)],
-    "reasonable_expensive" : [round(expensive - reasonable, 2)],
-    "up_expensive" : [round(expensive * 1.5 - expensive, 2)]
-}
-
-json1 = json.dumps(result)
-
-print(json1)
-
-sys.stdout.flush()
+    per.get_realtime_price(sys.argv[1])
+    per.get_EPS(sys.argv[1], sys.argv[2])
+    per.get_Kline(sys.argv[1], sys.argv[2])
+    per.get_evaluate()
+    per.handle_to_json()

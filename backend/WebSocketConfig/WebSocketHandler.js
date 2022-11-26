@@ -1,6 +1,6 @@
 const { sessionMaxAge } = require('../constant');
 const con = require('../Model/connectMySQL');
-const { HandleNotifyQuantityTimeInterval, HandleRealTimePriceInterval } = require('./WebSocketConstant');
+const { HandleNotifyQuantityTimeInterval, HandleRealTimePriceInterval, HandleSubListInterval } = require('./WebSocketConstant');
 let { PythonShell } = require('python-shell')
 
 //Define a dict to record user timer
@@ -23,6 +23,21 @@ exports.HandleNotifyQuantity = (socket) => {
         }
     }, HandleNotifyQuantityTimeInterval)
     IntervalID[socket.handshake.query.username].push(NotifyQuantityID)
+}
+
+exports.HandleSubList = (socket) => {
+    const SubListID = setInterval(async () => {
+        let sql = "SELECT * FROM subscribe WHERE `username`= " + `"${socket.handshake.query.username}"`
+
+        try {
+            const [rows, fields] = await con.promise().query(sql);
+
+            socket.emit("REGISTER_SUBSCRIBE_LIST", rows)
+        } catch (error) {
+            console.log(error)
+        }
+    }, HandleSubListInterval)
+    IntervalID[socket.handshake.query.username].push(SubListID)
 }
 
 exports.HandleSessionExpired = (socket) => {

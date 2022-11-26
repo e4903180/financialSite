@@ -16,6 +16,7 @@ import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 import StockPricingStratagyComp from './component/stock_pricing_stratagyPage/stock_pricing_stratagyComp';
 import PERRiverComp from './component/PER_RiverPage/PER_RiverComp';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "@popperjs/core";
 import "bootstrap";
 import SupportResistanceComp from './component/support_resistance_page/support_resistance_comp';

@@ -25,7 +25,7 @@ class DxyJnkUpdate():
     def _update_DXY(self) -> None:
         self.DXY_table_data = yf.download("DX-Y.NYB", progress = False, show_errors = False)
 
-        self.DXY_table_data = self.DXY_table_data.reset_index().iloc[-2]
+        self.DXY_table_data = self.DXY_table_data.reset_index().iloc[-1]
         self.DXY_table_data["Date"] = self.DXY_table_data["Date"].strftime("%Y-%m-%d")
         self.DXY_table_data["Close"] = self.DXY_table_data["Close"].round(2)
         self.DXY_table_data = self.DXY_table_data.fillna(0.0)

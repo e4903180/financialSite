@@ -93,9 +93,11 @@ dataRouter.get("/realtime_price", StockTool.get_realtime_price)
 dataRouter.get("/cpi_fed", StockTool.cpi_fed)
 
 /* Subscribe router */
-dataRouter.get("/get_support_resistance_sub", Sub.get_support_resistance_sub)
+dataRouter.get("/get_sub", Sub.get_sub)
 dataRouter.delete("/cancel_sub", Sub.delete_sub)
 dataRouter.post("/handle_support_resistance_sub", Sub.handle_support_resistance_sub)
+dataRouter.post("/handle_pricing_strategy_sub", Sub.handle_pricing_strategy_sub)
+dataRouter.post("/handle_per_river_sub", Sub.handle_per_river_sub)
 
 /* Notify router */
 dataRouter.get("/notify_all", Notify.notify_all)

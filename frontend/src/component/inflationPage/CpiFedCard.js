@@ -181,7 +181,7 @@ function CpiFedCard() {
             setOptions2({
                 series : [
                     {
-                        name : "AHE",
+                        name : "Average Hourly EarningsAHE",
                         id: 'AHE',
                         data : res.data["AHE"]
                     },
@@ -236,7 +236,7 @@ function CpiFedCard() {
                 <div className = 'col-md-10 mx-auto'>
                     <div className = 'card h-100'>
                         <div className = "card-header text-center">
-                            CPI (物價通貨膨脹指數 相較去年同月百分比) vs FED (聯邦基金利率 百分比)
+                            CPI (物價通貨膨脹指數 年增率) vs FED (聯邦基金利率 百分比)
                         </div>
 
                         <div className = 'card-body'>
@@ -255,12 +255,12 @@ function CpiFedCard() {
             </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
-                <div className = 'col-md-4 mx-auto'>
+                <div className = 'col-md-10 mx-auto'>
                     <div className = 'card h-100'>
                         <div className = "card-header text-center">
                             Average Hourly Earnings
                             <br/>
-                            (美國每小時薪資成長率 相較去年同月百分比)
+                            (美國每小時薪資成長率 年增率)
                         </div>
 
                         <div className = 'card-body'>
@@ -270,8 +270,10 @@ function CpiFedCard() {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div className = 'col-md-4 mx-auto'>
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-10 mx-auto'>
                     <div className = 'card h-100'>
                         <div className = "card-header text-center">
                             美元指數(DXY)
@@ -288,8 +290,10 @@ function CpiFedCard() {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div className = 'col-md-4 mx-auto'>
+            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+                <div className = 'col-md-10 mx-auto'>
                     <div className = 'card h-100'>
                         <div className = "card-header text-center">
                             垃圾債(JNK)

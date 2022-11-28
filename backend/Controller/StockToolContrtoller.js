@@ -93,7 +93,7 @@ exports.cpi_fed = async function(req, res){
     }
     
     const result = await new Promise((resolve, reject) => {
-        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/FRED/FRED.py', options, (err, data) => {
+        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/FRED/Inflation.py', options, (err, data) => {
             if (err) reject(err)
 
             const parsedString = JSON.parse(data)

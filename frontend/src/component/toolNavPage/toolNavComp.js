@@ -69,7 +69,7 @@ function ToolNavComp() {
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
                 <div className = "card h-100 p-0">
                     <div className = "card-header text-center">
-                        其他
+                        總經分析
                     </div>
 
                     <div className = "card-body">

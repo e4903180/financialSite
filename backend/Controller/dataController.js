@@ -132,18 +132,9 @@ exports.calenderData = async function(req, res){
 }
 
 exports.tickerList = async function(req, res){
-    con.query("SELECT ticker from ticker_list", function(err, result, field){
+    con.query("SELECT ID, stock_name as stock_num_name from ticker_list", function(err, result, field){
         if(err === null){
-            let temp = []
-
-            for(let i = 0; i < result.length; i++){
-                temp.push(result[i]["ticker"])
-
-                if(i === result.length - 1){
-                    return res.status(200).json(temp)
-                }
-            }
-            
+            return res.status(200).json(result)
         }else{
             return res.status(400).send("error")
         }

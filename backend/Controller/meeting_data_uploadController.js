@@ -24,15 +24,22 @@ exports.meetingData_middleWare = function(req, res, next){
     })
 }
 
-exports.meetingData_upload = function(req, res){
+exports.meetingData_upload = async function(req, res){
     let filename = "NULL"
     if(req.body.filename !== "") filename =  req.body.filename
 
-    con.query("INSERT INTO `meetingData` (`username`, `date`, `filename`) VALUES (?, ?, ?)", [ req.session.userName, Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'), filename ], function(err, result, field){
-        if(err === null){
-            res.status(200).send("success");
-        }else{
-            res.status(400).send("error");
-        }
-    });
+    let sql = "INSERT INTO `meetingData` (`username`, `date`, `filename`) VALUES (?, ?, ?)"
+    let param = [ 
+        req.session.userName,
+        Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'),
+        filename
+    ]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send("success");
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };

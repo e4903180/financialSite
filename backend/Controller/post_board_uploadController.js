@@ -24,7 +24,7 @@ exports.post_board_middleWare = function(req, res, next){
     })
 }
 
-exports.post_board_upload = function(req, res){
+exports.post_board_upload = async function(req, res){
     const temp = req.body.stock_num_name.split(" ")
     let filename = "NULL"
     const date = req.body.date
@@ -36,12 +36,24 @@ exports.post_board_upload = function(req, res){
     const reason = req.body.reason
     if(req.body.filename !== "") filename = date + "-" + req.body.filename
     
+    let sql = "INSERT INTO `post_board_memo` (`date`, `username`, `stockName`, `stockNum`, `evaluation`, `price`, `reason`, `filename`, `supplement`) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)"
+    let param = [
+        date,
+        username,
+        stockName,
+        stockNum,
+        evaluation,
+        price,
+        reason,
+        filename,
+        "NULL"
+    ]
 
-    con.query("INSERT INTO `post_board_memo` (`date`, `username`, `stockName`, `stockNum`, `evaluation`, `price`, `reason`, `filename`, `supplement`) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)", [ date, username, stockName, stockNum, evaluation, price, reason, filename, "NULL" ], function(err, result, field){
-        if(err === null){
-            res.status(200).send("success");
-        }else{
-            res.status(400).send("error");
-        }
-    });
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send("success");
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };

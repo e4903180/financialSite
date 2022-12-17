@@ -120,8 +120,10 @@ function PERRiverComp() {
         if((autocom.map(element => element.stock_num_name).includes(ticker))){
             setInputError(false)
 
-            axios.post(rootApiIP + "/data/PER_River", {
-                "stockNum" : ticker.split(" ")[0],
+            axios.get(rootApiIP + "/data/PER_River", {
+                params : {
+                    "stockNum" : ticker.split(" ")[0],
+                }
             })
             .then(res => {
                 setContent(res.data)

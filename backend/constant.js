@@ -5,12 +5,12 @@ const API_BASE_IP = "0.0.0.0"
 const API_ROUTE_IP = "/api"
 const API_PORT = 3000
 const CLIENT_IP = "http://140.116.214.154:8080"
-
+const DJANGO_REST_IP = "http://140.116.214.154:3847/api"
 const sessionMiddleware = session({
     secret: 'secretkey',
     rolling: true,
     saveUninitialized: false,
-    resave: true, 
+    resave: true,
     cookie: {
         maxAge : sessionMaxAge,
         secure : false
@@ -34,4 +34,4 @@ const WebSocketMiddlewareHandler = (socket, next) => {
     }
 }
 
-module.exports = { sessionMaxAge, API_BASE_IP, API_ROUTE_IP, API_PORT, CLIENT_IP, sessionMiddleware, corsSetting, ioOptions, wrap, WebSocketMiddlewareHandler }
+module.exports = { sessionMaxAge, API_BASE_IP, API_ROUTE_IP, API_PORT, CLIENT_IP, sessionMiddleware, corsSetting, ioOptions, wrap, WebSocketMiddlewareHandler, DJANGO_REST_IP }

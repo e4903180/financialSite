@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { rootApiIP } from '../../constant'
+import {rootApiIP } from '../../constant'
 import PricingComp from './pricingComp';
 import { label, priceInit, pricing1, pricing2, pricing3, pricing4 } from './pricingInit';
 import { columns_dividend, columns_high_low, columns_PBR, columns_PER } from '../column/column';
@@ -98,10 +98,12 @@ function StockPricingStratagyComp() {
         if(autocom.map(element => element.stock_num_name).includes(ticker)){
             setInputError(false)
 
-            axios.post(rootApiIP + "/data/pricing", {
-                "stockNum" : ticker.split(" ")[0],
-                "year" : year
-            })
+            axios.get(rootApiIP + "/data/PricingStrategy", { 
+                    params : {
+                        "stockNum" : ticker.split(" ")[0],
+                        "year" : year
+                    }
+                })
             .then(res => {
                 setPrice(priceInit)
                 setPrice(res.data)

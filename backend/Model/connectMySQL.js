@@ -7,7 +7,7 @@ var con = mysql2.createPool({
     database : "financial",
     charset : "utf8",
     multipleStatements : true,
-    connectionLimit: 20,
+    connectionLimit: 10,
 });
 
 module.exports = con

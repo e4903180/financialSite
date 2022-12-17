@@ -16,19 +16,18 @@ function createCSV(path, data){
     return path
 }
 
-exports.single_financialData_download = function(req, res){
+exports.single_financialData_download = async function(req, res){
     const filename = req.query.filename;
-    let sql = `SELECT stockNum FROM financialData WHERE filename='${filename}'`
+    let sql = `SELECT stockNum FROM financialData WHERE filename=?`
+    let param = [filename]
 
-    con.query(sql, function(err, result, field){
-        if(err === null){
-            try {
-                res.download("/home/cosbi/桌面/financialData/gmailData/data/" + result[0].stockNum + "/" + filename)
-            } catch (error) {
-                return res.status(400).send("Not found")
-            }
-        }
-    });
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        res.download("/home/cosbi/桌面/financialData/gmailData/data/" + rows[0].stockNum + "/" + filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_post_board_memo_download = function(req, res){
@@ -39,40 +38,56 @@ exports.single_line_memo_download = function(req, res){
     res.download("/home/cosbi/桌面/financialData/lineMemo_data/" + req.query.filename)
 };
 
-exports.financialData2csv_download = function(req, res){
-    con.query("select * from financialData", function(err, result, field){
-        if(err === null){
-            const path = createCSV('/home/cosbi/桌面/financialData/financialData.csv', result)
-            res.download(path)
-        }
-    });
+exports.financialData2csv_download = async function(req, res){
+    let sql = `SELECT * FROM financialData`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        const path = createCSV('/home/cosbi/桌面/financialData/financialData.csv', rows)
+        res.download(path)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
-exports.post_board_memo2csv_download = function(req, res){
-    con.query("select * from post_board_memo", function(err, result, field){
-        if(err === null){
-            const path = createCSV('/home/cosbi/桌面/financialData/post_board_memo.csv', result)
-            res.download(path)
-        }
-    });
+exports.post_board_memo2csv_download = async function(req, res){
+    let sql = `SELECT * FROM post_board_memo`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        const path = createCSV('/home/cosbi/桌面/financialData/post_board_memo.csv', rows)
+        res.download(path)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
-exports.lineMemo2csv_download = function(req, res){
-    con.query("select * from lineMemo", function(err, result, field){
-        if(err === null){
-            const path = createCSV('/home/cosbi/桌面/financialData/lineMemo.csv', result)
-            res.download(path)
-        }
-    });
+exports.lineMemo2csv_download = async function(req, res){
+    let sql = `SELECT * FROM lineMemo`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        const path = createCSV('/home/cosbi/桌面/financialData/lineMemo.csv', rows)
+        res.download(path)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
-exports.calender2csv_download = function(req, res){
-    con.query("select * from calender", function(err, result, field){
-        if(err === null){
-            const path = createCSV('/home/cosbi/桌面/financialData/calender.csv', result)
-            res.download(path)
-        }
-    });
+exports.calender2csv_download = async function(req, res){
+    let sql = `SELECT * FROM calender`
+
+    try {
+        const [rows, fields] = await con.promise().query(sql);
+
+        const path = createCSV('/home/cosbi/桌面/financialData/calender.csv', rows)
+        res.download(path)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_meetingData_memo_download = function(req, res){
@@ -80,7 +95,7 @@ exports.single_meetingData_memo_download = function(req, res){
 };
 
 exports.single_industry_analysis_download = function(req, res){
-    res.download("/home/cosbi/桌面/financialData/Industry_analysis/" + req.query.filename)
+    res.download("/home/cosbi/桌面/financialData/Industry_analysis/" + req.query.filename.replace("percentTransform", "%"))
 };
 
 exports.single_twse_chPDF_download = function(req, res){

@@ -24,15 +24,23 @@ exports.industry_analysis_middleWare = function(req, res, next){
     })
 }
 
-exports.industry_analysis_upload = function(req, res){
+exports.industry_analysis_upload = async function(req, res){
     let filename = "NULL"
     if(req.body.filename !== "") filename = req.body.filename
 
-    con.query("INSERT INTO `industry_analysis` (`title`, `date`, `filename`, `username`) VALUES (?, ?, ?, ?)", [ req.body.title, Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'), filename, req.session.userName ], function(err, result, field){
-        if(err === null){
-            res.status(200).send("success");
-        }else{
-            res.status(400).send("error");
-        }
-    });
+    let sql = 'INSERT INTO `industry_analysis` (`title`, `date`, `filename`, `username`) VALUES (?, ?, ?, ?)'
+    let param = [
+                    req.body.title,
+                    Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'),
+                    filename,
+                    req.session.userName
+    ]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send("success");
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };

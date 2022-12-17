@@ -4,20 +4,21 @@ const con = require('../Model/connectMySQL')
 exports.login = async function(req, res){
     var userName = req.body.userName
     var password = req.body.password
-    let sql = `SELECT password FROM user WHERE userName = "${userName}"`
+    let sql = `SELECT password FROM user WHERE userName=?`
+    let param = [userName]
 
     try {
-        const [row, field] = await con.promise().query(sql)
+        const [row, field] = await con.promise().query(sql, param)
 
         if(bcrypt.compareSync(password, row[0].password)){
             req.session.userName = userName;
             
-            res.status(200).send("success");
+            return res.status(200).send("success");
         }else{
-            res.status(400).send("Username or password error");
+            return res.status(400).send("Username or password error");
         }
     } catch (error) {
-        res.status(400).send("error");
+        return res.status(400).send("error");
     }
 }
 
@@ -37,10 +38,10 @@ exports.register = async function(req, res){
     var email = req.body.email
     const hash_password = bcrypt.hashSync(req.body.password, 10);
 
-    let sql = `SELECT * FROM user WHERE userName="${userName}"`
-
+    let sql = `SELECT * FROM user WHERE userName=?`
+    let param = [userName]
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(sql, param);
 
         if(rows.length !== 0){
             return res.status(401).send("Username duplicate please try another")
@@ -49,9 +50,11 @@ exports.register = async function(req, res){
         return res.status(400).send("error")
     }
 
+    sql = `INSERT INTO user (name, userName, password, superUser, email) VALUES (?, ?, ?, ?, ?)`
+    param = [name, userName, hash_password, 0, email]
+
     try {
-        sql = `INSERT INTO user (name, userName, password, superUser, email) VALUES ("${name}", "${userName}", "${hash_password}", 0, "${email}")`
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(sql, param);
     } catch (error) {
         return res.status(400).send("error")
     }

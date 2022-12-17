@@ -1,6 +1,5 @@
 var express = require('express')
 var router = express.Router();
-var multer  = require('multer')
 const rateLimit = require("express-rate-limit")
 var dataRouter = express.Router();
 var userRouter = express.Router();
@@ -66,6 +65,7 @@ dataRouter.post("/upload/industry_analysis_upload", industry_analysisUp.industry
 dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 dataRouter.post("/upload/self_upload", SelfUp.self_upload_middleWare, SelfUp.self_upload)
 
+/* Get DB data */
 dataRouter.get("/newest15", Data.newest15)
 dataRouter.get("/allData", Data.allData)
 dataRouter.get("/post_board_state", Data.post_board_state)
@@ -87,11 +87,12 @@ dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
 dataRouter.post("/ticker_search", dbSearch.ticker_search)
 
 /* StockTool router */
-dataRouter.post("/pricing", StockTool.pricingData)
-dataRouter.post("/PER_River", StockTool.PER_river_Data)
-dataRouter.post("/support_resistance", StockTool.support_resistance_data)
+dataRouter.get("/PricingStrategy", StockTool.pricingData)
+dataRouter.get("/PER_River", StockTool.PER_river_Data)
+dataRouter.get("/support_resistance", StockTool.support_resistance_data)
 dataRouter.get("/realtime_price", StockTool.get_realtime_price)
-dataRouter.get("/cpi_fed", StockTool.cpi_fed)
+dataRouter.get("/inflation", StockTool.inflation)
+dataRouter.get("/cpi_ppi", StockTool.cpi_ppi)
 
 /* Subscribe router */
 dataRouter.get("/get_sub", Sub.get_sub)

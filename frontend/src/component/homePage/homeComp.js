@@ -7,7 +7,7 @@ import { columns1 } from '../column/column'
 
 function HomeComp() {
     let [data, setData] = useState([]);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(15);
     // const [realTimePrice, setRealTimePrice] = useState([0.0, 0.0, 0.0])
     // const socket = useContext(WSContext);
 
@@ -88,11 +88,11 @@ function HomeComp() {
                 <div className = 'col-md-10 mx-auto py-3'>
                     <h3 className = "display-5 text-center">最新15筆個股研究資料</h3>
                     <DataGrid
-                        columns = { columns1 } 
+                        columns = { columns1 }
                         rows = { data }
                         pageSize = { pageSize }
                         onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
-                        rowsPerPageOptions = {[5, 10, 20]}
+                        rowsPerPageOptions = {[5, 10, 15, 20]}
                         getRowId = { row => row.ID }
                         components = {{ Toolbar: GridToolbar }}
                         componentsProps = {{ toolbar: { showQuickFilter: true },}}

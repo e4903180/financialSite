@@ -6,7 +6,7 @@ export const columns = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-    { field: 'downloadUrl', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { rowData.value } download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
+    { field: 'downloadUrl', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener" download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
 ];
 
 export const columns1 = [
@@ -15,7 +15,7 @@ export const columns1 = [
     { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } download = { rowData.value}>Download</a> },
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
 export const columns2 = [
@@ -57,14 +57,14 @@ export const columns5 = [
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'title', headerName: '上傳檔案標題', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
-    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_industry_analysis?filename=" + rowData.value } download = { rowData.value }>Download</a>  },
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_industry_analysis?filename=" + rowData.value.replace("%", "percentTransform") } target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
 export const columns6 = [
     { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
-    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } download = { rowData.value }>Download</a>  },
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
 export const columns_dividend = [
@@ -132,7 +132,7 @@ const check_single_twse_chPDF_NULL = (value) => {
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } download = { value }>Download</a>
+        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } target = "_blank" rel = "noreferrer noopener" download = { value }>Download</a>
     }
 }
 
@@ -142,6 +142,6 @@ const check_single_twse_enPDF_NULL = (value) => {
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_enPDF_download?filename=" + value } download = { value }>Download</a>
+        return <a href = { rootApiIP + "/data/download/single_twse_enPDF_download?filename=" + value } target = "_blank" rel = "noreferrer noopener" download = { value }>Download</a>
     }
 }

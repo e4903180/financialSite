@@ -8,50 +8,46 @@ import { columns4 } from '../column/column';
 
 function CalendarComp() {
     const [data, setData] = useState([])
-    const [year1, setYear1] = useState(new Date().getFullYear())
-    const [month1, setMonth1] = useState(new Date().getMonth() + 1)
+    const [year, setYear] = useState(new Date().getFullYear())
+    const [month, setMonth] = useState(new Date().getMonth() + 1)
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        axios.post(rootApiIP + "/data/calenderData", { "year" : year1, "month" : month1 })
+        axios.post(rootApiIP + "/data/calenderData", { "year" : year, "month" : month })
         .then(res => {
             setPage(0)
             setData(res.data)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
-    }, [year1, month1])
+    }, [year, month])
 
     function clickEvent(info){
         window.open("/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
     }
 
-    async function getCalendarData(fetchInfo, successCallback) {
+    async function getCalendarData(fetchInfo, successCallback, failureCallback) {
         try {
-            let year = new Date().getFullYear();
-            let month = new Date().getMonth() + 1;
-        
-            if (fetchInfo) {
-                year = new Date(fetchInfo.start).getFullYear();
-                month = new Date(fetchInfo.start).getMonth() + 1;
-            }
+            let temp_year = fetchInfo.start.getFullYear()
+            let temp_month = (fetchInfo.start.getMonth() + 1).toString().padStart(2, '0');
 
-            setYear1(year)
-            setMonth1(month)
+            setYear(temp_year)
+            setMonth(temp_month)
 
-            const response = await axios.post(rootApiIP + "/data/calender", { "year" : year, "month" : month })
+            const response = await axios.post(rootApiIP + "/data/calender", { "year" : temp_year, "month" : temp_month })
 
             successCallback(
                 response.data.map(event => {
                     return ({
                         title: event.title,
-                        start: event.date,
+                        start: event.date.slice(0, 10),
                     });
                 })
             );
         } catch (error) {
             if(error.response.data === "Session expired") window.location.reload()
+            failureCallback(error)
         }
     }
 

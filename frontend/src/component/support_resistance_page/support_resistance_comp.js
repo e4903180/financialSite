@@ -86,13 +86,13 @@ function SupportResistanceComp() {
         if(autocom.map(element => element.stock_num_name).includes(ticker)){
             setInputError(false)
             
-            axios.post(rootApiIP + "/data/support_resistance", {
+            axios.get(rootApiIP + "/data/support_resistance", { params : {
                 "stockNum" : ticker.split(" ")[0],
                 "startDate" : startDate,
                 "ma_type" : maType,
                 "maLen" : maLen,
                 "method" : method
-            })
+            }})
             .then(res => {
                 if(res.data["support"].length === 0){
                     setInputError(true)

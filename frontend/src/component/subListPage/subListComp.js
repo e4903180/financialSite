@@ -1,7 +1,7 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
-import { rootApiIP, WSContext } from '../../constant';
+import React, { useEffect, useState } from 'react';
+import { rootApiIP } from '../../constant';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SupportResisCard from './support_resistance_card';
 import PricingStratagyCard from './pricing_stratagy_card';
@@ -12,7 +12,6 @@ function SubListComp() {
     const [pageSize, setPageSize] = useState(10);
     const [rows, setRows] = useState([]);
     const [type, setType] = useState("type1");
-    const socket = useContext(WSContext);
 
     //需要用到row做filter不能獨立到column.js
     const column_sub_list = [
@@ -51,16 +50,6 @@ function SubListComp() {
         })
     }, [])
 
-    useEffect(() => {
-        if(socket){
-            socket.on("REGISTER_SUBSCRIBE_LIST", (arg) => setRows(arg));
-
-            return () => {
-                socket.off("REGISTER_SUBSCRIBE_LIST");
-            };
-        }
-    }, [socket])
-
     return (
         <>
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
@@ -85,9 +74,9 @@ function SubListComp() {
                                 </li>
                             </ul>
 
-                            { type === "type1" && <PricingStratagyCard />}
-                            { type === "type2" && <PerRiverCard />}
-                            { type === "type3" && <SupportResisCard />}
+                            { type === "type1" && <PricingStratagyCard setRows = { setRows }/>}
+                            { type === "type2" && <PerRiverCard setRows = { setRows }/>}
+                            { type === "type3" && <SupportResisCard setRows = { setRows }/>}
                         </div>
                     </div>
                 </div>

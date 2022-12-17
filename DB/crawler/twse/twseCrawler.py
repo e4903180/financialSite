@@ -19,11 +19,7 @@ import MySQLdb
 import time
 import datetime
 
-# In[11]:
-
 sys.stderr = open("/home/cosbi/桌面/financialData/twseData/log/" + str(datetime.date.today()) + '.log', 'w')
-
-# In[2]:
 
 class TwseSelenium():
     
@@ -34,9 +30,13 @@ class TwseSelenium():
         
         self.driver = webdriver.Chrome(options = _options, service = _s)
 
-    def driver_find(self, month:int) -> Any:
+    def driver_find(self, year : str, month : str) -> Any:
         self.driver.get("https://mops.twse.com.tw/mops/web/t100sb02_1")
         
+        input1 = self.driver.find_element(by = By.NAME, value = "year")
+        input1.clear()
+        input1.send_keys(year)
+
         select_element = self.driver.find_element(by = By.NAME, value = "month")
         select_object = Select(select_element)
         select_object.select_by_index(month)
@@ -47,10 +47,6 @@ class TwseSelenium():
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         
         return soup
-
-
-# In[3]:
-
 
 class MySQL():
     
@@ -80,9 +76,6 @@ class MySQL():
         
     def close(self) -> None:
         self._db.close()
-
-
-# In[10]:
 
 
 class Twse(TwseSelenium, MySQL):
@@ -120,9 +113,9 @@ class Twse(TwseSelenium, MySQL):
             with open("/home/cosbi/桌面/financialData/twseData/data/" + lang + "/" + stockNum + "/" + fileName, 'wb') as s:
                 s.write(data)
     
-    def crawler(self, month:str) -> None:
-        soup = self.driver_find(month)
-        
+    def crawler(self, year : str, month : str) -> None:
+        soup = self.driver_find(year, month)
+
         result_even = soup.find_all("tr", class_ = "even")
         result_odd = soup.find_all("tr", class_ = "odd")
         result_total = result_even + result_odd
@@ -136,7 +129,7 @@ class Twse(TwseSelenium, MySQL):
             row_date = newYear + row_date
             
             sql_result = list(self.search(data_td[0].getText(), row_date))
-            
+
             if(len(sql_result) == 0):
                 self._download_pdf("ch", data_td[0].getText(), data_td[6].getText())
                 self._download_pdf("en", data_td[0].getText(), data_td[7].getText())
@@ -158,24 +151,26 @@ class Twse(TwseSelenium, MySQL):
 def run():
     today = datetime.datetime.now()
     twse = Twse()
-    
+    current_year = today.year - 1911
+
     if today.day == 28:
         if today.month == 1:
-            twse.crawler(month = "12")
+            twse.crawler(year = str(current_year - 1), month = "12")
         else:
-            twse.crawler(month = str(today.month - 1))
+            twse.crawler(year = str(current_year), month = str(today.month - 1))
 
     current_month = today.month
     next_moth = (current_month + 1) % 12
+
     if next_moth == 0:
         next_moth = 12
 
-    twse.crawler(month = str(current_month))
-    twse.crawler(month = str(next_moth))
-
-
-# In[6]:
-
+    if next_moth == 1:
+        # twse.crawler(year = str(current_year), month = str(current_month))
+        twse.crawler(year = str(current_year + 1), month = str(next_moth))
+    else:
+        twse.crawler(year = str(current_year), month = str(current_month))
+        twse.crawler(year = str(current_year), month = str(next_moth))
 
 if __name__ == "__main__":
     run()

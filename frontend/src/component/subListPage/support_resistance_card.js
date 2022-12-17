@@ -5,7 +5,7 @@ import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant';
 import TickerSearchComp from '../tickerSearchComp';
 
-function SupportResisCard() {
+function SupportResisCard(props) {
     var Today = new Date();
     let year = Today.getFullYear()
     let month = (Today.getMonth() + 1) - 1
@@ -45,32 +45,42 @@ function SupportResisCard() {
         ]
     }
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault()
         setInputError(false)
         setOpen(false)
 
         if((autocom.map(element => element.stock_num_name).includes(ticker)) && (endDate !== "")){
-            axios.post(rootApiIP + "/data/handle_support_resistance_sub", {
-                "stockNum" : ticker.split(" ")[0],
-                "startDate" : startDate,
-                "endDate" : endDate,
-                "maType" : maType,
-                "maLen" : maLen,
-                "method" : method,
-                "subType" : subType,
-                "alertCondition" : alertCondition
-            }).then((res) => {
+            try {
+                await axios.post(rootApiIP + "/data/handle_support_resistance_sub", {
+                    "stockNum" : ticker.split(" ")[0],
+                    "startDate" : startDate,
+                    "endDate" : endDate,
+                    "maType" : maType,
+                    "maLen" : maLen,
+                    "method" : method,
+                    "subType" : subType,
+                    "alertCondition" : alertCondition
+                })
+
                 setOpen(true)
                 setSubed(false)
-            }).catch((res) => {
-                if(res.response.data === "Session expired") window.location.reload()
+            } catch (error) {
+                if(error.response.data === "Session expired") window.location.reload()
                     
-                if(res.response.status === 401){
+                if(error.response.status === 401){
                     setOpen(true)
                     setSubed(true)
                 }
-            })
+            }
+
+            try {
+                const response = await axios.get(rootApiIP + "/data/get_sub")
+
+                props.setRows(response.data)
+            } catch (error) {
+                if(error.response.data === "Session expired") window.location.reload()
+            }
         }else{
             setInputError(true)
         }

@@ -1,6 +1,6 @@
 const { sessionMaxAge } = require('../constant');
 const con = require('../Model/connectMySQL');
-const { HandleNotifyQuantityTimeInterval, HandleRealTimePriceInterval, HandleSubListInterval } = require('./WebSocketConstant');
+const { HandleNotifyQuantityTimeInterval, HandleRealTimePriceInterval, HandleSubListInterval, HandleRealTimeInterval } = require('./WebSocketConstant');
 let { PythonShell } = require('python-shell')
 
 //Define a dict to record user timer
@@ -66,6 +66,16 @@ exports.HandleRealTimePrice = (socket) => {
 
         IntervalID[socket.handshake.query.username].push(RealTimePriceID)
     })
+}
+
+exports.HandleRealTime = (socket) => {
+    const RealTimeID = setInterval(async () => {
+        let date = new Date()
+
+        socket.emit("REGISTER_REAL_TIME", date.toLocaleTimeString('en-US'))
+    }, HandleRealTimeInterval)
+
+    IntervalID[socket.handshake.query.username].push(RealTimeID)
 }
 
 exports.HandleDisconnect = (socket) => {

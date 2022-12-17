@@ -1,19 +1,10 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 
 function SupportResistanceCard(props) {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const [rows, setRows] = useState(props.data);
-
-    useEffect(() => {
-        try {
-            setRows(JSON.parse(props.data))
-        } catch (error) {
-            
-        }
-    }, [props.data])
 
     return (
         <>
@@ -42,7 +33,7 @@ function SupportResistanceCard(props) {
                                 }}
                                 
                                 columns = { props.columns }
-                                rows = { rows }
+                                rows = { props.data }
                                 page = { page }
                                 onPageChange = {(newPage) => setPage(newPage)}
                                 pageSize = { pageSize }

@@ -1,4 +1,4 @@
-const { HandleNotifyQuantity, HandleSessionExpired, HandleRealTimePrice, HandleDisconnect, HandleIntervalID, HandleSubList } = require("./WebSocketHandler")
+const { HandleNotifyQuantity, HandleSessionExpired, HandleRealTimePrice, HandleDisconnect, HandleIntervalID, HandleSubList, HandleRealTime } = require("./WebSocketHandler")
 
 exports.WebSocketManager = (socket) => {
     console.log("socket ID: " + socket.id)
@@ -9,6 +9,7 @@ exports.WebSocketManager = (socket) => {
     HandleNotifyQuantity(socket)
     HandleRealTimePrice(socket)
     HandleSubList(socket)
+    HandleRealTime(socket)
 
     HandleDisconnect(socket)
 }

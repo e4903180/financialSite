@@ -33,14 +33,24 @@ exports.self_upload_middleWare = function(req, res, next){
     })
 }
 
-exports.self_upload = function(req, res){
+exports.self_upload = async function(req, res){
     let temp = req.body.ticker.split(" ")
-    con.query("INSERT INTO `financialData` (`stockNum`, `stockName`, `date`, `investmentCompany`, `filename`, `recommend`) VALUES (?, ?, ?, ?, ?, ?)", [temp[0], temp[1], req.body.date, req.body.provider, `${temp[0]}-${temp[1]}-${req.body.provider}-${req.body.evaluate}-${req.body.filename}`, req.body.evaluate], function(err, result, field){
-        if(err === null){
-            res.status(200).send("success");
-        }else{
-            console.log(err)
-            res.status(400).send("error");
-        }
-    });
+
+    let sql = "INSERT INTO `financialData` (`stockNum`, `stockName`, `date`, `investmentCompany`, `filename`, `recommend`) VALUES (?, ?, ?, ?, ?, ?)"
+    let param = [
+        temp[0],
+        temp[1],
+        req.body.date,
+        req.body.provider,
+        `${temp[0]}-${temp[1]}-${req.body.provider}-${req.body.evaluate}-${req.body.filename}`,
+        req.body.evaluate
+    ]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send("success");
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };

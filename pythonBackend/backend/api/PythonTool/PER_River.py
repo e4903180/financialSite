@@ -1,6 +1,5 @@
 import pandas as pd
 import sys
-import json
 import twstock
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -35,15 +34,7 @@ class PerRiver():
     def _get_EPS(self, ticker : str, period : str) -> None:
         self.chrome.get("https://goodinfo.tw/tw/ShowK_ChartFlow.asp?RPT_CAT=PER&STOCK_ID=%s&CHT_CAT=%s" % (ticker, period))
 
-        try :
-            PER_River_form = self.chrome.find_element(by = By.ID, value = 'divDetail')
-        except:
-            json = json.dumps({
-                "error" : "Error"
-            })
-            print(json)
-            sys.stdout.flush()
-            sys.exit()
+        PER_River_form = self.chrome.find_element(by = By.ID, value = 'divDetail')
 
         PER_table = pd.read_html(PER_River_form.get_attribute('innerHTML'), header = 1)[0]
         self.EPS = float(PER_table[PER_table.columns[4]][0])
@@ -67,22 +58,17 @@ class PerRiver():
     def _get_Kline(self, ticker : str, period : str) -> None:
         self.chrome.get("https://goodinfo.tw/tw/ShowK_Chart.asp?STOCK_ID=%s&CHT_CAT2=%s&PRICE_ADJ=F" % (ticker, period))
 
-        try :
-            KLine = self.chrome.find_element(by = By.ID, value = 'divPriceDetail')
-        except:
-            json = json.dumps({
-                "error" : "Error"
-            })
-            print(json)
-            sys.stdout.flush()
-            sys.exit()
+        KLine = self.chrome.find_element(by = By.ID, value = 'divPriceDetail')
 
         Kline_table = pd.read_html(KLine.get_attribute('innerHTML'), header = 1)[0]
         Kline_table = Kline_table.drop(Kline_table.columns[[x for x in range(6, len(Kline_table.columns))]], axis = 1)
+        Kline_table = Kline_table.iloc[:-1]
 
         for i in range(len(Kline_table)):
-            if Kline_table["交易月份"][i] == "交易月份": Kline_table.drop(i, inplace = True)
-            else: Kline_table["交易月份"][i] = ("20" + Kline_table["交易月份"][i]).replace("M", "-") + "-01"
+            if Kline_table["交易月份"][i] == "交易月份":
+                Kline_table.drop(i, inplace = True)
+            else:
+                Kline_table["交易月份"][i] = ("20" + Kline_table["交易月份"][i]).replace("M", "-") + "-01"
 
         Kline_table["交易月份"] = [i / 10**6 for i in pd.to_datetime(Kline_table["交易月份"]).astype(int)]
 

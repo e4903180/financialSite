@@ -16,12 +16,8 @@ class MethodBase():
         self._annotations_labels = []
     
     @abstractmethod
-    def detect_highchart(self):
-        pass
-
-    @abstractmethod
-    def detect_alert(self):
-        pass
+    def detect(self):
+        raise NotImplementedError("detect not implement")
 
 
 class Method1(MethodBase):
@@ -31,7 +27,7 @@ class Method1(MethodBase):
     def __init__(self) -> None:
         super().__init__()
 
-    def detect_highchart(self, row_data : pd.DataFrame, volume : List, ma : List, ma_len : int, table_data : Dict) -> Dict:
+    def detect(self, row_data : pd.DataFrame, volume : List, ma : List, ma_len : int, table_data : Dict) -> Dict:
         """Calculate support resistance through method1, then transfer to highchart format
         
             Args:
@@ -93,48 +89,6 @@ class Method1(MethodBase):
             "table_data" : { "data" : table_data }
         }
 
-    def detect_alert(self, row_data : pd.DataFrame, ma : List, ma_len : int, table_data : Dict) -> Dict:
-        """Calculate support resistance through method1, then transfer to alert format
-        
-            Args:
-                row_data : (pd.DataFrame) Kline data
-                ma : (List) ma data
-                ma_len : (int) ma length
-                table_data : (Dict) Kline data
-            
-            Return:
-                result : (Dict) Json format of result
-        """
-
-        # Traverse ma to calculate BIAS
-        for i in range(ma_len, len(ma), 1):
-            temp = (float(row_data["Close"][i]) - ma[i]) / ma[i]
-            
-            if temp >= 0:
-                self._pos_BIAS.append(round(float(temp), 4))
-            else:
-                self._neg_BIAS.append(round(float(temp), 4))
-
-        self._pos_BIAS.sort()
-        self._neg_BIAS.sort()
-
-        # Define threshold of support resistance
-        pos_BIAS_val = float(self._pos_BIAS[int(len(self._pos_BIAS) * 0.95) - 1])
-        neg_BIAS_val = float(self._neg_BIAS[int(len(self._neg_BIAS) * 0.05) - 1])
-
-        # Traverse ma to calculate support resistance and cross detect
-        for i in range(ma_len, len(ma), 1):
-            self._support.append(round((1 + neg_BIAS_val) * ma[i], 2))
-            self._ma_o.append(round(ma[i], 2))
-            self._resistance.append(round((1 + pos_BIAS_val) * ma[i], 2))
-
-        return {
-            "support" : self._support,
-            "resistance" : self._resistance,
-            "ma" : self._ma_o,
-            "table_data" : pd.DataFrame.from_records(table_data)
-        }
-
 
 class Method2(MethodBase):
     """Calculate support resistance through method2
@@ -143,7 +97,7 @@ class Method2(MethodBase):
     def __init__(self) -> None:
         super().__init__()
 
-    def detect_highchart(self, row_data : pd.DataFrame, volume : List, ma : List, ma_len : int, table_data : Dict) -> Dict:
+    def detect(self, row_data : pd.DataFrame, volume : List, ma : List, ma_len : int, table_data : Dict) -> Dict:
         """Calculate support resistance through method2, then transfer to highchart format
         
             Args:
@@ -188,40 +142,6 @@ class Method2(MethodBase):
             "table_data" : { "data" : table_data }
         }
 
-    def detect_alert(self, row_data : pd.DataFrame, ma : List, ma_len : int, table_data : Dict) -> Dict:
-        """Calculate support resistance through method2, then transfer to alert format
-        
-            Args:
-                row_data : (pd.DataFrame) Kline data
-                ma : (List) ma data
-                ma_len : (int) ma length
-                table_data : (Dict) Kline data
-            
-            Return:
-                result : (Dict) result
-        """
-
-        # Traverse ma to calculate BIAS
-        for i in range(ma_len, len(ma), 1):
-            if row_data["Close"][i] < ma[i]:
-                temp = (float(row_data["Close"][i]) - ma[i]) / ma[i]
-                self._neg_BIAS.append(temp)
-
-        # Define threshold of support
-        neg_BIAS_std = np.std(self._neg_BIAS)
-
-        # Traverse ma to calculate support and cross detect
-        for i in range(ma_len, len(ma), 1):
-            temp = ma[i] * (1 + (np.mean(self._neg_BIAS) - 2 * neg_BIAS_std))
-            self._support.append(round(temp, 2))
-            self._ma_o.append(round(ma[i], 2))
-
-        return {
-            "support" : self._support,
-            "ma" : self._ma_o,
-            "table_data" : pd.DataFrame.from_records(table_data)
-        }
-
 
 class Method3(MethodBase):
     """Calculate support resistance through method3
@@ -232,7 +152,7 @@ class Method3(MethodBase):
         self._support1 = []
         self._support2 = []
     
-    def detect_highchart(self, row_data : pd.DataFrame, volume : List, ma : List, ma_len : int, table_data : Dict) -> Dict:
+    def detect(self, row_data : pd.DataFrame, volume : List, ma : List, ma_len : int, table_data : Dict) -> Dict:
         """Calculate support resistance through method3, then transfer to highchart format
         
             Args:
@@ -292,49 +212,6 @@ class Method3(MethodBase):
             "annotations_labels" : self._annotations_labels,
             "table_data" : { "data" : table_data }
         }
-    
-    def detect_alert(self, row_data : pd.DataFrame, ma : List, ma_len : int, table_data : Dict) -> Dict:
-        """Calculate support resistance through method3, then transfer to alert format
-        
-            Args:
-                row_data : (pd.DataFrame) Kline data
-                ma : (List) ma data
-                ma_len : (int) ma length
-                table_data : (Dict) Kline data
-            
-            Return:
-                result : (Dict) result
-        """
-
-        # Calculate average of volume through ma len
-        vol_avg = row_data["Volume"][len(row_data) - 2 - ma_len: len(row_data) - 2].sum() / ma_len
-
-        # Detect cross average volume
-        over_volume = 1 if row_data["Volume"][len(row_data) - 1] > 2 * vol_avg else 0
-
-        # Traverse ma to calculate BIAS
-        for i in range(ma_len, len(ma), 1):
-            if row_data["Close"][i] < ma[i]:
-                temp = (float(row_data["Close"][i]) - ma[i]) / ma[i]
-                self._neg_BIAS.append(temp)
-
-        # Define threshold of support
-        self._neg_BIAS.sort()
-        neg_BIAS_1 = self._neg_BIAS[int(len(self._neg_BIAS) * 0.01) - 1]
-        neg_BIAS_5 = self._neg_BIAS[int(len(self._neg_BIAS) * 0.05) - 1]
-
-        # Traverse ma to calculate support and cross detect
-        for i in range(ma_len, len(ma), 1):
-            self._support1.append(round(ma[i] + ma[i] * neg_BIAS_1, 2))
-            self._support2.append(round(ma[i] + ma[i] * neg_BIAS_5, 2))
-            self._ma_o.append(round(ma[i], 2))
-
-        return {
-            "support" : {"support1" : self._support1, "support2" : self._support2},
-            "over" : over_volume,
-            "ma" : self._ma_o,
-            "table_data" : pd.DataFrame.from_records(table_data)
-        }
 
 
 class SupportResistance(Method1, Method2, Method3):
@@ -371,18 +248,6 @@ class SupportResistance(Method1, Method2, Method3):
         if self._row_data.empty:
             self._row_data = yf.download(self._stock_num + ".TW", start = self._start_date, progress = False, show_errors = False)
 
-        if (self._row_data.empty) or (len(self._row_data) < 2): 
-            print(self.handle_to_json({
-                "support" : [],
-                "resistance" : [],
-                "Kline" : [],
-                "volume": [],
-                "ma" : [],
-                "annotations_labels" : []
-            }))
-            sys.stdout.flush()
-            sys.exit(0)
-
         self._row_data = self._row_data.reset_index().drop(columns = ["Adj Close"])
         self._row_data["Open"] = self._row_data["Open"].round(2)
         self._row_data["High"] = self._row_data["High"].round(2)
@@ -405,28 +270,22 @@ class SupportResistance(Method1, Method2, Method3):
         elif self._ma_type == "sma":
             self._ma = talib.SMA(self._row_data["Close"], timeperiod = self._ma_len)
     
-    def run_highchart(self, method : str) -> Dict:
+    def run(self, method : str) -> Dict:
+        """Run method
 
+            Args:
+                method : (str) method
+                type : (str) highcart or alert
+            Retuen:
+                result : (Dict) result of the support resistance
+        """
         if method == "method1":
-            result = Method1.detect_highchart(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
+            result = Method1.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 
         elif method == "method2":
-            result = Method2.detect_highchart(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
+            result = Method2.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 
         elif method == "method3":
-            result = Method3.detect_highchart(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
-
-        return result
-
-    def run_alert(self, method : str) -> Dict:
-
-        if method == "method1":
-            result = Method1.detect_alert(self, self._row_data, self._ma, self._ma_len, self._table_data)
-
-        elif method == "method2":
-            result = Method2.detect_alert(self, self._row_data, self._ma, self._ma_len, self._table_data)
-
-        elif method == "method3":
-            result = Method3.detect_alert(self, self._row_data, self._ma, self._ma_len, self._table_data)
+            result = Method3.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 
         return result

@@ -96,6 +96,9 @@ dataRouter.get("/cpi_ppi", StockTool.cpi_ppi)
 
 /* Subscribe router */
 dataRouter.get("/get_sub", Sub.get_sub)
+dataRouter.get("/get_user_notify_type", Sub.get_user_notify_type)
+dataRouter.put("/update_user_lineNotify_type", Sub.update_user_lineNotify_type)
+dataRouter.put("/update_user_emailNotify_type", Sub.update_user_emailNotify_type)
 dataRouter.delete("/cancel_sub", Sub.delete_sub)
 dataRouter.post("/handle_support_resistance_sub", Sub.handle_support_resistance_sub)
 dataRouter.post("/handle_pricing_strategy_sub", Sub.handle_pricing_strategy_sub)

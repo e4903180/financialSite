@@ -27,7 +27,8 @@ function DatabaseSearchComp() {
     const [pageSize4, setPageSize4] = useState(10);
     const [columnTable, set_colume_table] = useState([]);
     const [input1Error, set_input1Error] = useState(false);
-    const [ticker, setTicker] = useState(param.stock_num_name);
+    const [init, setInit] = useState(false)
+    const [ticker, setTicker] = useState("");
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
     const [input4, setInput4] = useState("");
@@ -35,18 +36,8 @@ function DatabaseSearchComp() {
 
     const autocom = AutoCom.AutoComList;
 
-    async function submit(e){
-        e.preventDefault()
-        setLoading(true)
-
-        setData1([])
-        setData2([])
-        setData3([])
-        setData4([])
-        setPage1(0)
-        set_colume_table([])
-
-        if((ticker !== "") && (!autocom.map(element => element.stock_num_name).includes(ticker))){
+    const searchHandler = (value) => {
+        if((value !== "") && (!autocom.map(element => element.stock_num_name).includes(value))){
             set_input1Error(true)
             setLoading(false)
         }else{
@@ -56,7 +47,7 @@ function DatabaseSearchComp() {
                 setSearch(false)
 
                 axios.post(rootApiIP + "/data/financial_search", {
-                    "stock_num_name" : ticker,
+                    "stock_num_name" : value,
                     "startDate" : input2,
                     "endDate" : input3,
                     "investmentCompany" : input4,
@@ -73,7 +64,7 @@ function DatabaseSearchComp() {
                 })
 
                 axios.post(rootApiIP + "/data/post_board_search", {
-                    "stock_num_name" : ticker,
+                    "stock_num_name" : value,
                     "startDate" : input2,
                     "endDate" : input3,
                     "recommend" : "",
@@ -91,7 +82,7 @@ function DatabaseSearchComp() {
                 })
 
                 axios.post(rootApiIP + "/data/lineMemo_search", {
-                    "stock_num_name" : ticker,
+                    "stock_num_name" : value,
                     "startDate" : input2,
                     "endDate" : input3,
                 }).then(res => {
@@ -107,7 +98,7 @@ function DatabaseSearchComp() {
                 })
 
                 axios.post(rootApiIP + "/data/calender_search", {
-                    "stock_num_name" : ticker,
+                    "stock_num_name" : value,
                     "startDate" : input2,
                     "endDate" : input3,
                 }).then(res => {
@@ -127,7 +118,7 @@ function DatabaseSearchComp() {
                 switch(input5){
                     case "financialData" : {
                         axios.post(rootApiIP + "/data/financial_search", {
-                            "stock_num_name" : ticker,
+                            "stock_num_name" : value,
                             "startDate" : input2,
                             "endDate" : input3,
                             "investmentCompany" : input4,
@@ -147,7 +138,7 @@ function DatabaseSearchComp() {
 
                     case "post_board_memo" : {
                         axios.post(rootApiIP + "/data/post_board_search", {
-                            "stock_num_name" : ticker,
+                            "stock_num_name" : value,
                             "startDate" : input2,
                             "endDate" : input3,
                             "recommend" : "",
@@ -170,7 +161,7 @@ function DatabaseSearchComp() {
 
                     case "lineMemo" : {
                         axios.post(rootApiIP + "/data/lineMemo_search", {
-                            "stock_num_name" : ticker,
+                            "stock_num_name" : value,
                             "startDate" : input2,
                             "endDate" : input3,
                         }).then(res => {
@@ -191,7 +182,7 @@ function DatabaseSearchComp() {
 
                     case "calender" : {
                         axios.post(rootApiIP + "/data/calender_search", {
-                            "stock_num_name" : ticker,
+                            "stock_num_name" : value,
                             "startDate" : input2,
                             "endDate" : input3,
                         }).then(res => {
@@ -216,6 +207,24 @@ function DatabaseSearchComp() {
         }
     }
 
+    async function submit(e){
+        e.preventDefault()
+
+        setData1([])
+        setData2([])
+        setData3([])
+        setData4([])
+        setPage1(0)
+        set_colume_table([])
+
+        if(!init){
+            searchHandler(param.stock_num_name)
+            setInit(true)
+        }else{
+            searchHandler(ticker)
+        }
+    }
+
     useEffect(() => {
         axios.get(rootApiIP + "/data/allData")
         .then(res => {
@@ -229,7 +238,7 @@ function DatabaseSearchComp() {
 
     return (
         <>
-            <div className = 'row mx-auto py-3' style = {{ width : "40vw" }}>
+            <div className = 'row mx-auto py-5' style = {{ width : "40vw" }}>
                 <div className = 'col-md-10 mx-auto py-3'>
                     <h3 className = "display-6 text-center">資料庫總表</h3>
 
@@ -255,7 +264,7 @@ function DatabaseSearchComp() {
                         <div className = 'form-group row'>
                             <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
                             <div className = 'col-md-3'>
-                                <TickerSearchComp init = {ticker} setTicker = {setTicker}/>
+                                <TickerSearchComp init = {param.stock_num_name} setTicker = {setTicker}/>
                             </div>
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>
@@ -302,7 +311,7 @@ function DatabaseSearchComp() {
 
                         <div className = 'form-group pt-4 text-center'>
                             { input1Error ? <p style = {{ color : "red" }}>股票代號&名稱格式或資料表錯誤</p> : <></> }
-                            {loading ? <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }} disabled><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button> : <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }}>搜尋</button>}
+                            { loading ? <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }} disabled><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button> : <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }}>搜尋</button>}
                         </div>
                     </form>
                 </div>

@@ -11,13 +11,11 @@ function PricingStratagyCard(props) {
 
     const [ticker, setTicker] = useState("")
     const [inputError, setInputError] = useState(false);
-    const [method, setMethod] = useState("股利法");
     const [startYear, setStartYear] = useState(10);
     const [endDate, setEndDate] = useState("");
-    const [alertCondition, setAlertCondition] = useState("便宜價");
+    const [alertCondition, setAlertCondition] = useState("低於便宜價");
     const [subed, setSubed] = useState(false);
     const [open, setOpen] = useState(false);
-    const [subType, setSubType] = useState("Line");
 
     const autocom = AutoCom.AutoComList;
 
@@ -32,8 +30,6 @@ function PricingStratagyCard(props) {
                     "stockNum" : ticker.split(" ")[0],
                     "startYear" : startYear,
                     "endDate" : endDate,
-                    "method" : method,
-                    "subType" : subType,
                     "alertCondition" : alertCondition
                 })
 
@@ -60,7 +56,7 @@ function PricingStratagyCard(props) {
         }
     }
 
-    const conditionSwitch = ["便宜價", "合理價", "昂貴價"]
+    const conditionSwitch = ["低於便宜價", "便宜價到合理價", "合理價到昂貴價", "高於昂貴價"]
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -79,18 +75,6 @@ function PricingStratagyCard(props) {
                             <label htmlFor = "ticker" className = "col-md-4 col-form-label">股票代號&名稱:</label>
                             <div className = 'col-md-8'>
                                 <TickerSearchComp init = "" setTicker = { setTicker } />
-                            </div>
-                        </div>
-
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "method" className = "col-md-4 col-form-label">定價方法:</label>
-                            <div className = 'col-md-8'>
-                                <select id = "method" className = "form-select" onChange = {e => setMethod(e.target.value)} defaultValue = {10}>
-                                    <option value = "股利法">股利法</option>
-                                    <option value = "高低價法">高低價法</option>
-                                    <option value = "本益比法">本益比法</option>
-                                    <option value = "本淨比法">本淨比法</option>
-                                </select>
                             </div>
                         </div>
 
@@ -123,16 +107,6 @@ function PricingStratagyCard(props) {
                             <div className = 'col-md-6'>
                                 <select id = "condition" className = "form-select" onChange = {e => setAlertCondition(e.target.value)}>
                                     {conditionSwitch.map((ele, idx) => {return <option key = {idx} value = {ele}>{ele}</option>})}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "subType" className = "col-md-4 col-form-label">通知方式:</label>
-                            <div className = 'col-md-6'>
-                                <select id = "subType" className = "form-select" onChange = {e => setSubType(e.target.value)}>
-                                    <option value = "Line">Line</option>
-                                    <option value = "Email">Email</option>
                                 </select>
                             </div>
                         </div>

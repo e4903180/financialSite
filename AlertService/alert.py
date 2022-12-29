@@ -1,66 +1,207 @@
-# import sys
-# sys.path.append("/home/cosbi/financialSite")
-
 from utils.SupportResistanceHandler import SupportResistanceHandler
+from utils.PerRiverHandler import PerRiverHandler
+from utils.StockPriceDecisionHandler import StockPriceDecisionHandler
+from gmailService.constant import GMAIL_ACCOUNT
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+from pdfMaker import PdfMaker
 import pandas as pd
 from linebot import LineBotApi
-import configparser
-# from pythonBackend.backend.api.PythonTool.StockPriceDecision import *
-# from pythonBackend.backend.api.PythonTool.PER_River import PerRiver
+from linebot.models import TextSendMessage
 import configparser
 import MySQLdb
 import MySQLdb.cursors
-from typing import Dict
+import os
+from gmailService.gmailService import GmailService
 
 config = configparser.ConfigParser()
 config.read('../LineBot/config.ini')
 
 line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
 
-class AlertService(SupportResistanceHandler):
-    def __init__(self) -> None:
-        self.SRH = SupportResistanceHandler()
+class AlertService():
+    """Create the analysis research by user's subscribe settings,
+        and notify by line or email
+    """
 
+    def __init__(self) -> None:
+        self._GS = GmailService()
         self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
-        self._sub_list = None
+        self._user_list = None
+        self._subscribe_list = None
 
         config = configparser.ConfigParser()
         config.read('../LineBot/config.ini')
 
-        self.line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
+        self._line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
+    
+    def init_dir(self) -> None:
+        """Clear the image, pdf and html directory
+
+            Args :
+                None
+            Return :
+                None
+        """
+        for file in os.listdir("/home/cosbi/financialSite/AlertService/html"):
+            os.remove("/home/cosbi/financialSite/AlertService/html/" + file)
+
+        for file in os.listdir("/home/cosbi/financialSite/AlertService/image"):
+            os.remove("/home/cosbi/financialSite/AlertService/image/" + file)
+
+        for file in os.listdir("/home/cosbi/financialSite/AlertService/pdf"):
+            os.remove("/home/cosbi/financialSite/AlertService/pdf/" + file)
 
     def _get_sub_list(self) -> None:
-        sql = 'SELECT * FROM subscribe'
+        """Get subscribe list from DB
+
+            Args :
+                None
+            Return :
+                None
+        """
+
+        sql = f'SELECT * FROM subscribe'
         self._cursor.execute(sql)
         self._db.commit()
 
-        self._sub_list = pd.DataFrame.from_dict(self._cursor.fetchall())
+        self._subscribe_list =  pd.DataFrame.from_dict(self._cursor.fetchall())
+    
+    def _get_user(self) -> None:
+        """Get user list from DB
 
-    def _get_email_lineId(self, username : str) -> Dict:
-        sql = f'SELECT email, lineId FROM user WHERE userName="{username}"'
+            Args :
+                None
+            Return :
+                None
+        """
+
+        sql = 'SELECT userName, email, lineId, emailNotify, lineNotify FROM user'
         self._cursor.execute(sql)
         self._db.commit()
 
-        return self._cursor.fetchall()[0]
+        self._user_list = pd.DataFrame.from_dict(self._cursor.fetchall())
+
+    def _send_support_resistance_mail(self, subject : str, username : str, email : str) -> None:
+        """Send the analysis research through gmail service
+
+            Args :
+                subject : (str) subject of the mail
+                username : (str) username
+                email : (str) user's email
+
+            Return :
+                None
+        """
+
+        content = MIMEMultipart()
+        content["subject"] = subject
+        content["from"] =  GMAIL_ACCOUNT
+        content["to"] = email
+        content.attach(MIMEText(f"附件為您在我們網站訂閱的內容\n可互動圖表連結在此，連結有效時間為一天\n"))
+        content.attach(MIMEText(f'<a href="http://140.116.214.154:3847/api/analysis_html_download?filename={username}.html" target="_blank" rel="noreferrer noopener" download="{username}.html">http://140.116.214.154:3847/api/analysis_html_download?filename={username}.html</a>', _subtype = "html"))
+        content.attach(MIMEText(f"\n如遇到連結無法正常開啟，請複製連結到新分頁再開啟"))
+
+        with open(f"./pdf/{username}-分析報告.pdf", "rb") as f:
+            pdf_attach = MIMEApplication(f.read(), _subtype = "pdf", Name = username + '-分析報告.pdf')
+
+        content.add_header('content-disposition', 'attachment')
+        content.attach(pdf_attach)
+
+        self._GS.send_mail(content)
+
+    def _send_support_resistance_line(self, filename : str, username : str, userId : str) -> None:
+        """Send the analysis research through line service
+
+            Args :
+                filename : (str) analysis research filename
+                username : (str) username
+                userId : (str) user's line Id
+
+            Return :
+                None
+        """
+
+        content = "FinancialCosbi 分析報告通知\n詳情請下載分析報告\n檔案只會保持一天請下載以保留"
+        content += "http://140.116.214.154:3847/api/analysis_download?filename={filename}"
+        line_bot_api.push_message(userId, TextSendMessage(text = content))
+
+        content = f"可互動圖表下載\nhttp://140.116.214.154:3847/api/analysis_html_download?filename={username}.html"
+        line_bot_api.push_message(userId, TextSendMessage(text = content))
 
     def detect(self) -> None:
+        """Traverse subscribe list, creating analysis research and send to the user
+
+            Args :
+                None
+            Return :
+                None
+        """
+
+        # Init image and pdf directory
+        self.init_dir()
+
+        # Get user list
+        self._get_user()
+
+        # Get subscribe list
         self._get_sub_list()
         
-        for i in range(len(self._sub_list)):
-            temp = self._sub_list.iloc[i]
-            email_line = self._get_email_lineId(temp["username"])
+        # If suscribe list is empty, then return
+        if len(self._subscribe_list) == 0:
+            return
 
-            if temp["strategy"] == "天花板地板線":
-                self.SRH.handle_support_resistance(line_bot_api, temp, email_line)
+        # Traverse all user
+        for i in range(len(self._user_list)):
+            username = self._user_list.iloc[i]["userName"]
+            subsribe = self._subscribe_list[self._subscribe_list["username"] == username]
+            
+            # Check if user subscribe exist
+            if len(subsribe) > 0:
+                pdfMaker = PdfMaker(username)
+                SRH = SupportResistanceHandler(pdfMaker)
+                PRH = PerRiverHandler(pdfMaker)
+                SPDH = StockPriceDecisionHandler(pdfMaker)
 
-            elif temp["strategy"] == "本益比河流圖":
-                pass
+                # Create research html
+                f = open(f"./html/{username}.html", "w")
+                f.write("<html><head></head><body>")
 
-            elif temp["strategy"] == "定價策略":
-                pass
+                # Traverse user's subscribe
+                for j in range(len(subsribe)):
+                    temp = subsribe.iloc[j]
+                
+                    if temp["strategy"] == "天花板地板線":
+                        SRH.handle_support_resistance(temp, f)
+
+                    elif temp["strategy"] == "本益比河流圖":
+                        PRH.handle_per_river(temp, f)
+
+                    elif temp["strategy"] == "股票定價策略":
+                        SPDH.handle_stock_pricing_decision(temp, f)
+
+                # Add html end
+                f.write("</body></html>")
+                f.close()
+
+                # Create research
+                pdfMaker.output()
+                
+                # If email notify is true, using gmail service
+                if self._user_list.iloc[i]["emailNotify"]:
+                    self._send_support_resistance_mail("FinancialCosbi 分析報告通知",
+                                                        username,
+                                                        self._user_list.iloc[i]["email"])
+
+                # If line notify is true, using line service
+                if self._user_list.iloc[i]["lineNotify"]:
+                    self._send_support_resistance_line(username + '-分析報告.pdf',
+                                                        username,
+                                                        self._user_list.iloc[i]["lineId"])
 
 if __name__ == "__main__":
     AS = AlertService()

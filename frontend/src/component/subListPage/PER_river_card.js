@@ -12,10 +12,9 @@ function PerRiverCard(props) {
     const [ticker, setTicker] = useState("")
     const [inputError, setInputError] = useState(false);
     const [endDate, setEndDate] = useState("");
-    const [alertCondition, setAlertCondition] = useState("便宜價");
+    const [alertCondition, setAlertCondition] = useState("低於便宜價");
     const [subed, setSubed] = useState(false);
     const [open, setOpen] = useState(false);
-    const [subType, setSubType] = useState("Line");
 
     const autocom = AutoCom.AutoComList;
 
@@ -29,7 +28,6 @@ function PerRiverCard(props) {
                 await axios.post(rootApiIP + "/data/handle_per_river_sub", {
                     "stockNum" : ticker.split(" ")[0],
                     "endDate" : endDate,
-                    "subType" : subType,
                     "alertCondition" : alertCondition
                 })
 
@@ -56,7 +54,7 @@ function PerRiverCard(props) {
         }
     }
 
-    const conditionSwitch = ["便宜價", "合理價", "昂貴價"]
+    const conditionSwitch = ["低於便宜價", "便宜價到合理價", "合理價到昂貴價", "高於昂貴價"]
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -90,16 +88,6 @@ function PerRiverCard(props) {
                             <div className = 'col-md-6'>
                                 <select id = "condition" className = "form-select" onChange = {e => setAlertCondition(e.target.value)}>
                                     {conditionSwitch.map((ele, idx) => {return <option key = {idx} value = {ele}>{ele}</option>})}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "subType" className = "col-md-4 col-form-label">通知方式:</label>
-                            <div className = 'col-md-6'>
-                                <select id = "subType" className = "form-select" onChange = {e => setSubType(e.target.value)}>
-                                    <option value = "Line">Line</option>
-                                    <option value = "Email">Email</option>
                                 </select>
                             </div>
                         </div>

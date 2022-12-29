@@ -1,4 +1,4 @@
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponse
 from rest_framework import status
  
 from rest_framework.decorators import api_view
@@ -10,6 +10,36 @@ from .PythonTool.FRED.CPI_PPI_PCE import CpiPpiPce
 from .DataBaseManager import DataBaseManager
 
 DB = DataBaseManager()
+
+@api_view(['GET'])
+def analysis_download(request):
+    if request.method == "GET":
+        filename = request.query_params.get("filename")
+        
+        try:
+            FilePointer = open("/home/cosbi/financialSite/AlertService/pdf/" + filename, "rb")
+            response = HttpResponse(FilePointer, content_type = 'application/pdf')
+            response['Content-Disposition'] = f'attachment; filename={filename}'
+
+            return response
+        except Exception as e:
+            print(e)
+            return JsonResponse({"message" :"File not existed"}, status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def analysis_html_download(request):
+    if request.method == "GET":
+        filename = request.query_params.get("filename")
+
+        try:
+            FilePointer = open("/home/cosbi/financialSite/AlertService/html/" + filename, "rb")
+            response = HttpResponse(FilePointer, content_type = 'text/html')
+            response['Content-Disposition'] = f'attachment; filename={filename}'
+
+            return response
+        except Exception as e:
+            print(e)
+            return JsonResponse({"message" :"File not existed"}, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def pricing_strategy(request):
@@ -45,7 +75,7 @@ def support_resistance_strategy(request):
             
             SR.get_data_yfinance()
             
-            return JsonResponse(SR.run_highchart(request.query_params.get("method")), status = status.HTTP_200_OK)
+            return JsonResponse(SR.run(request.query_params.get("method")), status = status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)

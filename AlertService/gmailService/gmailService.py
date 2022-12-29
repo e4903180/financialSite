@@ -20,20 +20,3 @@ class GmailService():
             except smtplib.SMTPRecipientsRefused as e:
                 with open("/home/cosbi/桌面/financialData/SMTP/" + str(datetime.date.today()) + '.log', 'a') as f:
                     f.write(str(e))
-
-if __name__ == "__main__":
-    GS = GmailService()
-
-    content = MIMEMultipart()  #建立MIMEMultipart物件
-    content["subject"] = "天花板地板線分析報告"  #郵件標題
-    content["from"] = GMAIL_ACCOUNT  #寄件者
-    content["to"] = "leo4707@gmail.com" #收件者
-    content.attach(MIMEText("附件為您在我們網站訂閱的內容"))  #郵件內容
-
-    with open("./pdf/GFG.pdf", "rb") as f:
-        pdf_attach = MIMEApplication(f.read(), _subtype = "pdf", Name = 'GFG.pdf')
-
-    content.add_header('content-disposition', 'attachment')
-    content.attach(pdf_attach)
-
-    GS.send_mail(content)

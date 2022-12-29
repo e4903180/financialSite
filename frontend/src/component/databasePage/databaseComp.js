@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 import { rootApiIP } from '../../constant'
 import { columns, columns1, columns2, columns3, columns4 } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';

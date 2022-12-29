@@ -9,16 +9,18 @@ exports.handle_support_resistance_sub = async function(req, res){
     var maLen = req.body.maLen
     var maType = req.body.maType
     var method = req.body.method
-    var subType = req.body.subType
     var alertCondition = req.body.alertCondition
     var Today = new Date();
 
     var year = Today.getFullYear().toString()
     var month = (Today.getMonth() + 1).toString().padStart(2, '0');
     var day = Today.getDate().toString().padStart(2, '0');
-    var Time = year + "-" + month + "-" + day
-    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND subType=? AND content=? AND strategy=? AND alertCondition=?`
-    let param = [userName, endDate, stock_num, subType, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
+    var hour = Today.getHours().toString().padStart(2, '0');
+    var min = Today.getMinutes().toString().padStart(2, '0');
+    var sec = Today.getSeconds().toString().padStart(2, '0');
+    var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
+    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND content=? AND strategy=? AND alertCondition=?`
+    let param = [userName, endDate, stock_num, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
     
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -30,8 +32,8 @@ exports.handle_support_resistance_sub = async function(req, res){
         return res.status(400).send("error")
     }
     
-    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, subType, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    param = [userName, Time, endDate, stock_num, subType, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    param = [userName, Time, endDate, stock_num, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
 
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -46,19 +48,20 @@ exports.handle_pricing_strategy_sub = async function(req, res){
     var userName = req.session.userName
     var stock_num = req.body.stockNum
     var startYear = req.body.startYear
-    var method = req.body.method
     var endDate = req.body.endDate
-    var subType = req.body.subType
     var alertCondition = req.body.alertCondition
     var Today = new Date();
 
     var year = Today.getFullYear().toString()
     var month = (Today.getMonth() + 1).toString().padStart(2, '0');
     var day = Today.getDate().toString().padStart(2, '0');
-    var Time = year + "-" + month + "-" + day
+    var hour = Today.getHours().toString().padStart(2, '0');
+    var min = Today.getMinutes().toString().padStart(2, '0');
+    var sec = Today.getSeconds().toString().padStart(2, '0');
+    var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
 
-    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND subType=? AND content=? AND strategy=? AND alertCondition=?`
-    let param = [userName, endDate, stock_num, subType, "歷史幾年資料" + startYear + "_" + method, "股票定價策略", alertCondition]
+    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND content=? AND strategy=? AND alertCondition=?`
+    let param = [userName, endDate, stock_num, "歷史幾年資料" + startYear, "股票定價策略", alertCondition]
 
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -70,8 +73,8 @@ exports.handle_pricing_strategy_sub = async function(req, res){
         return res.status(400).send("error")
     }
     
-    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, subType, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    param = [userName, Time, endDate, stock_num, subType, "歷史幾年資料" + startYear + "_" + method, "股票定價策略", alertCondition]
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    param = [userName, Time, endDate, stock_num, "歷史幾年資料" + startYear, "股票定價策略", alertCondition]
     
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -86,17 +89,19 @@ exports.handle_per_river_sub = async function(req, res){
     var userName = req.session.userName
     var stock_num = req.body.stockNum
     var endDate = req.body.endDate
-    var subType = req.body.subType
     var alertCondition = req.body.alertCondition
     var Today = new Date();
 
     var year = Today.getFullYear().toString()
     var month = (Today.getMonth() + 1).toString().padStart(2, '0');
     var day = Today.getDate().toString().padStart(2, '0');
-    var Time = year + "-" + month + "-" + day
+    var hour = Today.getHours().toString().padStart(2, '0');
+    var min = Today.getMinutes().toString().padStart(2, '0');
+    var sec = Today.getSeconds().toString().padStart(2, '0');
+    var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
 
-    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND subType=? AND strategy=? AND alertCondition=?`
-    let param = [userName, endDate, stock_num, subType, "本益比河流圖", alertCondition]
+    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND strategy=? AND alertCondition=?`
+    let param = [userName, endDate, stock_num, "本益比河流圖", alertCondition]
     
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -108,8 +113,9 @@ exports.handle_per_river_sub = async function(req, res){
         return res.status(400).send("error")
     }
     
-    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, subType, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    param = [userName, Time, endDate, stock_num, subType, "", "本益比河流圖", alertCondition]
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    param = [userName, Time, endDate, stock_num, "", "本益比河流圖", alertCondition]
+
     try {
         const [rows, fields] = await con.promise().query(sql, param);
     } catch (error) {
@@ -120,11 +126,11 @@ exports.handle_per_river_sub = async function(req, res){
 }
 
 exports.get_sub = async function(req, res){
-    var userName = req.session.userName
+    let sql = `SELECT * FROM subscribe WHERE username=?`
+    let param = [req.session.userName]
 
-    let sql = `SELECT * FROM subscribe WHERE username="${userName}"`
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(sql, param);
         return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")
@@ -132,13 +138,11 @@ exports.get_sub = async function(req, res){
 }
 
 exports.delete_sub = async function(req, res){
-    var userName = req.session.userName
-    var subTime = req.body.subTime
-
-    let sql = `DELETE FROM subscribe WHERE username = "${userName}" AND subTime = "${subTime}"`
+    let sql = `DELETE FROM subscribe WHERE username = ? AND subTime = ?`
+    let param = [req.session.userName, req.body.subTime]
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(sql, param);
 
         return res.status(200).send(rows)
     } catch (error) {
@@ -146,3 +150,45 @@ exports.delete_sub = async function(req, res){
         return res.status(400).send("error")
     }
 }
+
+exports.get_user_notify_type = async function(req, res){
+    let sql = `SELECT lineNotify, emailNotify FROM user WHERE userName=?`
+    let param = [req.session.userName]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+
+        return res.status(400).send("error")
+    }
+}
+
+exports.update_user_lineNotify_type = async function(req, res){
+    let sql = `UPDATE user SET lineNotify=? WHERE userName=?`
+    let param = [req.body.switch, req.session.userName]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send("success")
+    } catch (error) {
+
+        return res.status(400).send("error")
+    }
+}
+
+exports.update_user_emailNotify_type = async function(req, res){
+    let sql = `UPDATE user SET emailNotify=? WHERE userName=?`
+    let param = [req.body.switch, req.session.userName]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).send("success")
+    } catch (error) {
+
+        return res.status(400).send("error")
+    }
+} 

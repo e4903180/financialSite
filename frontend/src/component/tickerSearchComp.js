@@ -11,7 +11,7 @@ function TickerSearchComp(props) {
     const handleSearch = (pattern) => {
         setIsLoading(true);
         props.setTicker(pattern)
-
+        
         axios.post(rootApiIP + "/data/ticker_search", {
             "pattern" : pattern
         })

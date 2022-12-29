@@ -26,7 +26,6 @@ function SupportResisCard(props) {
     const [method, setMethod] = useState("method1");
     const [maLen, setMaLen] = useState(20);
     const [maType, setMaType] = useState("sma");
-    const [subType, setSubType] = useState("Line");
     const [alertCondition, setAlertCondition] = useState("突破天花板線");
     const [subed, setSubed] = useState(false);
     const [open, setOpen] = useState(false);
@@ -59,7 +58,6 @@ function SupportResisCard(props) {
                     "maType" : maType,
                     "maLen" : maLen,
                     "method" : method,
-                    "subType" : subType,
                     "alertCondition" : alertCondition
                 })
 
@@ -144,7 +142,10 @@ function SupportResisCard(props) {
                         <div className = 'form-group row py-3'>
                             <label htmlFor = "method" className = "col-md-4 col-form-label">計算方式:</label>
                             <div className = 'col-md-4'>
-                                <select id = "method" className = "form-select" onChange = {e => setMethod(e.target.value)}>
+                                <select id = "method" className = "form-select" onChange = {e => {
+                                    setMethod(e.target.value)
+                                    setAlertCondition(conditionSwitch[e.target.value][0])
+                                    }}>
                                     <option value = "method1">方法一</option>
                                     <option value = "method2">方法二</option>
                                     <option value = "method3">方法三</option>
@@ -157,16 +158,6 @@ function SupportResisCard(props) {
                             <div className = 'col-md-6'>
                                 <select id = "condition" className = "form-select" onChange = {e => setAlertCondition(e.target.value)}>
                                     {conditionSwitch[method].map((ele, idx) => {return <option key = {idx} value = {ele}>{ele}</option>})}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "subType" className = "col-md-4 col-form-label">通知方式:</label>
-                            <div className = 'col-md-6'>
-                                <select id = "subType" className = "form-select" onChange = {e => setSubType(e.target.value)}>
-                                    <option value = "Line">Line</option>
-                                    <option value = "Email">Email</option>
                                 </select>
                             </div>
                         </div>

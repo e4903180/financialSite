@@ -19,7 +19,7 @@ import SupportResistanceComp from './component/support_resistance_page/support_r
 // import ScrollTopButton from './component/scrollTopButton/ScrollTopButton';
 import axios from 'axios';
 import SubListComp from './component/subListPage/subListComp';
-// import ChooseTickerComp from './component/chooseTickerPage/chooseTikcerComp';
+import ChooseTickerComp from './component/chooseTickerPage/chooseTikcerComp';
 import SelfUploadPage from './component/selfUploadPage/selfUploadPage';
 import ToolNavComp from './component/toolNavPage/toolNavComp';
 import InflationComp from './component/inflationPage/inflationComp';
@@ -54,7 +54,7 @@ function App() {
             <Route exact path = "/PER_River" element = { <PERRiverComp /> } ></Route>
             <Route exact path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
             <Route exact path = "/subscibe_list" element = { <SubListComp /> } ></Route>
-            {/* <Route path = "/choose_ticker" element = { <ChooseTickerComp /> } ></Route> */}
+            <Route path = "/choose_ticker" element = { <ChooseTickerComp /> } ></Route>
             <Route exact path = "/self_upload" element = { <SelfUploadPage /> } ></Route>
             <Route exact path = "/tool_nav" element = { <ToolNavComp /> } ></Route>
             <Route exact path = "/inflation" element = { <InflationComp /> } ></Route>

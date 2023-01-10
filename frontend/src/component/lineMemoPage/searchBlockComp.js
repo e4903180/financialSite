@@ -94,10 +94,11 @@ function SearchBlockComp() {
                 </div>
             </form>
 
-            { search &&  <div className = 'row mx-auto py-4' style = {{ height : "400px" }}>
+            { search &&  <div className = 'row mx-auto py-4'>
                 <h3 className = "display-6 text-center">查詢結果</h3>
 
                 <DataGrid
+                    autoHeight
                     columns = { columns3 }
                     rows = { data }
                     page = { page }

@@ -11,12 +11,22 @@ class FPDF(FPDF):
 
 
 class PdfMaker():
+    """Create research pdf
+    """
     def __init__(self, username : str) -> None:
         self.pdf = FPDF()
         self.pdf.add_font('MicrosoftJhengHei', '', 'MicrosoftJhengHei.ttf', True)
         self.username = username
 
     def make_support_resistance(self, datas : List[Dict], image : str) -> None:
+        """Create support resistance page
+
+            Args :
+                datas : (List[Dict]) table content
+                image : (str) image filename
+            Return :
+                None
+        """
         self.pdf.add_page()
         self.pdf.set_fill_color(r = 231, g = 255, b = 255)
 
@@ -31,6 +41,15 @@ class PdfMaker():
         self.pdf.image("./image/" + image, x = 5, y = 130, w = 200, h = 130, type = "png")
 
     def make_per_river(self, datas : List[Dict], filenameKline : str, filenameBar : str) -> None:
+        """Create per river page
+
+            Args :
+                datas : (List[Dict]) table content
+                filenameKline : (str) kline image filename
+                filenameBar : (str) bar image filename
+            Return :
+                None
+        """
         self.pdf.add_page()
         self.pdf.set_fill_color(r = 231, g = 255, b = 255)
 
@@ -43,9 +62,17 @@ class PdfMaker():
             self.pdf.cell(190, 12, txt = datas[i]["sentence"], ln = 1, align = datas[i]["align"], fill = True)
 
         self.pdf.image(f"./image/{filenameBar}", x = 5, y = 100, w = 200, h = 120, type = "png")
-        self.pdf.image(f"./image/{filenameKline}", x = 5, y = 180, w = 200, h = 120, type = "png")
+        self.pdf.image(f"./image/{filenameKline}", x = 5, y = 160, w = 200, h = 120, type = "png")
 
     def make_stock_price_decision(self, datas : List[Dict], filename : str) -> None:
+        """Create stock price decision page
+
+            Args :
+                datas : (List[Dict]) table content
+                filename : (str) image filename
+            Return :
+                None
+        """
         self.pdf.add_page()
         self.pdf.set_fill_color(r = 231, g = 255, b = 255)
 
@@ -59,17 +86,12 @@ class PdfMaker():
 
         self.pdf.image(f"./image/{filename}", x = 5, y = 130, w = 200, h = 130, type = "png")
         
-    def output(self):
+    def output(self) -> None:
+        """Output pdf
+
+            Args :
+                None
+            Return :
+                None
+        """
         self.pdf.output(f"./pdf/{self.username}-分析報告.pdf")
-
-if __name__ == "__main__":
-    PM = PdfMaker()
-
-    PM.make([
-            {"sentence" : "分析報告-天花板地板線", "align" : "C"},
-            {"sentence" : "        股票代號: 2330", "align" : "L"},
-            {"sentence" : "        起始日期: 2017/01/01", "align" : "L"},
-            {"sentence" : "        ma: 20wma", "align" : "L"},
-            {"sentence" : "        計算方式: 方法一", "align" : "L"},
-            {"sentence" : "突破地板線觸發!!!", "align" : "C"},
-        ])

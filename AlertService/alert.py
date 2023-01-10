@@ -65,7 +65,9 @@ class AlertService():
                 None
         """
 
-        sql = f'SELECT * FROM subscribe'
+        sql = f'SELECT subscribe.ID, subscribe.username, ticker_list.stock_num, subscribe.endTime, subscribe.subTime, \
+            subscribe.content, subscribe.strategy, subscribe.alertCondition \
+            FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID'
         self._cursor.execute(sql)
         self._db.commit()
 
@@ -86,7 +88,7 @@ class AlertService():
 
         self._user_list = pd.DataFrame.from_dict(self._cursor.fetchall())
 
-    def _send_support_resistance_mail(self, subject : str, username : str, email : str) -> None:
+    def _send_by_mail(self, subject : str, username : str, email : str) -> None:
         """Send the analysis research through gmail service
 
             Args :
@@ -114,7 +116,7 @@ class AlertService():
 
         self._GS.send_mail(content)
 
-    def _send_support_resistance_line(self, filename : str, username : str, userId : str) -> None:
+    def _send_by_line(self, filename : str, username : str, userId : str) -> None:
         """Send the analysis research through line service
 
             Args :
@@ -126,8 +128,8 @@ class AlertService():
                 None
         """
 
-        content = "FinancialCosbi 分析報告通知\n詳情請下載分析報告\n檔案只會保持一天請下載以保留"
-        content += "http://140.116.214.154:3847/api/analysis_download?filename={filename}"
+        content = "FinancialCosbi 分析報告通知\n詳情請下載分析報告\n檔案只會保持一天請下載以保留\n"
+        content += f"http://140.116.214.154:3847/api/analysis_download?filename={filename}"
         line_bot_api.push_message(userId, TextSendMessage(text = content))
 
         content = f"可互動圖表下載\nhttp://140.116.214.154:3847/api/analysis_html_download?filename={username}.html"
@@ -169,7 +171,7 @@ class AlertService():
 
                 # Create research html
                 f = open(f"./html/{username}.html", "w")
-                f.write("<html><head></head><body>")
+                f.write('<html><head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script></head><body>')
 
                 # Traverse user's subscribe
                 for j in range(len(subsribe)):
@@ -193,13 +195,13 @@ class AlertService():
                 
                 # If email notify is true, using gmail service
                 if self._user_list.iloc[i]["emailNotify"]:
-                    self._send_support_resistance_mail("FinancialCosbi 分析報告通知",
+                    self._send_by_mail("FinancialCosbi 分析報告通知",
                                                         username,
                                                         self._user_list.iloc[i]["email"])
 
                 # If line notify is true, using line service
                 if self._user_list.iloc[i]["lineNotify"]:
-                    self._send_support_resistance_line(username + '-分析報告.pdf',
+                    self._send_by_line(username + '-分析報告.pdf',
                                                         username,
                                                         self._user_list.iloc[i]["lineId"])
 

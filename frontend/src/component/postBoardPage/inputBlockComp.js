@@ -27,7 +27,7 @@ function InputBlockComp() {
 
             const formData = new FormData();
             formData.append("stock_num_name", ticker);
-            formData.append("date", Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0'))
+            formData.append("date", Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'))
             formData.append("recommend", input2);
             formData.append("price", input3);
             formData.append("reason", input4);
@@ -78,7 +78,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5 pt-4">
                     <div className = "form-group">
                         <label htmlFor = "date">日期:</label>
-                        <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "_" + String(Today.getMonth()+1).padStart(2, '0') + "_" + String(Today.getDate()).padStart(2, '0') } disabled style = {{ opacity : 0.8 }}/>
+                        <input type = "text" className = "form-control" id = "date" value = { Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0') } disabled style = {{ opacity : 0.8 }}/>
                     </div>
                 </div>
 

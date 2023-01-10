@@ -19,21 +19,35 @@ exports.handle_support_resistance_sub = async function(req, res){
     var min = Today.getMinutes().toString().padStart(2, '0');
     var sec = Today.getSeconds().toString().padStart(2, '0');
     var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
-    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND content=? AND strategy=? AND alertCondition=?`
+    let sql = `SELECT COUNT(*) as dataQuantity FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID \
+    WHERE username=? AND endTime=? AND stock_num=? AND content=? AND strategy=? AND alertCondition=?`
     let param = [userName, endDate, stock_num, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
     
     try {
         const [rows, fields] = await con.promise().query(sql, param);
 
-        if(rows.length != 0){
+        if(rows[0]["dataQuantity"] != 0){
             return res.status(401).send("same")
         }
     } catch (error) {
         return res.status(400).send("error")
     }
+
+    let key = -1
+
+    sql = `SELECT ID FROM ticker_list WHERE stock_num=?`
+    param = [stock_num]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        key = rows[0]["ID"]
+    } catch (error) {
+        return res.status(400).send("error")
+    }
     
-    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
-    param = [userName, Time, endDate, stock_num, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker_id, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    param = [userName, Time, endDate, key, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
 
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -60,21 +74,35 @@ exports.handle_pricing_strategy_sub = async function(req, res){
     var sec = Today.getSeconds().toString().padStart(2, '0');
     var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
 
-    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND content=? AND strategy=? AND alertCondition=?`
+    let sql = `SELECT COUNT(*) as dataQuantity FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID \
+    WHERE username=? AND endTime=? AND stock_num=? AND content=? AND strategy=? AND alertCondition=?`
     let param = [userName, endDate, stock_num, "歷史幾年資料" + startYear, "股票定價策略", alertCondition]
 
     try {
         const [rows, fields] = await con.promise().query(sql, param);
 
-        if(rows.length != 0){
+        if(rows[0]["dataQuantity"] != 0){
             return res.status(401).send("same")
         }
     } catch (error) {
         return res.status(400).send("error")
     }
+
+    let key = -1
+
+    sql = `SELECT ID FROM ticker_list WHERE stock_num=?`
+    param = [stock_num]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        key = rows[0]["ID"]
+    } catch (error) {
+        return res.status(400).send("error")
+    }
     
-    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
-    param = [userName, Time, endDate, stock_num, "歷史幾年資料" + startYear, "股票定價策略", alertCondition]
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker_id, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    param = [userName, Time, endDate, key, "歷史幾年資料" + startYear, "股票定價策略", alertCondition]
     
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -100,21 +128,35 @@ exports.handle_per_river_sub = async function(req, res){
     var sec = Today.getSeconds().toString().padStart(2, '0');
     var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
 
-    let sql = `SELECT * FROM subscribe WHERE username=? AND endTime=? AND ticker=? AND strategy=? AND alertCondition=?`
+    let sql = `SELECT COUNT(*) as dataQuantity FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID \
+     WHERE username=? AND endTime=? AND stock_num=? AND strategy=? AND alertCondition=?`
     let param = [userName, endDate, stock_num, "本益比河流圖", alertCondition]
     
     try {
         const [rows, fields] = await con.promise().query(sql, param);
 
-        if(rows.length != 0){
+        if(rows[0]["dataQuantity"] != 0){
             return res.status(401).send("same")
         }
     } catch (error) {
         return res.status(400).send("error")
     }
+
+    let key = -1
+
+    sql = `SELECT ID FROM ticker_list WHERE stock_num=?`
+    param = [stock_num]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        key = rows[0]["ID"]
+    } catch (error) {
+        return res.status(400).send("error")
+    }
     
-    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
-    param = [userName, Time, endDate, stock_num, "", "本益比河流圖", alertCondition]
+    sql = `INSERT INTO subscribe (username, subTime, endTime, ticker_id, content, strategy, alertCondition) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    param = [userName, Time, endDate, key, "", "本益比河流圖", alertCondition]
 
     try {
         const [rows, fields] = await con.promise().query(sql, param);
@@ -126,7 +168,8 @@ exports.handle_per_river_sub = async function(req, res){
 }
 
 exports.get_sub = async function(req, res){
-    let sql = `SELECT * FROM subscribe WHERE username=?`
+    let sql = `SELECT subscribe.ID, ticker_list.stock_name, subscribe.endTime, subscribe.subTime, subscribe.content, subscribe.strategy, subscribe.alertCondition FROM subscribe \
+    INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID WHERE username=?`
     let param = [req.session.userName]
 
     try {

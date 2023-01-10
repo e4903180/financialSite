@@ -347,14 +347,14 @@ def requests_post(*args1, **args2):
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def crawl_price(date):
-    datestr = date.strftime('%Y%m%d')
-    
+    datestr = date
+
     try:
         r = requests_post('https://www.twse.com.tw/exchangeReport/MI_INDEX?response=csv&date=' + datestr + '&type=ALLBUT0999')
     except Exception as e:
         print('**WARRN: cannot get stock price at', datestr)
         print(e)
-        return None
+        return pd.DataFrame([])
     
     content = r.text.replace('=', '')
     
@@ -363,10 +363,10 @@ def crawl_price(date):
     content = "\n".join(lines)
     
     if content == '':
-        return None
+        return pd.DataFrame([])
     
     df = pd.read_csv(StringIO(content))
-    print(df)
+
     df = df.astype(str)
     df = df.apply(lambda s: s.str.replace(',', ''))
     df = df.drop(columns=["成交金額", "成交筆數", "漲跌(+/-)", "漲跌價差", "最後揭示買價", "最後揭示買量", "最後揭示賣價", "最後揭示賣量", "Unnamed: 16"])

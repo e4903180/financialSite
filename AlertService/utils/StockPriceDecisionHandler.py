@@ -24,13 +24,9 @@ class StockPriceDecisionHandler():
             Return:
                 None
         """
-        ps = PricingStrategy(row_data["ticker"], row_data["content"][6:])
+        ps = PricingStrategy(row_data["stock_num"], row_data["content"][6:])
         result = ps.run()
         filename = row_data["username"] + row_data["subTime"] + ".png"
-
-        self._create_image_html(row_data["ticker"] + "-定價區間", filename, result["NewPrice"], result["down_cheap"],
-                            result["cheap_reasonable"], result["reasonable_expensive"], result["up_expensive"],
-                            fileStream)
 
         alert = row_data["alertCondition"] + "未觸發"
         error = False
@@ -60,60 +56,68 @@ class StockPriceDecisionHandler():
                     break
     
         result["alert"] = alert
-        self._add_page(row_data["ticker"], result, error, filename)
 
-    def _create_image_html(self, title : str, filename : str, new_price : float, down_cheap : List[int], cheap_reasonable : List[int], reasonable_expensive : List[int], up_expensive : List[int], fileStream : TextIO) -> None:
+        self._create_image_html(row_data["stock_num"] + "-股票定價策略", filename, result, fileStream, row_data, error)
+
+        self._add_page(row_data["stock_num"], row_data["endTime"], result, error, filename)
+
+    def _create_image_html(self, title : str, filename : str, result : Dict, fileStream : TextIO, table_content : Dict, error : bool) -> None:
         """Create image and html
 
             Args:
+                title : (str) image title
                 filename : (str) image name
-                new_price : (float) new price
-                down_cheap : (List[int]) section under cheap price
-                cheap_reasonable : (List[int]) section between cheap price and reasonable price
-                reasonable_expensive : (List[int]) section between reasonable price and expensive price
-                up_expensive : (List[int]) section upper expensive price
+                result : (Dict) calculate result
                 fileStream : (TextIO) html file stream
+                table_content : (Dict) table content
+                error : (bool) Value loss
             Return:
                 None
         """
         y_label = ["本益比法", "本淨比法", "高低價法", "股利法"]
         fig = make_subplots(subplot_titles = [title])
-        fig.add_trace(go.Bar(y = y_label, x = down_cheap, name = "便宜價", orientation = "h", marker = {"color":"#FFFF4F"}))
-        fig.add_trace(go.Bar(y = y_label, x = cheap_reasonable, name = "便宜價到合理價區間", orientation = "h", marker = {"color":"#59FF59"}))
-        fig.add_trace(go.Bar(y = y_label, x = reasonable_expensive, name = "合理價到昂貴價區間", orientation = "h", marker = {"color":"#FF5353"}))
-        fig.add_trace(go.Bar(y = y_label, x = up_expensive, name = "昂貴價", orientation = "h", marker = {"color":"red"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["down_cheap"], name = "便宜價", orientation = "h", marker = {"color":"#FFFF4F"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["cheap_reasonable"], name = "便宜價到合理價區間", orientation = "h", marker = {"color":"#59FF59"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["reasonable_expensive"], name = "合理價到昂貴價區間", orientation = "h", marker = {"color":"#FF5353"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["up_expensive"], name = "昂貴價", orientation = "h", marker = {"color":"red"}))
         fig.update_layout(barmode = 'stack')
-        fig.add_vline(x = new_price, line_width = 3, line_color = "black", annotation_text = "現在價格")
+        fig.add_vline(x = result["NewPrice"], line_width = 3, line_color = "black", annotation_text = "現在價格")
         
         fig.write_image("./image/" + filename)
 
-        fileStream.write(fig.to_html(full_html = False, include_plotlyjs = 'cdn'))
+        container = f'<div class="row mx-auto py-3" style="width:70vw"><div class="card p-0 mt-3"><div class="card-header text-center">{title}</div><div class="card-body">'
+        container += f'<p class="card-text">股票代號: {table_content["stock_num"]}</p>'
+        container += f'<p class="card-text">最新價格: {result["NewPrice"]}</p>'
 
-    def _add_page(self, ticker : str, result_content : Dict, error : bool, filename : str):
+        if error:
+            container += f'<p class="card-text text-center" style="color:red">資料缺值部份定價法不適用</p>'
+        else:
+            container += f'<p class="card-text text-center" style="color:red">{result["alert"]}</p>'
+        
+        container += '</div>' + fig.to_html(full_html = False, include_plotlyjs = 'cdn') + '</div></div>'
+        fileStream.write(container)
+
+    def _add_page(self, ticker : str, endTime : str, result_content : Dict, error : bool, filename : str):
         """Add new page to pdf
 
             Args:
                 ticker : (str) ticker
-                research_content : (Dict) content
+                endTime : (str) end of subscribe
+                result_content : (Dict) content
                 error : (bool) Value loss
                 filename : (str) image name
             Return:
                 None
         """
+        sentence = [{"sentence" : f"分析報告-股票定價策略", "align" : "C"},
+                {"sentence" : f"        股票代號: {ticker}", "align" : "L"},
+                {"sentence" : f"        最新價格: {result_content['NewPrice']}", "align" : "L"}]
+        
         if error:
-            self._pdfMaker.make_stock_price_decision([
-                {"sentence" : f"分析報告-股票定價策略", "align" : "C"},
-                {"sentence" : f"        股票代號: {ticker}", "align" : "L"},
-                {"sentence" : f"        最新價格: {result_content['NewPrice']}", "align" : "L"},
-                {"sentence" : f"        {result_content['alert']}", "align" : "L"},
-                {"sentence" : f"        資料缺值部份定價法不適用", "align" : "L"},
-            ], filename)
+            sentence.append({"sentence" : f"        資料缺值部份定價法不適用", "align" : "C"})
         else:
-            self._pdfMaker.make_stock_price_decision([
-                {"sentence" : f"分析報告-股票定價策略", "align" : "C"},
-                {"sentence" : f"        股票代號: {ticker}", "align" : "L"},
-                {"sentence" : f"        最新價格: {result_content['NewPrice']}", "align" : "L"},
-                {"sentence" : f"        {result_content['alert']}", "align" : "L"},
-            ], filename)
+            sentence.append({"sentence" : f"        {result_content['alert']}", "align" : "C"})
+
+        self._pdfMaker.make_stock_price_decision(sentence, filename)
 
 

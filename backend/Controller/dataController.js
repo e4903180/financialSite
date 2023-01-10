@@ -1,7 +1,8 @@
 const con = require('../Model/connectMySQL')
 
 exports.newest15 = async function(req, res){
-    let sql = "SELECT * FROM financialData ORDER BY `date` DESC Limit 15;"
+    let sql = "SELECT financialData.ID, ticker_list.stock_name, financialData.date, financialData.investmentCompany, \
+    financialData.filename, financialData.recommend FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 15;"
 
     try {
         const [rows, fields] = await con.promise().query(sql);
@@ -90,7 +91,7 @@ exports.industry_analysis = async function(req, res){
 }
 
 exports.userList = async function(req, res){
-    let sql ="SELECT name, userName, email FROM user"
+    let sql = "SELECT name, userName, email FROM user"
 
     try {
         const [rows, fields] = await con.promise().query(sql);
@@ -109,29 +110,36 @@ exports.userList = async function(req, res){
 }
 
 exports.calender = async function(req, res){
-    con.query("SELECT stockNum, stockName, Date from calender where year(date)=? AND month(date)=?;", [req.body.year, req.body.month] , function(err, result, field){
-        let re = [];
-        
-        for(let i = 0; i < result.length; i++){
-            re.push(Object.assign({"title" : result[i]["stockNum"] + " " + result[i]["stockName"]}, {"date" : result[i]["Date"]}))
+    let sql = "SELECT stock_name, date from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
+    let param = [req.body.year, req.body.month]
+    let re = [];
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        for(let i = 0; i < rows.length; i++){
+            re.push(Object.assign({"title" : rows[i]["stock_name"]}, {"date" : rows[i]["date"]}))
         };
-        
-        if(err === null){
-            return res.status(200).json(re)
-        }else{
-            return res.status(400).send("error")
-        }
-    })    
+
+        return res.status(200).json(re)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 }
 
 exports.calenderData = async function(req, res){
-    con.query("SELECT * from calender where year(date)=? AND month(date)=?;", [req.body.year, req.body.month,] , function(err, result, field){
-        if(err === null){
-            return res.status(200).json(result)
-        }else{
-            return res.status(400).send("error")
-        }
-    })    
+    let sql = "SELECT calender.ID, calender.date, calender.Time, calender.Form, calender.Message, calender.chPDF,\
+        calender.enPDF, calender.More_information, calender.Video_address, calender.Attention, ticker_list.stock_name\
+        from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
+    let param = [req.body.year, req.body.month]
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        return res.status(200).json(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 }
 
 exports.tickerList = async function(req, res){

@@ -9,6 +9,8 @@ import requests
 import os
 import sys
 import MySQLdb
+import MySQLdb.cursors
+import pandas as pd
 import time
 import datetime
 
@@ -56,35 +58,57 @@ class MySQL():
     """
     def __init__(self) -> None:
         self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint",
-                                   passwd = "CEMj8ptYHraxNxFt", db = "financial", charset = "utf8")
+                                   passwd = "CEMj8ptYHraxNxFt", db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
         
-    def isDuplicate(self, stockNum:str, date:str) -> bool:
+    def isDuplicate(self, key : int, date : str, time : str) -> bool:
         """Check if data duplicate
 
             Args :
-                stockNum : (str) stock number
+                key : (int) foreign key
                 date : (str) data date
+                time : (str) data time
             Return:
                 bool
         """   
-        sql = "SELECT * from calender WHERE `stockNum`='%s' AND `date`='%s';" % (stockNum, date)
+        query = "SELECT * from calender WHERE `ticker_id`='%s' AND `date`='%s' AND `time`='%s';" % (key, date, time)
 
-        self._cursor.execute(sql)
+        self._cursor.execute(query)
         self._db.commit()
         
-        result = list(self._cursor.fetchall())
+        result = pd.DataFrame.from_dict(self._cursor.fetchall())
 
-        if len(result) == 0:
+        if result.empty:
             return False
         return True
+
+    def _get_foreign_key_id(self, stock_num : str) -> int:
+        """Find the ticker_list ID
+
+            Args:
+                stock_num : (str) stock number
+            
+            Return:
+                If stock_num exist return ID
+                else return -1
+        """
+        query = "SELECT ID FROM ticker_list WHERE stock_num='%s';" % (stock_num)
+
+        self._cursor.execute(query)
+        self._db.commit()
+
+        result = pd.DataFrame.from_dict(self._cursor.fetchall())
+
+        if result.empty:
+            return -1
+        
+        return result["ID"][0]
     
-    def insert(self, stockNum : str, stockName : str, Date : str, Time : str, Form : str, Message : str, chPDF : str, enPDF : str, More_information : str, Video_address : str, Attention : str) -> None:
+    def insert(self, key : int, Date : str, Time : str, Form : str, Message : str, chPDF : str, enPDF : str, More_information : str, Video_address : str, Attention : str) -> None:
         """Insert data to DB
 
             Args:
-                stockNum : (str) stock number
-                stockName : (str) stock name
+                key : (str) foreign key
                 Date : (str) 法說會日期
                 Time : (str) 法說會時間
                 Form : (str) 舉辦形式
@@ -97,15 +121,18 @@ class MySQL():
             Return:
                 None
         """
-        self._cursor.execute("INSERT INTO calender (`stockNum`, `stockName`, `Date`, `Time`, `Form`, `Message`, `chPDF`, `enPDF`, `More information`, `Video address`, `Attention`)"
-                        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (stockNum, stockName, Date, Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention))
+        query = ("INSERT INTO calender (`ticker_id`, `date`, `Time`, `Form`, `Message`, `chPDF`, `enPDF`, `More_information`, `Video_address`, `Attention`)"\
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);")
+        param = (key, Date, Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention)
+
+        self._cursor.execute(query, param)
         self._db.commit()
         
-    def update(self, stockNum : str, Date : str, Time : str, Form : str, Message : str, chPDF : str, enPDF : str, More_information : str, Video_address : str, Attention : str) -> None:
+    def update(self, key : int, Date : str, Time : str, Form : str, Message : str, chPDF : str, enPDF : str, More_information : str, Video_address : str, Attention : str) -> None:
         """Update data to DB
 
             Args:
-                stockNum : (str) stock number
+                key : (int) foreign key
                 Date : (str) 法說會日期
                 Time : (str) 法說會時間
                 Form : (str) 舉辦形式
@@ -118,9 +145,11 @@ class MySQL():
             Return:
                 None
         """
-        sql = "UPDATE calender SET `Time`='%s', `Form`='%s', `Message`='%s', `chPDF`='%s', `enPDF`='%s', `More information`='%s', `Video address`='%s', `Attention`='%s' WHERE `stockNum`='%s' AND `Date`='%s';" % (Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention, stockNum, Date)
+        query = ("UPDATE calender SET `Time`=%s, `Form`=%s, `Message`=%s, `chPDF`=%s, `enPDF`=%s, `More_information`=%s, `Video_address`=%s, "\
+            "`Attention`=%s WHERE `ticker_id`=%s AND `date`=%s;")
+        param = (Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention, key, Date)
 
-        self._cursor.execute(sql)
+        self._cursor.execute(query, param)
         self._db.commit()
 
 
@@ -128,7 +157,8 @@ class Twse(TwseSelenium, MySQL):
     """Get data through TwseSelenium class, and update SQL through MySQL class
     """
     def __init__(self):
-        super.__init__()
+        TwseSelenium.__init__(self)
+        MySQL.__init__(self)
         
     def _download_pdf(self, lang : str, stockNum : str, fileName : str) -> None:
         """Download pdf
@@ -195,19 +225,24 @@ class Twse(TwseSelenium, MySQL):
             newYear = str(int(row_date.split("-")[0]) + 1911)
             row_date = row_date.replace(row_date.split("-")[0], "")
             row_date = newYear + row_date
+            
+            key = self._get_foreign_key_id(data_td[0].getText().replace("'", ""))
+
+            if key == -1:
+                continue
 
             self._download_pdf("ch", data_td[0].getText(), data_td[6].getText())
             self._download_pdf("en", data_td[0].getText(), data_td[7].getText())
-            
-            # Check if data duplicate
-            if not self.isDuplicate(data_td[0].getText(), row_date):
-                self.insert(data_td[0].getText().replace("'", ""), data_td[1].getText().replace("'", ""), row_date, data_td[3].getText().replace("'", ""),
+
+            # Check if data duplicate   
+            if not self.isDuplicate(key, row_date, data_td[3].getText().replace("'", "")):
+                self.insert(key, row_date, data_td[3].getText().replace("'", ""),
                            data_td[4].getText().replace("'", ""), data_td[5].getText().replace("'", ""), data_td[6].getText().replace("'", ""),
                            data_td[7].getText().replace("'", ""), data_td[8].getText().replace("'", ""), data_td[9].getText().replace("'", ""),
                            data_td[10].getText().replace("'", ""))
                 
             else:
-                self.update(data_td[0].getText().replace("'", ""), row_date, data_td[3].getText().replace("'", ""),
+                self.update(key, row_date, data_td[3].getText().replace("'", ""),
                            data_td[4].getText().replace("'", ""), data_td[5].getText().replace("'", ""), data_td[6].getText().replace("'", ""),
                            data_td[7].getText().replace("'", ""), data_td[8].getText().replace("'", ""), data_td[9].getText().replace("'", ""),
                            data_td[10].getText().replace("'", ""))

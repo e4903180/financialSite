@@ -26,7 +26,7 @@ class SupportResistanceHandler():
         """
         # row_data is DB subscribe table data
         content = row_data["content"].split("_")
-        SR = SupportResistance(row_data["ticker"], content[0][7:], content[1][2:], int(content[1][:2]))
+        SR = SupportResistance(row_data["stock_num"], content[0][7:], content[1][2:], int(content[1][:2]))
 
         SR.get_data_yfinance()
         result = SR.run(content[-1])
@@ -61,7 +61,6 @@ class SupportResistanceHandler():
             "resistance" : result["resistance"],
             "ma" : result["ma"]
         }
-        self._create_image_html(result["table_data"]["data"], add_plots, image_filename, row_data["ticker"] + "-天花板地板線", fileStream)
 
         if ((row_data["alertCondition"] == "突破天花板線") and
             (result["table_data"]["data"].iloc[-1]["Close"] > result["resistance"][-1][1])):
@@ -72,9 +71,9 @@ class SupportResistanceHandler():
         else:
             alert = row_data["alertCondition"] + "未觸發"
 
-        self._add_page({
+        table_content = {
             "title" : "天花板地板線",
-            "tiker" : row_data["ticker"],
+            "ticker" : row_data["stock_num"],
             "start_date" : content[0][7:],
             "ma" : content[1],
             "method" : "方法一",
@@ -82,8 +81,12 @@ class SupportResistanceHandler():
             "up" : str(result["resistance"][-1][1]),
             "low" : str(result["support"][-1][1]),
             "alert" : alert,
-            "image" : image_filename
-        })
+        }
+
+        self._create_image_html(result["table_data"]["data"], add_plots, image_filename, row_data["stock_num"] + "-天花板地板線", fileStream, table_content)
+        table_content["image"] = image_filename
+        
+        self._add_page(table_content)
 
     def _handle_support_resistance_method2(self, result : Dict, row_data : Dict, content : List, fileStream : TextIO) -> None:
         """Make the kline research image and add pdf page with format method2
@@ -105,7 +108,6 @@ class SupportResistanceHandler():
             "support" : result["support"],
             "ma" : result["ma"]
         }
-        self._create_image_html(result["table_data"]["data"], add_plots, image_filename, row_data["ticker"] + "-天花板地板線", fileStream)
 
         if ((row_data["alertCondition"] == "突破地板線") and
             (result["table_data"]["data"].iloc[-1]["Close"] < result["support"][-1][-1])):
@@ -113,9 +115,9 @@ class SupportResistanceHandler():
         else:
             alert = row_data["alertCondition"] + "未觸發"
 
-        self._add_page({
+        table_content = {
             "title" : "天花板地板線",
-            "tiker" : row_data["ticker"],
+            "ticker" : row_data["stock_num"],
             "start_date" : content[0][7:],
             "ma" : content[1],
             "method" : "方法二",
@@ -123,8 +125,13 @@ class SupportResistanceHandler():
             "up" : "無",
             "low" : str(result["support"][-1][1]),
             "alert" : alert,
-            "image" : image_filename
-        })
+        }
+
+        self._create_image_html(result["table_data"]["data"], add_plots, image_filename, row_data["stock_num"] + "-天花板地板線", fileStream, table_content)
+
+        table_content["image"] = image_filename
+
+        self._add_page(table_content)
 
     def _handle_support_resistance_method3(self, result : Dict, row_data : Dict, content : List, fileStream : TextIO) -> None:
         """Make the kline research image and add pdf page with format method3
@@ -147,7 +154,6 @@ class SupportResistanceHandler():
             "support5" : result['support']['support2'],
             "ma" : result["ma"]
         }
-        self._create_image_html(result["table_data"]["data"], add_plots, image_filename, row_data["ticker"] + "-天花板地板線", fileStream)
 
         if ((row_data["alertCondition"] == "突破地板線1%") and
             (result["table_data"]["data"].iloc[-1]["Close"] < result["support"]['support1'][-1][1])):
@@ -163,20 +169,25 @@ class SupportResistanceHandler():
         else:
             alert += " 今日交易量小於20天均量"
 
-        self._add_page({
+        table_content = {
             "title" : "天花板地板線",
-            "tiker" : row_data["ticker"],
+            "ticker" : row_data["stock_num"],
             "start_date" : content[0][7:],
             "ma" : content[1],
             "method" : "方法三",
             "close" : str(result["table_data"]["data"].iloc[-1]["Close"]),
             "up" : "無",
-            "low" : f"support1: {str(result['support']['support1'][-1][1])}, support5%: {str(result['support']['support2'][-1][1])}",
+            "low" : f"support1%: {str(result['support']['support1'][-1][1])}, support5%: {str(result['support']['support2'][-1][1])}",
             "alert" : alert,
-            "image" : image_filename
-        })
+        }
 
-    def _create_image_html(self, Kline : pd.DataFrame, add_plots : Dict, image_filename : str, title : str, fileStream : TextIO) -> None:
+        self._create_image_html(result["table_data"]["data"], add_plots, image_filename, row_data["stock_num"] + "-天花板地板線", fileStream, table_content)
+
+        table_content["image"] = image_filename
+
+        self._add_page(table_content)
+
+    def _create_image_html(self, Kline : pd.DataFrame, add_plots : Dict, image_filename : str, title : str, fileStream : TextIO, table_content : Dict) -> None:
         """Create image and html
 
             Args:
@@ -185,6 +196,7 @@ class SupportResistanceHandler():
                 image_name : (str) image name
                 title : (str) image title
                 fileStream : (TextIO) html file stream
+                table_content : (Dict) result of the table content
             Return:
                 None
         """
@@ -210,27 +222,40 @@ class SupportResistanceHandler():
         fig.add_trace(go.Bar(name = "Volume", x = Kline["Date"], y = Kline["Volume"]), secondary_y = True)
 
         fig.layout.yaxis2.showgrid = False
-        fileStream.write(fig.to_html(full_html = False, include_plotlyjs = 'cdn'))
+
+        container = f'<div class="row mx-auto py-3" style="width:70vw"><div class="card p-0 mt-3"><div class="card-header text-center">{title}</div><div class="card-body">'
+
+        container += f'<p class="card-text">股票代號: {table_content["ticker"]}</p>'
+        container += f'<p class="card-text">資料起始日: {table_content["start_date"]}</p>'
+        container += f'<p class="card-text">ma類型: {table_content["ma"]}</p>'
+        container += f'<p class="card-text">計算方式: {table_content["method"]}</p>'
+        container += f'<p class="card-text">收盤價: {table_content["close"]}</p>'
+        container += f'<p class="card-text">天花板: {table_content["up"]}</p>'
+        container += f'<p class="card-text">地板: {table_content["low"]}</p>'
+        container += f'<p class="card-text text-center" style="color:red">{table_content["alert"]}</p>'
+        
+        container += '</div>' + fig.to_html(full_html = False, include_plotlyjs = 'cdn') + '</div></div>'
+        fileStream.write(container)
 
         fig.update_layout(xaxis_rangeslider_visible = False)
         fig.write_image("./image/" + image_filename)
 
-    def _add_page(self, research_content : Dict) -> None:
+    def _add_page(self, table_content : Dict) -> None:
         """Add new page to pdf
 
             Args:
-                research_content : (Dict) content
+                table_content : (Dict) result of the table content
             Return:
                 None
         """
         self._pdfMaker.make_support_resistance([
-            {"sentence" : f"分析報告-{research_content['title']}", "align" : "C"},
-            {"sentence" : f"        股票代號: {research_content['tiker']}", "align" : "L"},
-            {"sentence" : f"        起始日期: {research_content['start_date']}", "align" : "L"},
-            {"sentence" : f"        ma: {research_content['ma']}", "align" : "L"},
-            {"sentence" : f"        計算方式: {research_content['method']}", "align" : "L"},
-            {"sentence" : f"        收盤價: {research_content['close']}", "align" : "L"},
-            {"sentence" : f"        天花板: {research_content['up']}", "align" : "L"},
-            {"sentence" : f"        地板: {research_content['low']}", "align" : "L"},
-            {"sentence" : f"{research_content['alert']}", "align" : "C"},
-        ], research_content['image'])
+            {"sentence" : f"分析報告-{table_content['title']}", "align" : "C"},
+            {"sentence" : f"        股票代號: {table_content['ticker']}", "align" : "L"},
+            {"sentence" : f"        起始日期: {table_content['start_date']}", "align" : "L"},
+            {"sentence" : f"        ma: {table_content['ma']}", "align" : "L"},
+            {"sentence" : f"        計算方式: {table_content['method']}", "align" : "L"},
+            {"sentence" : f"        收盤價: {table_content['close']}", "align" : "L"},
+            {"sentence" : f"        天花板: {table_content['up']}", "align" : "L"},
+            {"sentence" : f"        地板: {table_content['low']}", "align" : "L"},
+            {"sentence" : f"{table_content['alert']}", "align" : "C"},
+        ], table_content['image'])

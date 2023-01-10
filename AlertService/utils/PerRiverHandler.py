@@ -26,7 +26,7 @@ class PerRiverHandler():
                 None
         """
         per = PerRiver()
-        result = per.run(row_data["ticker"], "MONTH")
+        result = per.run(row_data["stock_num"], "MONTH")
         Kline = pd.DataFrame(result["Kline"], columns = ['Date', 'Open', 'High', 'Low', 'Close'])
 
         Kline["Date"] =  [datetime.fromtimestamp(date / 10**3) for date in Kline["Date"]]
@@ -42,11 +42,6 @@ class PerRiverHandler():
 
         filenameKline = row_data["username"] + row_data["subTime"] + "Kline.png"
         filenameBar = row_data["username"] + row_data["subTime"] + "Bar.png"
-
-        self._create_image_html(Kline, add_plots, row_data["ticker"] + "-本益比河流圖", filenameKline, fileStream)
-        self._create_image_bar_html(row_data["ticker"] + "-定價區間", result["NewPrice"], result["down_cheap"],
-                                    result["cheap_reasonable"], result["reasonable_expensive"], result["up_expensive"],
-                                    filenameBar, fileStream)
 
         alert = row_data["alertCondition"] + "未觸發"
         if ((row_data["alertCondition"] == "低於便宜價") and
@@ -68,17 +63,22 @@ class PerRiverHandler():
             alert = "警示條件觸發: 高於昂貴價"
         result["alert"] = alert
 
-        self._add_page(row_data["ticker"], result, filenameKline, filenameBar)
+        self._create_image_html(Kline, add_plots, row_data["stock_num"] + "-本益比河流圖", filenameKline, fileStream, row_data, result)
+        self._create_image_bar_html(row_data["stock_num"] + "-定價區間", result, filenameBar, fileStream)
+
+        self._add_page(row_data["stock_num"], result, filenameKline, filenameBar)
     
-    def _create_image_html(self, Kline : pd.DataFrame, add_plots : Dict, title : str, filenameKline : str, fileStream : TextIO) -> None:
+    def _create_image_html(self, Kline : pd.DataFrame, add_plots : Dict, title : str, filenameKline : str, fileStream : TextIO, table_content : Dict, result : Dict) -> None:
         """Create kline image and html
 
             Args:
+                Kline : (pd.DataFrame) Kline data
                 add_plots : (List) extra line add on kline
-                table_data : (pd.DataFrame) Kline data
-                label : (List) name of the line
+                title : (str) chart title
                 filenameKline : (str) image name
                 fileStream : (TextIO) html file stream
+                table_content : (Dict) table content
+                result : (Dict) calculate result
             Return:
                 None
         """
@@ -101,33 +101,42 @@ class PerRiverHandler():
 
             fig.add_trace(go.Scatter(x = temp_x, y = temp_y, mode = "lines", name = key))
 
-        fileStream.write(fig.to_html(full_html = False, include_plotlyjs = 'cdn'))
+        container = f'<div class="row mx-auto py-3" style="width:70vw"><div class="card p-0 mt-3"><div class="card-header text-center">{title}</div><div class="card-body">'
+
+        container += f'<p class="card-text">股票代號: {table_content["stock_num"]}</p>'
+        container += f'<p class="card-text">最新價格: {result["NewPrice"]}</p>'
+        container += f'<p class="card-text">最新EPS: {result["EPS"]}</p>'
+        container += f'<p class="card-text">本益比換算倍率: {result["PER_rate"]}</p>'
+        container += f'<p class="card-text">評價: {result["evaluate"]}</p>'
+        container += f'<p class="card-text text-center" style="color:red">{result["alert"]}</p>'
+        
+        container += '</div>' + fig.to_html(full_html = False, include_plotlyjs = 'cdn')
+
+        fileStream.write(container)
 
         fig.update_layout(xaxis_rangeslider_visible = False)
         fig.write_image("./image/" + filenameKline)
 
-    def _create_image_bar_html(self, title : str, new_price : float, down_cheap : List[int], cheap_reasonable : List[int], reasonable_expensive : List[int], up_expensive : List[int], filenameBar : str, fileStream : TextIO):
+    def _create_image_bar_html(self, title : str, result : Dict, filenameBar : str, fileStream : TextIO):
         """Create bar image
 
             Args:
-                new_price : (float) new price
-                down_cheap : (List[int]) section under cheap price
-                cheap_reasonable : (List[int]) section between cheap price and reasonable price
-                reasonable_expensive : (List[int]) section between reasonable price and expensive price
-                up_expensive : (List[int]) section upper expensive price
+
                 filenameBar : (str) image name
             Return:
                 None
         """
         y_label = ["本益比河流圖"]
         fig = make_subplots(subplot_titles = [title])
-        fig.add_trace(go.Bar(y = y_label, x = down_cheap, name = "便宜價", orientation = "h", marker = {"color":"#FFFF4F"}))
-        fig.add_trace(go.Bar(y = y_label, x = cheap_reasonable, name = "便宜價到合理價區間", orientation = "h", marker = {"color":"#59FF59"}))
-        fig.add_trace(go.Bar(y = y_label, x = reasonable_expensive, name = "合理價到昂貴價區間", orientation = "h", marker = {"color":"#FF5353"}))
-        fig.add_trace(go.Bar(y = y_label, x = up_expensive, name = "昂貴價", orientation = "h", marker = {"color":"red"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["down_cheap"], name = "便宜價", orientation = "h", marker = {"color":"#FFFF4F"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["cheap_reasonable"], name = "便宜價到合理價區間", orientation = "h", marker = {"color":"#59FF59"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["reasonable_expensive"], name = "合理價到昂貴價區間", orientation = "h", marker = {"color":"#FF5353"}))
+        fig.add_trace(go.Bar(y = y_label, x = result["up_expensive"], name = "昂貴價", orientation = "h", marker = {"color":"red"}))
         fig.update_layout(barmode = 'stack')
-        fig.add_vline(x = new_price, line_width = 3, line_color = "black", annotation_text = "現在價格")
-        fileStream.write(fig.to_html(full_html = False, include_plotlyjs = 'cdn'))
+        fig.add_vline(x = result["NewPrice"], line_width = 3, line_color = "black", annotation_text = "現在價格")
+
+        container = fig.to_html(full_html = False, include_plotlyjs = 'cdn') + "</div></div>"
+        fileStream.write(container)
         
         fig.write_image("./image/" + filenameBar)
 
@@ -148,5 +157,5 @@ class PerRiverHandler():
             {"sentence" : f"        最新EPS: {result_content['EPS']}", "align" : "L"},
             {"sentence" : f"        本益比換算倍率: {result_content['PER_rate']}", "align" : "L"},
             {"sentence" : f"        {result_content['evaluate']}", "align" : "L"},
-            {"sentence" : f"        {result_content['alert']}", "align" : "L"},
+            {"sentence" : f"        {result_content['alert']}", "align" : "C"},
         ], filenameKline, filenameBar)

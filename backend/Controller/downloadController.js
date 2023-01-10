@@ -18,15 +18,15 @@ function createCSV(path, data){
 
 exports.single_financialData_download = async function(req, res){
     const filename = req.query.filename;
-    let sql = `SELECT stockNum FROM financialData WHERE filename=?`
+    let sql = `SELECT ticker_list.stock_num FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE filename=?`
     let param = [filename]
 
     try {
         const [rows, fields] = await con.promise().query(sql, param);
 
-        res.download("/home/cosbi/桌面/financialData/gmailData/data/" + rows[0].stockNum + "/" + filename)
+        res.download("/home/cosbi/桌面/financialData/gmailData/data/" + rows[0].stock_num + "/" + filename)
     } catch (error) {
-        return res.status(400).send("error")
+        return res.status(400).send(error)
     }
 };
 

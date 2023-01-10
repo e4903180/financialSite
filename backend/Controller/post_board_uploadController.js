@@ -29,24 +29,33 @@ exports.post_board_upload = async function(req, res){
     let filename = "NULL"
     const date = req.body.date
     const username = req.session.userName
-    const stockName = temp[1]
     const stockNum = temp[0]
-    const evaluation = req.body.evaluation
+    const evaluation = req.body.recommend
     const price = req.body.price
     const reason = req.body.reason
-    if(req.body.filename !== "") filename = date + "-" + req.body.filename
+    if(req.body.filename !== "") filename = date + "_" + req.body.filename
+
+    let sql = `SELECT ID FROM ticker_list WHERE stock_num=?`
+    let param = [stockNum]
+    let key = -1
+
+    try {
+        const [rows, fields] = await con.promise().query(sql, param);
+
+        key = rows[0]["ID"]
+    } catch (error) {
+        console.log("error")
+    }
     
-    let sql = "INSERT INTO `post_board_memo` (`date`, `username`, `stockName`, `stockNum`, `evaluation`, `price`, `reason`, `filename`, `supplement`) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)"
-    let param = [
-        date,
+    sql = "INSERT INTO `post_board_memo` (`ticker_id`, `username`, `date`, `evaluation`, `price`, `reason`, `filename`) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    param = [
+        key,
         username,
-        stockName,
-        stockNum,
+        date,
         evaluation,
         price,
         reason,
-        filename,
-        "NULL"
+        filename
     ]
 
     try {

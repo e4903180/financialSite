@@ -10,8 +10,7 @@ export const columns = [
 ];
 
 export const columns1 = [
-    { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
@@ -21,8 +20,7 @@ export const columns1 = [
 export const columns2 = [
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'evaluation', headerName: '評價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 400 },
@@ -30,8 +28,7 @@ export const columns2 = [
 ];
 
 export const columns3 = [
-    { field: 'stockNum', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'stockName', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
     { field: 'inputTime', headerName: '輸入時間', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -39,16 +36,15 @@ export const columns3 = [
 ];
 
 export const columns4 = [
-    { field: 'stockNum', headerName: '股票代號', width: 100, headerAlign: 'center', align: 'center' },
-    { field: 'stockName', headerName: '股票名稱', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'stock_name', headerName: '股票名稱', width: 200, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '法說會日期', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'chPDF', headerName: '中文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
     { field: 'enPDF', headerName: '英文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
-    { field: 'More information', headerName: '相關資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Video address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'More_information', headerName: '相關資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Video_address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
 ];
 
@@ -110,8 +106,17 @@ export const columns_support_resistance = [
     { field: 'Close', headerName: 'Close', flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
+export const columns_choose_ticker = [
+    { field: "stock_name", headerName : "股票名稱", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Open', headerName: 'Open', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'High', headerName: 'High', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Low', headerName: 'Low', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Close', headerName: 'Close', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Volume', headerName: '成交量', flex: 1, headerAlign: 'center', align: 'center' },
+];
+
 const check_single_post_board_memo_NULL = (value) => {
-    if(value === "NULL"){
+    if(value === "nan" || value === "NULL"){
         return <>沒有檔案</>
     }else{
         return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
@@ -119,15 +124,15 @@ const check_single_post_board_memo_NULL = (value) => {
 }
 
 const check_single_lineMemo_memo_NULL = (value) => {
-    if(value === "NULL"){
-        return <> </>
+    if(value === "nan" || value === "NULL"){
+        return <>沒有檔案</>
     }else{
         return <CustomA value = { rootApiIP + "/data/download/single_line_memo?filename=" + value } />
     }
 }
 
 const check_single_twse_chPDF_NULL = (value) => {
-    if(value === "NULL"){
+    if(value === "nan" || value === "NULL"){
         return <> </>
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
@@ -137,7 +142,7 @@ const check_single_twse_chPDF_NULL = (value) => {
 }
 
 const check_single_twse_enPDF_NULL = (value) => {
-    if(value === "NULL"){
+    if(value === "nan" || value === "NULL"){
         return <> </>
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value

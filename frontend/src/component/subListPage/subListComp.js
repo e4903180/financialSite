@@ -45,7 +45,7 @@ function SubListComp() {
         { field: "ID", headerName : "ID", flex: 1, headerAlign: 'center', align: 'center', hide : 'true' },
         { field: 'endTime', headerName: '訂閱結束日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: "subTime", headerName : "訂閱起始日期", flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'ticker', headerName: '股票代號', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'strategy', headerName: '策略類型', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'content', headerName: '策略內容', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
         { field: 'alertCondition', headerName: '警示條件', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },

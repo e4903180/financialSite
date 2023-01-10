@@ -36,7 +36,7 @@ class DxyJnkUpdate():
         self.JNK_table_data = self.JNK_table_data.fillna(0.0)
 
         for i in range(len(self.JNK_table_data)):
-            if not self._isDuplicate(self.JNK_table_data.iloc[i]["Date"], "JNK"):
+            if not self._isDuplicate(self.JNK_table_data.iloc[i]["Date"].strftime("%Y-%m-%d"), "JNK"):
                 self._update_to_sql(self.JNK_table_data.iloc[i]["Date"].strftime("%Y-%m-%d"), self.JNK_table_data.iloc[i]["Close"].round(2), "JNK")
     
     def _update_DXY(self, start_date : str) -> None:
@@ -52,7 +52,7 @@ class DxyJnkUpdate():
         self.DXY_table_data = self.DXY_table_data.fillna(0.0)
 
         for i in range(len(self.DXY_table_data)):
-            if not self._isDuplicate(self.DXY_table_data.iloc[i]["Date"], "DXY"):
+            if not self._isDuplicate(self.DXY_table_data.iloc[i]["Date"].strftime("%Y-%m-%d"), "DXY"):
                 self._update_to_sql(self.DXY_table_data.iloc[i]["Date"].strftime("%Y-%m-%d"), self.DXY_table_data.iloc[i]["Close"].round(2), "DXY")
 
     def update(self) -> None:

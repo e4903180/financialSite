@@ -1,5 +1,4 @@
 import pandas as pd
-import sys
 import talib
 import numpy as np
 import yfinance as yf

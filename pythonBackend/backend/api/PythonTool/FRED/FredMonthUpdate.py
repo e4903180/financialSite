@@ -1,9 +1,9 @@
 from fredapi import Fred
 import datetime
-import sys
 import MySQLdb
 import MySQLdb.cursors
 import pandas as pd
+import sys
 
 class FredUpdate():
     """Update Fed data, include
@@ -16,8 +16,6 @@ class FredUpdate():
         7. RPCEG => Real Personal Consumption Expenditures: Goods
     """
     def __init__(self) -> None:
-        tonow = datetime.datetime.now()
-
         self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
                                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
@@ -31,9 +29,6 @@ class FredUpdate():
         self.PCE_data = None
         self.RPCEG_data = None
 
-        self.year = tonow.year - 1
-        self.month = tonow.month - 1
-
     def update(self) -> None:
         """Update data
 
@@ -42,24 +37,35 @@ class FredUpdate():
             Return:
                 None
         """
-        self._update_CPI()
-        self._update_FED()
-        self._update_AHE()
-        self._update_UMCS()
-        self._update_PPI()
-        self._update_PCE()
-        self._update_RPCEG()
+        now = datetime.datetime.now()
+        year = now.year
 
-    def _update_CPI(self) -> None:
+        # last month
+        month = now.month - 1
+
+        # if last month is 0, cross year
+        if month == 0:
+            year -= 1
+            month = 12
+
+        self._update_CPI(str(year - 1), str(month))
+        self._update_FED(str(year), str(month))
+        self._update_AHE(str(year - 1), str(month))
+        self._update_UMCS(str(year), str(month))
+        self._update_PPI(str(year - 1), str(month))
+        self._update_PCE(str(year - 1), str(month))
+        self._update_RPCEG(str(year - 1), str(month))
+
+    def _update_CPI(self, year : str, month : str) -> None:
         """Update CPI
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take one year ago data
-        self.CPI_data = self.fred.get_series('CPIAUCSL', str(self.year) + "-" + str(self.month) + "-01")
+        self.CPI_data = self.fred.get_series('CPIAUCSL', year + "-" + month + "-01")
 
         if len(self.CPI_data) < 13:
             return
@@ -68,30 +74,30 @@ class FredUpdate():
             new_data = round(100 * ((self.CPI_data[-1] - self.CPI_data[0]) / self.CPI_data[0]), 2)
             self._update_to_sql(self.CPI_data.index[-1].strftime("%Y-%m-%d"), new_data, "CPI")
 
-    def _update_FED(self) -> None:
+    def _update_FED(self, year : str, month : str) -> None:
         """Update FED
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take last month data
-        self.FED_data = self.fred.get_series('FEDFUNDS', str(self.year + 1) + "-" + str(self.month) + "-01")
+        self.FED_data = self.fred.get_series('FEDFUNDS', year + "-" + month + "-01")
 
-        if not self._isDuplicate(self.FED_data.index[0].strftime("%Y-%m-%d"), "FED"):
-            self._update_to_sql(self.FED_data.index[0].strftime("%Y-%m-%d"), self.FED_data[0], "FED")
+        if not self._isDuplicate(self.FED_data.index[-1].strftime("%Y-%m-%d"), "FED"):
+            self._update_to_sql(self.FED_data.index[-1].strftime("%Y-%m-%d"), self.FED_data[-1], "FED")
 
-    def _update_AHE(self) -> None:
+    def _update_AHE(self, year : str, month : str) -> None:
         """Update AHE
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take one year ago data
-        self.AHE_data = self.fred.get_series('CES0500000003', str(self.year) + "-" + str(self.month) + "-01")
+        self.AHE_data = self.fred.get_series('CES0500000003', year + "-" + month + "-01")
 
         if len(self.AHE_data) < 13:
             return
@@ -100,30 +106,33 @@ class FredUpdate():
             new_data = round(100 * ((self.AHE_data[-1] - self.AHE_data[0]) / self.AHE_data[0]), 2)
             self._update_to_sql(self.AHE_data.index[-1].strftime("%Y-%m-%d"), new_data, "AHE")
 
-    def _update_UMCS(self) -> None:
+    def _update_UMCS(self, year : str, month : str) -> None:
         """Update UMCS
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take last month data
-        self.UMCS_data = self.fred.get_series('UMCSENT', str(self.year + 1) + "-" + str(self.month) + "-01")
- 
+        self.UMCS_data = self.fred.get_series('UMCSENT', year + "-" + month + "-01")
+
+        if len(self.UMCS_data) == 0:
+            return
+        
         if not self._isDuplicate(self.UMCS_data.index[-1].strftime("%Y-%m-%d"), "UMCS"):
             self._update_to_sql(self.UMCS_data.index[-1].strftime("%Y-%m-%d"), self.UMCS_data[-1], "UMCS")
 
-    def _update_PPI(self) -> None:
+    def _update_PPI(self, year : str, month : str) -> None:
         """Update PPI
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take one year ago data
-        self.PPI_data = self.fred.get_series('PPIACO', str(self.year) + "-" + str(self.month) + "-01")
+        self.PPI_data = self.fred.get_series('PPIACO', year + "-" + month + "-01")
         
         if len(self.PPI_data) < 13:
             return
@@ -132,16 +141,16 @@ class FredUpdate():
             new_data = round(100 * ((self.PPI_data[-1] - self.PPI_data[0]) / self.PPI_data[0]), 2)
             self._update_to_sql(self.PPI_data.index[-1].strftime("%Y-%m-%d"), new_data, "PPI")
 
-    def _update_PCE(self) -> None:
+    def _update_PCE(self, year : str, month : str) -> None:
         """Update PCE
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take one year ago data
-        self.PCE_data = self.fred.get_series('PCEPI', str(self.year) + "-" + str(self.month) + "-01")
+        self.PCE_data = self.fred.get_series('PCEPI', year + "-" + month + "-01")
 
         if len(self.PCE_data) < 13:
             return
@@ -150,16 +159,16 @@ class FredUpdate():
             new_data = round(100 * ((self.PCE_data[-1] - self.PCE_data[0]) / self.PCE_data[0]), 2)
             self._update_to_sql(self.PCE_data.index[-1].strftime("%Y-%m-%d"), new_data, "PCE")
 
-    def _update_RPCEG(self) -> None:
+    def _update_RPCEG(self, year : str, month : str) -> None:
         """Update RPCEG
 
             Args:
-                None
+                year : (str) start year
+                month : (str) start month
             Return:
                 None
         """
-        # Take one year ago data
-        self.RPCEG_data = self.fred.get_series('DGDSRX1', str(self.year) + "-" + str(self.month) + "-01")
+        self.RPCEG_data = self.fred.get_series('DGDSRX1', year + "-" + month + "-01")
         
         if len(self.RPCEG_data) < 13:
             return

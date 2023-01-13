@@ -1,4 +1,4 @@
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 
 exports.notify_all = async function(req, res){
     let sql = "SELECT * FROM notify WHERE username=?"

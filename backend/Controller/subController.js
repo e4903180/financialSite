@@ -1,5 +1,5 @@
 const { escape } = require('mysql2')
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 
 exports.handle_support_resistance_sub = async function(req, res){
     var userName = req.session.userName

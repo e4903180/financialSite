@@ -1,7 +1,7 @@
 var multer  = require('multer')
 const fs = require('fs')
 var Today = new Date();
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {

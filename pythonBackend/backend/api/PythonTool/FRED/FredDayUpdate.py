@@ -7,7 +7,7 @@ import pandas as pd
 
 class DxyJnkUpdate():
     """Update yfinance data, include
-        1. DXY => US Dollar/USDX - Index – Cash
+        1. DXY => US Dollar/USDX - Index - Cash
         2. JNK => SPDR Bloomberg High Yield Bond ETF
     """
 
@@ -63,8 +63,10 @@ class DxyJnkUpdate():
             Return:
                 None
         """
+        # 多拿10天資料比對有無漏更新
         self.day -= 10
 
+        # 因為2月只有28天因此從28往前算
         if self.day <= 0:
             self.day += 28
             self.month -= 1

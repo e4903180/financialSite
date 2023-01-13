@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 
 exports.login = async function(req, res){
     var userName = req.body.userName

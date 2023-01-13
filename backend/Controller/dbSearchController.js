@@ -1,8 +1,8 @@
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 
 exports.financial_search = async function(req, res){
-    let sql = `SELECT financialData.ID, ticker_list.stock_name, ticker_list.stock_num, financialData.date, financialData.investmentCompany, \
-    financialData.filename, financialData.recommend FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE 1=1`
+    let sql = `SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
+    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE 1=1`
 
     if(req.body.stock_num_name !== "") sql += ` AND stock_num='${req.body.stock_num_name.split(" ")[0]}'`
     if(req.body.startDate !== "" && req.body.endDate !== "") sql += ` AND date BETWEEN '${req.body.startDate}' AND '${req.body.endDate}'`
@@ -17,8 +17,7 @@ exports.financial_search = async function(req, res){
 }
 
 exports.post_board_search = async function(req, res){
-    let sql = `SELECT post_board_memo.ID, post_board_memo.username, ticker_list.stock_name, ticker_list.stock_num, post_board_memo.date, \
-    post_board_memo.evaluation, post_board_memo.price, post_board_memo.reason, post_board_memo.filename \
+    let sql = `SELECT post_board_memo.*, ticker_list.stock_name, ticker_list.stock_num \
     FROM post_board_memo INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ID WHERE 1=1`
 
     if(req.body.stock_num_name !== "") sql += ` AND stock_num='${req.body.stock_num_name.split(" ")[0]}'`
@@ -37,7 +36,7 @@ exports.post_board_search = async function(req, res){
 }
 
 exports.lineMemo_search = async function(req, res){
-    let sql = `SELECT lineMemo.ID, lineMemo.date, lineMemo.filename, lineMemo.inputTime, lineMemo.username, ticker_list.stock_name, ticker_list.stock_num\
+    let sql = `SELECT lineMemo.*, ticker_list.stock_name, ticker_list.stock_num\
     FROM lineMemo INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID WHERE 1=1`
 
     if(req.body.stock_num_name !== "") sql += ` AND stock_num='${req.body.stock_num_name.split(" ")[0]}'`
@@ -52,8 +51,7 @@ exports.lineMemo_search = async function(req, res){
 }
 
 exports.calender_search = async function(req, res){
-    let sql = `SELECT calender.ID, calender.date, calender.Time, calender.Form, calender.Message, calender.chPDF,\
-    calender.enPDF, calender.More_information, calender.Video_address, calender.Attention, ticker_list.stock_name\
+    let sql = `SELECT calender.*, ticker_list.stock_name\
     from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
 
     if(req.body.stock_num_name !== "") sql += ` AND stock_num='${req.body.stock_num_name.split(" ")[0]}'`

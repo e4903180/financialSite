@@ -1,8 +1,8 @@
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 
 exports.newest15 = async function(req, res){
-    let sql = "SELECT financialData.ID, ticker_list.stock_name, financialData.date, financialData.investmentCompany, \
-    financialData.filename, financialData.recommend FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 15;"
+    let sql = "SELECT financialData.*, ticker_list.stock_name \
+    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 15;"
 
     try {
         const [rows, fields] = await con.promise().query(sql);
@@ -15,7 +15,10 @@ exports.newest15 = async function(req, res){
 };
 
 exports.allData = async function(req, res){
-    let sql = "SELECT count( * ) as dataQuantity from financialData; select max(date) as newestDate from financialData;select count( * ) as dataQuantity from post_board_memo;select max(date) as newestDate from post_board_memo;select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;select count( * ) as dataQuantity from calender;select max(date) as newestDate from calender;"
+    let sql = "SELECT count( * ) as dataQuantity from financialData; select max(date) as newestDate from financialData;\
+    select count( * ) as dataQuantity from post_board_memo;select max(date) as newestDate from post_board_memo;\
+    select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;\
+    select count( * ) as dataQuantity from calender;select max(date) as newestDate from calender;"
 
     try {
         const [rows, fields] = await con.promise().query(sql);
@@ -128,8 +131,7 @@ exports.calender = async function(req, res){
 }
 
 exports.calenderData = async function(req, res){
-    let sql = "SELECT calender.ID, calender.date, calender.Time, calender.Form, calender.Message, calender.chPDF,\
-        calender.enPDF, calender.More_information, calender.Video_address, calender.Attention, ticker_list.stock_name\
+    let sql = "SELECT calender.*, ticker_list.stock_name\
         from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
     let param = [req.body.year, req.body.month]
 

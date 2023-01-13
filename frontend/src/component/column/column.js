@@ -113,6 +113,7 @@ export const columns_choose_ticker = [
     { field: 'Low', headerName: 'Low', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'Close', headerName: 'Close', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'Volume', headerName: '成交量', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'detail', headerName: '詳細資料', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener">詳細資料</a> }
 ];
 
 const check_single_post_board_memo_NULL = (value) => {

@@ -8,7 +8,7 @@ const Data = require('./Controller/dataController');
 const Notify = require('./Controller/notifyController');
 const Sub = require('./Controller/subController');
 const dbSearch = require('./Controller/dbSearchController');
-const ChooseTicker = require('./Controller/chooseTickerController');
+const FilterTicker = require('./Controller/filterTickerController');
 const StockTool = require('./Controller/StockToolContrtoller');
 const meetingDataUp = require('./Controller/meeting_data_uploadController');
 const PostUp = require('./Controller/post_board_uploadController');
@@ -110,5 +110,8 @@ dataRouter.get("/notify_read", Notify.notify_read)
 dataRouter.patch("/notify_handle_read", Notify.notify_handle_read)
 dataRouter.patch("/notify_handle_unread", Notify.notify_handle_unread)
 dataRouter.get("/get_notify_quantity", Notify.get_notify_quantity)
+
+/* Filter ticker */
+dataRouter.get("/filter_ticker", FilterTicker.filter_ticker)
 
 module.exports = {router};

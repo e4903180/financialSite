@@ -1,6 +1,8 @@
-import { Alert, Button, Snackbar } from '@mui/material';
+import { Alert, Backdrop, Button, CircularProgress, Snackbar } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import axios from 'axios';
 import React, { createContext, useState } from 'react';
+import { rootApiIP } from '../../constant';
 import { columns_choose_ticker } from '../column/column';
 import AnalysisComp from './analysisComp';
 import CurrentConditionComp from './currentConditionComp';
@@ -9,10 +11,11 @@ export const ConditionsContext = createContext();
 function ChooseTickerComp() {
     const [data, setData] = useState([])
     const [page, setPage] = useState(0)
-    const [pageSize, setPageSize] = useState(5)
+    const [pageSize, setPageSize] = useState(20)
     const [conditions, setConditions] = useState([])
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const handleConditionsAdd = (newItem) => {
         if(conditions.length >= 3){
@@ -51,8 +54,26 @@ function ChooseTickerComp() {
 
     const submit = (e) => {
         e.preventDefault()
+        setLoading(true)
 
-        // to-do get data
+        if(conditions.length === 0){
+            setMessage("至少需要一個條件")
+            setOpen(true)
+            setLoading(false)
+            return
+        }
+
+        axios.get(rootApiIP + "/data/filter_ticker", {
+            params : {
+                "conditions" : conditions
+            }
+        }).then(res => {
+            setData(res.data)
+            setLoading(false)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+            setLoading(false)
+        })
     }
 
     return (
@@ -62,6 +83,14 @@ function ChooseTickerComp() {
                     { message }
                 </Alert>
             </Snackbar>
+
+            <Backdrop
+                sx = {{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open = { loading }
+            >
+                資料載入中&emsp;
+                <CircularProgress color = "inherit" />
+            </Backdrop>
 
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
                 <h3 className = "display-6 text-center">選股</h3>

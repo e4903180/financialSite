@@ -7,7 +7,6 @@ const http = require('http');
 const server = http.createServer(app);
 const { API_PORT, API_ROUTE_IP, API_BASE_IP, sessionMiddleware, wrap, corsSetting, WebSocketMiddlewareHandler, ioOptions } = require('./constant');
 const { WebSocketManager } = require("./WebSocketConfig/WebSocketManager");
-const con = require('./Model/connectMySQL')
 
 //<--------------------------------HTTP settings-------------------------------->
 // Allow POST, PUT method

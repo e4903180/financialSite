@@ -71,6 +71,10 @@ function SupportResistanceComp() {
                 dataGrouping : {
                     enabled : false
                 }
+            },
+            candlestick: {
+                color: 'green',
+                upColor: 'red'
             }
         }
     });
@@ -131,7 +135,8 @@ function SupportResistanceComp() {
                                     type: 'column',
                                     name: 'Volume',
                                     data: res.data["volume"],
-                                    yAxis: 1
+                                    yAxis: 1,
+                                    turboThreshold : 5000
                                 },
                             ],
                         })

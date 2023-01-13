@@ -369,7 +369,7 @@ def crawl_price(date):
 
     df = df.astype(str)
     df = df.apply(lambda s: s.str.replace(',', ''))
-    df = df.drop(columns=["成交金額", "成交筆數", "漲跌(+/-)", "漲跌價差", "最後揭示買價", "最後揭示買量", "最後揭示賣價", "最後揭示賣量", "Unnamed: 16"])
+    df = df.drop(columns=["成交金額", "成交筆數", "漲跌(+/-)", "漲跌價差", "最後揭示買價", "最後揭示買量", "最後揭示賣價", "最後揭示賣量", "Unnamed: 16", "本益比", "證券名稱"])
     # df['date'] = pd.to_datetime(date)
     # df = df.rename(columns={'證券代號':'stock_id'})
     # df = df.set_index(['stock_id', 'date'])
@@ -377,7 +377,11 @@ def crawl_price(date):
     
     df = df[df.columns[df.isnull().all() == False]]
     df = df[~df['收盤價'].isnull()]
-    
+    df = df.rename(columns = { "證券代號" : "ticker_id", "成交股數" : "Volume", "開盤價" : "Open", "最高價" : "High", "最低價" : "Low", "收盤價" : "Close" })
+    # skip losing value
+    df = df[df.Open != "--"]
+    df = df.reset_index(drop = True)
+
     return df
 
 def crawl_benchmark(date):

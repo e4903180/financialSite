@@ -25,6 +25,7 @@ import ToolNavComp from './component/toolNavPage/toolNavComp';
 import InflationComp from './component/inflationPage/inflationComp';
 import CpiPpiPceComp from './component/CpiPpiPcePage/CpiPpiPceComp';
 import LineComp from './component/LinePage/LineComp';
+import ChooseTickerDetail from './component/chooseTickerPage/chooseTickerDetail';
 
 axios.defaults.withCredentials = true;
 
@@ -55,6 +56,7 @@ function App() {
             <Route exact path = "/support_resistance" element = { <SupportResistanceComp /> } ></Route>
             <Route exact path = "/subscibe_list" element = { <SubListComp /> } ></Route>
             <Route path = "/choose_ticker" element = { <ChooseTickerComp /> } ></Route>
+            <Route exact path = "/choose_ticker/detail" element = { <ChooseTickerDetail /> }></Route>
             <Route exact path = "/self_upload" element = { <SelfUploadPage /> } ></Route>
             <Route exact path = "/tool_nav" element = { <ToolNavComp /> } ></Route>
             <Route exact path = "/inflation" element = { <InflationComp /> } ></Route>

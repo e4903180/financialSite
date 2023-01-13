@@ -7,7 +7,7 @@ import { ConditionsContext } from './chooseTikcerComp';
 function TechnicalAnalyzeComp() {
     const {handleConditionsAdd} = useContext(ConditionsContext);
 
-    const condition = ["5ma突破30ma黃金交叉", "5ma突破30ma死亡交叉", "KD黃金交叉", "KD死亡交叉", "天花板地板線20wma方法一", "天花板地板線20wma方法二", "天花板地板線20wma方法三"]
+    const condition = ["5ma突破15ma黃金交叉", "5ma突破15ma死亡交叉", "5ma突破30ma黃金交叉", "5ma突破30ma死亡交叉", "KD黃金交叉", "KD死亡交叉", "天花板地板線20wma方法一", "天花板地板線20wma方法二", "天花板地板線20wma方法三"]
 
     return (
         <>

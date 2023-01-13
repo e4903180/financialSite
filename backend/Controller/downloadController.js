@@ -1,4 +1,4 @@
-const con = require('../Model/connectMySQL')
+const con = require('../Model/connectFinancial')
 const { Parser } = require('json2csv');
 const iconv = require('iconv-lite');
 const fs = require('fs');

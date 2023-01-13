@@ -110,11 +110,14 @@ function NavbarComp() {
                             {/* <p className = "my-auto" style = {{color : "white"}}>{time}</p> */}
 
                             <NavDropdown title = {
-                                <Tooltip title = "資料庫相關功能" style = {{ height : "1vh" }}>
-                                    <IconButton>
-                                        <FiDatabase style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
-                                    </IconButton>
-                                </Tooltip>
+                                <>
+                                    <Tooltip title = "資料庫相關功能" style = {{ height : "1vh" }}>
+                                        <IconButton>
+                                            <FiDatabase style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                    資料庫相關功能
+                                </>
                             } align = "end">
                                 <NavDropdown.Item href = "/database">資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
@@ -131,6 +134,7 @@ function NavbarComp() {
                                         <BuildOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
                                     </IconButton>
                                 </Tooltip>
+                                分析工具
                             </Nav.Link>
 
                             <Nav.Link href = "/subscibe_list">
@@ -139,6 +143,7 @@ function NavbarComp() {
                                         <AccessAlarmsOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
                                     </IconButton>
                                 </Tooltip>
+                                警示訂閱
                             </Nav.Link>
 
                             <Nav.Link href = "/choose_ticker">
@@ -147,6 +152,7 @@ function NavbarComp() {
                                         <FilterListOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
                                     </IconButton>
                                 </Tooltip>
+                                選股
                             </Nav.Link>
 
                             <NavDropdown id = "notify" title = {
@@ -165,7 +171,7 @@ function NavbarComp() {
                                 <NavbarNotifyComp />
                             </NavDropdown>
                             
-                            <NavDropdown title = {
+                            <NavDropdown id = "notify" title = {
                                 <Tooltip title = "更多" style = {{ height : "1vh" }}>
                                     <IconButton>
                                         <MenuOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />

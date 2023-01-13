@@ -108,6 +108,17 @@ function PERRiverComp() {
                 'toggleAnnotations', 'separator', 'verticalLabels', 'flags', 'separator', 'zoomChange', 'fullScreen',
                 'typeChange', 'separator', 'currentPriceIndicator', 'saveChart' ]
             }
+        },
+        plotOptions : {
+            series : {
+                dataGrouping : {
+                    enabled : false
+                }
+            },
+            candlestick: {
+                color: 'green',
+                upColor: 'red'
+            }
         }
     });
 

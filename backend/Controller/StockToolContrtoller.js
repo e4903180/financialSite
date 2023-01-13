@@ -47,7 +47,20 @@ exports.support_resistance_data = async function(req, res){
         return res.status(400).send(error)
     }
 
-    return res.status(200).send(result.data)
+    let temp = []
+
+    for(let i = 0; i < result.data["Kline"].length; i++){
+        if(result.data["Kline"][i][1] <= result.data["Kline"][i][4]){
+            temp.push({ x : result.data["volume"][i][0], y : result.data["volume"][i][1], color : "red"})
+        }else{
+            temp.push({ x : result.data["volume"][i][0], y : result.data["volume"][i][1], color : "green"})
+        }
+
+        if(i == result.data["Kline"].length - 1){
+            result.data["volume"] = temp
+            return res.status(200).send(result.data)
+        }
+    };
 }
 
 

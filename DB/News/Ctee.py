@@ -35,17 +35,29 @@ class Ctee(NewsBase):
             Return :
                 None 
         """
-        print("工商時報 證券")
-        self.crawler("stocks", "工商時報 證券")
+        # Create news setting dict
+        # Contains category, table_category
+        news_settings = [
+            {
+                "category" : "stocks",
+                "table_category" : "工商時報 證券"
+            },
+            {
+                "category" : "tech",
+                "table_category" : "工商時報 科技"
+            },
+            {
+                "category" : "industry",
+                "table_category" : "工商時報 產業"
+            }
+        ]
 
-        print("工商時報 科技")
-        self.crawler("tech", "工商時報 科技")
+        for news_setting in tqdm(news_settings):
+            print(news_setting["table_category"])
+            self._get(news_setting["category"], news_setting["table_category"])
 
-        print("工商時報 產業")
-        self.crawler("industry", "工商時報 產業")
-
-    def crawler(self, category : str, table_category : str) -> None:
-        """Crawler different category
+    def _get(self, category : str, table_category : str) -> None:
+        """Get different category
 
             Args :
                 category : (str) category of news
@@ -59,7 +71,7 @@ class Ctee(NewsBase):
         page = 2
         stop = False
 
-        # Infinite loop until article date is not today
+        # Infinite loop until article date is not today or yeasterday
         while True:
             articles = self.driver.find_elements(by = By.TAG_NAME, value = "article")
             

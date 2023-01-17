@@ -42,13 +42,18 @@ class Money(NewsBase):
         page = 1
         stop = False
 
+        # Infinite loop until article date is not today or yeasterday
         while True:
+            # Insert the page and category id to url
             url = news_setting["url"].format(page, id)
             r = requests.get(url)
             soup = BeautifulSoup(r.text, "html.parser")
+            # Get all news <a> tags
             a_tags = soup.find_all('a')
 
+            # Traverse all <a> tags
             for tag in tqdm(a_tags):
+                # Get article attributes title, href, date, repoter
                 article_title = tag.get('title')
                 article_href = self._root + tag.get('href')
 
@@ -57,17 +62,23 @@ class Money(NewsBase):
                 article_date = soup1.select_one(".article-body__time").text.split(" ")[0]
                 article_repoter = soup1.select_one(".article-body__info").text.replace("\n", "").split("／")[0]
 
-                if ((self._check_date(article_date, self._today_format)) and 
-                    (not self._isDuplicate(article_title, article_href, article_repoter, category))):
+                # Check if data duplicate in table
+                if self._isDuplicate(article_title, article_href, article_repoter, category):
+                    continue
+
+                # Check if article date is today
+                if self._check_date(article_date, self._today_format):
                     self._insert(article_title, article_href, article_repoter, category, self._today_format)
-                elif ((self._check_date(article_date, self._yeasterday_format)) and 
-                    (not self._isDuplicate(article_title, article_href, article_repoter, category))):
+                # Check if article date is yeasterday
+                elif self._check_date(article_date, self._yeasterday_format):
                     self._insert(article_title, article_href, article_repoter, category, self._yeasterday_format)
+                # Raise stop flag
                 else:
                     stop = True
 
             if stop:
                 break
+
             page += 1
 
     def _check_date(self, article_date : str, date : str) -> bool:
@@ -124,6 +135,16 @@ class Money(NewsBase):
         return True
 
     def run(self):
+        """Run
+
+            Args :
+                None
+
+            Return :
+                None 
+        """
+        # Create news setting dict
+        # Contains url, categorys, category id
         news_settings = [
             {
                 "url" : "https://money.udn.com/money/get_article/{}/1001/5591/{}",
@@ -137,9 +158,12 @@ class Money(NewsBase):
             }
         ]
 
+        # Traverse news_settings 
         for news_setting in tqdm(news_settings):
+            # Traverse categorys and categorys url id
             for category, id in zip(news_setting["categorys"], news_setting["ids"]):
                 print(category)
+                # Get article details
                 self._get_details(news_setting, category, id)
 
                 

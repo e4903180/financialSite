@@ -12,19 +12,19 @@ exports.lineMemo_upload = async function(req, res){
     const username = req.session.userName
     const content = req.body.content
 
-    let sql = `SELECT ID FROM ticker_list WHERE stock_num=?`
+    let query = `SELECT ID FROM ticker_list WHERE stock_num=?`
     let param = [stockNum]
     let key = -1
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         key = rows[0]["ID"]
     } catch (error) {
         console.log("error")
     }
 
-    sql = "INSERT INTO `lineMemo` (`ticker_id`, `date`, `filename`, `inputTime`, `username`) VALUES (?, ?, ?, ?, ?)"
+    query = "INSERT INTO `lineMemo` (`ticker_id`, `date`, `filename`, `inputTime`, `username`) VALUES (?, ?, ?, ?, ?)"
     param = [
         key,
         date,
@@ -36,7 +36,7 @@ exports.lineMemo_upload = async function(req, res){
     fs.writeFileSync("/home/cosbi/桌面/financialData/lineMemo_data/" + filename, content);
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).send("success");
     } catch (error) {

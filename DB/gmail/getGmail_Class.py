@@ -5,15 +5,11 @@ from google.auth.transport.requests import Request
 import pickle
 import os.path
 import base64
-import email
 from tqdm import trange
 from bs4 import BeautifulSoup
 import pandas as pd
-import lxml
 from apiclient import errors
 import re
-from datetime import datetime
-import logging
 import requests
 import urllib
 
@@ -191,10 +187,10 @@ class gmailService:
         """
         
         # \d{4}(?=\.[A-Z] 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
-        # (?<=[^\d])\d{4}(?=[^\d\/]) 4個數字(\d{4}) 前面為非數字(?<=[^\d]) 後面不能接數字(\d) or/ or 年 or .
+        # \d{4}(?=[^\d\/]) 4個數字(\d{4}) 後面不能接數字(\d) or/ or 年 or .
         
         temp1 = re.findall(r'\d{4}(?=\.[A-Z])', subject)
-        temp2 = re.findall(r'(?<=[^\d])\d{4}(?=[^\d\/\年\.])', subject)
+        temp2 = re.findall(r'\d{4}(?=[^\d\/\年\.])', subject)
         
         if len(temp1) != 0 and len(temp2) == 0:
             return temp1

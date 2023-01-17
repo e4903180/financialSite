@@ -16,11 +16,11 @@ function DatabaseComp() {
     const [search1, setSearch1] = useState(false);
     const [loading, setLoading] = useState(false);
     const [page1, setPage1] = useState(0);
-    const [pageSize1, setPageSize1] = useState(5);
+    const [pageSize1, setPageSize1] = useState(10);
     const [page2, setPage2] = useState(0);
-    const [pageSize2, setPageSize2] = useState(5);
+    const [pageSize2, setPageSize2] = useState(10);
     const [page3, setPage3] = useState(0);
-    const [pageSize3, setPageSize3] = useState(5);
+    const [pageSize3, setPageSize3] = useState(10);
     const [page4, setPage4] = useState(0);
     const [pageSize4, setPageSize4] = useState(10);
     const [columnTable, set_colume_table] = useState([]);
@@ -304,7 +304,7 @@ function DatabaseComp() {
                 </div>
             </div>
 
-            { search  && <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            { search  && <div className = 'row mx-auto py-3' style = {{ width : "90%", height : "600px" }}>
                 <h3 className = "display-6 text-center">查詢結果</h3>
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
@@ -325,7 +325,6 @@ function DatabaseComp() {
                     disableDensitySelector
                     disableColumnFilter
                     disableSelectionOnClick = { true }
-                    autoHeight = { true }
                 />
             </div>}
 
@@ -334,7 +333,7 @@ function DatabaseComp() {
 
                 <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
-                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "400px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
                     <h4 className = "text-center">個股研究資料</h4>
 
                     <DataGrid
@@ -357,7 +356,7 @@ function DatabaseComp() {
                     />
                 </div>
 
-                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "400px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
                     <h4 className = "text-center">Post board memo</h4>
 
                     <DataGrid
@@ -380,7 +379,7 @@ function DatabaseComp() {
                     />
                 </div>
 
-                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "400px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
                     <h4 className = "text-center">Line memo</h4>
 
                     <DataGrid

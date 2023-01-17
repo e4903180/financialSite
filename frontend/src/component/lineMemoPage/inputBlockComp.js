@@ -25,6 +25,8 @@ function InputBlockComp() {
                 date : Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'),
                 content : input2
             }).then(res => {
+                setTicker("")
+                setInput2("")
                 alert("上傳成功")
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()

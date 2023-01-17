@@ -1,11 +1,11 @@
 const con = require('../Model/connectFinancial')
 
 exports.newest15 = async function(req, res){
-    let sql = "SELECT financialData.*, ticker_list.stock_name \
+    let query = "SELECT financialData.*, ticker_list.stock_name \
     FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 15;"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         return res.status(200).send(rows)
     } catch (error) {
@@ -15,13 +15,13 @@ exports.newest15 = async function(req, res){
 };
 
 exports.allData = async function(req, res){
-    let sql = "SELECT count( * ) as dataQuantity from financialData; select max(date) as newestDate from financialData;\
-    select count( * ) as dataQuantity from post_board_memo;select max(date) as newestDate from post_board_memo;\
-    select count( * ) as dataQuantity from lineMemo;select max(date) as newestDate from lineMemo;\
-    select count( * ) as dataQuantity from calender;select max(date) as newestDate from calender;"
+    let query = "SELECT COUNT( * ) as dataQuantity FROM financialData; SELECT MAX(date) as newestDate FROM financialData;\
+    SELECT COUNT( * ) as dataQuantity FROM post_board_memo;SELECT MAX(date) as newestDate FROM post_board_memo;\
+    SELECT COUNT( * ) as dataQuantity FROM lineMemo;SELECT MAX(date) as newestDate FROM lineMemo;\
+    SELECT COUNT( * ) as dataQuantity FROM calender;SELECT MAX(date) as newestDate FROM calender;"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         return res.status(200).send([Object.assign({ "dbName" : "個股研究資料" }, rows[0][0], rows[1][0], {"downloadUrl" : "http://140.116.214.154:3000/api/data/download/financialData"}),
                                         Object.assign({ "dbName" : "個股推薦" }, rows[2][0], rows[3][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/post_board_memo" }),
@@ -33,10 +33,10 @@ exports.allData = async function(req, res){
 };
 
 exports.post_board_state = async function(req, res){
-    let sql = "SELECT count( * ) as dataQuantity, max(date) as newestDate from post_board_memo;"
+    let query = "SELECT COUNT( * ) as dataQuantity, MAX(date) as newestDate FROM post_board_memo;"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         return res.status(200).send(rows[0])
     } catch (error) {
@@ -45,10 +45,10 @@ exports.post_board_state = async function(req, res){
 }
 
 exports.lineMemo_state = async function(req, res){
-    let sql = "SELECT count( * ) as dataQuantity, max(date) as newestDate from lineMemo;"
+    let query = "SELECT COUNT( * ) as dataQuantity, MAX(date) as newestDate FROM lineMemo;"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         return res.status(200).send(rows[0])
     } catch (error) {
@@ -57,11 +57,11 @@ exports.lineMemo_state = async function(req, res){
 }
 
 exports.superUser = async function(req, res){
-    let sql = "SELECT superUser from user WHERE userName=?"
+    let query = "SELECT superUser FROM user WHERE userName=?"
     let param = [req.session.userName]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).send(rows)
     } catch (error) {
@@ -70,10 +70,10 @@ exports.superUser = async function(req, res){
 }
 
 exports.meetingData = async function(req, res){
-    let sql = "SELECT *, filename as fileName from meetingData;"
+    let query = "SELECT *, filename as fileName FROM meetingData;"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         return res.status(200).send(rows)
     } catch (error) {
@@ -82,10 +82,10 @@ exports.meetingData = async function(req, res){
 }
 
 exports.industry_analysis = async function(req, res){
-    let sql ="SELECT *, filename as fileName from industry_analysis;"
+    let query ="SELECT *, filename as fileName FROM industry_analysis;"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         return res.status(200).send(rows)
     } catch (error) {
@@ -94,10 +94,10 @@ exports.industry_analysis = async function(req, res){
 }
 
 exports.userList = async function(req, res){
-    let sql = "SELECT name, userName, email FROM user"
+    let query = "SELECT name, userName, email FROM user"
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         // if(re.length % 8 != 0){
         //     const range = 8 - (re.length % 8)
@@ -113,12 +113,12 @@ exports.userList = async function(req, res){
 }
 
 exports.calender = async function(req, res){
-    let sql = "SELECT stock_name, date from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
+    let query = "SELECT stock_name, date FROM calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
     let param = [req.body.year, req.body.month]
     let re = [];
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         for(let i = 0; i < rows.length; i++){
             re.push(Object.assign({"title" : rows[i]["stock_name"]}, {"date" : rows[i]["date"]}))
@@ -131,12 +131,12 @@ exports.calender = async function(req, res){
 }
 
 exports.calenderData = async function(req, res){
-    let sql = "SELECT calender.*, ticker_list.stock_name\
-        from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
+    let query = "SELECT calender.*, ticker_list.stock_name\
+        FROM calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE YEAR(date)=? AND MONTH(date)=?;"
     let param = [req.body.year, req.body.month]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).json(rows)
     } catch (error) {
@@ -145,13 +145,33 @@ exports.calenderData = async function(req, res){
 }
 
 exports.tickerList = async function(req, res){
-    con.query("SELECT ID, stock_name as stock_num_name from ticker_list", function(err, result, field){
-        if(err === null){
-            return res.status(200).json(result)
-        }else{
-            return res.status(400).send("error")
+    let query = "SELECT ID, stock_name as stock_num_name FROM ticker_list"
+
+    try {
+        const [rows, fields] = await con.promise().query(query);
+
+        return res.status(200).json(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    } 
+}
+
+exports.news = async function(req, res){
+    let query = "SELECT * FROM news ORDER BY date DESC, category DESC WHERE date=(SELECT MAX(date) FROM news)"
+
+    try {
+        const [rows, fields] = await con.promise().query(query);
+        
+        for(let i = 0; i < rows.length; i++){
+            rows[i]["title"] = [rows[i]["title"], rows[i]["link"]]
+            delete rows[i]["link"]
         }
-    })    
+
+        return res.status(200).json(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send("error")
+    } 
 }
 
 exports.username = async function(req, res){

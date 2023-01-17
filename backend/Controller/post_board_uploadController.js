@@ -35,19 +35,19 @@ exports.post_board_upload = async function(req, res){
     const reason = req.body.reason
     if(req.body.filename !== "") filename = date + "_" + req.body.filename
 
-    let sql = `SELECT ID FROM ticker_list WHERE stock_num=?`
+    let query = `SELECT ID FROM ticker_list WHERE stock_num=?`
     let param = [stockNum]
     let key = -1
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         key = rows[0]["ID"]
     } catch (error) {
         console.log("error")
     }
     
-    sql = "INSERT INTO `post_board_memo` (`ticker_id`, `username`, `date`, `evaluation`, `price`, `reason`, `filename`) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    query = "INSERT INTO `post_board_memo` (`ticker_id`, `username`, `date`, `evaluation`, `price`, `reason`, `filename`) VALUES (?, ?, ?, ?, ?, ?, ?)"
     param = [
         key,
         username,
@@ -59,7 +59,7 @@ exports.post_board_upload = async function(req, res){
     ]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).send("success");
     } catch (error) {

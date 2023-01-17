@@ -28,7 +28,7 @@ exports.industry_analysis_upload = async function(req, res){
     let filename = "NULL"
     if(req.body.filename !== "") filename = req.body.filename
 
-    let sql = 'INSERT INTO `industry_analysis` (`title`, `date`, `filename`, `username`) VALUES (?, ?, ?, ?)'
+    let query = 'INSERT INTO `industry_analysis` (`title`, `date`, `filename`, `username`) VALUES (?, ?, ?, ?)'
     let param = [
                     req.body.title,
                     Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'),
@@ -37,7 +37,7 @@ exports.industry_analysis_upload = async function(req, res){
     ]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).send("success");
     } catch (error) {

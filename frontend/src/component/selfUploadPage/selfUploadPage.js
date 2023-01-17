@@ -7,15 +7,14 @@ import TickerSearchComp from '../tickerSearchComp';
 const autocom = AutoCom.AutoComList;
 
 function SelfUploadPage() {
-    const [superUser, setSuperUser] = useState(0)
-    const [ticker, setTicker] = useState("")
-
     var Today = new Date();
     let year = Today.getFullYear()
     let month = (Today.getMonth() + 1)
     let day = Today.getDate()
     var TodayDate = year.toString() + "-" + month.toString().padStart(2, '0') + "-" + day.toString().padStart(2, '0')
-
+    
+    const [superUser, setSuperUser] = useState(0)
+    const [ticker, setTicker] = useState("")
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState("");
     const [provider, setProvider] = useState("NULL");
@@ -48,6 +47,13 @@ function SelfUploadPage() {
             axios.post(rootApiIP + "/data/upload/self_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
+                setFile(null)
+                setFileName("")
+                setProvider("NULL")
+                setEvaluate("NULL")
+                setTicker("")
+                setDate(TodayDate)
+                
                 alert("上傳成功")
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -71,7 +77,7 @@ function SelfUploadPage() {
         <>
             { superUser === 1 ?
                 <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
-                    <h3 className = "display-6 text-center">自定義上傳</h3>
+                    <h3 className = "display-6 text-center">個股研究報告上傳</h3>
 
                     <form onSubmit = { submit }>
                         <div className = 'form-group row my-2'>

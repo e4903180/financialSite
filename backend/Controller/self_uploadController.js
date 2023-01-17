@@ -1,6 +1,5 @@
 var multer  = require('multer')
 const fs = require('fs')
-var Today = new Date();
 const con = require('../Model/connectFinancial')
 
 var storage = multer.diskStorage({
@@ -35,11 +34,22 @@ exports.self_upload_middleWare = function(req, res, next){
 
 exports.self_upload = async function(req, res){
     let temp = req.body.ticker.split(" ")
+    let key = -1
 
-    let sql = "INSERT INTO `financialData` (`stockNum`, `stockName`, `date`, `investmentCompany`, `filename`, `recommend`) VALUES (?, ?, ?, ?, ?, ?)"
-    let param = [
-        temp[0],
-        temp[1],
+    let query = "SELECT ID FROM ticker_list WHERE stock_num=?"
+    let param = [temp[0]]
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        key = rows[0]["ID"]
+    } catch (error) {
+        console.log("error")
+    }
+
+    query = "INSERT INTO `financialData` (`ticker_id`, `date`, `investmentCompany`, `filename`, `recommend`) VALUES (?, ?, ?, ?, ?)"
+    param = [
+        key,
         req.body.date,
         req.body.provider,
         `${temp[0]}-${temp[1]}-${req.body.provider}-${req.body.evaluate}-${req.body.filename}`,
@@ -47,7 +57,7 @@ exports.self_upload = async function(req, res){
     ]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).send("success");
     } catch (error) {

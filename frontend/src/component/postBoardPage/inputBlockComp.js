@@ -37,6 +37,12 @@ function InputBlockComp() {
             axios.post(rootApiIP + "/data/upload/post_board_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
+                setTicker("")
+                setInput2("")
+                setInput3("")
+                setInput4("")
+                setFile(null)
+                setFileName("")
                 alert("上傳成功")
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()

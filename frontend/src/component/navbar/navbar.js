@@ -147,12 +147,12 @@ function NavbarComp() {
                             </Nav.Link>
 
                             <Nav.Link href = "/choose_ticker">
-                                <Tooltip title = "選股" style = {{ height : "1vh" }}>
+                                <Tooltip title = "選股(開發中)" style = {{ height : "1vh" }}>
                                     <IconButton>
                                         <FilterListOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
                                     </IconButton>
                                 </Tooltip>
-                                選股
+                                選股(開發中)
                             </Nav.Link>
 
                             <NavDropdown id = "notify" title = {

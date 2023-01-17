@@ -28,7 +28,7 @@ exports.meetingData_upload = async function(req, res){
     let filename = "NULL"
     if(req.body.filename !== "") filename =  req.body.filename
 
-    let sql = "INSERT INTO `meetingData` (`username`, `date`, `filename`) VALUES (?, ?, ?)"
+    let query = "INSERT INTO `meetingData` (`username`, `date`, `filename`) VALUES (?, ?, ?)"
     let param = [ 
         req.session.userName,
         Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'),
@@ -36,7 +36,7 @@ exports.meetingData_upload = async function(req, res){
     ]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         return res.status(200).send("success");
     } catch (error) {

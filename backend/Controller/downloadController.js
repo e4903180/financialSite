@@ -18,11 +18,11 @@ function createCSV(path, data){
 
 exports.single_financialData_download = async function(req, res){
     const filename = req.query.filename;
-    let sql = `SELECT ticker_list.stock_num FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE filename=?`
+    let query = `SELECT ticker_list.stock_num FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE filename=?`
     let param = [filename]
 
     try {
-        const [rows, fields] = await con.promise().query(sql, param);
+        const [rows, fields] = await con.promise().query(query, param);
 
         res.download("/home/cosbi/桌面/financialData/gmailData/data/" + rows[0].stock_num + "/" + filename)
     } catch (error) {
@@ -39,10 +39,10 @@ exports.single_line_memo_download = function(req, res){
 };
 
 exports.financialData2csv_download = async function(req, res){
-    let sql = `SELECT * FROM financialData`
+    let query = `SELECT * FROM financialData`
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         const path = createCSV('/home/cosbi/桌面/financialData/financialData.csv', rows)
         res.download(path)
@@ -52,10 +52,10 @@ exports.financialData2csv_download = async function(req, res){
 };
 
 exports.post_board_memo2csv_download = async function(req, res){
-    let sql = `SELECT * FROM post_board_memo`
+    let query = `SELECT * FROM post_board_memo`
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         const path = createCSV('/home/cosbi/桌面/financialData/post_board_memo.csv', rows)
         res.download(path)
@@ -65,10 +65,10 @@ exports.post_board_memo2csv_download = async function(req, res){
 };
 
 exports.lineMemo2csv_download = async function(req, res){
-    let sql = `SELECT * FROM lineMemo`
+    let query = `SELECT * FROM lineMemo`
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         const path = createCSV('/home/cosbi/桌面/financialData/lineMemo.csv', rows)
         res.download(path)
@@ -78,10 +78,10 @@ exports.lineMemo2csv_download = async function(req, res){
 };
 
 exports.calender2csv_download = async function(req, res){
-    let sql = `SELECT * FROM calender`
+    let query = `SELECT * FROM calender`
 
     try {
-        const [rows, fields] = await con.promise().query(sql);
+        const [rows, fields] = await con.promise().query(query);
 
         const path = createCSV('/home/cosbi/桌面/financialData/calender.csv', rows)
         res.download(path)

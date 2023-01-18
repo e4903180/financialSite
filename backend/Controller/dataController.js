@@ -157,7 +157,7 @@ exports.tickerList = async function(req, res){
 }
 
 exports.news = async function(req, res){
-    let query = "SELECT * FROM news ORDER BY date DESC, category DESC WHERE date=(SELECT MAX(date) FROM news)"
+    let query = "SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) ORDER BY date DESC, category DESC"
 
     try {
         const [rows, fields] = await con.promise().query(query);

@@ -7,6 +7,8 @@ import datetime
 from typing import Any
 import pandas as pd
 from tqdm import tqdm
+import requests
+from bs4 import BeautifulSoup
 
 class MoneyDj(NewsBase):
     """Update news from https://www.moneydj.com
@@ -18,7 +20,7 @@ class MoneyDj(NewsBase):
         self._db = db
         self._cursor = cursor
         self.driver = webdriver.Chrome(options = options, service = service)
-        self._today = datetime.date.today().strftime("%Y-%m-%d")
+        self._today = datetime.date.today()
     
     def run(self):
         """Run
@@ -37,7 +39,7 @@ class MoneyDj(NewsBase):
         industry_li = industry_li.find_elements(by = By.XPATH, value = "./li")
 
         table_category = "MoneyDj 科技"
-        
+        print("MoneyDj")
         for i in range(2):
             print(table_category)
             aes = industry_li[i].find_elements(by = By.TAG_NAME, value = "a")
@@ -45,9 +47,21 @@ class MoneyDj(NewsBase):
             for a in tqdm(aes):
                 title = a.get_attribute("innerText")
                 link = a.get_attribute("href")
+                r = requests.get(link)
+                soup = BeautifulSoup(r.text, "html.parser")
+                repoter = soup.select_one('p').text
 
-                if not self._isDuplicate(title, link, "NULL", table_category):
-                    self._insert(title, link, "NULL", table_category, self._today)
+                if repoter[-2:] != "報導" :
+                    repoter = "NULL"
+                else:
+                    start = -4
+
+                    while repoter[start] != "記":
+                        start -= 1
+                    repoter = repoter[start : -3]
+
+                if not self._isDuplicate(title, link, repoter, table_category):
+                    self._insert(title, link, repoter, table_category, self._today)
             table_category = "MoneyDj 傳產"
     
     def _insert(self, title : str, link : str, repoter : str, table_category : str, date : str) -> None:

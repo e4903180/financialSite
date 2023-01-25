@@ -18,7 +18,8 @@ function createCSV(path, data){
 
 exports.single_financialData_download = async function(req, res){
     const filename = req.query.filename;
-    let query = `SELECT ticker_list.stock_num FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE filename=?`
+    let query = `SELECT ticker_list.stock_num FROM financialData \
+    INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE filename=?`
     let param = [filename]
 
     try {

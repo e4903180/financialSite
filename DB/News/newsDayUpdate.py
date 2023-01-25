@@ -7,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import MySQLdb
 import MySQLdb.cursors
 import sys
+import datetime
     
 class News():
     def __init__(self) -> None:
@@ -24,12 +25,12 @@ class News():
         self._money = Money(options, service, db, cursor)
     
     def run(self):
-        # self._ctee.run()
-        # self._moneydj.run()
+        self._ctee.run()
+        self._moneydj.run()
         self._money.run()
 
 if __name__ == "__main__":
-    # sys.stderr = open("/home/cosbi/桌面/financialData/news/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open("/home/cosbi/桌面/financialData/news/" + str(datetime.datetime.now()) + '.log', 'w')
     news = News()
 
     news.run()

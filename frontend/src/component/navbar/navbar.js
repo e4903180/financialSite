@@ -17,12 +17,10 @@ import "./navbar.css";
 import { IconButton, Tooltip } from '@mui/material';
 
 function NavbarComp() {
-    // let date = new Date()
     const [show, setShow] = useState(false);
     const [badgeNumber, setBadgeNumber] = useState(0)
     const [loading, setLoading] = useState(true)
     const [superUser, setSuperUser] = useState(0)
-    // const [time, setTime] = useState(date.toLocaleTimeString('en-US'))
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -32,10 +30,6 @@ function NavbarComp() {
     const HandleNotifyQuantity = useCallback((arg) => {
         setBadgeNumber(arg)
     }, [])
-
-    // const HandleTime = useCallback((arg) => {
-    //     setTime(arg)
-    // }, [])
 
     function logout(e){
         e.preventDefault()
@@ -72,11 +66,9 @@ function NavbarComp() {
     useEffect(() => {
         if(socket){
             socket.on("REGISTER_NOTIFY_QUANTITY", (arg) => HandleNotifyQuantity(arg));
-            // socket.on("REGISTER_REAL_TIME", (arg) => HandleTime(arg));
 
             return () => {
                 socket.off("REGISTER_NOTIFY_QUANTITY");
-                // socket.off("REGISTER_REAL_TIME");
             };
         }
     }, [socket])
@@ -107,8 +99,6 @@ function NavbarComp() {
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
                     <Navbar.Collapse id =" basic-navbar-nav">
                         <Nav className = "ms-auto">
-                            {/* <p className = "my-auto" style = {{color : "white"}}>{time}</p> */}
-
                             <NavDropdown title = {
                                 <>
                                     <Tooltip title = "資料庫相關功能" style = {{ height : "1vh" }}>
@@ -120,6 +110,7 @@ function NavbarComp() {
                                 </>
                             } align = "end">
                                 <NavDropdown.Item href = "/database">資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = "/news">新聞資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
                                 <NavDropdown.Item href = "/line_memo">Line memo</NavDropdown.Item>
                                 <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>

@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/pythonBackend/backend/api/PythonTool/FRED
+cd /home/cosbi/financialSite/DB/FRED
 python3 FredMonthUpdate.py

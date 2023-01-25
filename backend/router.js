@@ -86,6 +86,7 @@ dataRouter.post("/calender_search", dbSearch.calender_search)
 dataRouter.post("/post_board_search", dbSearch.post_board_search)
 dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
 dataRouter.post("/ticker_search", dbSearch.ticker_search)
+dataRouter.post("/news_search", dbSearch.news_search)
 
 /* StockTool router */
 dataRouter.get("/PricingStrategy", StockTool.pricingData)

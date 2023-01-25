@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/pythonBackend/backend/api/PythonTool/SubExpire
+cd /home/cosbi/financialSite/DB/SubExpire
 python3 subExpireDayUpdate.py

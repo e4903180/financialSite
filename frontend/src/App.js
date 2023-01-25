@@ -26,6 +26,7 @@ import InflationComp from './component/inflationPage/inflationComp';
 import CpiPpiPceComp from './component/CpiPpiPcePage/CpiPpiPceComp';
 import LineComp from './component/LinePage/LineComp';
 import ChooseTickerDetail from './component/chooseTickerPage/chooseTickerDetail';
+import NewsComp from './component/newsPage/newsComp'
 
 axios.defaults.withCredentials = true;
 
@@ -47,6 +48,7 @@ function App() {
             <Route path = "/database" element = { <DatabaseComp /> } ></Route>
             <Route exact path = "/database/search/:stock_num_name" element = { <DatabaseSearchComp /> } ></Route>
             <Route exact path = "/post_board" element = { <PostBoardComp /> } ></Route>
+            <Route exact path = "/news" element = { <NewsComp /> } ></Route>
             <Route exact path = "/line_memo" element = { <LineMemoComp /> } ></Route>
             <Route exact path = "/meeting_data" element = { <MeetingDataComp /> } ></Route>
             <Route exact path = "/industry_analysis" element = { <IndustryAnalysisComp /> } ></Route>

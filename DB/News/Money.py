@@ -29,7 +29,7 @@ class Money(NewsBase):
         self._yeasterday_format = self._yeasterday.strftime("%Y/%m/%d")
         self._root = "https://money.udn.com/"
 
-    def _get_details(self, news_setting : Dict, category : str, id : str) -> None:
+    def _get(self, news_setting : Dict, category : str, id : str) -> None:
         """Get the details of news
 
             Args :
@@ -68,10 +68,10 @@ class Money(NewsBase):
 
                 # Check if article date is today
                 if self._check_date(article_date, self._today_format):
-                    self._insert(article_title, article_href, article_repoter, category, self._today_format)
+                    self._insert(article_title, article_href, article_repoter, category, self._today)
                 # Check if article date is yeasterday
                 elif self._check_date(article_date, self._yeasterday_format):
-                    self._insert(article_title, article_href, article_repoter, category, self._yeasterday_format)
+                    self._insert(article_title, article_href, article_repoter, category, self._yeasterday)
                 # Raise stop flag
                 else:
                     stop = True
@@ -158,12 +158,13 @@ class Money(NewsBase):
             }
         ]
 
+        print("經濟日報")
         # Traverse news_settings 
         for news_setting in tqdm(news_settings):
             # Traverse categorys and categorys url id
             for category, id in zip(news_setting["categorys"], news_setting["ids"]):
                 print(category)
                 # Get article details
-                self._get_details(news_setting, category, id)
+                self._get(news_setting, category, id)
 
                 

@@ -51,7 +51,7 @@ class Ctee(NewsBase):
                 "table_category" : "工商時報 產業"
             }
         ]
-
+        print("工商時報")
         for news_setting in tqdm(news_settings):
             print(news_setting["table_category"])
             self._get(news_setting["category"], news_setting["table_category"])

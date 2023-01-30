@@ -9,7 +9,7 @@ import MySQLdb.cursors
 import sys
 import datetime
     
-class News():
+class NewsDayUpdate():
     def __init__(self) -> None:
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
@@ -31,6 +31,6 @@ class News():
 
 if __name__ == "__main__":
     sys.stderr = open("/home/cosbi/桌面/financialData/news/" + str(datetime.datetime.now()) + '.log', 'w')
-    news = News()
+    news = NewsDayUpdate()
 
     news.run()

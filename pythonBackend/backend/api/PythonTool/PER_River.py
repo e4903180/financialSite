@@ -41,10 +41,12 @@ class PerRiver():
         PER_table = PER_table.drop(PER_table.columns[[x for x in range(1, 6)]], axis = 1)
 
         for i in range(len(PER_table)):
-            if PER_table["交易月份"][i] == "交易月份": PER_table.drop(i, inplace = True)
-            else: PER_table["交易月份"][i] = ("20" + PER_table["交易月份"][i]).replace("M", "-") + "-01"
+            if PER_table["交易 月份"][i] == "交易 月份":
+                PER_table.drop(i, inplace = True)
+            else:
+                PER_table["交易 月份"][i] = ("20" + PER_table["交易 月份"][i]).replace("M", "-") + "-01"
 
-        PER_table["交易月份"] = [i / 10**6 for i in pd.to_datetime(PER_table["交易月份"]).astype(int)]
+        PER_table["交易 月份"] = [i / 10**6 for i in pd.to_datetime(PER_table["交易 月份"]).astype(int)]
         PER_table.reset_index(drop = True, inplace = True)
         PER_table.replace("-", 0, inplace = True)
         PER_table = PER_table.astype(float)
@@ -65,12 +67,12 @@ class PerRiver():
         Kline_table = Kline_table.iloc[:-1]
 
         for i in range(len(Kline_table)):
-            if Kline_table["交易月份"][i] == "交易月份":
+            if Kline_table["交易 月份"][i] == "交易 月份":
                 Kline_table.drop(i, inplace = True)
             else:
-                Kline_table["交易月份"][i] = ("20" + Kline_table["交易月份"][i]).replace("M", "-") + "-01"
+                Kline_table["交易 月份"][i] = ("20" + Kline_table["交易 月份"][i]).replace("M", "-") + "-01"
 
-        Kline_table["交易月份"] = [i / 10**6 for i in pd.to_datetime(Kline_table["交易月份"]).astype(int)]
+        Kline_table["交易 月份"] = [i / 10**6 for i in pd.to_datetime(Kline_table["交易 月份"]).astype(int)]
 
         Kline_table = Kline_table.drop(Kline_table.columns[1], axis = 1)
         Kline_table.reset_index(drop = True, inplace = True)

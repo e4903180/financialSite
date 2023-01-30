@@ -1,6 +1,5 @@
 from NewsBase import NewsBase
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 import MySQLdb
 import MySQLdb.cursors
 import datetime
@@ -25,8 +24,6 @@ class Money(NewsBase):
 
         self._today = datetime.date.today()
         self._yeasterday = self._today - datetime.timedelta(days = 1)
-        self._today_format = self._today.strftime("%Y/%m/%d")
-        self._yeasterday_format = self._yeasterday.strftime("%Y/%m/%d")
         self._root = "https://money.udn.com/"
 
     def _get(self, news_setting : Dict, category : str, id : str) -> None:
@@ -46,6 +43,7 @@ class Money(NewsBase):
         while True:
             # Insert the page and category id to url
             url = news_setting["url"].format(page, id)
+            # print(url)
             r = requests.get(url)
             soup = BeautifulSoup(r.text, "html.parser")
             # Get all news <a> tags
@@ -59,22 +57,23 @@ class Money(NewsBase):
 
                 r1 = requests.get(article_href)
                 soup1 = BeautifulSoup(r1.text, "html.parser")
-                article_date = soup1.select_one(".article-body__time").text.split(" ")[0]
+                article_date = soup1.select_one(".article-body__time").text.split(" ")[0].replace("/", "-")
                 article_repoter = soup1.select_one(".article-body__info").text.replace("\n", "").split("／")[0]
 
                 # Check if data duplicate in table
-                if self._isDuplicate(article_title, article_href, article_repoter, category):
+                if self._isDuplicate(article_title, article_href, article_repoter, category, article_date):
                     continue
 
                 # Check if article date is today
-                if self._check_date(article_date, self._today_format):
+                if self._check_date(article_date, str(self._today)):
                     self._insert(article_title, article_href, article_repoter, category, self._today)
                 # Check if article date is yeasterday
-                elif self._check_date(article_date, self._yeasterday_format):
+                elif self._check_date(article_date, str(self._yeasterday)):
                     self._insert(article_title, article_href, article_repoter, category, self._yeasterday)
                 # Raise stop flag
                 else:
                     stop = True
+                    break
 
             if stop:
                 break
@@ -111,7 +110,7 @@ class Money(NewsBase):
         self._cursor.execute(query)
         self._db.commit()
 
-    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str) -> bool:
+    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str, date : str) -> bool:
         """Check if data duplicate
 
             Args :
@@ -119,12 +118,13 @@ class Money(NewsBase):
                 link : (str) article link
                 repoter : (str) article repoter
                 table_category : (str) category of news for table
+                date : (str) date
             Return:
                 bool
         """
-        query = f'SELECT * FROM news WHERE title="{title}" \
-            AND link="{link}" AND repoter="{repoter}" AND category="{table_category}"'
-
+        query = f'SELECT * FROM news WHERE title="{title}" AND link="{link}" \
+            AND repoter="{repoter}" AND category="{table_category}" AND date="{date}"'
+        
         self._cursor.execute(query)
         self._db.commit()
 
@@ -153,8 +153,8 @@ class Money(NewsBase):
             },
             {
                 "url" : "https://money.udn.com/money/get_article/{}/1001/5590/{}",
-                "categorys" : ["經濟日報 證券 市場焦點", "經濟日報 證券 集中市場", "經濟日報 證券 櫃買動態", "經濟日報 證券 權證特區", "經濟日報 證券 證券達人"],
-                "ids" : ["5607", "5710", "11074", "5739", "8543"]
+                "categorys" : ["經濟日報 證券 市場焦點", "經濟日報 證券 集中市場", "經濟日報 證券 櫃買動態", "經濟日報 證券 證券達人"],
+                "ids" : ["5607", "5710", "11074", "8543"]
             }
         ]
 

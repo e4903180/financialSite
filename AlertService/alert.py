@@ -14,6 +14,8 @@ import MySQLdb
 import MySQLdb.cursors
 import os
 from gmailService.gmailService import GmailService
+import datetime
+import sys
 
 config = configparser.ConfigParser()
 config.read('../LineBot/config.ini')
@@ -206,6 +208,7 @@ class AlertService():
                                                         self._user_list.iloc[i]["lineId"])
 
 if __name__ == "__main__":
+    sys.stderr = open("/home/cosbi/桌面/financialData/alert/" + str(datetime.datetime.now()) + '.log', 'w')
     AS = AlertService()
 
     AS.detect()

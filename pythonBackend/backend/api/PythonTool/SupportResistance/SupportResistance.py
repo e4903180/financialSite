@@ -258,7 +258,7 @@ class SupportResistance(Method1, Method2, Method3):
         self._table_data["ID"] = self._table_data["ID"].astype(str)
         self._table_data = self._table_data.to_dict(orient = "records")
 
-        self._row_data["Date"] = [i / 10**6 for i in pd.to_datetime(self._row_data["Date"]).astype(int)]
+        self._row_data["Date"] = [i.value / 10**6 for i in pd.to_datetime(self._row_data["Date"])]
         self._row_data = self._row_data.astype(float)
 
         self._volume = self._row_data[["Date", "Volume"]].values.tolist()

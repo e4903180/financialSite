@@ -21,6 +21,7 @@ class MoneyDj(NewsBase):
         self._cursor = cursor
         self.driver = webdriver.Chrome(options = options, service = service)
         self._today = datetime.date.today()
+        self._yeasterday = self._today - datetime.timedelta(days = 1)
     
     def run(self):
         """Run
@@ -40,6 +41,7 @@ class MoneyDj(NewsBase):
 
         table_category = "MoneyDj 科技"
         print("MoneyDj")
+
         for i in range(2):
             print(table_category)
             aes = industry_li[i].find_elements(by = By.TAG_NAME, value = "a")
@@ -50,6 +52,7 @@ class MoneyDj(NewsBase):
                 r = requests.get(link)
                 soup = BeautifulSoup(r.text, "html.parser")
                 repoter = soup.select_one('p').text
+                date = soup.find("span", {"id" : "MainContent_Contents_lbDate"}).text.split(" ")[0].replace("/", "-")
 
                 if repoter[-2:] != "報導" :
                     repoter = "NULL"
@@ -60,8 +63,19 @@ class MoneyDj(NewsBase):
                         start -= 1
                     repoter = repoter[start : -3]
 
-                if not self._isDuplicate(title, link, repoter, table_category):
+                # Check if data duplicate in table
+                if self._isDuplicate(title, link, repoter, table_category, date):
+                    continue
+                
+                # Check if article date is today
+                if self._check_date(date, str(self._today)):
                     self._insert(title, link, repoter, table_category, self._today)
+                # Check if article date is yeasterday
+                elif self._check_date(date, str(self._yeasterday)):
+                    self._insert(title, link, repoter, table_category, self._yeasterday)
+                else:
+                    break
+
             table_category = "MoneyDj 傳產"
     
     def _insert(self, title : str, link : str, repoter : str, table_category : str, date : str) -> None:
@@ -83,7 +97,7 @@ class MoneyDj(NewsBase):
         self._cursor.execute(query, param)
         self._db.commit()
 
-    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str) -> bool:
+    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str, date : str) -> bool:
         """Check if data duplicate
 
             Args :
@@ -91,12 +105,13 @@ class MoneyDj(NewsBase):
                 link : (str) article link
                 repoter : (str) article repoter
                 table_category : (str) category of news for table
+                date : (str) date
             Return:
                 bool
         """
         query = "SELECT * FROM news WHERE title=%s \
-            AND link=%s AND repoter=%s AND category=%s"
-        param = (title, link, repoter, table_category)
+            AND link=%s AND repoter=%s AND category=%s AND date=%s"
+        param = (title, link, repoter, table_category, date)
 
         self._cursor.execute(query, param)
         self._db.commit()
@@ -106,3 +121,16 @@ class MoneyDj(NewsBase):
         if result.empty:
             return False
         return True
+
+    def _check_date(self, article_date : str, date : str) -> bool:
+        """Check if date is match
+
+            Args :
+                article_date : (str) article date
+            
+            Return :
+                True if acticle date is today date, otherwise False
+        """
+        if article_date == date:
+            return True
+        return False

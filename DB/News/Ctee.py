@@ -94,7 +94,7 @@ class Ctee(NewsBase):
             page += 1
     
     def _get_details(self, article : Any, date : str, table_category : str):
-        """Get the details on article
+        """Get the details on article, if false insert to table
 
             Args :
                 article : (Any) WebElement of selenium
@@ -107,7 +107,7 @@ class Ctee(NewsBase):
         title, link = self._find_title_link(article)
         repoter = self._find_repoter(link)
 
-        if not self._isDuplicate(title, link, repoter, table_category):
+        if not self._isDuplicate(title, link, repoter, table_category, date):
             self._insert(title, link, repoter, table_category, date)
 
     def _find_repoter(self, link : str) -> str:
@@ -115,6 +115,7 @@ class Ctee(NewsBase):
 
             Args :
                 link : (str) Article link
+            
             Return :
                 repoter
         """
@@ -128,6 +129,7 @@ class Ctee(NewsBase):
 
             Args :
                 article : (Any) WebElement of selenium
+            
             Return :
                 link and text
         """
@@ -144,6 +146,7 @@ class Ctee(NewsBase):
 
             Args :
                 article : (Any) WebElement of selenium
+            
             Return :
                 True if acticle date is today date, otherwise False
         """
@@ -170,7 +173,7 @@ class Ctee(NewsBase):
         self._cursor.execute(query)
         self._db.commit()
 
-    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str) -> bool:
+    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str, date : str) -> bool:
         """Check if data duplicate
 
             Args :
@@ -178,11 +181,12 @@ class Ctee(NewsBase):
                 link : (str) article link
                 repoter : (str) article repoter
                 table_category : (str) category of news for table
+                date : (str) date
             Return:
                 bool
         """
-        query = f'SELECT * FROM news WHERE title="{title}" \
-            AND link="{link}" AND repoter="{repoter}" AND category="{table_category}"'
+        query = f'SELECT * FROM news WHERE title="{title}" AND link="{link}" \
+            AND repoter="{repoter}" AND category="{table_category}" AND date="{date}"'
 
         self._cursor.execute(query)
         self._db.commit()

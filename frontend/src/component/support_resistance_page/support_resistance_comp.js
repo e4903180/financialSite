@@ -46,6 +46,9 @@ function SupportResistanceComp() {
                 // rotation : 45
             }
         },
+        time: {
+            useUTC : false
+        },
         chart : {
             height : 600
         },

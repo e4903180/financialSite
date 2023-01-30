@@ -139,7 +139,12 @@ exports.news_search = async function(req, res){
 
     if(req.body.pattern !== ""){
         query += " AND ?? LIKE ?"
-	param.push(req.body.column, `%${req.body.pattern}%`)
+	    param.push(req.body.column, `%${req.body.pattern}%`)
+    }
+
+    if(req.body.category !== "all"){
+        query += " AND category=?"
+        param.push(req.body.category)
     }
 
     try {

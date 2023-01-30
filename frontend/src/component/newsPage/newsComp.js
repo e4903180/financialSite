@@ -17,6 +17,7 @@ function NewsComp() {
     const [page, setPage] = useState(0)
     const [pageSize, setPageSize] = useState(10)
     const [column, setColumn] = useState("title")
+    const [category, setCategory] = useState("all")
     const [pattern, setPattern] = useState("")
 
     const submit = (e) => {
@@ -26,7 +27,8 @@ function NewsComp() {
         axios.post(rootApiIP + "/data/news_search", {
             "date" : startDate,
             "column" : column,
-            "pattern" : pattern
+            "pattern" : pattern,
+            "category" : category
         })
         .then((res) => {
             setData(res.data)
@@ -57,7 +59,6 @@ function NewsComp() {
                         <div className = 'col-md-3'>
                             <select id = "columns" className = "form-select" onChange = {e => setColumn(e.target.value)}>
                                 <option value = "title">新聞標題</option>
-                                <option value = "category">新聞類別</option>
                                 <option value = "repoter">記者</option>
                             </select>
                         </div>
@@ -69,7 +70,29 @@ function NewsComp() {
                     </div>
 
                     <div className = 'form-group row py-3'>
-                        <label htmlFor = "date" className = "col-md-3 col-form-label">新聞資料起始日:</label>
+                        <label htmlFor = "category" className = "col-md-3 col-form-label text-center">新聞類別:</label>
+                        <div className = 'col-md-3'>
+                            <select id = "category" className = "form-select" onChange = {e => setCategory(e.target.value)}>
+                                <option value = "all">全部</option>
+                                <option value = "工商時報 證券">工商時報 證券</option>
+                                <option value = "工商時報 科技">工商時報 科技</option>
+                                <option value = "工商時報 產業">工商時報 產業</option>
+                                <option value = "MoneyDj 科技">MoneyDj 科技</option>
+                                <option value = "MoneyDj 產業">MoneyDj 產業</option>
+                                <option value = "經濟日報 產業 產業熱點">經濟日報 產業 產業熱點</option>
+                                <option value = "經濟日報 產業 科技產業">經濟日報 產業 科技產業</option>
+                                <option value = "經濟日報 產業 綜合產業">經濟日報 產業 綜合產業</option>
+                                <option value = "經濟日報 產業 產業達人">經濟日報 產業 產業達人</option>
+                                <option value = "經濟日報 證券 市場焦點">經濟日報 證券 市場焦點</option>
+                                <option value = "經濟日報 證券 集中市場">經濟日報 證券 集中市場</option>
+                                <option value = "經濟日報 證券 櫃買動態">經濟日報 證券 櫃買動態</option>
+                                <option value = "經濟日報 證券 證券達人">經濟日報 證券 證券達人</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className = 'form-group row py-3'>
+                        <label htmlFor = "date" className = "col-md-3 col-form-label text-center">新聞資料起始日:</label>
                         <div className = 'col-md-3'>
                             <input type = "date" id = "date" className = "form-control" onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
                         </div>

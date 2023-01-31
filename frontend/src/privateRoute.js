@@ -18,10 +18,6 @@ function PrivateRoute() {
         })
     }
 
-    let timer = setTimeout(() => {
-        handleLogOut()
-    }, 14.9 * 60 * 1000);
-
     const event = [
         "load",
         "mousemove",
@@ -43,6 +39,10 @@ function PrivateRoute() {
     }, [])
 
     useEffect(() => {
+        let timer = setTimeout(() => {
+            handleLogOut()
+        }, 14.9 * 60 * 1000);
+
         event.forEach((item, idx) => {
             window.addEventListener(item, () => {
                 clearTimeout(timer)

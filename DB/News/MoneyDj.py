@@ -48,6 +48,7 @@ class MoneyDj(NewsBase):
 
             for a in tqdm(aes):
                 title = a.get_attribute("innerText")
+
                 link = a.get_attribute("href")
                 r = requests.get(link)
                 soup = BeautifulSoup(r.text, "html.parser")

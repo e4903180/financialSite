@@ -142,7 +142,7 @@ exports.news_search = async function(req, res){
 	    param.push(req.body.column, `%${req.body.pattern}%`)
     }
 
-    if(req.body.category !== "all"){
+    if(req.body.category !== "全部"){
         query += " AND category=?"
         param.push(req.body.category)
     }

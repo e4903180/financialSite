@@ -4,6 +4,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { rootApiIP } from '../../constant';
 import { columns_news } from '../column/column';
+import { categoryList } from './categoryList';
 
 function NewsComp() {
     var Today = new Date()
@@ -71,22 +72,12 @@ function NewsComp() {
 
                     <div className = 'form-group row py-3'>
                         <label htmlFor = "category" className = "col-md-3 col-form-label text-center">新聞類別:</label>
-                        <div className = 'col-md-3'>
+                        <div className = 'col-md-4'>
                             <select id = "category" className = "form-select" onChange = {e => setCategory(e.target.value)}>
-                                <option value = "all">全部</option>
-                                <option value = "工商時報 證券">工商時報 證券</option>
-                                <option value = "工商時報 科技">工商時報 科技</option>
-                                <option value = "工商時報 產業">工商時報 產業</option>
-                                <option value = "MoneyDj 科技">MoneyDj 科技</option>
-                                <option value = "MoneyDj 產業">MoneyDj 產業</option>
-                                <option value = "經濟日報 產業 產業熱點">經濟日報 產業 產業熱點</option>
-                                <option value = "經濟日報 產業 科技產業">經濟日報 產業 科技產業</option>
-                                <option value = "經濟日報 產業 綜合產業">經濟日報 產業 綜合產業</option>
-                                <option value = "經濟日報 產業 產業達人">經濟日報 產業 產業達人</option>
-                                <option value = "經濟日報 證券 市場焦點">經濟日報 證券 市場焦點</option>
-                                <option value = "經濟日報 證券 集中市場">經濟日報 證券 集中市場</option>
-                                <option value = "經濟日報 證券 櫃買動態">經濟日報 證券 櫃買動態</option>
-                                <option value = "經濟日報 證券 證券達人">經濟日報 證券 證券達人</option>
+                                { 
+                                    categoryList.map((ele, idx) => 
+                                        <option value = { ele } key = { idx }>{ele}</option>) 
+                                }
                             </select>
                         </div>
                     </div>

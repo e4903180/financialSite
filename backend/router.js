@@ -78,6 +78,7 @@ dataRouter.get("/username", Data.username)
 dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 dataRouter.get("/tickerList", Data.tickerList)
+dataRouter.get("/news_summary", Data.news_summary)
 dataRouter.get("/news", Data.news)
 
 /* DB search router */

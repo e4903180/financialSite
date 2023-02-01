@@ -9,6 +9,7 @@ import pandas as pd
 from tqdm import tqdm
 import requests
 from bs4 import BeautifulSoup
+import sys
 
 class MoneyDj(NewsBase):
     """Update news from https://www.moneydj.com
@@ -40,10 +41,10 @@ class MoneyDj(NewsBase):
         industry_li = industry_li.find_elements(by = By.XPATH, value = "./li")
 
         table_category = "MoneyDj 科技"
-        print("MoneyDj")
+        print("\nMoneyDj", file = sys.stderr)
 
         for i in range(2):
-            print(table_category)
+            print("\n" + table_category, file = sys.stderr)
             aes = industry_li[i].find_elements(by = By.TAG_NAME, value = "a")
 
             for a in tqdm(aes):

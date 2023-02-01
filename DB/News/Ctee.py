@@ -7,6 +7,10 @@ import datetime
 from typing import Any, Tuple
 import pandas as pd
 from tqdm import tqdm
+import requests
+from bs4 import BeautifulSoup
+import time
+import sys
 
 class Ctee(NewsBase):
     """Update news from https://ctee.com.tw
@@ -19,7 +23,7 @@ class Ctee(NewsBase):
         self._cursor = cursor
         
         self.driver = webdriver.Chrome(options = options, service = service)
-        self.driver1 = webdriver.Chrome(options = options, service = service)
+        self.driver.set_page_load_timeout(30)
 
         self._today = datetime.date.today()
         self._yeasterday = self._today - datetime.timedelta(days = 1)
@@ -51,9 +55,9 @@ class Ctee(NewsBase):
                 "table_category" : "工商時報 產業"
             }
         ]
-        print("工商時報")
+        print("工商時報", file = sys.stderr)
         for news_setting in tqdm(news_settings):
-            print(news_setting["table_category"])
+            print("\n" + news_setting["table_category"], file = sys.stderr)
             self._get(news_setting["category"], news_setting["table_category"])
 
     def _get(self, category : str, table_category : str) -> None:
@@ -66,7 +70,12 @@ class Ctee(NewsBase):
                 None
         """
         # first page url
-        self.driver.get(f"https://ctee.com.tw/category/news/{category}")
+        # If access the url too much, IP will be banned
+        try:
+            self.driver.get(f"https://ctee.com.tw/category/news/{category}")
+        except:
+            print(f'\nctee {category} timeout', file = sys.stderr)
+            return
 
         page = 2
         stop = False
@@ -119,8 +128,10 @@ class Ctee(NewsBase):
             Return :
                 repoter
         """
-        self.driver1.get(link)
-        repoter = self.driver1.find_element(by = By.CLASS_NAME, value = "author.url.fn").text
+        r = requests.get(link)
+
+        soup = BeautifulSoup(r.text, "html.parser")
+        repoter = soup.select_one(".author.url.fn").text
 
         return repoter
 

@@ -1,25 +1,61 @@
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, List, ListItemButton, ListItemText } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { rootApiIP } from '../../constant';
 import { columns_news } from '../column/column';
 import { categoryList } from './categoryList';
 
 function NewsComp() {
-    var Today = new Date()
-    let day = (Today.getDate()).toString().padStart(2, "0")
-    let month = ( Today.getMonth() + 1).toString().padStart(2, "0")
-    let year = Today.getFullYear()
-
-    const [startDate, setStartDate] = useState(`${year}-${month}-${day}`)
+    const [startDate, setStartDate] = useState("2023-01-01")
     const [loading, setLoading] = useState(false)
+    const [data0, setData0] = useState([])
+
     const [data, setData] = useState([])
     const [page, setPage] = useState(0)
     const [pageSize, setPageSize] = useState(10)
     const [column, setColumn] = useState("title")
-    const [category, setCategory] = useState("all")
+    const [category, setCategory] = useState("全部")
     const [pattern, setPattern] = useState("")
+
+    const listButtonHandle = (listCategory) => {
+        setCategory(listCategory)
+        setLoading(true)
+
+        axios.post(rootApiIP + "/data/news_search", {
+            "date" : startDate,
+            "column" : column,
+            "pattern" : pattern,
+            "category" : listCategory
+        })
+        .then((res) => {
+            setData(res.data)
+            setLoading(false)
+            window.scrollTo({
+                left : 0, 
+                top : document.body.scrollHeight,
+                behavior : "smooth"
+            })
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+            setLoading(false)
+        })
+    }
+
+    const dateHandle = (date) => {
+        setStartDate(date)
+
+        axios.get(rootApiIP + "/data/news_summary", {params :{
+            "date" : date,
+        }})
+        .then((res) => {
+            setData0(res.data)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+    }
 
     const submit = (e) => {
         e.preventDefault()
@@ -41,6 +77,18 @@ function NewsComp() {
         })
     }
 
+    useEffect(() => {
+        axios.get(rootApiIP + "/data/news_summary", {params :{
+            "date" : startDate,
+        }})
+        .then((res) => {
+            setData0(res.data)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+    }, [])
+
     return (
         <>
             <Backdrop
@@ -50,6 +98,48 @@ function NewsComp() {
                 資料載入中&emsp;
                 <CircularProgress color = "inherit" />
             </Backdrop>
+            
+            <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
+                <h3 className = "display-6 text-center">新聞資料庫總覽</h3>
+
+                <div className = 'form-group row py-3'>
+                    <label htmlFor = "date" className = "col-md-3 col-form-label text-center">新聞資料起始日:</label>
+                    <div className = 'col-md-3'>
+                        <input type = "date" id = "date" className = "form-control" onChange = {e => { dateHandle(e.target.value) }} value = { startDate }></input>
+                    </div>
+                </div>
+
+                <div className = 'col-md-10 mx-auto'>
+                    <div className = 'card'>
+                        <div className = 'card-body'>
+                            <div className = 'row mx-auto'>
+                                <div className = 'col-md-6'>
+                                    <List>
+                                        { data0.slice(0, 7).map((ele, idx) => {
+                                            return (
+                                                <ListItemButton key = { idx } onClick = { () => listButtonHandle(ele["category"]) }>
+                                                    <ListItemText primary = { ele["category"] + ": " + ele["quantity"] } />
+                                                </ListItemButton>
+                                            )
+                                        }) }
+                                    </List>
+                                </div>
+                                <div className = 'col-md-6'>
+                                    <List>
+                                        { data0.slice(7, 14).map((ele, idx) => {
+                                                return (
+                                                    <ListItemButton key = { idx } onClick = { () => listButtonHandle(ele["category"]) }>
+                                                        <ListItemText primary = { ele["category"] + ": " + ele["quantity"] } />
+                                                    </ListItemButton>
+                                                )
+                                        }) }
+                                    </List>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
                 <h3 className = "display-6 text-center">新聞資料庫查詢</h3>
@@ -85,7 +175,7 @@ function NewsComp() {
                     <div className = 'form-group row py-3'>
                         <label htmlFor = "date" className = "col-md-3 col-form-label text-center">新聞資料起始日:</label>
                         <div className = 'col-md-3'>
-                            <input type = "date" id = "date" className = "form-control" onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
+                            <input type = "date" id = "date" className = "form-control" onChange = {e => dateHandle(e.target.value)} value = { startDate }></input>
                         </div>
                     </div>
 

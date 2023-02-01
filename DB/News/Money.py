@@ -8,6 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 import requests
 from bs4 import BeautifulSoup
+import sys
 
 class Money(NewsBase):
     """Update news from https://money.udn.com
@@ -148,8 +149,8 @@ class Money(NewsBase):
         news_settings = [
             {
                 "url" : "https://money.udn.com/money/get_article/{}/1001/5591/{}",
-                "categorys" : ["經濟日報 產業 產業熱點", "經濟日報 產業 科技產業", "經濟日報 產業 綜合產業", "經濟日報 產業 能源電力50尖兵", "經濟日報 產業 產業達人"],
-                "ids" : ["5612", "11162", "10871", "122807", "6808"]
+                "categorys" : ["經濟日報 產業 產業熱點", "經濟日報 產業 科技產業", "經濟日報 產業 綜合產業", "經濟日報 產業 產業達人"],
+                "ids" : ["5612", "11162", "10871", "6808"]
             },
             {
                 "url" : "https://money.udn.com/money/get_article/{}/1001/5590/{}",
@@ -158,13 +159,11 @@ class Money(NewsBase):
             }
         ]
 
-        print("經濟日報")
+        print("\n經濟日報", file = sys.stderr)
         # Traverse news_settings 
         for news_setting in tqdm(news_settings):
             # Traverse categorys and categorys url id
             for category, id in zip(news_setting["categorys"], news_setting["ids"]):
-                print(category)
+                print("\n" + category, file = sys.stderr)
                 # Get article details
                 self._get(news_setting, category, id)
-
-                

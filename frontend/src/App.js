@@ -27,6 +27,7 @@ import CpiPpiPceComp from './component/CpiPpiPcePage/CpiPpiPceComp';
 import LineComp from './component/LinePage/LineComp';
 import ChooseTickerDetail from './component/chooseTickerPage/chooseTickerDetail';
 import NewsComp from './component/newsPage/newsComp'
+import HomeComp1 from './component/homePage/homeComp1';
 
 axios.defaults.withCredentials = true;
 
@@ -43,7 +44,7 @@ function App() {
           </Route>
           
           <Route element = { <PrivateRoute /> } >
-            <Route exact path = "/home" element = { <HomeComp /> }></Route>
+            <Route exact path = "/home" element = { <HomeComp1 /> }></Route>
             <Route exact path = "/calendar" element = { <CalendarComp /> }></Route>
             <Route path = "/database" element = { <DatabaseComp /> } ></Route>
             <Route exact path = "/database/search/:stock_num_name" element = { <DatabaseSearchComp /> } ></Route>

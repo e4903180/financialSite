@@ -1,8 +1,8 @@
 const con = require('../Model/connectFinancial')
 
-exports.newest15 = async function(req, res){
+exports.newestResearch25 = async function(req, res){
     let query = "SELECT financialData.*, ticker_list.stock_name \
-    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 15;"
+    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 25;"
 
     try {
         const [rows, fields] = await con.promise().query(query);
@@ -13,6 +13,28 @@ exports.newest15 = async function(req, res){
         return res.status(400).send("error")
     }
 };
+
+exports.newestNews25 = async function(req, res){
+    let query = `SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%工商時報%" LIMIT 25;\
+                SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%MoneyDj%" LIMIT 25;\
+                SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%經濟日報%" LIMIT 25;`
+
+    try {
+        const [rows, fields] = await con.promise().query(query);
+        
+        for(let i = 0; i < 3; i++){
+            for(let j = 0; j < rows[i].length; j++){
+                rows[i][j]["title"] = [rows[i][j]["title"], rows[i][j]["link"]]
+                delete rows[i][j]["link"]
+            };
+        }
+
+        return res.status(200).json(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send("error")
+    } 
+}
 
 exports.allData = async function(req, res){
     let query = "SELECT COUNT( * ) as dataQuantity FROM financialData; SELECT MAX(date) as newestDate FROM financialData;\

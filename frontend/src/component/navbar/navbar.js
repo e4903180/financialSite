@@ -109,7 +109,7 @@ function NavbarComp() {
                                     資料庫相關功能
                                 </>
                             } align = "end">
-                                <NavDropdown.Item href = "/database">資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = "/database">綜合資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/news">新聞資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
                                 <NavDropdown.Item href = "/line_memo">Line memo</NavDropdown.Item>

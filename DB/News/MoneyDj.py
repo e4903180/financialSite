@@ -75,8 +75,6 @@ class MoneyDj(NewsBase):
                 # Check if article date is yeasterday
                 elif self._check_date(date, str(self._yeasterday)):
                     self._insert(title, link, repoter, table_category, self._yeasterday)
-                else:
-                    break
 
             table_category = "MoneyDj 傳產"
     

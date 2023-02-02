@@ -35,13 +35,14 @@ function PrivateRoute() {
         }).catch(res => {
             setIsAuth(false)
             setWs(null)
+            alert("連線逾時請重新登入")
         })
     }, [])
 
     useEffect(() => {
         let timer = setTimeout(() => {
             handleLogOut()
-        }, 14.9 * 60 * 1000);
+        }, 14.8 * 60 * 1000);
 
         event.forEach((item, idx) => {
             window.addEventListener(item, () => {
@@ -49,7 +50,7 @@ function PrivateRoute() {
 
                 timer = setTimeout(() => {
                     handleLogOut()
-                }, 14.9 * 60 * 1000);
+                }, 14.8 * 60 * 1000);
             });
         })
     }, [])

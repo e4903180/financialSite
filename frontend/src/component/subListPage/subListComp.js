@@ -49,7 +49,8 @@ function SubListComp() {
         { field: 'strategy', headerName: '策略類型', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'content', headerName: '策略內容', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
         { field: 'alertCondition', headerName: '警示條件', flex: 1, headerAlign: 'center', sortable: false, align: 'center' },
-        { field: 'action', headerName: '取消訂閱', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : rowData => <DeleteOutlineIcon style = {{ cursor : "pointer" }} onClick = {() => handle_sub_list_cancel(rowData)}/>},
+        { field: 'action', headerName: '取消訂閱', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : 
+        rowData => <DeleteOutlineIcon style = {{ cursor : "pointer" }} onClick = {() => handle_sub_list_cancel(rowData)}/>},
     ]
     
     function handle_sub_list_cancel(rowData){

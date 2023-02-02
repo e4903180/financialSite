@@ -179,43 +179,6 @@ exports.tickerList = async function(req, res){
     } 
 }
 
-exports.news_summary = async function(req, res){
-    let query = `SELECT COUNT(*) as total FROM news WHERE date>=?;\
-                SELECT category, COUNT(category) as quantity FROM news WHERE date>=? GROUP BY category ORDER BY category;`
-    let param = [req.query.date, req.query.date]
-    let result = [
-        { "category" : "全部", "quantity" : 0 },
-        { "category" : "MoneyDj 傳產", "quantity" : 0 },
-        { "category" : "MoneyDj 科技", "quantity" : 0 },
-        { "category" : "工商時報 產業", "quantity" : 0 },
-        { "category" : "工商時報 科技", "quantity" : 0 },
-        { "category" : "工商時報 證券", "quantity" : 0 },
-        { "category" : "經濟日報 產業 產業熱點", "quantity" : 0 },
-        { "category" : "經濟日報 產業 科技產業", "quantity" : 0 },
-        { "category" : "經濟日報 產業 綜合產業", "quantity" : 0 },
-        { "category" : "經濟日報 證券 市場焦點", "quantity" : 0 },
-        { "category" : "經濟日報 證券 櫃買動態", "quantity" : 0 },
-        { "category" : "經濟日報 證券 權證特區", "quantity" : 0 },
-        { "category" : "經濟日報 證券 證券達人", "quantity" : 0 },
-        { "category" : "經濟日報 證券 集中市場", "quantity" : 0 }
-    ]
-
-    try {
-        const [rows, fields] = await con.promise().query(query, param)
-        result[0]["quantity"] = rows[0][0]["total"]
-
-        for(let i = 0; i < rows[1].length; i++){
-            result.filter(ele => ele["category"] === rows[1][i]["category"])
-            .forEach(ele => ele["quantity"] = rows[1][i]["quantity"])
-        }
-
-        return res.status(200).json(result)
-    } catch (error) {
-        console.log(error)
-        return res.status(400).send("error")
-    } 
-}
-
 exports.news = async function(req, res){
     let query = "SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) ORDER BY category DESC"
 

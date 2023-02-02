@@ -79,7 +79,6 @@ dataRouter.get("/username", Data.username)
 dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 dataRouter.get("/tickerList", Data.tickerList)
-dataRouter.get("/news_summary", Data.news_summary)
 dataRouter.get("/news", Data.news)
 
 /* DB search router */
@@ -88,7 +87,10 @@ dataRouter.post("/calender_search", dbSearch.calender_search)
 dataRouter.post("/post_board_search", dbSearch.post_board_search)
 dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
 dataRouter.post("/ticker_search", dbSearch.ticker_search)
-dataRouter.post("/news_search", dbSearch.news_search)
+dataRouter.get("/news_search_today", dbSearch.news_search_today)
+dataRouter.get("/news_search_past", dbSearch.news_search_past)
+dataRouter.get("/news_search", dbSearch.news_search)
+dataRouter.get("/news_summary", dbSearch.news_summary)
 
 /* StockTool router */
 dataRouter.get("/PricingStrategy", StockTool.pricingData)

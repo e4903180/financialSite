@@ -4,17 +4,28 @@ import NavbarComp from './component/navbar/navbar';
 import axios from "axios";
 import { rootApiIP, WebSocketIP, WSContext } from './constant';
 import socketio from 'socket.io-client'
+import { Button, Modal } from 'react-bootstrap';
 
 function PrivateRoute() {
     const [isAuth, setIsAuth] = useState()
     const [ws, setWs] = useState(null)
     const nav = useNavigate()
+    const [show, setShow] = useState(false);
+
+    const handleClose =() => {
+        setShow(false)
+        nav("/login")
+    }
+
+    const handleTimeout = () => {
+        setShow(true)
+        handleLogOut()
+    };
 
     const handleLogOut = () => {
         axios.get(rootApiIP + "/user/logout")
         .then(res => {
             if(ws) ws.disconnect()
-            nav("/login")
         })
     }
 
@@ -35,29 +46,49 @@ function PrivateRoute() {
         }).catch(res => {
             setIsAuth(false)
             setWs(null)
-            alert("連線逾時請重新登入")
         })
     }, [])
 
     useEffect(() => {
         let timer = setTimeout(() => {
-            handleLogOut()
-        }, 14.8 * 60 * 1000);
+            handleTimeout()
+        }, 14.9 * 60 * 1000);
 
         event.forEach((item, idx) => {
             window.addEventListener(item, () => {
                 clearTimeout(timer)
 
                 timer = setTimeout(() => {
-                    handleLogOut()
-                }, 14.8 * 60 * 1000);
+                    handleTimeout()
+                }, 14.9 * 60 * 1000);
             });
         })
     }, [])
 
     if (isAuth === undefined) return null
 
-    return isAuth ? <><WSContext.Provider value = {ws}><NavbarComp /> <Outlet /></WSContext.Provider></> : <Navigate to = "/login" />;
+    return isAuth ? 
+        <>
+            <WSContext.Provider value = {ws}>
+                <Modal show = { show }>
+                    <Modal.Header>
+                        <Modal.Title>服務中斷</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>閒置過久請重新登入</Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant = "secondary" onClick = { handleClose }>
+                            確定
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <NavbarComp /> 
+                <Outlet />
+            </WSContext.Provider>
+        </> 
+        : 
+        <Navigate to = "/login" />;
 }
 
 export default PrivateRoute;

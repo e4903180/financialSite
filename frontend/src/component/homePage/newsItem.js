@@ -4,9 +4,9 @@ import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
 import { GridToolbar } from '@mui/x-data-grid';
 
 function NewsItem(props) {
-    const [pageSize1, setPageSize1] = useState(10)
-    const [pageSize2, setPageSize2] = useState(10)
-    const [pageSize3, setPageSize3] = useState(10)
+    const [pageSize1, setPageSize1] = useState(20)
+    const [pageSize2, setPageSize2] = useState(20)
+    const [pageSize3, setPageSize3] = useState(20)
     const table = [
         { "pageSize" : pageSize1, "setPageSize" : setPageSize1, "title" : "工商時報" },
         { "pageSize" : pageSize2, "setPageSize" : setPageSize2, "title" : "MoneyDj" },
@@ -27,7 +27,7 @@ function NewsItem(props) {
                                     rows = { props.data[idx] }
                                     pageSize = { ele["pageSize"] }
                                     onPageSizeChange={ (newPageSize) => ele["setPageSize"](newPageSize) }
-                                    rowsPerPageOptions = {[5, 10, 25]}
+                                    rowsPerPageOptions = {[5, 10, 20, 25]}
                                     getRowId = { row => row.ID }
                                     components = {{ Toolbar: GridToolbar }}
                                     componentsProps = {{ toolbar: { showQuickFilter: true },}}

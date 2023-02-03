@@ -105,7 +105,7 @@ class gmailService:
         """
         numList, nameList, filenameList, recommendList = [[] for i in range(4)]
         i = 0
-        
+
         for num, name in stock_num_name:
             try:
                 att = self.service.users().messages().attachments().get(userId = 'me', messageId = ID, id = encodedFile['body']['attachmentId']).execute()
@@ -183,23 +183,27 @@ class gmailService:
                 subject: (string) Mail title
             
             Return:
-                (list) temp1 || temp2 || []
+                (list) re result
         """
         
-        # \d{4}(?=\.[A-Z] 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
-        # \d{4}(?=[^\d\/]) 4個數字(\d{4}) 後面不能接數字(\d) or/ or 年 or .
+        if "統一投顧" in subject:
+            # 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
+            return re.findall(r'\d{4}(?=\.[A-Z])', subject)
         
-        temp1 = re.findall(r'\d{4}(?=\.[A-Z])', subject)
-        temp2 = re.findall(r'\d{4}(?=[^\d\/\年\.])', subject)
+        elif "永豐投顧" in subject:
+            # 4個數字(\d{4})但後面是 空白加英文 EX:5288 TT
+            return re.findall(r'\d{4}(?=\s[A-Z])', subject)
         
-        if len(temp1) != 0 and len(temp2) == 0:
-            return temp1
+        elif "元富投顧" in subject:
+            # 4個數字前後為() EX:(5288)
+            result =  re.findall(r'\(\d{4}\)', subject)
+            #拿掉()
+            result = [ele[1:-1] for ele in result]
+
+            return result
         
-        elif len(temp1) == 0 and len(temp2) != 0:
-            return temp2
-        
-        else:
-            return []
+        # 4個數字(\d{4}) 後面不能接數字(\d) or/ or 年 or .
+        return re.findall(r'\d{4}(?=[^\d\/\年\.])', subject)
             
     def getDate(self, header, display = False):
         """Get the mail date
@@ -345,22 +349,36 @@ class gmailService:
     def recommend(self, subject, stockNum):
         result = []
         
-        for i in stockNum:
-            offset = subject.find(i + ".TT")
-            
-            if offset != -1:
-                start = offset + 8
-                end = start + 2
+        if "統一投顧" in subject:
+            for i in stockNum:
+                offset = subject.find(i + ".TT")
                 
-                while(subject[end] != ")"):
-                    if end == len(subject) - 1:
+                if offset != -1:
+                    start = offset + 8
+                    end = start + 2
+                    
+                    while(subject[end] != ")"):
+                        if end == len(subject) - 1:
+                            break
+
+                        end += 1
+                        
+                    result.append(subject[start:end])
+                else:
+                    result.append("NULL")
+            return result
+        elif "元富投顧" in subject:
+            for i in stockNum:
+                idx_left_brackets = subject.find(i + ")") + 5
+                # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
+                end = len(subject)
+
+                for idx in range(idx_left_brackets, len(subject), 1):
+                    # Fwd: 元富投顧個股報告--聯電(2303)維持買進，1H23為營運毛利率谷底，評價低
+                    if subject[idx] == "，":
+                        end = idx + 1
                         break
 
-                    end += 1
-                    
-                result.append(subject[start:end])
-            else:
-                result.append("NULL")
-        return result
-
-
+                result.append(subject[idx_left_brackets:end])
+            return result
+        return ["NULL" for i in range(len(stockNum))]

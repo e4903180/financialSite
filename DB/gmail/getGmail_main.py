@@ -1,10 +1,9 @@
 # %%
 import getGmail_Class
-import os, sys, logging
+import sys, logging
 from tqdm import trange
 from datetime import datetime
 import pandas as pd
-import re
 
 # %%
 gGC = getGmail_Class.gmailService()
@@ -64,5 +63,3 @@ logging.info('Updating email end')
 # %%
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
 df.to_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName, index = False)
-
-

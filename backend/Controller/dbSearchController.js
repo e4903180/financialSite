@@ -68,7 +68,7 @@ exports.post_board_search = async function(req, res){
 }
 
 exports.lineMemo_search = async function(req, res){
-    let query = `SELECT lineMemo.*, ticker_list.stock_name, ticker_list.stock_num\
+    let query = `SELECT lineMemo.*, ticker_list.stock_name, ticker_list.stock_num \
     FROM lineMemo INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
 
@@ -85,10 +85,10 @@ exports.lineMemo_search = async function(req, res){
     query += " ORDER BY date DESC"
 
     try {
-        const [rows, fields] = await con.promise().query(query);
+        const [rows, fields] = await con.promise().query(query, param);
         return res.status(200).send(rows)
     } catch (error) {
-        return res.status(400).send({})
+        return res.status(400).send(error)
     }
 }
 

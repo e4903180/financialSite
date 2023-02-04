@@ -7,6 +7,13 @@ import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
 
 function DatabaseComp() {
+    var date = new Date();
+    const today = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
+    date.setDate(1);
+    date.setMonth(date.getMonth() - 3);
+    
+    const last3Month = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
+
     const [data, setData] = useState([])
     const [data1, setData1] = useState([]);
     const [data2, setData2] = useState([]);
@@ -14,7 +21,7 @@ function DatabaseComp() {
     const [data4, setData4] = useState([]);
     const [search, setSearch] = useState(false);
     const [search1, setSearch1] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [page1, setPage1] = useState(0);
     const [pageSize1, setPageSize1] = useState(10);
     const [page2, setPage2] = useState(0);
@@ -220,6 +227,73 @@ function DatabaseComp() {
             setData(res.data);
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
+        })
+
+        axios.post(rootApiIP + "/data/financial_search", {
+            "stock_num_name" : "",
+            "startDate" : last3Month,
+            "endDate" : today,
+            "investmentCompany" : "",
+        }).then(res => {
+            setData1(res.data)
+            setSearch1(true)
+            setLoading(false)
+            setPage1(0)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+
+            setData1([])
+            setPage1(0)
+        })
+
+        axios.post(rootApiIP + "/data/post_board_search", {
+            "stock_num_name" : "",
+            "startDate" : last3Month,
+            "endDate" : today,
+            "recommend" : "",
+            "provider" : ""
+        }).then(res => {
+            setData2(res.data)
+            setSearch1(true)
+            setLoading(false)
+            setPage2(0)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+
+            setData2([])
+            setPage2(0)
+        })
+
+        axios.post(rootApiIP + "/data/lineMemo_search", {
+            "stock_num_name" : ticker,
+            "startDate" : last3Month,
+            "endDate" : today,
+        }).then(res => {
+            setData3(res.data)
+            setSearch1(true)
+            setLoading(false)
+            setPage3(0)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+
+            setData3([])
+            setPage3(0)
+        })
+
+        axios.post(rootApiIP + "/data/calender_search", {
+            "stock_num_name" : ticker,
+            "startDate" : last3Month,
+            "endDate" : today,
+        }).then(res => {
+            setData4(res.data)
+            setSearch1(true)
+            setLoading(false)
+            setPage4(0)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+
+            setData4([])
+            setPage4(0)
         })
     }, [])
 

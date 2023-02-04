@@ -138,10 +138,15 @@ export const columns_news = [
 ];
 
 export const columns_home_news = [
-    { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
-    { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+    { field: "cteeDate", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "cteeTitle", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
     rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
-    { field: 'repoter', headerName: '記者', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: "moneyDjDate", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "moneyDjTitle", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+    { field: "moneyDate", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "moneyTitle", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
 ];
 
 const check_single_post_board_memo_NULL = (value) => {

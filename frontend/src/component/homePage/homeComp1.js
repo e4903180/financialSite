@@ -7,20 +7,20 @@ import CalendarItem from './calendarItem';
 
 function HomeComp1() {
     const [type, setType] = useState("news")
-    const [news, setNews] = useState([[], [], []])
+    const [news, setNews] = useState([])
     const [research, setResearch] = useState([])
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/newestNews25")
+        axios.get(rootApiIP + "/data/newestNews20")
         .then(res => {
-            setNews(res.data);
+            setNews(res.data)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
         axios.get(rootApiIP + "/data/newestResearch25")
         .then(res => {
-            setResearch(res.data);
+            setResearch(res.data)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
@@ -30,8 +30,6 @@ function HomeComp1() {
         <>
             <div className = 'row mx-auto'>
                 <div className = 'col-md-11 mx-auto py-3'>
-                    <h3 className = "display-5 text-center">快速瀏覽</h3>
-
                     <div className = "card h-100 p-0 mt-3">
                         <div className = 'mx-3 mt-2'>
                             <ul className = "nav nav-tabs">

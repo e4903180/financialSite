@@ -14,22 +14,43 @@ exports.newestResearch25 = async function(req, res){
     }
 };
 
-exports.newestNews25 = async function(req, res){
-    let query = `SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%工商時報%" LIMIT 25;\
-                SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%MoneyDj%" LIMIT 25;\
-                SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%經濟日報%" LIMIT 25;`
+exports.newestNews20 = async function(req, res){
+    let query = `SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%工商時報%" LIMIT 20;\
+                SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%MoneyDj%" LIMIT 20;\
+                SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%經濟日報%" LIMIT 20;`
+    let result = []
 
     try {
         const [rows, fields] = await con.promise().query(query);
         
-        for(let i = 0; i < 3; i++){
-            for(let j = 0; j < rows[i].length; j++){
-                rows[i][j]["title"] = [rows[i][j]["title"], rows[i][j]["link"]]
-                delete rows[i][j]["link"]
-            };
+        for(let i = 0; i < 20; i++){
+            let temp = { 
+                "ID" : i,
+                "cteeDate" : "", 
+                "cteeTitle" : ["", ""], 
+                "moneyDjDate" : "", 
+                "moneyDjTitle" : ["", ""], 
+                "moneyDate" : "", 
+                "moneyTitle" : ["", ""],
+            }
+
+            if(i < rows[0].length){
+                temp["cteeDate"] = rows[0][i]["date"]
+                temp["cteeTitle"] = [rows[0][i]["title"], rows[0][i]["link"]]
+            }
+            if(i < rows[1].length){
+                temp["moneyDjDate"] = rows[1][i]["date"]
+                temp["moneyDjTitle"] = [rows[1][i]["title"], rows[1][i]["link"]]
+            }
+            if(i < rows[2].length){
+                temp["moneyDate"] = rows[2][i]["date"]
+                temp["moneyTitle"] = [rows[2][i]["title"], rows[2][i]["link"]]
+            }
+
+            result.push(temp)
         }
 
-        return res.status(200).json(rows)
+        return res.status(200).json(result)
     } catch (error) {
         console.log(error)
         return res.status(400).send("error")

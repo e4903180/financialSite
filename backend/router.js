@@ -66,7 +66,7 @@ dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 dataRouter.post("/upload/self_upload", SelfUp.self_upload_middleWare, SelfUp.self_upload)
 
 /* Get DB data */
-dataRouter.get("/newestNews25", Data.newestNews25)
+dataRouter.get("/newestNews20", Data.newestNews20)
 dataRouter.get("/newestResearch25", Data.newestResearch25)
 dataRouter.get("/allData", Data.allData)
 dataRouter.get("/post_board_state", Data.post_board_state)

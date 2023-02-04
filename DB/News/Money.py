@@ -2,7 +2,6 @@ from NewsBase import NewsBase
 from selenium import webdriver
 import MySQLdb
 import MySQLdb.cursors
-import datetime
 from typing import Any, Dict
 import pandas as pd
 from tqdm import tqdm
@@ -12,9 +11,17 @@ import sys
 
 class Money(NewsBase):
     """Update news from https://money.udn.com
+
+        Args :
+            options : (Any) selenium potions
+            service : (Any) selenium service
+            db : (Any) database connection
+            cursor : (Any) database cursor
+        Return :
+            None
     """
 
-    def __init__(self, options : Any, service : Any, db : MySQLdb.connect, cursor : Any) -> None:
+    def __init__(self, options : Any, service : Any, db : Any, cursor : Any) -> None:
         super().__init__()
 
         self._db = db
@@ -23,8 +30,6 @@ class Money(NewsBase):
         self.driver = webdriver.Chrome(options = options, service = service)
         self.driver1 = webdriver.Chrome(options = options, service = service)
 
-        self._today = datetime.date.today()
-        self._yeasterday = self._today - datetime.timedelta(days = 1)
         self._root = "https://money.udn.com/"
 
     def _get(self, news_setting : Dict, category : str, id : str) -> None:
@@ -38,14 +43,18 @@ class Money(NewsBase):
                 None
         """
         page = 1
-        stop = False
 
-        # Infinite loop until article date is not today or yeasterday
+        # Infinite loop until duplicate count is 6
         while True:
+            duplicate_count = 0
             # Insert the page and category id to url
             url = news_setting["url"].format(page, id)
-            # print(url)
             r = requests.get(url)
+
+            # server response with nothing
+            if r.text == "<!--N-->\n  ":
+                break
+
             soup = BeautifulSoup(r.text, "html.parser")
             # Get all news <a> tags
             a_tags = soup.find_all('a')
@@ -54,6 +63,12 @@ class Money(NewsBase):
             for tag in tqdm(a_tags):
                 # Get article attributes title, href, date, repoter
                 article_title = tag.get('title')
+
+                # Check if data duplicate in table
+                if self._isDuplicate(article_title):
+                    duplicate_count += 1
+                    continue
+
                 article_href = self._root + tag.get('href')
 
                 r1 = requests.get(article_href)
@@ -61,38 +76,12 @@ class Money(NewsBase):
                 article_date = soup1.select_one(".article-body__time").text.split(" ")[0].replace("/", "-")
                 article_repoter = soup1.select_one(".article-body__info").text.replace("\n", "").split("／")[0]
 
-                # Check if data duplicate in table
-                if self._isDuplicate(article_title, article_href, article_repoter, category, article_date):
-                    continue
+                self._insert(article_title, article_href, article_repoter, category, article_date)
 
-                # Check if article date is today
-                if self._check_date(article_date, str(self._today)):
-                    self._insert(article_title, article_href, article_repoter, category, self._today)
-                # Check if article date is yeasterday
-                elif self._check_date(article_date, str(self._yeasterday)):
-                    self._insert(article_title, article_href, article_repoter, category, self._yeasterday)
-                # Raise stop flag
-                else:
-                    stop = True
-                    break
-
-            if stop:
+            if duplicate_count == 6:
                 break
 
             page += 1
-
-    def _check_date(self, article_date : str, date : str) -> bool:
-        """Check if article date match date
-
-            Args :
-                article_date : (str) article date
-                date : (str) date
-            Return :
-                None
-        """
-        if article_date == date:
-            return True
-        return False
 
     def _insert(self, title : str, link : str, repoter : str, table_category : str, date : str) -> None:
         """Insert article detail to DB
@@ -111,20 +100,16 @@ class Money(NewsBase):
         self._cursor.execute(query)
         self._db.commit()
 
-    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str, date : str) -> bool:
+    def _isDuplicate(self, title : str) -> bool:
         """Check if data duplicate
 
             Args :
                 title : (str) article title
-                link : (str) article link
-                repoter : (str) article repoter
-                table_category : (str) category of news for table
-                date : (str) date
+
             Return:
                 bool
         """
-        query = f'SELECT * FROM news WHERE title="{title}" AND link="{link}" \
-            AND repoter="{repoter}" AND category="{table_category}" AND date="{date}"'
+        query = f'SELECT * FROM news WHERE title="{title}"'
         
         self._cursor.execute(query)
         self._db.commit()

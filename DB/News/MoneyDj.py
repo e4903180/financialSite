@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import MySQLdb
 import MySQLdb.cursors
-import datetime
 from typing import Any
 import pandas as pd
 from tqdm import tqdm
@@ -13,16 +12,22 @@ import sys
 
 class MoneyDj(NewsBase):
     """Update news from https://www.moneydj.com
+
+        Args :
+            options : (Any) selenium potions
+            service : (Any) selenium service
+            db : (Any) database connection
+            cursor : (Any) database cursor
+        Return :
+            None
     """
 
-    def __init__(self, options : Any, service : Any, db : MySQLdb.connect, cursor : Any) -> None:
+    def __init__(self, options : Any, service : Any, db : Any, cursor : Any) -> None:
         super().__init__()
 
         self._db = db
         self._cursor = cursor
         self.driver = webdriver.Chrome(options = options, service = service)
-        self._today = datetime.date.today()
-        self._yeasterday = self._today - datetime.timedelta(days = 1)
     
     def run(self):
         """Run
@@ -50,6 +55,10 @@ class MoneyDj(NewsBase):
             for a in tqdm(aes):
                 title = a.get_attribute("innerText")
 
+                # Check if data duplicate in table
+                if self._isDuplicate(title):
+                    continue
+
                 link = a.get_attribute("href")
                 r = requests.get(link)
                 soup = BeautifulSoup(r.text, "html.parser")
@@ -64,17 +73,8 @@ class MoneyDj(NewsBase):
                     while repoter[start] != "記":
                         start -= 1
                     repoter = repoter[start : -3]
-
-                # Check if data duplicate in table
-                if self._isDuplicate(title, link, repoter, table_category, date):
-                    continue
                 
-                # Check if article date is today
-                if self._check_date(date, str(self._today)):
-                    self._insert(title, link, repoter, table_category, self._today)
-                # Check if article date is yeasterday
-                elif self._check_date(date, str(self._yeasterday)):
-                    self._insert(title, link, repoter, table_category, self._yeasterday)
+                self._insert(title, link, repoter, table_category, date)
 
             table_category = "MoneyDj 傳產"
     
@@ -97,21 +97,16 @@ class MoneyDj(NewsBase):
         self._cursor.execute(query, param)
         self._db.commit()
 
-    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str, date : str) -> bool:
+    def _isDuplicate(self, title : str) -> bool:
         """Check if data duplicate
 
             Args :
                 title : (str) article title
-                link : (str) article link
-                repoter : (str) article repoter
-                table_category : (str) category of news for table
-                date : (str) date
             Return:
                 bool
         """
-        query = "SELECT * FROM news WHERE title=%s \
-            AND link=%s AND repoter=%s AND category=%s AND date=%s"
-        param = (title, link, repoter, table_category, date)
+        query = "SELECT * FROM news WHERE title=%s"
+        param = (title,)
 
         self._cursor.execute(query, param)
         self._db.commit()
@@ -121,16 +116,3 @@ class MoneyDj(NewsBase):
         if result.empty:
             return False
         return True
-
-    def _check_date(self, article_date : str, date : str) -> bool:
-        """Check if date is match
-
-            Args :
-                article_date : (str) article date
-            
-            Return :
-                True if acticle date is today date, otherwise False
-        """
-        if article_date == date:
-            return True
-        return False

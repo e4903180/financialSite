@@ -376,7 +376,7 @@ class gmailService:
                 for idx in range(idx_left_brackets, len(subject), 1):
                     # Fwd: 元富投顧個股報告--聯電(2303)維持買進，1H23為營運毛利率谷底，評價低
                     if subject[idx] == "，":
-                        end = idx + 1
+                        end = idx
                         break
 
                 result.append(subject[idx_left_brackets:end])

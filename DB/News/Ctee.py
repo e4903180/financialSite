@@ -3,32 +3,33 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import MySQLdb
 import MySQLdb.cursors
-import datetime
 from typing import Any, Tuple
 import pandas as pd
 from tqdm import tqdm
 import requests
 from bs4 import BeautifulSoup
-import time
 import sys
 
 class Ctee(NewsBase):
     """Update news from https://ctee.com.tw
+
+        Args :
+            options : (Any) selenium potions
+            service : (Any) selenium service
+            db : (Any) database connection
+            cursor : (Any) database cursor
+        Return :
+            None
     """
 
-    def __init__(self, options : Any, service : Any, db : MySQLdb.connect, cursor : Any) -> None:
+    def __init__(self, options : Any, service : Any, db : Any, cursor : Any) -> None:
         super().__init__()
 
         self._db = db
         self._cursor = cursor
         
         self.driver = webdriver.Chrome(options = options, service = service)
-        self.driver.set_page_load_timeout(30)
-
-        self._today = datetime.date.today()
-        self._yeasterday = self._today - datetime.timedelta(days = 1)
-        self._today_format = self._today.strftime("%Y.%m.%d")
-        self._yeasterday_format = self._yeasterday.strftime("%Y.%m.%d")
+        self.driver.set_page_load_timeout(10)
     
     def run(self):
         """Run
@@ -78,46 +79,30 @@ class Ctee(NewsBase):
             return
 
         page = 2
-        stop = False
 
         # Infinite loop until article date is not today or yeasterday
         while True:
             articles = self.driver.find_elements(by = By.TAG_NAME, value = "article")
-            
+            duplicate_count = 0
+
             # traverse articles
             for article in tqdm(articles):
-                # Check if acticle date is today date
-                if self._check_date(article, self._today_format):
-                    self._get_details(article, self._today, table_category)
-                elif self._check_date(article, self._yeasterday_format):
-                    self._get_details(article, self._yeasterday, table_category)
-                else:
-                    stop = True
-                    break
+                title, link = self._find_title_link(article)
+
+                if self._isDuplicate(title):
+                    duplicate_count += 1
+                    continue
+
+                repoter = self._find_repoter(link)
+                article_date = article.find_element(by = By.CLASS_NAME, value = "post-meta").text.replace(".", "-")
+                self._insert(title, link, repoter, table_category, article_date)
             
-            if stop:
+            if duplicate_count == 10:
                 break
 
             # after access first page then url change to below format
             self.driver.get(f"https://ctee.com.tw/category/news/{category}/page/{page}")
             page += 1
-    
-    def _get_details(self, article : Any, date : str, table_category : str):
-        """Get the details on article, if false insert to table
-
-            Args :
-                article : (Any) WebElement of selenium
-                date : (str) date
-                table_category : (str) category of news for table
-
-            Return :
-                None
-        """
-        title, link = self._find_title_link(article)
-        repoter = self._find_repoter(link)
-
-        if not self._isDuplicate(title, link, repoter, table_category, date):
-            self._insert(title, link, repoter, table_category, date)
 
     def _find_repoter(self, link : str) -> str:
         """Find repoter through article
@@ -152,21 +137,6 @@ class Ctee(NewsBase):
 
         return title, link
 
-    def _check_date(self, article : Any, date : str) -> bool:
-        """Check if date is match
-
-            Args :
-                article : (Any) WebElement of selenium
-            
-            Return :
-                True if acticle date is today date, otherwise False
-        """
-        article_date = article.find_element(by = By.CLASS_NAME, value = "post-meta").text
-
-        if article_date == date:
-            return True
-        return False
-
     def _insert(self, title : str, link : str, repoter : str, table_category : str, date : str) -> None:
         """Insert article detail to DB
 
@@ -184,20 +154,16 @@ class Ctee(NewsBase):
         self._cursor.execute(query)
         self._db.commit()
 
-    def _isDuplicate(self, title : str, link : str, repoter : str, table_category : str, date : str) -> bool:
+    def _isDuplicate(self, title : str) -> bool:
         """Check if data duplicate
 
             Args :
                 title : (str) article title
-                link : (str) article link
-                repoter : (str) article repoter
-                table_category : (str) category of news for table
-                date : (str) date
+
             Return:
                 bool
         """
-        query = f'SELECT * FROM news WHERE title="{title}" AND link="{link}" \
-            AND repoter="{repoter}" AND category="{table_category}" AND date="{date}"'
+        query = f'SELECT * FROM news WHERE title="{title}"'
 
         self._cursor.execute(query)
         self._db.commit()

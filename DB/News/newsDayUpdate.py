@@ -25,7 +25,7 @@ class NewsDayUpdate():
         self._money = Money(options, service, db, cursor)
     
     def run(self):
-        # self._ctee.run()
+        self._ctee.run()
         self._moneydj.run()
         self._money.run()
 

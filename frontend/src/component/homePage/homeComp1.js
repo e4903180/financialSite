@@ -18,7 +18,7 @@ function HomeComp1() {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get(rootApiIP + "/data/newestResearch25")
+        axios.get(rootApiIP + "/data/newestResearch20")
         .then(res => {
             setResearch(res.data)
         }).catch(res => {

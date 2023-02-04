@@ -1,8 +1,8 @@
 const con = require('../Model/connectFinancial')
 
-exports.newestResearch25 = async function(req, res){
+exports.newestResearch20 = async function(req, res){
     let query = "SELECT financialData.*, ticker_list.stock_name \
-    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 25;"
+    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY `date` DESC Limit 20;"
 
     try {
         const [rows, fields] = await con.promise().query(query);

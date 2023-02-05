@@ -1,8 +1,6 @@
 from NewsBase import NewsBase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import MySQLdb
-import MySQLdb.cursors
 from typing import Any, Tuple
 import pandas as pd
 from tqdm import tqdm

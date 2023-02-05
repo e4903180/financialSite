@@ -33,8 +33,6 @@ function CalendarItem() {
     return (
         <>
             <div className = 'row mt-3 mx-auto'>
-                <h3 className = "display-6 text-center">法說會行事曆</h3>
-
                 <div className = 'col-md-8 mx-auto'>
                     <FullCalendar
                         plugins={[ dayGridPlugin ]}

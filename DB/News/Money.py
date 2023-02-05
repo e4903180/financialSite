@@ -1,7 +1,4 @@
 from NewsBase import NewsBase
-from selenium import webdriver
-import MySQLdb
-import MySQLdb.cursors
 from typing import Any, Dict
 import pandas as pd
 from tqdm import tqdm
@@ -13,22 +10,17 @@ class Money(NewsBase):
     """Update news from https://money.udn.com
 
         Args :
-            options : (Any) selenium potions
-            service : (Any) selenium service
             db : (Any) database connection
             cursor : (Any) database cursor
         Return :
             None
     """
 
-    def __init__(self, options : Any, service : Any, db : Any, cursor : Any) -> None:
+    def __init__(self, db : Any, cursor : Any) -> None:
         super().__init__()
 
         self._db = db
         self._cursor = cursor
-        
-        self.driver = webdriver.Chrome(options = options, service = service)
-        self.driver1 = webdriver.Chrome(options = options, service = service)
 
         self._root = "https://money.udn.com/"
 
@@ -43,9 +35,10 @@ class Money(NewsBase):
                 None
         """
         page = 1
-
-        # Infinite loop until duplicate count is 6
-        while True:
+        duplicate_count = 0
+        
+        # while loop until duplicate count is 6
+        while duplicate_count != 6:
             duplicate_count = 0
             # Insert the page and category id to url
             url = news_setting["url"].format(page, id)
@@ -77,9 +70,6 @@ class Money(NewsBase):
                 article_repoter = soup1.select_one(".article-body__info").text.replace("\n", "").split("／")[0]
 
                 self._insert(article_title, article_href, article_repoter, category, article_date)
-
-            if duplicate_count == 6:
-                break
 
             page += 1
 

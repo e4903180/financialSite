@@ -134,8 +134,13 @@ exports.ticker_search = async function(req, res){
 }
 
 exports.news_search = async function(req, res){
-    let query = `SELECT * FROM news WHERE date>=?`
-    let param = [req.query.date]
+    let query = `SELECT * FROM news WHERE 1=1`
+    let param = []
+
+    if(req.query.startDate !== "" && req.query.endDate !== ""){
+        query += " AND date BETWEEN ? AND ?"
+        param.push(req.query.startDate, req.query.endDate)
+    }
 
     if(req.query.pattern !== ""){
         query += " AND ?? LIKE ?"
@@ -157,6 +162,73 @@ exports.news_search = async function(req, res){
 
         return res.status(200).send(rows)
     } catch (error) {
+        return res.status(400).send("error")
+    }
+}
+
+exports.news_statmentdog_search = async function(req, res){
+    let query = `SELECT * FROM statementdog WHERE 1=1`
+    let param = []
+
+    if(req.query.startDate !== "" && req.query.endDate !== ""){
+        query += " AND date BETWEEN ? AND ?"
+        param.push(req.query.startDate, req.query.endDate)
+    }
+
+    if(req.query.pattern !== ""){
+        query += " AND title LIKE ?"
+	    param.push(`%${req.query.pattern}%`)
+    }
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        for(let i = 0; i < rows.length; i++){
+            rows[i]["title"] = [rows[i]["title"], rows[i]["link"]]
+            delete rows[i]["link"]
+        }
+
+        return res.status(200).send(rows)
+    } catch (error) {
+
+        return res.status(400).send("error")
+    }
+}
+
+exports.news_statmentdog_search_today = async function(req, res){
+    let query = `SELECT * FROM statementdog WHERE date=?`
+    let param = [req.query.date]
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        for(let i = 0; i < rows.length; i++){
+            rows[i]["title"] = [rows[i]["title"], rows[i]["link"]]
+            delete rows[i]["link"]
+        }
+
+        return res.status(200).send(rows)
+    } catch (error) {
+
+        return res.status(400).send("error")
+    }
+}
+
+exports.news_statmentdog_search_past = async function(req, res){
+    let query = `SELECT * FROM statementdog WHERE date<?`
+    let param = [req.query.date]
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        for(let i = 0; i < rows.length; i++){
+            rows[i]["title"] = [rows[i]["title"], rows[i]["link"]]
+            delete rows[i]["link"]
+        }
+
+        return res.status(200).send(rows)
+    } catch (error) {
+
         return res.status(400).send("error")
     }
 }
@@ -212,7 +284,7 @@ exports.news_summary = async function(req, res){
                 SELECT category, COUNT(category) as todayQuantity FROM news WHERE date=? GROUP BY category ORDER BY category;\
                 SELECT COUNT(*) as pastQuantity FROM news WHERE date<?;\
                 SELECT category, COUNT(category) as pastQuantity FROM news WHERE date<? GROUP BY category ORDER BY category;`
-    let param = [req.query.date, req.query.date, req.query.date, req.query.date]
+    let param = [req.query.date, req.query.date, req.query.date, req.query.date, req.query.date, req.query.date]
     let result = [
         { "ID" : 0, "category" : "全部", "todayQuantity" : 0, "pastQuantity" : 0 },
         { "ID" : 1, "category" : "MoneyDj 傳產", "todayQuantity" : 0, "pastQuantity" : 0 },
@@ -227,7 +299,7 @@ exports.news_summary = async function(req, res){
         { "ID" : 10, "category" : "經濟日報 證券 櫃買動態", "todayQuantity" : 0, "pastQuantity" : 0 },
         { "ID" : 11, "category" : "經濟日報 證券 權證特區", "todayQuantity" : 0, "pastQuantity" : 0 },
         { "ID" : 12, "category" : "經濟日報 證券 證券達人", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 13, "category" : "經濟日報 證券 集中市場", "todayQuantity" : 0, "pastQuantity" : 0 }
+        { "ID" : 13, "category" : "經濟日報 證券 集中市場", "todayQuantity" : 0, "pastQuantity" : 0 },
     ]
     const rowNum = [1, 3]
 
@@ -247,6 +319,26 @@ exports.news_summary = async function(req, res){
             }
         })
 
+        return res.status(200).json(result)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send("error")
+    } 
+}
+
+exports.news_summary_statementdog = async function(req, res){
+    let query = `SELECT COUNT(*) as todayQuantity FROM statementdog WHERE date=?;\
+                SELECT COUNT(*) as pastQuantity FROM statementdog WHERE date<?;`
+    let param = [req.query.date, req.query.date]
+    let result = [
+        { "ID" : 0, "category" : "財報狗", "todayQuantity" : 0, "pastQuantity" : 0 },
+    ]
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param)
+
+        result[0]["todayQuantity"] = rows[0][0]["todayQuantity"]
+        result[0]["pastQuantity"] = rows[1][0]["pastQuantity"]
         return res.status(200).json(result)
     } catch (error) {
         console.log(error)

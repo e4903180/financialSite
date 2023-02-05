@@ -3,45 +3,56 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { rootApiIP } from '../../constant';
-import { columns_news } from '../column/column';
-import { categoryList } from './categoryList';
+import NewsItem from './newsItem';
+import StatementdogItem from './statementdogItem';
 
 function NewsComp() {
     var Today = new Date()
     const todayDate = Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0')
-    const [startDate, setStartDate] = useState(todayDate)
+
+    const [type, setType] = useState("news")
     const [loading, setLoading] = useState(false)
     const [data0, setData0] = useState([])
     const [page0, setPage0] = useState(0)
     const [pageSize0, setPageSize0] = useState(10)
 
-    const [data, setData] = useState([])
-    const [page, setPage] = useState(0)
-    const [pageSize, setPageSize] = useState(10)
-    const [column, setColumn] = useState("title")
-    const [category, setCategory] = useState("全部")
-    const [pattern, setPattern] = useState("")
+    const [data1, setData1] = useState([])
+    const [page1, setPage1] = useState(0)
+    const [pageSize1, setPageSize1] = useState(10)
+
+    const [dataNews, setDataNews] = useState([])
+    const [dataStatementdog, setDataStatementdog] = useState([])
 
     const columns_summary_news = [
         { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },
         { field: "todayQuantity", headerName : todayDate + "新聞數量", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-            rowData => <Button variant = "text" onClick = { () => buttonTodayHandle(rowData["row"]["category"]) }>{rowData.value}</Button>
+            rowData => <Button variant = "text" onClick = { () => buttonNewsHandle("today", rowData["row"]["category"]) }>{rowData.value}</Button>
         },
         { field: "pastQuantity", headerName : todayDate + "前新聞數量", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-            rowData => <Button variant = "text" onClick = { () => buttonPastHandle(rowData["row"]["category"]) }>{rowData.value}</Button>
+            rowData => <Button variant = "text" onClick = { () => buttonNewsHandle("past", rowData["row"]["category"]) }>{rowData.value}</Button>
         }
     ];
 
-    const buttonTodayHandle = (buttonCategory) => {
-        setLoading(true)
+    const columns_summary_statementdog = [
+        { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },
+        { field: "todayQuantity", headerName : todayDate + "新聞數量", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+            rowData => <Button variant = "text" onClick = { () => buttonStatementdogHandle("today") }>{rowData.value}</Button>
+        },
+        { field: "pastQuantity", headerName : todayDate + "前新聞數量", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+            rowData => <Button variant = "text" onClick = { () => buttonStatementdogHandle("past") }>{rowData.value}</Button>
+        }
+    ];
 
-        axios.get(rootApiIP + "/data/news_search_today", { params : {
+    const buttonNewsHandle = (date, buttonCategory) => {
+        setLoading(true)
+        setType("news")
+
+        axios.get(rootApiIP + `/data/news_search_${date}`, { params : {
             "date" : todayDate,
             "category" : buttonCategory
         }})
         .then((res) => {
-            console.log(res.data)
-            setData(res.data)
+            setDataNews(res.data)
             setLoading(false)
             window.scrollTo({
                 left : 0, 
@@ -55,15 +66,15 @@ function NewsComp() {
         })
     }
 
-    const buttonPastHandle = (buttonCategory) => {
+    const buttonStatementdogHandle = (date) => {
         setLoading(true)
+        setType("statementdog")
 
-        axios.get(rootApiIP + "/data/news_search_past", { params : {
+        axios.get(rootApiIP + `/data/news_statmentdog_search_${date}`, { params : {
             "date" : todayDate,
-            "category" : buttonCategory
         }})
         .then((res) => {
-            setData(res.data)
+            setDataStatementdog(res.data)
             setLoading(false)
             window.scrollTo({
                 left : 0, 
@@ -75,34 +86,24 @@ function NewsComp() {
             if(res.response.data === "Session expired") window.location.reload()
             setLoading(false)
         })
-    }
-
-    const submit = (e) => {
-        e.preventDefault()
-        setLoading(true)
-
-        axios.get(rootApiIP + "/data/news_search", { params :{
-            "date" : startDate,
-            "column" : column,
-            "pattern" : pattern,
-            "category" : category
-        }})
-        .then((res) => {
-            setData(res.data)
-            setLoading(false)
-        })
-        .catch((res) => {
-            if(res.response.data === "Session expired") window.location.reload()
-            setLoading(false)
-        })
-    }
+    }   
 
     useEffect(() => {
         axios.get(rootApiIP + "/data/news_summary", {params :{
-            "date" : startDate,
+            "date" : todayDate,
         }})
         .then((res) => {
             setData0(res.data)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+
+        axios.get(rootApiIP + "/data/news_summary_statementdog", {params :{
+            "date" : todayDate,
+        }})
+        .then((res) => {
+            setData1(res.data)
         })
         .catch((res) => {
             if(res.response.data === "Session expired") window.location.reload()
@@ -119,10 +120,10 @@ function NewsComp() {
                 <CircularProgress color = "inherit" />
             </Backdrop>
             
-            <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
+            <div className = 'row mx-auto py-3' style = {{ width : "90vw" }}>
                 <h3 className = "display-6 text-center">新聞資料庫總覽</h3>
 
-                <div className = 'col-md-10 mx-auto pt-3'>
+                <div className = 'col-md-7 mx-auto pt-3'>
                     <DataGrid
                         columns = { columns_summary_news }
                         rows = { data0 }
@@ -143,66 +144,15 @@ function NewsComp() {
                         disableSelectionOnClick = { true }
                     />
                 </div>
-            </div>
 
-            <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
-                <h3 className = "display-6 text-center">新聞資料庫查詢</h3>
-
-                <form onSubmit = { submit }>
-                    <div className = 'form-group row py-3'>
-                        <label htmlFor = "columns" className = "col-md-3 col-form-label text-center">搜尋欄位:</label>
-                        <div className = 'col-md-3'>
-                            <select id = "columns" className = "form-select" onChange = {e => setColumn(e.target.value)}>
-                                <option value = "title">新聞標題</option>
-                                <option value = "repoter">記者</option>
-                            </select>
-                        </div>
-                        
-                        <div className = 'col-md-6'>
-                            <input type = "text" className = "form-control" onChange = { e => 
-                                setPattern(e.target.value) }></input>
-                        </div>
-                    </div>
-
-                    <div className = 'form-group row py-3'>
-                        <label htmlFor = "category" className = "col-md-3 col-form-label text-center">新聞類別:</label>
-                        <div className = 'col-md-4'>
-                            <select id = "category" className = "form-select" onChange = {e => setCategory(e.target.value)}>
-                                { 
-                                    categoryList.map((ele, idx) => 
-                                        <option value = { ele } key = { idx }>{ele}</option>) 
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className = 'form-group row py-3'>
-                        <label htmlFor = "date" className = "col-md-3 col-form-label text-center">新聞資料起始日:</label>
-                        <div className = 'col-md-3'>
-                            <input type = "date" id = "date" className = "form-control" onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
-                        </div>
-                    </div>
-
-                    <div className = 'form-group row py-3'>
-                        <div className = 'col-md-12 text-center'>
-                            <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }}>搜尋</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            
-            <h3 className = "display-6 text-center">查詢結果</h3>
-            <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
-
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
-                <div className = 'col-md-10 mx-auto'>
+                <div className = 'col-md-5 mx-auto pt-3'>
                     <DataGrid
-                        columns = { columns_news }
-                        rows = { data }
-                        page = { page }
-                        onPageChange={(newPage) => setPage(newPage)}
-                        pageSize = { pageSize }
-                        onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
+                        columns = { columns_summary_statementdog }
+                        rows = { data1 }
+                        page = { page1 }
+                        onPageChange={(newPage) => setPage1(newPage)}
+                        pageSize = { pageSize1 }
+                        onPageSizeChange={ (newPageSize) => setPageSize1(newPageSize) }
                         rowsPerPageOptions = {[5, 10, 20]}
                         getRowId = { row => row.ID }
                         components = {{ Toolbar: GridToolbar }}
@@ -215,6 +165,29 @@ function NewsComp() {
                         disableColumnFilter
                         disableSelectionOnClick = { true }
                     />
+                </div>
+            </div>
+
+            <h3 className = "display-6 text-center py-3">新聞資料庫查詢</h3>
+            
+            <div className = 'row mx-auto'>
+                <div className = 'col-md-11 mx-auto'>
+                    <div className = "card h-100 p-0 mt-3">
+                        <div className = 'mx-3 mt-2'>
+                            <ul className = "nav nav-tabs">
+                                <li className = "nav-item">
+                                    <button className = {`nav-link ${ type === "news" ? "active" : ""}`} data-bs-toggle = "tab" onClick = {() => setType("news")}>新聞</button>
+                                </li>
+
+                                <li className = "nav-item">
+                                    <button className = {`nav-link ${ type === "statementdog" ? "active" : ""}`} data-bs-toggle = "tab" onClick = {() => setType("statementdog")}>財報狗</button>
+                                </li>
+                            </ul>
+
+                            { type === "news" && <NewsItem setLoading = { setLoading } data = { dataNews } setData = { setDataNews }/>}
+                            { type === "statementdog" && <StatementdogItem setLoading = { setLoading } data = { dataStatementdog } setData = { setDataStatementdog }/>}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

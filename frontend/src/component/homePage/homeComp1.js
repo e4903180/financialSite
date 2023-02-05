@@ -4,6 +4,7 @@ import axios from 'axios';
 import NewsItem from './newsItem';
 import ReasearchItem from './researchItem';
 import CalendarItem from './calendarItem';
+import DbSearchItem from './dbSearchItem';
 
 function HomeComp1() {
     const [type, setType] = useState("news")
@@ -44,11 +45,16 @@ function HomeComp1() {
                                 <li className = "nav-item">
                                     <button className = "nav-link" data-bs-toggle = "tab" onClick = {() => setType("calendar")}>法說會行事曆</button>
                                 </li>
+
+                                <li className = "nav-item">
+                                    <button className = "nav-link" data-bs-toggle = "tab" onClick = {() => setType("dbSearch")}>綜合資料庫查詢</button>
+                                </li>
                             </ul>
 
                             { type === "news" && <NewsItem data = { news } />}
                             { type === "research" && <ReasearchItem data = { research } />}
                             { type === "calendar" && <CalendarItem />}
+                            { type === "dbSearch" && <DbSearchItem /> }
                         </div>
                     </div>
                 </div>

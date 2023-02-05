@@ -4,19 +4,17 @@ import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
 import { GridToolbar } from '@mui/x-data-grid';
 
 function ReasearchItem(props) {
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
 
     return (
         <>
             <div className = 'row pt-3 mx-auto'>
-                <h3 className = "display-6 text-center">個股研究報告</h3>
-
                 <StripedDataGrid
                     columns = { columns1 }
                     rows = { props.data }
                     pageSize = { pageSize }
                     onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
-                    rowsPerPageOptions = {[5, 10, 25]}
+                    rowsPerPageOptions = {[5, 10, 20]}
                     getRowId = { row => row.ID }
                     components = {{ Toolbar: GridToolbar }}
                     componentsProps = {{ toolbar: { showQuickFilter: true },}}

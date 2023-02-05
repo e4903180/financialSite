@@ -1,6 +1,7 @@
 from Ctee import Ctee
 from MoneyDj import MoneyDj
 from Money import Money
+from StatementDog import StatementDog
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -10,6 +11,9 @@ import sys
 import datetime
     
 class NewsDayUpdate():
+    """Update news from some websites
+    """
+    
     def __init__(self) -> None:
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
@@ -22,12 +26,22 @@ class NewsDayUpdate():
 
         self._ctee = Ctee(options, service, db, cursor)
         self._moneydj = MoneyDj(options, service, db, cursor)
-        self._money = Money(options, service, db, cursor)
+        self._money = Money(db, cursor)
+        self._statementdog = StatementDog(db, cursor)
     
     def run(self):
+        """Run
+
+            Args :
+                None
+
+            Return :
+                None 
+        """
         self._ctee.run()
         self._moneydj.run()
         self._money.run()
+        self._statementdog.run()
 
 if __name__ == "__main__":
     sys.stderr = open("/home/cosbi/桌面/financialData/news/" + str(datetime.datetime.now()) + '.log', 'w')

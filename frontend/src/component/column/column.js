@@ -137,6 +137,12 @@ export const columns_news = [
     { field: 'repoter', headerName: '記者', flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
+export const columns_statementdog = [
+    { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+];
+
 export const columns_home_news = [
     { field: "cteeDate", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "cteeTitle", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
@@ -146,6 +152,9 @@ export const columns_home_news = [
     rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
     { field: "moneyDate", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "moneyTitle", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+    { field: "statementdogDate", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "statementdogTitle", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
     rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
 ];
 

@@ -17,7 +17,8 @@ exports.newestResearch20 = async function(req, res){
 exports.newestNews20 = async function(req, res){
     let query = `SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%工商時報%" LIMIT 20;\
                 SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%MoneyDj%" LIMIT 20;\
-                SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%經濟日報%" LIMIT 20;`
+                SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%經濟日報%" LIMIT 20;\
+                SELECT date, title, link FROM statementdog WHERE date=(SELECT MAX(date) FROM statementdog) LIMIT 20;`
     let result = []
 
     try {
@@ -32,19 +33,28 @@ exports.newestNews20 = async function(req, res){
                 "moneyDjTitle" : ["", ""], 
                 "moneyDate" : "", 
                 "moneyTitle" : ["", ""],
+                "statementdogDate" : "", 
+                "statementdogTitle" : ["", ""],
             }
 
             if(i < rows[0].length){
                 temp["cteeDate"] = rows[0][i]["date"]
                 temp["cteeTitle"] = [rows[0][i]["title"], rows[0][i]["link"]]
             }
+
             if(i < rows[1].length){
                 temp["moneyDjDate"] = rows[1][i]["date"]
                 temp["moneyDjTitle"] = [rows[1][i]["title"], rows[1][i]["link"]]
             }
+
             if(i < rows[2].length){
                 temp["moneyDate"] = rows[2][i]["date"]
                 temp["moneyTitle"] = [rows[2][i]["title"], rows[2][i]["link"]]
+            }
+
+            if(i < rows[3].length){
+                temp["statementdogDate"] = rows[3][i]["date"]
+                temp["statementdogTitle"] = [rows[3][i]["title"], rows[3][i]["link"]]
             }
 
             result.push(temp)

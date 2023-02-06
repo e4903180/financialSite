@@ -15,10 +15,10 @@ exports.newestResearch20 = async function(req, res){
 };
 
 exports.newestNews20 = async function(req, res){
-    let query = `SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%工商時報%" LIMIT 20;\
-                SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%MoneyDj%" LIMIT 20;\
-                SELECT date, title, link FROM news WHERE date=(SELECT MAX(date) FROM news) AND category LIKE "%經濟日報%" LIMIT 20;\
-                SELECT date, title, link FROM statementdog WHERE date=(SELECT MAX(date) FROM statementdog) LIMIT 20;`
+    let query = `SELECT date, title, link FROM news WHERE category LIKE "%工商時報%" ORDER BY date DESC LIMIT 20;\
+                SELECT date, title, link FROM news WHERE category LIKE "%MoneyDj%" ORDER BY date DESC LIMIT 20;\
+                SELECT date, title, link FROM news WHERE category LIKE "%經濟日報%" ORDER BY date DESC LIMIT 20;\
+                SELECT date, title, link FROM statementdog ORDER BY date DESC LIMIT 20;`
     let result = []
 
     try {

@@ -44,7 +44,7 @@ function PrivateRoute() {
             setIsAuth(true)
             setWs(socketio.connect(WebSocketIP + res.data))
         }).catch(res => {
-            setIsAuth(false)
+            setShow(true)
             setWs(null)
         })
     }, [])

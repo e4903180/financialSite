@@ -125,6 +125,7 @@ class gmailService:
                     i += 1
                 else:
                     self.check_pdf_dir(num)
+                    
                     with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf", 'wb') as f:
                         f.write(file_data)
                         
@@ -367,18 +368,33 @@ class gmailService:
                 else:
                     result.append("NULL")
             return result
+
         elif "元富投顧" in subject:
             for i in stockNum:
-                idx_left_brackets = subject.find(i + ")") + 5
+                idx_left_brackets = subject.find(i + ")")
                 # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
                 end = len(subject)
 
-                for idx in range(idx_left_brackets, len(subject), 1):
+                for idx in range(idx_left_brackets + 5, len(subject), 1):
                     # Fwd: 元富投顧個股報告--聯電(2303)維持買進，1H23為營運毛利率谷底，評價低
                     if subject[idx] == "，":
                         end = idx
                         break
 
-                result.append(subject[idx_left_brackets:end])
+                result.append(subject[idx_left_brackets + 5:end])
+            return result
+        
+        elif "永豐投顧" in subject:
+            for i in stockNum:
+                # Fwd: 【永豐投顧】上奇（6123 TT，B，80）/ 評價具提升空間_20230202
+                idx_slash = subject.find("/")
+                end = len(subject)
+
+                for idx in range(idx_slash + 2, len(subject), 1):
+                    if subject[idx] == "_":
+                        end = idx
+                        break
+
+                result.append(subject[idx_slash + 2:end])
             return result
         return ["NULL" for i in range(len(stockNum))]

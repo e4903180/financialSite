@@ -23,13 +23,13 @@ function DbSearchItem() {
     const [search1, setSearch1] = useState(false);
     const [loading, setLoading] = useState(true);
     const [page1, setPage1] = useState(0);
-    const [pageSize1, setPageSize1] = useState(10);
+    const [pageSize1, setPageSize1] = useState(20);
     const [page2, setPage2] = useState(0);
     const [pageSize2, setPageSize2] = useState(10);
     const [page3, setPage3] = useState(0);
     const [pageSize3, setPageSize3] = useState(10);
     const [page4, setPage4] = useState(0);
-    const [pageSize4, setPageSize4] = useState(10);
+    const [pageSize4, setPageSize4] = useState(20);
     const [columnTable, set_colume_table] = useState([]);
     const [ticker, setTicker] = useState("");
     const [input1Error, set_input1Error] = useState(false);
@@ -384,7 +384,7 @@ function DbSearchItem() {
 
                 <hr className = 'mx-auto'/>
 
-                <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
+                <div className = 'row mx-auto py-4' style = {{ width : "90%" }}>
                     <h4 className = "text-center">個股研究資料</h4>
 
                     <DataGrid
@@ -394,6 +394,30 @@ function DbSearchItem() {
                         onPageChange={(newPage) => setPage1(newPage)}
                         pageSize = { pageSize1 }
                         onPageSizeChange={ (newPageSize) => setPageSize1(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                        autoHeight
+                    />
+                </div>
+
+                <div className = 'row mx-auto py-4' style = {{ width : "90%", "height" : "800px" }}>
+                    <h4 className = "text-center">法說會</h4>
+
+                    <DataGrid
+                        columns = { columns4 }
+                        rows = { data4 }
+                        page = { page4 }
+                        onPageChange={(newPage) => setPage4(newPage)}
+                        pageSize = { pageSize4 }
+                        onPageSizeChange={ (newPageSize) => setPageSize4(newPageSize) }
                         rowsPerPageOptions = {[5, 10, 20]}
                         getRowId = { row => row.ID }
                         components = {{ Toolbar: GridToolbar }}
@@ -450,31 +474,6 @@ function DbSearchItem() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
-                    />
-                </div>
-
-
-                <div className = 'row mx-auto py-4' style = {{ width : "90%"}}>
-                    <h4 className = "text-center">法說會</h4>
-
-                    <DataGrid
-                        columns = { columns4 }
-                        rows = { data4 }
-                        page = { page4 }
-                        onPageChange={(newPage) => setPage4(newPage)}
-                        pageSize = { pageSize4 }
-                        onPageSizeChange={ (newPageSize) => setPageSize4(newPageSize) }
-                        rowsPerPageOptions = {[5, 10, 20]}
-                        getRowId = { row => row.ID }
-                        components = {{ Toolbar: GridToolbar }}
-                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                        pagination
-                        disableColumnMenu
-                        disableColumnSelector
-                        disableDensitySelector
-                        disableColumnFilter
-                        disableSelectionOnClick = { true }
-                        autoHeight = { true }
                     />
                 </div>
             </>}

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { columns_home_news } from '../column/column';
 import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
-import { GridToolbar } from '@mui/x-data-grid';
 
 function NewsItem(props) {
     const [pageSize, setPageSize] = useState(20)
 
     return (
         <>
-            <div className = 'row pt-3'>
+            <div className = 'row pt-3 mx-auto'>
                 <StripedDataGrid
                     columns = { columns_home_news }
                     rows = { props.data }
@@ -16,8 +15,6 @@ function NewsItem(props) {
                     onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
                     rowsPerPageOptions = {[5, 10, 20]}
                     getRowId = { row => row.ID }
-                    components = {{ Toolbar: GridToolbar }}
-                    componentsProps = {{ toolbar: { showQuickFilter: true },}}
                     pagination
                     autoHeight
                     disableColumnMenu

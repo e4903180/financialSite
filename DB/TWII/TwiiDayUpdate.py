@@ -11,10 +11,7 @@ class TWII():
         self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
                             db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
-        self.today = datetime.date.today()
-        self.year = self.today.year
-        self.month = self.today.month
-        self.day = self.today.day
+        self.start_date = datetime.date.today() - datetime.timedelta(days = 30)
 
     def update(self) -> None:
         """Update data
@@ -24,17 +21,8 @@ class TWII():
             Return:
                 None
         """
-        self.day -= 10
 
-        if self.day <= 0:
-            self.day += 28
-            self.month -= 1
-
-        if self.month == 0:
-            self.month = 12
-            self.year -= 1
-
-        self._update_TWII(f"{self.year}-{self.month}-{self.day}")
+        self._update_TWII(self.start_date)
 
     def _update_TWII(self, start_date : str):
         """Update TWII
@@ -62,7 +50,7 @@ class TWII():
             Return:
                 None
         """
-        sql = f'INSERT INTO TWII (`date`, `Close`) VALUES ("{self._TWII_table_data["Date"]}", "{self._TWII_table_data["Close"]}")'
+        sql = f'INSERT INTO TWII (`date`, `Close`) VALUES ("{date}", "{close}")'
 
         self._cursor.execute(sql)
         self._db.commit()

@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import React from 'react';
-import HomeComp from './component/homePage/homeComp';
+// import HomeComp from './component/homePage/homeComp';
 import LoginComp from './component/loginPage/loginComp';
 import RegisterComp from './component/registerPage/registerComp';
 import CalendarComp from './component/calendarPage/calendarComp';

@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant';
-import TickerSearchComp from '../tickerSearchComp';
 
 const autocom = AutoCom.AutoComList;
 
@@ -20,6 +20,25 @@ function SelfUploadPage() {
     const [provider, setProvider] = useState("NULL");
     const [evaluate, setEvaluate] = useState("NULL");
     const [date, setDate] = useState(TodayDate)
+    const [isLoading, setIsLoading] = useState(false);
+    const [options, setOptions] = useState([]);
+    const typeaheadRef = useRef(null);
+
+    const handleSearch = (pattern) => {
+        setIsLoading(true);
+        setTicker(pattern)
+        
+        axios.post(rootApiIP + "/data/ticker_search", {
+            "pattern" : pattern
+        })
+        .then((res) => {
+            setOptions(res.data);
+            setIsLoading(false);
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+    };
 
     const saveFile = (e) => {
         if(e.target.files.length !== 0){
@@ -33,7 +52,7 @@ function SelfUploadPage() {
 
     function submit(e){
         e.preventDefault();
-
+        
         if((fileName !== "") && (autocom.map(element => element.stock_num_name).includes(ticker))){
             const formData = new FormData();
 
@@ -53,6 +72,8 @@ function SelfUploadPage() {
                 setEvaluate("NULL")
                 setTicker("")
                 setDate(TodayDate)
+                typeaheadRef.current.clear();
+                e.target.reset();
                 
                 alert("上傳成功")
             }).catch(res => {
@@ -83,14 +104,39 @@ function SelfUploadPage() {
                         <div className = 'form-group row my-2'>
                             <label htmlFor = "ticker" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
                             <div className = 'col-md-3'>
-                                    <TickerSearchComp init = "" setTicker = {setTicker}/>
+                                <AsyncTypeahead
+                                    id = "ticker"
+                                    ref = { typeaheadRef }
+                                    isLoading = { isLoading }
+                                    labelKey = "stock_name"
+                                    onSearch = { handleSearch }
+                                    options = { options }
+                                    placeholder = "搜尋股票代號及名稱"
+                                    minLength = {3}
+
+                                    renderMenuItemChildren={(option) => (
+                                        <>
+                                            <span>{option.stock_name}</span>
+                                        </>
+                                    )}
+                                    
+                                    onChange = {(e) => {
+                                        if(e[0]){
+                                            setTicker(e[0]["stock_name"])
+                                        }else{
+                                            setTicker("")
+                                        }
+                                    }}
+
+                                    defaultInputValue = { "" }
+                                />
                             </div>
                         </div>
 
                         <div className = 'form-group row'>
                             <label htmlFor = "date" className = "col-md-2 col-form-label text-center">日期:</label>
                             <div className = 'col-md-3'>
-                                <input id = "date" type = "date" onChange = { e => setDate(e.target.value) } value = { TodayDate }/>
+                                <input id = "date" type = "date" onChange = { e => setDate(e.target.value) }/>
                             </div>
                         </div>
 

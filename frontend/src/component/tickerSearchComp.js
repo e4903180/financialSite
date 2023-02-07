@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-
 import { rootApiIP } from '../constant';
 
 function TickerSearchComp(props) {

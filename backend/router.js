@@ -8,6 +8,7 @@ const Data = require('./Controller/dataController');
 const Notify = require('./Controller/notifyController');
 const Sub = require('./Controller/subController');
 const dbSearch = require('./Controller/dbSearchController');
+const dbUpdate = require('./Controller/dbUpdateController');
 const FilterTicker = require('./Controller/filterTickerController');
 const StockTool = require('./Controller/StockToolContrtoller');
 const meetingDataUp = require('./Controller/meeting_data_uploadController');
@@ -95,6 +96,9 @@ dataRouter.get("/news_statmentdog_search_past", dbSearch.news_statmentdog_search
 dataRouter.get("/news_statmentdog_search", dbSearch.news_statmentdog_search)
 dataRouter.get("/news_summary", dbSearch.news_summary)
 dataRouter.get("/news_summary_statementdog", dbSearch.news_summary_statementdog)
+
+/* DB update router */
+dataRouter.patch("/financial_recommend", dbUpdate.financial_recommend_update)
 
 /* StockTool router */
 dataRouter.get("/PricingStrategy", StockTool.pricingData)

@@ -44,6 +44,7 @@ function PrivateRoute() {
             setIsAuth(true)
             setWs(socketio.connect(WebSocketIP + res.data))
         }).catch(res => {
+            setIsAuth(false)
             setShow(true)
             setWs(null)
         })
@@ -67,28 +68,29 @@ function PrivateRoute() {
 
     if (isAuth === undefined) return null
 
-    return isAuth ? 
+    return(
         <>
-            <WSContext.Provider value = {ws}>
-                <Modal show = { show }>
-                    <Modal.Header>
-                        <Modal.Title>服務中斷</Modal.Title>
-                    </Modal.Header>
+            <Modal show = { show }>
+                <Modal.Header>
+                    <Modal.Title>服務中斷</Modal.Title>
+                </Modal.Header>
 
-                    <Modal.Body>閒置過久請重新登入</Modal.Body>
+                <Modal.Body>閒置過久請重新登入</Modal.Body>
 
-                    <Modal.Footer>
-                        <Button variant = "secondary" onClick = { handleClose }>
-                            確定
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <Modal.Footer>
+                    <Button variant = "secondary" onClick = { handleClose }>
+                        確定
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {isAuth ? <WSContext.Provider value = {ws}>
                 <NavbarComp /> 
                 <Outlet />
             </WSContext.Provider>
+            :<></>}
         </> 
-        : 
-        <Navigate to = "/login" />;
+    )
 }
 
 export default PrivateRoute;

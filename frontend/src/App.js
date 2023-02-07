@@ -28,6 +28,7 @@ import LineComp from './component/LinePage/LineComp';
 import ChooseTickerDetail from './component/chooseTickerPage/chooseTickerDetail';
 import NewsComp from './component/newsPage/newsComp'
 import HomeComp1 from './component/homePage/homeComp1';
+import SelfEditComp from './component/selfEdit/selfEditComp';
 
 axios.defaults.withCredentials = true;
 
@@ -65,6 +66,7 @@ function App() {
             <Route exact path = "/inflation" element = { <InflationComp /> } ></Route>
             <Route exact path = "/cpi_ppi_pce" element = { <CpiPpiPceComp /> } ></Route>
             <Route exact path = "/Line" element = { <LineComp /> } ></Route>
+            <Route exact path = "/selfEdit" element = { <SelfEditComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

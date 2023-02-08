@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AutoCom } from '../../autoCom';
 import { rootApiIP } from '../../constant'
 import TickerSearchComp from '../tickerSearchComp';
@@ -12,6 +12,7 @@ function InputBlockComp() {
     const [ticker, setTicker] = useState("")
     var Today = new Date();
     const autocom = AutoCom.AutoComList;
+    const typeaheadRef = useRef(null);
 
     function submit(e){
         e.preventDefault()
@@ -27,6 +28,9 @@ function InputBlockComp() {
             }).then(res => {
                 setTicker("")
                 setInput2("")
+
+                typeaheadRef.current.clear()
+                e.target.reset()
                 alert("上傳成功")
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
@@ -54,7 +58,7 @@ function InputBlockComp() {
                 <div className = "form-row px-5">
                     <div className = "form-group">
                         <label htmlFor = "stock_num_name">股票代號&名稱:</label>
-                        <TickerSearchComp init = "" setTicker = {setTicker}/>
+                        <TickerSearchComp init = "" setTicker = {setTicker} reference = { typeaheadRef }/>
                         { input1Validation ? <div style = {{ color : "red" }}>此欄位為必填或格式錯誤</div> : <></> }
                     </div>
                 </div>

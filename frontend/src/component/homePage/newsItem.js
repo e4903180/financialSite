@@ -22,7 +22,6 @@ function NewsItem(props) {
                     disableDensitySelector
                     disableColumnFilter
                     disableSelectionOnClick = { true }
-                    headerHeight = {0}
                     getRowClassName={(params) =>
                         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
                     }

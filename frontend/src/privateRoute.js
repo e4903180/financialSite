@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import NavbarComp from './component/navbar/navbar';
 import axios from "axios";
 import { rootApiIP, WebSocketIP, WSContext } from './constant';

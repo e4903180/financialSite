@@ -1,7 +1,5 @@
 import MySQLdb
 import MySQLdb.cursors
-import time
-import threading
 
 class DataBaseManager():
     def __init__(self) -> None:

@@ -8,8 +8,22 @@ from .PythonTool.SupportResistance.SupportResistance import SupportResistance
 from .PythonTool.FRED.Inflation import Inflation
 from .PythonTool.FRED.CPI_PPI_PCE import CpiPpiPce
 from .DataBaseManager import DataBaseManager
+from datetime import date
 
 DB = DataBaseManager()
+
+@api_view(['GET'])
+def zip_download(request):
+    if request.method == "GET":        
+        try:
+            FilePointer = open(f"/home/cosbi/financialSite/LineBot/utils/FileHandler/zip/{date.today().strftime('%Y%m%d')}.zip", "rb")
+            response = HttpResponse(FilePointer, content_type = 'application/zip')
+            response['Content-Disposition'] = f"attachment; filename={date.today().strftime('%Y%m%d')}.zip"
+
+            return response
+        except Exception as e:
+            print(e)
+            return JsonResponse({"message" :"File not existed"}, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def analysis_download(request):

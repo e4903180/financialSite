@@ -27,6 +27,7 @@ function TickerSearchComp(props) {
         <>
             <AsyncTypeahead
                 id = "ticker"
+                ref = { props.reference }
                 isLoading = { isLoading }
                 labelKey = "stock_name"
                 onSearch = { handleSearch }

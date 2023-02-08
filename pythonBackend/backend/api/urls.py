@@ -9,4 +9,5 @@ urlpatterns = [
     re_path(r'^api/cpi_ppi_pce$', views.cpi_ppi_pce),
     re_path(r'^api/analysis_download$', views.analysis_download),
     re_path(r'^api/analysis_html_download$', views.analysis_html_download),
+    re_path(r'^api/zip_download$', views.zip_download),
 ]

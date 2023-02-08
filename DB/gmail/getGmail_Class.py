@@ -111,7 +111,7 @@ class gmailService:
                 att = self.service.users().messages().attachments().get(userId = 'me', messageId = ID, id = encodedFile['body']['attachmentId']).execute()
                 file = att['data']
                 file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
-
+                
                 if investment_company_res != "":
                     self.check_pdf_dir(num)
 
@@ -157,7 +157,7 @@ class gmailService:
                 If failed
                     (string) Null, (string) Null, (string) Null
         """
-
+        
         a_tags = content.find_all('a')
 
         for a in range(len(a_tags)):
@@ -174,7 +174,7 @@ class gmailService:
                         return num, name,  num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf", recommend
                 except:
                     return "null", "null", "null", "null"
-                
+        
         return "null", "null", "null", "null"
     
     def verifySubject(self, subject):
@@ -187,7 +187,8 @@ class gmailService:
                 (list) re result
         """
         
-        if "統一投顧" in subject:
+        if (("統一投顧" in subject) or 
+            ("國票投顧【個股報告】" in subject)):
             # 4個數字(\d{4})但後面是 .加英文 EX:5288.TT
             return re.findall(r'\d{4}(?=\.[A-Z])', subject)
         
@@ -298,7 +299,7 @@ class gmailService:
                 mimeType.append(payload['parts'][j]['mimeType'])
         except:
             return Num, Name, investment_company_res, Path, Recommend
-        
+
         if 'application/pdf' in mimeType:
             for i in range(len(mimeType)):
                 if mimeType[i] == 'application/pdf':
@@ -350,7 +351,8 @@ class gmailService:
     def recommend(self, subject, stockNum):
         result = []
         
-        if "統一投顧" in subject:
+        if (("統一投顧" in subject) or 
+            ("國票投顧【個股報告】" in subject)):
             for i in stockNum:
                 offset = subject.find(i + ".TT")
                 

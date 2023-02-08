@@ -38,12 +38,13 @@ class StatementDog(NewsBase):
             datas = r.json()
 
             for data in tqdm(datas):
-                if self._isDuplicate(data["title"][3:]):
+                title_idx = data["title"].find(" ")
+
+                if self._isDuplicate(data["title"][title_idx + 1:]):
                     stop = True
                     break
 
-                self._insert(data["title"][3:], data["canonical_url"], data["post_date"][:10])
-
+                self._insert(data["title"][title_idx + 1:], data["canonical_url"], data["post_date"][:10])
             page += 1
     
     def _insert(self, title : str, link : str, date : str) -> None:

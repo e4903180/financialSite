@@ -2,10 +2,11 @@ from __future__ import unicode_literals
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent
 from utils.DataBaseManager import DataBaseManager
 from utils.bind import Bind
 import configparser
+from utils.FileHandler.FileHandler import FileHandler
 
 app = Flask(__name__)
 db_obj = DataBaseManager()
@@ -17,6 +18,8 @@ config.read('config.ini')
 
 line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
 handler = WebhookHandler(config.get('line-bot', 'channel_secret'))
+
+FH = FileHandler(line_bot_api)
 
 # 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
@@ -34,10 +37,13 @@ def callback():
 
     return 'OK'
 
-@handler.add(MessageEvent, message = TextMessage)
+@handler.add(MessageEvent)
 def handle_message(event):
-    if "/綁定帳號 " in event.message.text:
-        bind_obj.bind_line_id(line_bot_api, db_obj.db, db_obj.cursor, event)
+    if event.message.type == "text":
+        if "/綁定帳號 " in event.message.text:
+            bind_obj.bind_line_id(line_bot_api, db_obj.db, db_obj.cursor, event)
+    elif event.message.type == "file":
+        FH.handle_pdf(event)
 
 if __name__ == "__main__":
     app.run()

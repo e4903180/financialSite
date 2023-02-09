@@ -186,7 +186,7 @@ export const columns_home_news = [
     { field: "moneyTitle", headerName : "經濟日報", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
     rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
     { field: "statementdogDate", headerName : "", flex: 0.5, headerAlign: 'center', align: 'center' },
-    { field: "statementdogTitle", headerName : "新聞狗", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+    { field: "statementdogTitle", headerName : "財報狗", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
     rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
 ];
 

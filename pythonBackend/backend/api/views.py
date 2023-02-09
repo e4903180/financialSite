@@ -14,9 +14,10 @@ DB = DataBaseManager()
 
 @api_view(['GET'])
 def zip_download(request):
-    if request.method == "GET":        
+    if request.method == "GET":
+        filename = request.query_params.get("filename")
         try:
-            FilePointer = open(f"/home/cosbi/financialSite/LineBot/utils/FileHandler/zip/{date.today().strftime('%Y%m%d')}.zip", "rb")
+            FilePointer = open(f"/home/cosbi/financialSite/LineBot/utils/FileHandler/zip/{filename}", "rb")
             response = HttpResponse(FilePointer, content_type = 'application/zip')
             response['Content-Disposition'] = f"attachment; filename={date.today().strftime('%Y%m%d')}.zip"
 

@@ -7,10 +7,9 @@ import pandas as pd
 from tqdm import tqdm
 
 class Compress2SQL():
-    def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
-                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
-        self._cursor = self._db.cursor()
+    def __init__(self, db, cursor) -> None:
+        self._db = db
+        self._cursor = cursor
         self._copmpress_dir = "./utils/FileHandler/compress/"
         self._decompress_dir = "./utils/FileHandler/decompress/"
         self._destination_dir = "/home/cosbi/桌面/financialData/gmailData/data/"

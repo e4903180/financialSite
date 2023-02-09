@@ -41,9 +41,11 @@ def callback():
 def handle_message(event):
     if event.message.type == "text":
         if "/綁定帳號 " in event.message.text:
+            db_obj.db.ping(True)
             bind_obj.bind_line_id(line_bot_api, db_obj.db, db_obj.cursor, event)
     elif event.message.type == "file":
-        FH.handle_pdf(event)
+        db_obj.db.ping(True)
+        FH.handle_pdf(event, db_obj.db, db_obj.cursor)
 
 if __name__ == "__main__":
     app.run()

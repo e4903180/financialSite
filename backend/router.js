@@ -97,8 +97,9 @@ dataRouter.get("/news_statmentdog_search", dbSearch.news_statmentdog_search)
 dataRouter.get("/news_summary", dbSearch.news_summary)
 dataRouter.get("/news_summary_statementdog", dbSearch.news_summary_statementdog)
 
-/* DB update router */
+/* DB edit router */
 dataRouter.patch("/financial_recommend", dbUpdate.financial_recommend_update)
+dataRouter.delete("/financial_delete", dbUpdate.financial_delete)
 
 /* StockTool router */
 dataRouter.get("/PricingStrategy", StockTool.pricingData)

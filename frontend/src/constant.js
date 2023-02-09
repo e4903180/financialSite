@@ -1,5 +1,19 @@
 import { createContext } from "react"
 
+const dev = {
+    rootApiIP : "http://140.116.214.154:3000/api",
+    WebSocketIP : "http://140.116.214.154:3000?username=",
+    rootPathPrefix : ""
+}
+
+const prod = {
+    rootApiIP : "",
+    WebSocketIP : "",
+    rootPathPrefix : "/financial"
+}
+
+export const config = process.env.NODE_ENV === "development" ? dev : prod
+
 export const rootApiIP = "http://140.116.214.154:3000/api"
 export const WebSocketIP = "http://140.116.214.154:3000?username="
 export const WSContext = createContext()

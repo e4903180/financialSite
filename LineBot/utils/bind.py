@@ -7,8 +7,6 @@ class Bind():
         pass
 
     def bind_line_id(self, line_bot_api : LineBotApi, db, cursor, event : MessageEvent):
-        db.ping(True)
-
         sql = "SELECT lineId FROM user WHERE username=%s"
         param = (event.message.text.split(" ")[1],)
         cursor.execute(sql, param)
@@ -18,8 +16,6 @@ class Bind():
 
         if result.empty:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "請輸入正確的username"))
-
-        
 
         if result["lineId"][0] == None == None:
             sql = "UPDATE user SET lineId=%s WHERE username=%s"

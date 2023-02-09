@@ -14,3 +14,16 @@ exports.financial_recommend_update = async function(req, res){
         return res.status(400).send("error")
     }
 }
+
+exports.financial_delete = async function(req, res){
+    let query = "DELETE FROM financialData WHERE ID=?"
+    let param = [req.body.ID]
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        return res.status(200).send("success")
+    } catch (error) {
+        return res.status(400).send("error")
+    }
+}

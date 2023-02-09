@@ -19,4 +19,4 @@
 
 # cosbi5 mySQL
 mysql -u financialSite -h 140.116.214.134 -P 3306 -p  
-6*4******
+6x4xxxxxx

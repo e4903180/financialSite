@@ -10,7 +10,7 @@ class FileHandler():
     def handle_pdf(self, event : Dict, db, cursor) -> None:
         c2sql = Compress2SQL(db, cursor)
         message_content = self._api.get_message_content(event.message.id)
-        dir = f"./utils/FileHandler/unzip/{date.today().strftime('%Y%m%d')}"
+        dir = f"/home/cosbi/桌面/financialData/unzip/{date.today().strftime('%Y%m%d')}"
 
         if not os.path.isdir(dir):
             os.mkdir(dir)
@@ -21,7 +21,7 @@ class FileHandler():
                     fd.write(chunk)
         elif ((".zip" in event.message.file_name) or
               (".rar" in event.message.file_name)):
-            with open(f"./utils/FileHandler/compress/{event.message.file_name}", 'wb') as fd:
+            with open(f"/home/cosbi/桌面/financialData/compress/{event.message.file_name}", 'wb') as fd:
                 for chunk in message_content.iter_content():
                     fd.write(chunk)
             c2sql.run()

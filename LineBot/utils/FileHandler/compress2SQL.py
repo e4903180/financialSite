@@ -10,8 +10,8 @@ class Compress2SQL():
     def __init__(self, db, cursor) -> None:
         self._db = db
         self._cursor = cursor
-        self._copmpress_dir = "./utils/FileHandler/compress/"
-        self._decompress_dir = "./utils/FileHandler/decompress/"
+        self._copmpress_dir = "/home/cosbi/桌面/financialData/compress/"
+        self._decompress_dir = "/home/cosbi/桌面/financialData/decompress/"
         self._destination_dir = "/home/cosbi/桌面/financialData/gmailData/data/"
 
     def run(self) -> None:

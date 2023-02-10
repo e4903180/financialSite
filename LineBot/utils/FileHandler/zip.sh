@@ -1,8 +1,7 @@
 #!/bin/sh
 
-cd /home/cosbi/financialSite/LineBot/utils/FileHandler/unzip
 today=$(date +'%Y%m%d')
 
-if [ -d "/home/cosbi/financialSite/LineBot/utils/FileHandler/unzip/$today.zip" ]; then
-    zip -r ../zip/$today.zip ./$today
+if [ -d "/home/cosbi/桌面/financialData/unzip/$today.zip" ]; then
+    zip -r /home/cosbi/桌面/financialData/zip/$today.zip /home/cosbi/桌面/financialData/$today
 fi

@@ -60,17 +60,17 @@ class GetGmailIndustry():
                 pickle.dump(creds, token)
         return creds
 
-    def _modifyLabels(self, ID) -> None:
+    def _modifyLabels(self, id : str) -> None:
         """Modify mail from INBOX to Label_6431857565168172346
         
             Args:
-                ID: (String) The ID of the Message required
+                id: (String) The ID of the Message required
             Return:
                 None
         """
-        Body = { "addLabelIds": ["Label_6431857565168172346"], "removeLabelIds" : ["Label3"] }
+        Body = { "addLabelIds": ["Label_6431857565168172346"], "removeLabelIds" : ["Label_3"] }
             
-        self._service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
+        self._service.users().messages().modify(userId = 'me', id = id, body = Body).execute()
 
     def _get_date_subject(self, headers : List) -> Dict:
         """Get the mail date

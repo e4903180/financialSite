@@ -16,6 +16,7 @@
 0 17 * * * sh /home/cosbi/financialSite/AlertService/alert.sh  
 0 7,18 * * * sh /home/cosbi/financialSite/DB/gmail/main.sh  
 59 23 * * * sh /home/cosbi/financialSite/LineBot/utils/FileHandler/zip.sh  
+55 23 * * * sh /home/cosbi/financialSite/DB/gmail/get_gmail.industry.sh
 
 # cosbi5 mySQL
 mysql -u financialSite -h 140.116.214.134 -P 3306 -p  

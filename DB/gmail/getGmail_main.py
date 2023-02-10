@@ -19,6 +19,10 @@ logging.info('Updating email start')
 result = gGC.service.users().messages().list(userId = 'me', maxResults = 500, labelIds = ["INBOX"]).execute()
 messages = result.get('messages')
 
+# list all labels
+# labelsList = gGC.service.users().labels().list(userId='me').execute()
+# print(labelsList)
+
 if messages == None:
     logging.info('Inbox quantity is 0')
     logging.info('Updating email end')
@@ -32,6 +36,12 @@ for i in range(len(messages)):
 for i in trange(len(ID)):
     # Get the message from its id
     txt = gGC.service.users().messages().get(userId = 'me', id = ID[i]).execute()
+
+    # 把辜睿齊移到手動處理
+    if "辜睿齊" in txt['payload']['headers'][-7]["value"]:
+        gGC.modifyLabels(ID[i], "Label_3480553467383697550")
+        continue
+
     payload = txt['payload']
     headers = payload['headers']
     date = gGC.getDate(headers)
@@ -50,11 +60,12 @@ for i in trange(len(ID)):
                 Filename.append(tempFilename[j])
                 Recommend.append(tempRecommend[j])
                 
-        # Modify labels
-        gGC.modifyLabels(ID[i], "Label2")
-    else:
-        # Modify labels
-        gGC.modifyLabels(ID[i], "Label3")
+            # Modify labels to 已處理
+            gGC.modifyLabels(ID[i], "Label2")
+            continue
+
+    # Modify labels to 無效郵件
+    gGC.modifyLabels(ID[i], "Label3")
 
 df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : investment_company, "Date" : Date, "Filename" : Filename, "Recommend" : Recommend })
 

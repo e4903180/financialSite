@@ -340,11 +340,21 @@ class gmailService:
             formats: (String) modify from INBOX to label
         """
         
+        # 已處理
         if formats == "Label2":
             Body = { "addLabelIds": ["Label_2"], "removeLabelIds" : ["INBOX"] }
         
+        # 無效郵件
         elif formats == "Label3":
             Body = { "addLabelIds": ["Label_3"], "removeLabelIds" : ["INBOX"] }
+        
+        # 手動處理
+        elif formats == "Label_3480553467383697550":
+            Body = { "addLabelIds": ["Label_3480553467383697550"], "removeLabelIds" : ["INBOX"] }
+
+        # 無法分類
+        elif formats == "Label_6440152670261486487":
+            Body = { "addLabelIds": ["Label_6440152670261486487"], "removeLabelIds" : ["INBOX"] }
             
         self.service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
     

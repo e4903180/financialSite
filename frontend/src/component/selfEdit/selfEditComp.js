@@ -18,7 +18,7 @@ function SelfEditComp() {
     const [superUser, setSuperUser] = useState(0)
 
     function handle_sub_list_cancel(rowData){
-        axios.delete(rootApiIP + "/data/financial_delete", {
+        axios.delete(rootApiIP + "/data/financial", {
             data : {
                 ID : rowData.row.ID
             }
@@ -37,29 +37,30 @@ function SelfEditComp() {
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center', editable: true },
         { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } 
+            renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } 
         target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
         { field: 'edit', headerName: '確認修改', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-        renderCell : (params) => {
-            const onClick = (e) => {
-                const thisRow = params.row
-    
-                axios.patch(rootApiIP + "/data/financial_recommend", {
-                    "ticker_id" : thisRow.ticker_id,
-                    "date" : thisRow.date,
-                    "investmentCompany" : thisRow.investmentCompany,
-                    "filename" : thisRow.filename,
-                    "recommend" : thisRow.recommend,
-                }).then(res => {
-                    alert("成功")
-                }).catch(res => {
-                    if(res.response.data === "Session expired") window.location.reload()
-                    alert("失敗")
-                })
+            renderCell : (params) => {
+                const onClick = (e) => {
+                    const thisRow = params.row
+        
+                    axios.patch(rootApiIP + "/data/financial_recommend", {
+                        "ticker_id" : thisRow.ticker_id,
+                        "date" : thisRow.date,
+                        "investmentCompany" : thisRow.investmentCompany,
+                        "filename" : thisRow.filename,
+                        "recommend" : thisRow.recommend,
+                    }).then(res => {
+                        alert("成功")
+                    }).catch(res => {
+                        if(res.response.data === "Session expired") window.location.reload()
+                        alert("失敗")
+                    })
+                }
+        
+                return <button onClick = { onClick }>修改</button>
             }
-    
-            return <button onClick = { onClick }>修改</button>
-        }},
+        },
         { field: 'action', headerName: '取消訂閱', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : 
         rowData => <DeleteOutlineIcon style = {{ cursor : "pointer" }} onClick = {() => handle_sub_list_cancel(rowData)}/>},
     ];

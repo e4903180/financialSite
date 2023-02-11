@@ -31,6 +31,10 @@ exports.single_financialData_download = async function(req, res){
     }
 };
 
+exports.single_financialDataIndustry_download = function(req, res){
+    res.download("/home/cosbi/桌面/financialData/gmailDataIndustry/data/" + req.query.filename)
+};
+
 exports.single_post_board_memo_download = function(req, res){
     res.download("/home/cosbi/桌面/financialData/post_board_data/" + req.query.filename)
 };

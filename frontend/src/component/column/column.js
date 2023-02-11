@@ -7,7 +7,7 @@ export const columns = [
     { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'downloadUrl', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', 
-    renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener" 
+        renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener" 
     download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
 ];
 
@@ -17,7 +17,7 @@ export const columns1 = [
     { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } 
+        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
@@ -29,14 +29,14 @@ export const columns2 = [
     { field: 'price', headerName: '目標價', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'reason', headerName: '理由', headerAlign: 'center', align: 'center', sortable: false, width: 400 },
     { field: 'filename', headerName: '檔案下載', headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
+        renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
 ];
 
 export const columns3 = [
     { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
+        renderCell : rowData => (check_single_lineMemo_memo_NULL(rowData.value)) },
     { field: 'inputTime', headerName: '輸入時間', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
 ];
@@ -48,9 +48,9 @@ export const columns4 = [
     { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'chPDF', headerName: '中文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
+        renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
     { field: 'enPDF', headerName: '英文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
+        renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
     { field: 'More_information', headerName: '相關資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Video_address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
@@ -62,7 +62,7 @@ export const columns5 = [
     { field: 'title', headerName: '上傳檔案標題', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : rowData => <a href = { rootApiIP + "/data/download/single_industry_analysis?filename=" + rowData.value.replace("%", "percentTransform") } 
+        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_industry_analysis?filename=" + rowData.value.replace("%", "percentTransform") } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
@@ -71,7 +71,7 @@ export const columns6 = [
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-    renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } 
+        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
@@ -126,36 +126,45 @@ export const columns_choose_ticker = [
     { field: 'Close', headerName: 'Close', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'Volume', headerName: '成交量', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'detail', headerName: '詳細資料', flex: 1, headerAlign: 'center', align: 'center', 
-    renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener">詳細資料</a> }
+        renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener">詳細資料</a> }
 ];
 
 export const columns_news = [
     { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
     { field: 'repoter', headerName: '記者', flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
 export const columns_statementdog = [
     { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
 ];
 
 export const columns_home_news = [
     { field: "cteeDate", headerName : "", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "cteeTitle", headerName : "工商時報", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
     { field: "moneyDjDate", headerName : "", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "moneyDjTitle", headerName : "MoneyDj", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
     { field: "moneyDate", headerName : "", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "moneyTitle", headerName : "經濟日報", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
     { field: "statementdogDate", headerName : "", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "statementdogTitle", headerName : "財報狗", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-    rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
+];
+
+export const columns_financialDataIndustry = [
+    { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "investmentCompany", headerName : "投顧公司", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: "title", headerName : "標題", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
+        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialDataIndustry?filename=" + rowData.value } 
+    target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
 const check_single_post_board_memo_NULL = (value) => {
@@ -180,7 +189,7 @@ const check_single_twse_chPDF_NULL = (value) => {
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_chPDF_download?filename=" + value } 
+        return <a href = { rootApiIP + "/data/download/single_twse_chPDF?filename=" + value } 
         target = "_blank" rel = "noreferrer noopener" download = { value }>Download</a>
     }
 }
@@ -191,7 +200,7 @@ const check_single_twse_enPDF_NULL = (value) => {
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_enPDF_download?filename=" + value } 
+        return <a href = { rootApiIP + "/data/download/single_twse_enPDF?filename=" + value } 
         target = "_blank" rel = "noreferrer noopener" download = { value }>Download</a>
     }
 }

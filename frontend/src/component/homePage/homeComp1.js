@@ -39,7 +39,7 @@ function HomeComp1() {
                                 </li>
 
                                 <li className = "nav-item">
-                                    <button className = "nav-link" data-bs-toggle = "tab" onClick = {() => setType("research")}>個股研究報告</button>
+                                    <button className = "nav-link" data-bs-toggle = "tab" onClick = {() => setType("research")}>研究報告</button>
                                 </li>
 
                                 <li className = "nav-item">

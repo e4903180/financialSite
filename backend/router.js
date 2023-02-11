@@ -50,14 +50,15 @@ dataRouter.get("/download/single_post_board_memo", Download.single_post_board_me
 dataRouter.get("/download/single_line_memo", Download.single_line_memo_download)
 dataRouter.get("/download/single_meetingData", Download.single_meetingData_memo_download)
 dataRouter.get("/download/single_industry_analysis", Download.single_industry_analysis_download)
-dataRouter.get("/download/single_twse_chPDF_download", Download.single_twse_chPDF_download)
-dataRouter.get("/download/single_twse_enPDF_download", Download.single_twse_enPDF_download)
+dataRouter.get("/download/single_twse_chPDF", Download.single_twse_chPDF_download)
+dataRouter.get("/download/single_twse_enPDF", Download.single_twse_enPDF_download)
 
 /* Download table router */
 dataRouter.get("/download/financialData", Download.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
 dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
 dataRouter.get("/download/calender", Download.calender2csv_download)
+dataRouter.get("/download/single_financialDataIndustry", Download.single_financialDataIndustry_download)
 
 /* Upload files router */
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
@@ -99,7 +100,7 @@ dataRouter.get("/news_summary_statementdog", dbSearch.news_summary_statementdog)
 
 /* DB edit router */
 dataRouter.patch("/financial_recommend", dbUpdate.financial_recommend_update)
-dataRouter.delete("/financial_delete", dbUpdate.financial_delete)
+dataRouter.delete("/financial", dbUpdate.financial_delete)
 
 /* StockTool router */
 dataRouter.get("/PricingStrategy", StockTool.pricingData)

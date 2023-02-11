@@ -155,19 +155,20 @@ class GetGmailIndustry():
         
         return filename
 
-    def _isDuplicate(self, date : str, investmentCompany : str, filename : str) -> bool:
+    def _isDuplicate(self, date : str, investmentCompany : str, title : str, filename : str) -> bool:
         """Check if data is duplicate
 
             Args :
                 date : (str) mail date
                 investmentCompany : (str) mail investment company
+                title : (str) mail title
                 filename : (str) filename
             Return :
                 bool
         """
-        query = "SELECT * from financialDataIndustry WHERE date=%s AND investmentCompany=%s AND filename=%s;"
+        query = "SELECT * from financialDataIndustry WHERE date=%s AND investmentCompany=%s AND title=%s AND filename=%s;"
 
-        param = (date, investmentCompany, filename)
+        param = (date, investmentCompany, title, filename)
 
         self._cursor.execute(query, param)
         self._db.commit()
@@ -178,20 +179,21 @@ class GetGmailIndustry():
             return False
         return True
 
-    def _insert(self, date : str, investmentCompany : str, filename : str) -> None:
+    def _insert(self, date : str, investmentCompany : str, title : str, filename : str) -> None:
         """Insert data
 
             Args :
                 date : (str) mail date
                 investmentCompany : (str) mail investment company
+                title : (str) mail title
                 filename : (str) filename
             Return :
                 None
         """
-        query = "INSERT INTO financialDataIndustry (date, investmentCompany, filename) \
-            VALUE (%s, %s, %s);"
+        query = "INSERT INTO financialDataIndustry (date, investmentCompany, title, filename) \
+            VALUE (%s, %s, %s, %s);"
 
-        param = (date, investmentCompany, filename)
+        param = (date, investmentCompany, title, filename)
         self._cursor.execute(query, param)
         self._db.commit()
 
@@ -216,8 +218,8 @@ class GetGmailIndustry():
         
         filename = self._getAttachments(payload['parts'][1:], id)
 
-        if not self._isDuplicate(result_subject_date["date"], result_subject_date["subject"], filename):
-            self._insert(result_subject_date["date"], result_subject_date["subject"], filename)
+        if not self._isDuplicate(result_subject_date["date"], investmentCompany, result_subject_date["subject"], filename):
+            self._insert(result_subject_date["date"], investmentCompany, result_subject_date["subject"], filename)
 
     def run(self) -> None:
         """Run

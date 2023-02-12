@@ -30,6 +30,9 @@ import NewsComp from './component/newsPage/newsComp'
 import HomeComp1 from './component/homePage/homeComp1';
 import SelfEditComp from './component/selfEdit/selfEditComp';
 import { config } from './constant';
+import IndustryComp from './component/industryPage/industryComp';
+import IndustryUploadComp from './component/industryUploadPage/industryUploadComp';
+import IndustryEditComp from './component/industryEditPage/industryEditComp';
 
 axios.defaults.withCredentials = true;
 
@@ -49,6 +52,7 @@ function App() {
             <Route exact path = { config.rootPathPrefix + "/home" } element = { <HomeComp1 /> }></Route>
             <Route exact path = { config.rootPathPrefix + "/calendar" } element = { <CalendarComp /> }></Route>
             <Route path = { config.rootPathPrefix + "/database" } element = { <DatabaseComp /> } ></Route>
+            <Route exact path = { config.rootPathPrefix + "/industry" } element = { <IndustryComp /> }></Route>
             <Route exact path = { config.rootPathPrefix + "/database/search/:stock_num_name" } element = { <DatabaseSearchComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/post_board" } element = { <PostBoardComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/news" } element = { <NewsComp /> } ></Route>
@@ -62,12 +66,14 @@ function App() {
             <Route exact path = { config.rootPathPrefix + "/subscibe_list" } element = { <SubListComp /> } ></Route>
             <Route path = { config.rootPathPrefix + "/choose_ticker" } element = { <ChooseTickerComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/choose_ticker/detail" } element = { <ChooseTickerDetail /> }></Route>
+            <Route exact path = { config.rootPathPrefix + "/self_edit" } element = { <SelfEditComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/self_upload" } element = { <SelfUploadPage /> } ></Route>
+            <Route exact path = { config.rootPathPrefix + "/industry_upload" } element = { <IndustryUploadComp /> } ></Route>
+            <Route exact path = { config.rootPathPrefix + "/industry_edit" } element = { <IndustryEditComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/tool_nav" } element = { <ToolNavComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/inflation" } element = { <InflationComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/cpi_ppi_pce" } element = { <CpiPpiPceComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/Line" } element = { <LineComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/selfEdit" } element = { <SelfEditComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

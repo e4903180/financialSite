@@ -9,7 +9,7 @@ var storage = multer.diskStorage({
 
         if(!fs.existsSync(dir)) fs.mkdirSync(dir)
 
-        callBack(null, `/home/cosbi/桌面/financialData/gmailData/data/${temp[0]}`)
+        callBack(null, dir)
     },
     filename: (req, file, callBack) => {
         let temp = req.body.ticker.split(" ")

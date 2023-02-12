@@ -304,6 +304,8 @@ function DatabaseSearchComp() {
                                         <option value = "第一金">第一金</option>
                                         <option value = "富邦台灣">富邦台灣</option>
                                         <option value = "SinoPac">永豐金證券</option>
+                                        <option value = "CTBC">CTBC</option>
+                                        <option value = "永豐投顧">永豐投顧</option>
                                     </select>
                                 </div>
                             </>}

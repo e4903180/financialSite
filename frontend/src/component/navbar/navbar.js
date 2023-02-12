@@ -109,15 +109,18 @@ function NavbarComp() {
                                     資料庫相關功能
                                 </>
                             } align = "end">
-                                <NavDropdown.Item href = "/database">綜合資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = "/database">個股綜合資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = "/industry">產業研究資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/news">新聞資料庫查詢</NavDropdown.Item>
                                 <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
                                 <NavDropdown.Item href = "/line_memo">Line memo</NavDropdown.Item>
                                 <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>
                                 <NavDropdown.Item href = "/meeting_data">Meeting data</NavDropdown.Item>
                                 <NavDropdown.Item href = "/industry_analysis">產業分析上傳</NavDropdown.Item>
+                                { superUser === 1 && <NavDropdown.Item href = "/industry_upload">產業研究報告上傳</NavDropdown.Item> }
+                                { superUser === 1 && <NavDropdown.Item href = "/industry_edit">產業研究報告修改</NavDropdown.Item> }
                                 { superUser === 1 && <NavDropdown.Item href = "/self_upload">個股研究報告上傳</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = "/selfEdit">個股研究報告修改</NavDropdown.Item> }
+                                { superUser === 1 && <NavDropdown.Item href = "/self_edit">個股研究報告修改</NavDropdown.Item> }
                             </NavDropdown>
                             
                             <Nav.Link href = "/tool_nav">

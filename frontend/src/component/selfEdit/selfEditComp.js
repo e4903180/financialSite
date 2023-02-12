@@ -17,7 +17,7 @@ function SelfEditComp() {
     const [pageSize, setPageSize] = useState(10)
     const [superUser, setSuperUser] = useState(0)
 
-    function handle_sub_list_cancel(rowData){
+    function handle_delete(rowData){
         axios.delete(rootApiIP + "/data/financial", {
             data : {
                 ID : rowData.row.ID
@@ -61,8 +61,8 @@ function SelfEditComp() {
                 return <button onClick = { onClick }>修改</button>
             }
         },
-        { field: 'action', headerName: '取消訂閱', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : 
-        rowData => <DeleteOutlineIcon style = {{ cursor : "pointer" }} onClick = {() => handle_sub_list_cancel(rowData)}/>},
+        { field: 'action', headerName: '刪除', flex: 1, headerAlign: 'center', sortable: false, align: 'center', renderCell : 
+        rowData => <DeleteOutlineIcon style = {{ cursor : "pointer" }} onClick = {() => handle_delete(rowData)}/>},
     ];
 
     useEffect(() => {

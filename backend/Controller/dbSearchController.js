@@ -345,3 +345,34 @@ exports.news_summary_statementdog = async function(req, res){
         return res.status(400).send("error")
     } 
 }
+
+exports.industry_search = async function(req, res){
+    let query = "SELECT * FROM financialDataIndustry WHERE 1=1"
+    let param = []
+
+    if(req.query.pattern !== ""){
+        query += " AND title LIKE ?"
+	    param.push(`%${req.query.pattern}%`)
+    }
+
+    if((req.query.startDate !== "") && (req.query.endDate !== "")){
+        query += " AND date BETWEEN ? AND ?"
+        param.push(req.query.startDate, req.query.endDate)
+    }
+
+    if(req.query.investmentCompany !== ""){
+        query += " AND investmentCompany=?"
+        param.push(req.query.investmentCompany)
+    }
+
+    query += " ORDER BY date DESC"
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param)
+
+        return res.status(200).json(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send("error")
+    } 
+}

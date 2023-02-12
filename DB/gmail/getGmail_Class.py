@@ -2,6 +2,10 @@
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 import pickle
 import os.path
 import base64
@@ -12,6 +16,7 @@ from apiclient import errors
 import re
 import requests
 import urllib
+import shutil
 
 # %%
 class gmailService:
@@ -159,6 +164,7 @@ class gmailService:
         """
         
         a_tags = content.find_all('a')
+        temp_num, temp_name, temp_filename, temp_recommend = [[] for i in range(4)]
 
         for a in range(len(a_tags)):
             if re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText()):
@@ -171,11 +177,35 @@ class gmailService:
                         self.check_pdf_dir(num)
                         file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
-                        return num, name,  num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf", recommend
+                        return [num], [name],  [num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"], [recommend]
                 except:
-                    return "null", "null", "null", "null"
-        
-        return "null", "null", "null", "null"
+                    return temp_num, temp_name, temp_filename, temp_recommend
+            elif "https://www.ibfs.com.tw/CancelConsulting" in a_tags[a].getText():
+                for num, name in stock_num_name:
+                    options = webdriver.ChromeOptions()
+                    options.add_argument('--headless')
+                    options.add_experimental_option('prefs', {
+                        "download.default_directory": self.rootPath + num + "/temp",
+                        "download.prompt_for_download": False, #To auto download the file
+                        "download.directory_upgrade": True,
+                        "plugins.always_open_pdf_externally": True #It will not show PDF directly in chrome
+                    })
+
+                    s = Service(ChromeDriverManager().install())
+                    driver = webdriver.Chrome(options = options, service = s)
+                    driver.get(a_tags[a].getText())
+
+                    for file in os.listdir(self.rootPath + num + "/temp/"):
+                        shutil.move(self.rootPath + num + "/temp/" + file,
+                                    self.rootPath + num + "/" + num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
+                    
+                    temp_num.append(num)
+                    temp_name.append(name)
+                    temp_filename.append(num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
+                    temp_recommend.append(recommend[0])
+                os.rmdir(self.rootPath + num + "/temp")
+
+        return temp_num, temp_name, temp_filename, temp_recommend
     
     def verifySubject(self, subject):
         """Get the mail subject
@@ -321,10 +351,10 @@ class gmailService:
                         
                     num, name, path, recommend = self.getAttachmentsURL(content, stock_num_name, date, temp_recommendResult)
 
-                    if path != "null":
-                        Num.append(num)
-                        Name.append(name)
-                        Path.append(path)
+                    if len(path) != 0:
+                        Num.extend(num)
+                        Name.extend(name)
+                        Path.extend(path)
                         Recommend.extend(recommend)
         
         if len(investment_company_res) == 0:

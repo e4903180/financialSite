@@ -16,6 +16,7 @@ const PostUp = require('./Controller/post_board_uploadController');
 const industry_analysisUp = require('./Controller/industry_analysis_uploadController')
 const LineMemoUp = require('./Controller/lineMemo_uploadController');
 const SelfUp = require('./Controller/self_uploadController');
+const InUp = require('./Controller/industryUploadController');
 const Download = require('./Controller/downloadController');
 
 const Limiter = rateLimit({
@@ -66,6 +67,7 @@ dataRouter.post("/upload/meeting_data_upload", meetingDataUp.meetingData_middleW
 dataRouter.post("/upload/industry_analysis_upload", industry_analysisUp.industry_analysis_middleWare, industry_analysisUp.industry_analysis_upload)
 dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 dataRouter.post("/upload/self_upload", SelfUp.self_upload_middleWare, SelfUp.self_upload)
+dataRouter.post("/upload/industry_upload", InUp.industry_upload_middleWare, InUp.industry_upload)
 
 /* Get DB data */
 dataRouter.get("/newestNews20", Data.newestNews20)
@@ -85,6 +87,7 @@ dataRouter.get("/news", Data.news)
 
 /* DB search router */
 dataRouter.post("/financial_search", dbSearch.financial_search)
+dataRouter.get("/industry_search", dbSearch.industry_search)
 dataRouter.post("/calender_search", dbSearch.calender_search)
 dataRouter.post("/post_board_search", dbSearch.post_board_search)
 dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
@@ -101,6 +104,8 @@ dataRouter.get("/news_summary_statementdog", dbSearch.news_summary_statementdog)
 /* DB edit router */
 dataRouter.patch("/financial_recommend", dbUpdate.financial_recommend_update)
 dataRouter.delete("/financial", dbUpdate.financial_delete)
+dataRouter.patch("/financialDataIndustry_title", dbUpdate.financialDataIndustry_title_update)
+dataRouter.delete("/financialDataIndustry", dbUpdate.financialDataIndustry_delete)
 
 /* StockTool router */
 dataRouter.get("/PricingStrategy", StockTool.pricingData)

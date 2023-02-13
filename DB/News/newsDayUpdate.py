@@ -47,7 +47,7 @@ class NewsDayUpdate():
         self._statementdog.run()
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["NEWS_DATA_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["NEWS_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     news = NewsDayUpdate()
 
     news.run()

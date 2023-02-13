@@ -3,11 +3,16 @@ import MySQLdb.cursors
 from datetime import date
 import pandas as pd
 import sys
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 
 class SubExpire():
     def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+
         self._cursor = self._db.cursor()
 
     def detect(self) -> None:

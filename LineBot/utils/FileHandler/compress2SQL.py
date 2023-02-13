@@ -82,7 +82,8 @@ class Compress2SQL():
         self._db.commit()
     
     def _move_file(self, dir_name : str, stock_num : str, origin_filename : str, new_filename : str) -> None:
-        os.rename(self._decompress_dir + dir_name + "/" + origin_filename, self._destination_dir + stock_num + "/" + new_filename)
+        if not os.path.exists(self._destination_dir + stock_num + "/" + new_filename):
+            os.rename(self._decompress_dir + dir_name + "/" + origin_filename, self._destination_dir + stock_num + "/" + new_filename)
 
 if __name__ == "__main__":
     c2sql = Compress2SQL()

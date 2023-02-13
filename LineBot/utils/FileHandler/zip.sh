@@ -1,7 +1,7 @@
 #!/bin/sh
-
+cd "/home/cosbi/桌面/financialData/unzip"
 today=$(date +'%Y%m%d')
 
-if [ -d "/home/cosbi/桌面/financialData/unzip/$today" ]; then
-    zip -r /home/cosbi/桌面/financialData/zip/$today.zip /home/cosbi/桌面/financialData/unzip/$today
+if [ -d "./$today" ]; then
+    zip -r ../zip/$today.zip ./$today
 fi

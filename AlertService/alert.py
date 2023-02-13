@@ -16,11 +16,10 @@ import os
 from gmailService.gmailService import GmailService
 import datetime
 import sys
+import json
 
-config = configparser.ConfigParser()
-config.read('../LineBot/config.ini')
-
-line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
+db_config = json.load(open("../db_config.json"))
+root_path = json.load(open("../root_path.json"))
 
 class AlertService():
     """Create the analysis research by user's subscribe settings,
@@ -29,7 +28,7 @@ class AlertService():
 
     def __init__(self) -> None:
         self._GS = GmailService()
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
@@ -49,14 +48,14 @@ class AlertService():
             Return :
                 None
         """
-        for file in os.listdir("/home/cosbi/financialSite/AlertService/html"):
-            os.remove("/home/cosbi/financialSite/AlertService/html/" + file)
+        for file in os.listdir(root_path["ALTERSERVICE_HTML_PATH"]):
+            os.remove(root_path["ALTERSERVICE_HTML_PATH"] + "/" + file)
 
-        for file in os.listdir("/home/cosbi/financialSite/AlertService/image"):
-            os.remove("/home/cosbi/financialSite/AlertService/image/" + file)
+        for file in os.listdir(root_path["ALTERSERVICE_IMAGE_PATH"]):
+            os.remove(root_path["ALTERSERVICE_IMAGE_PATH"] + "/" + file)
 
-        for file in os.listdir("/home/cosbi/financialSite/AlertService/pdf"):
-            os.remove("/home/cosbi/financialSite/AlertService/pdf/" + file)
+        for file in os.listdir(root_path["ALTERSERVICE_PDF_PATH"]):
+            os.remove(root_path["ALTERSERVICE_PDF_PATH"] + "/" + file)
 
     def _get_sub_list(self) -> None:
         """Get subscribe list from DB
@@ -107,7 +106,7 @@ class AlertService():
         content["from"] =  GMAIL_ACCOUNT
         content["to"] = email
         content.attach(MIMEText(f"附件為您在我們網站訂閱的內容\n可互動圖表連結在此，連結有效時間為一天\n"))
-        content.attach(MIMEText(f'<a href="http://140.116.214.154:3847/api/analysis_html_download?filename={username}.html" target="_blank" rel="noreferrer noopener" download="{username}.html">http://140.116.214.154:3847/api/analysis_html_download?filename={username}.html</a>', _subtype = "html"))
+        content.attach(MIMEText(f'<a href="http://140.116.214.134:3847/api/analysis_html_download?filename={username}.html" target="_blank" rel="noreferrer noopener" download="{username}.html">http://140.116.214.134:3847/api/analysis_html_download?filename={username}.html</a>', _subtype = "html"))
         content.attach(MIMEText(f"\n如遇到連結無法正常開啟，請複製連結到新分頁再開啟"))
 
         with open(f"./pdf/{username}-分析報告.pdf", "rb") as f:
@@ -131,11 +130,11 @@ class AlertService():
         """
 
         content = "FinancialCosbi 分析報告通知\n詳情請下載分析報告\n檔案只會保持一天請下載以保留\n"
-        content += f"http://140.116.214.154:3847/api/analysis_download?filename={filename}"
-        line_bot_api.push_message(userId, TextSendMessage(text = content))
+        content += f"http://140.116.214.134:3847/api/analysis_download?filename={filename}"
+        self._line_bot_api.push_message(userId, TextSendMessage(text = content))
 
-        content = f"可互動圖表下載\nhttp://140.116.214.154:3847/api/analysis_html_download?filename={username}.html"
-        line_bot_api.push_message(userId, TextSendMessage(text = content))
+        content = f"可互動圖表下載\nhttp://140.116.214.134:3847/api/analysis_html_download?filename={username}.html"
+        self._line_bot_api.push_message(userId, TextSendMessage(text = content))
 
     def detect(self) -> None:
         """Traverse subscribe list, creating analysis research and send to the user
@@ -208,7 +207,7 @@ class AlertService():
                                                         self._user_list.iloc[i]["lineId"])
 
 if __name__ == "__main__":
-    sys.stderr = open("/home/cosbi/桌面/financialData/alert/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["ALTERSERVICE_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     AS = AlertService()
 
     AS.detect()

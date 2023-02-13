@@ -1,5 +1,6 @@
+import json
 import sys
-sys.path.append("/home/cosbi/financialSite")
+sys.path.append(json.load(open("../root_path.json"))["PROJECT_ROOT_PATH"])
 
 from pdfMaker import PdfMaker
 from pythonBackend.backend.api.PythonTool.SupportResistance.SupportResistance import SupportResistance

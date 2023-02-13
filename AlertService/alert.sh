@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/AlertService
+cd /home/uikai/financialSite/AlertService
 python3 alert.py

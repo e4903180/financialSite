@@ -15,8 +15,8 @@ import time
 import datetime
 import json
 
-db_config = json.load(open("../db_config.json"))
-root_path = json.load(open("../root_path.json"))
+db_config = json.load(open("../../../db_config.json"))
+root_path = json.load(open("../../../root_path.json"))
 
 class TwseSelenium():
     """Init selenium and get table

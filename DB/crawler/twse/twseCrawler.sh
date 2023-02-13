@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/DB/crawler/twse
+cd /home/uikai/financialSite/DB/crawler/twse
 python3 twseCrawler.py

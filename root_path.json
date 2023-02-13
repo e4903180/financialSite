@@ -4,5 +4,7 @@
     "ALTERSERVICE_LOG_PATH" : "/home/uikai/financialData/alert",
     "ALTERSERVICE_HTML_PATH" : "/home/uikai/financialSite/AlertService/html",
     "ALTERSERVICE_IMAGE_PATH" : "/home/uikai/financialSite/AlertService/image",
-    "ALTERSERVICE_PDF_PATH" : "/home/uikai/financialSite/AlertService/pdf"
+    "ALTERSERVICE_PDF_PATH" : "/home/uikai/financialSite/AlertService/pdf",
+    "TWSE_LOG_PATH" : "/home/uikai/financialData/twseData/log",
+    "TWSE_DATA_PATH" : "/home/uikai/financialData/twseData/data"
 }

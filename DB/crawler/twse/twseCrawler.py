@@ -13,8 +13,10 @@ import MySQLdb.cursors
 import pandas as pd
 import time
 import datetime
+import json
 
-sys.stderr = open("/home/cosbi/桌面/financialData/twseData/log/" + str(datetime.date.today()) + '.log', 'w')
+db_config = json.load(open("../db_config.json"))
+root_path = json.load(open("../root_path.json"))
 
 class TwseSelenium():
     """Init selenium and get table
@@ -57,8 +59,8 @@ class MySQL():
     """Connect to MySQL, and define query method
     """
     def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint",
-                                   passwd = "CEMj8ptYHraxNxFt", db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
         
     def isDuplicate(self, key : int, date : str, time : str) -> bool:
@@ -172,7 +174,7 @@ class Twse(TwseSelenium, MySQL):
                 None
         """
         # Check if fileName include ".pdf" pattern and file not exists in disk
-        if (".pdf" in fileName) and (not os.path.exists("/home/cosbi/桌面/financialData/twseData/data/" + lang + "/" + stockNum + "/" + fileName)):
+        if (".pdf" in fileName) and (not os.path.exists(root_path["TWSE_DATA_PATH"] + "/" + lang + "/" + stockNum + "/" + fileName)):
             
             download_payload = {
                 "step": "9",
@@ -199,7 +201,7 @@ class Twse(TwseSelenium, MySQL):
                 if(len(data) > 1000):
                     break
 
-            with open("/home/cosbi/桌面/financialData/twseData/data/" + lang + "/" + stockNum + "/" + fileName, 'wb') as s:
+            with open(root_path["TWSE_DATA_PATH"] + "/" + lang + "/" + stockNum + "/" + fileName, 'wb') as s:
                 s.write(data)
     
     def run(self, year : str, month : str) -> None:
@@ -248,6 +250,7 @@ class Twse(TwseSelenium, MySQL):
                            data_td[10].getText().replace("'", ""))
 
 if __name__ == "__main__":
+    sys.stderr = open(root_path["TWSE_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
     today = datetime.datetime.now()
     twse = Twse()
     current_year = today.year - 1911

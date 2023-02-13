@@ -5,14 +5,17 @@ import os
 import shutil
 import pandas as pd
 from tqdm import tqdm
+import json
+
+root_path = json.load(open("../root_path.json"))
 
 class Compress2SQL():
     def __init__(self, db, cursor) -> None:
         self._db = db
         self._cursor = cursor
-        self._copmpress_dir = "/home/cosbi/桌面/financialData/compress/"
-        self._decompress_dir = "/home/cosbi/桌面/financialData/decompress/"
-        self._destination_dir = "/home/cosbi/桌面/financialData/gmailData/data/"
+        self._copmpress_dir = root_path["COMPRESS_DIR_PATH"] + "/"
+        self._decompress_dir = root_path["DECOMPRESS_DIR_PATH"] + "/"
+        self._destination_dir = root_path["DESTINATION_DIR_PATH"] + "/"
 
     def run(self) -> None:
         compress_files = os.listdir(self._copmpress_dir)

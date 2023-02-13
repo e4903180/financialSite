@@ -9,6 +9,10 @@ from .PythonTool.FRED.Inflation import Inflation
 from .PythonTool.FRED.CPI_PPI_PCE import CpiPpiPce
 from .DataBaseManager import DataBaseManager
 from datetime import date
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 
 DB = DataBaseManager()
 
@@ -17,7 +21,7 @@ def zip_download(request):
     if request.method == "GET":
         filename = request.query_params.get("filename")
         try:
-            FilePointer = open(f"/home/cosbi/桌面/financialData/zip/{filename}", "rb")
+            FilePointer = open(f"{root_path['ZIP_PATH']}/{filename}", "rb")
             response = HttpResponse(FilePointer, content_type = 'application/zip')
             response['Content-Disposition'] = f"attachment; filename={date.today().strftime('%Y%m%d')}.zip"
 
@@ -32,7 +36,7 @@ def analysis_download(request):
         filename = request.query_params.get("filename")
         
         try:
-            FilePointer = open("/home/cosbi/financialSite/AlertService/pdf/" + filename, "rb")
+            FilePointer = open(root_path['ALTERSERVICE_PDF_PATH'] + "/" + filename, "rb")
             response = HttpResponse(FilePointer, content_type = 'application/pdf')
             response['Content-Disposition'] = f'attachment; filename={filename}'
 
@@ -47,7 +51,7 @@ def analysis_html_download(request):
         filename = request.query_params.get("filename")
 
         try:
-            FilePointer = open("/home/cosbi/financialSite/AlertService/html/" + filename, "rb")
+            FilePointer = open(root_path['ALTERSERVICE_HTML_PATH'] + "/" + filename, "rb")
             response = HttpResponse(FilePointer, content_type = 'text/html')
             response['Content-Disposition'] = f'attachment; filename={filename}'
 

@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/DB/News
+cd /home/uikai/financialSite/DB/News
 python3 newsDayUpdate.py

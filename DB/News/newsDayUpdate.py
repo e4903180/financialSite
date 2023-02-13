@@ -9,6 +9,10 @@ import MySQLdb
 import MySQLdb.cursors
 import sys
 import datetime
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
     
 class NewsDayUpdate():
     """Update news from some websites
@@ -19,9 +23,8 @@ class NewsDayUpdate():
         options.add_argument('--headless')
         service = Service(ChromeDriverManager().install())
 
-        db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint",
-                    passwd = "CEMj8ptYHraxNxFt", db = "financial", charset = "utf8",
-                    cursorclass = MySQLdb.cursors.DictCursor)
+        db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         cursor = db.cursor()
 
         self._ctee = Ctee(options, service, db, cursor)
@@ -44,7 +47,7 @@ class NewsDayUpdate():
         self._statementdog.run()
 
 if __name__ == "__main__":
-    sys.stderr = open("/home/cosbi/桌面/financialData/news/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["NEWS_DATA_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     news = NewsDayUpdate()
 
     news.run()

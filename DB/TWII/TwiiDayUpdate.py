@@ -4,12 +4,16 @@ import MySQLdb.cursors
 import datetime
 import sys
 import pandas as pd
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 
 class TWII():
     def __init__(self) -> None:
         self._TWII_table_data = None
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
-                            db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
         self.start_date = datetime.date.today() - datetime.timedelta(days = 30)
 

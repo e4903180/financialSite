@@ -12,7 +12,6 @@ class SubExpire():
     def __init__(self) -> None:
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
-
         self._cursor = self._db.cursor()
 
     def detect(self) -> None:
@@ -29,5 +28,5 @@ class SubExpire():
 if __name__ == "__main__":
     SE = SubExpire()
 
-    sys.stderr = open("/home/cosbi/桌面/financialData/SubExpire/" + str(date.today()) + '.log', 'w')
+    sys.stderr = open(root_path["SUBEXPIRE_LOG_PATH"] + "/" + str(date.today()) + '.log', 'w')
     SE.detect()

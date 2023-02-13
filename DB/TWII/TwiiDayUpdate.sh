@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/DB/TWII
+cd /home/uikai/financialSite/DB/TWII
 python3 TwiiDayUpdate.py

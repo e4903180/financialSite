@@ -84,5 +84,5 @@ class TWII():
 if __name__ == "__main__":
     twii = TWII()
 
-    sys.stderr = open("/home/cosbi/桌面/financialData/TWII/" + str(datetime.date.today()) + '.log', 'w')
+    sys.stderr = open(root_path["TWII_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
     twii.update()

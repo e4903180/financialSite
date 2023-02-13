@@ -17,6 +17,9 @@ import re
 import requests
 import urllib
 import shutil
+import json
+
+root_path = json.load(open("../../root_path.json"))
 
 # %%
 class gmailService:
@@ -30,7 +33,7 @@ class gmailService:
         self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", index_col = 0, names = ['name'], sheet_name = 1)
         self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['name']
         self.dict_investment_company = self.df_investment_company.to_dict(orient = 'dict')['name']
-        self.rootPath = "/home/cosbi/桌面/financialData/gmailData/data/"
+        self.rootPath = root_path["GMAIL_DATA_DATA_PATH"]
     
     def getCreds(self):
         """Get the token from google api before accesing gmail api
@@ -90,8 +93,8 @@ class gmailService:
         """Create the file dir
         
         """
-        if not os.path.isdir(self.rootPath + dirName):
-            os.mkdir(self.rootPath + dirName)
+        if not os.path.isdir(self.rootPath + "/" + dirName):
+            os.mkdir(self.rootPath + "/" + dirName)
     
     def getAttachments(self, encodedFile, ID, stock_num_name, investment_company_res, date, recommend):
         """Get the mail attachments already existed in mail 
@@ -120,7 +123,7 @@ class gmailService:
                 if investment_company_res != "":
                     self.check_pdf_dir(num)
 
-                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf", 'wb') as f:
+                    with open(self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf", 'wb') as f:
                         f.write(file_data)
                     
                     numList.append(num)
@@ -131,7 +134,7 @@ class gmailService:
                 else:
                     self.check_pdf_dir(num)
                     
-                    with open(self.rootPath + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf", 'wb') as f:
+                    with open(self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf", 'wb') as f:
                         f.write(file_data)
                         
                     numList.append(num)
@@ -175,7 +178,7 @@ class gmailService:
 
                     for num, name in stock_num_name:
                         self.check_pdf_dir(num)
-                        file_rename = self.rootPath + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
+                        file_rename = self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
                         return [num], [name],  [num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"], [recommend]
                 except:
@@ -185,7 +188,7 @@ class gmailService:
                     options = webdriver.ChromeOptions()
                     options.add_argument('--headless')
                     options.add_experimental_option('prefs', {
-                        "download.default_directory": self.rootPath + num + "/temp",
+                        "download.default_directory": self.rootPath + "/" + num + "/temp",
                         "download.prompt_for_download": False, #To auto download the file
                         "download.directory_upgrade": True,
                         "plugins.always_open_pdf_externally": True #It will not show PDF directly in chrome
@@ -195,15 +198,15 @@ class gmailService:
                     driver = webdriver.Chrome(options = options, service = s)
                     driver.get(a_tags[a].getText())
 
-                    for file in os.listdir(self.rootPath + num + "/temp/"):
-                        shutil.move(self.rootPath + num + "/temp/" + file,
-                                    self.rootPath + num + "/" + num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
+                    for file in os.listdir(self.rootPath + "/" + num + "/temp/"):
+                        shutil.move(self.rootPath + "/" + num + "/temp/" + file,
+                                    self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
                     
                     temp_num.append(num)
                     temp_name.append(name)
                     temp_filename.append(num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
                     temp_recommend.append(recommend[0])
-                os.rmdir(self.rootPath + num + "/temp")
+                os.rmdir(self.rootPath + "/" + num + "/temp")
 
         return temp_num, temp_name, temp_filename, temp_recommend
     

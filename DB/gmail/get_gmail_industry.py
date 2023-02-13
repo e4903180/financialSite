@@ -12,6 +12,10 @@ import MySQLdb
 import MySQLdb.cursors
 import sys
 import datetime
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 
 class GetGmailIndustry():
     def __init__(self) -> None:
@@ -22,11 +26,11 @@ class GetGmailIndustry():
         self._service = build('gmail', 'v1', credentials = self._creds)
         self._monthMap = { "Jan" : "01", "Feb" : "02", "Mar" : "03", "Apr" : "04", "May" : "05", "Jun" : "06",
            "Jul" : "07", "Aug" : "08", "Sep" : "09", "Oct" : "10", "Nov" : "11", "Dec" : "12" }
-        self._rootPath = "/home/cosbi/桌面/financialData/gmailDataIndustry/data/"
+        self._rootPath = root_path["GMAIL_DATA_INDUSTRY_DATA_PATH"]
         self._investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", 
             index_col = 0, names = ['name'], sheet_name = 1).to_dict(orient = 'dict')['name']
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
-                db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
     def getCreds(self) -> None:
@@ -244,7 +248,7 @@ class GetGmailIndustry():
             self._modifyLabels(message['id'])
 
 if __name__ == "__main__":
-    sys.stderr = open("/home/cosbi/桌面/financialData/gmailDataIndustry/log/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["GMAIL_DATA_INDUSTRY_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     GGI = GetGmailIndustry()
 
     GGI.run()

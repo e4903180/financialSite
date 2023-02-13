@@ -4,6 +4,9 @@ import sys, logging
 from tqdm import trange
 from datetime import datetime
 import pandas as pd
+import json
+
+root_path = json.load(open("../../root_path.json"))
 
 # %%
 gGC = getGmail_Class.gmailService()
@@ -12,7 +15,7 @@ gGC = getGmail_Class.gmailService()
 Num, Name, investment_company, Date, Filename, ID, Recommend = [[] for i in range(7)]
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-logging.basicConfig(level = logging.INFO, filename = "/home/cosbi/桌面/financialData/gmailData/log/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
+logging.basicConfig(level = logging.INFO, filename = root_path["GMAIL_DATA_LOG_PATH"] + "/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
 logging.info('Updating email start')
 
 # request a list of all the messages
@@ -73,4 +76,4 @@ logging.info('Updating email end')
 
 # %%
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
-df.to_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName, index = False)
+df.to_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName, index = False)

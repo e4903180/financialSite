@@ -4,13 +4,17 @@ from datetime import datetime
 import logging
 import MySQLdb.cursors
 from tqdm import trange
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-logging.basicConfig(level = logging.INFO, filename = "/home/cosbi/桌面/financialData/gmailData/log/" + datetime.now().strftime("%Y_%m_%d") + '_SQL.log', filemode = 'w', format = FORMAT)
+logging.basicConfig(level = logging.INFO, filename = root_path["GMAIL_DATA_LOG_PATH"] + "/" + datetime.now().strftime("%Y_%m_%d") + '_SQL.log', filemode = 'w', format = FORMAT)
 logging.info('Updating gmail data to sql')
 
-db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
-                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+            db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
 
 cursor = db.cursor()
 
@@ -29,7 +33,7 @@ def find_key(stock_num):
 
 try:
     csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
-    df = pd.read_csv("/home/cosbi/桌面/financialData/gmailData/dataFrame/" + csvName)
+    df = pd.read_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName)
     df = df.fillna("NULL")
     df.drop_duplicates(inplace = True)
     df.reset_index(drop = True, inplace = True) 
@@ -47,4 +51,3 @@ try:
 except Exception as e:
     logging.info(e)
     logging.info('Updating failed')
-

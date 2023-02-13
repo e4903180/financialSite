@@ -1,4 +1,4 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/DB/gmail/
+cd /home/uikai/financialSite/DB/gmail/
 
 python3 get_gmail_industry.py

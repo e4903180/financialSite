@@ -8,5 +8,10 @@
     "TWSE_LOG_PATH" : "/home/uikai/financialData/twseData/log",
     "TWSE_DATA_PATH" : "/home/uikai/financialData/twseData/data",
     "FRED_DAY_UPDATE_LOG_PATH" : "/home/uikai/financialData/DXY_JNK",
-    "FRED_MONTH_UPDATE_LOG_PATH" : "/home/uikai/financialData/FRED"
+    "FRED_MONTH_UPDATE_LOG_PATH" : "/home/uikai/financialData/FRED",
+    "GMAIL_DATA_INDUSTRY_DATA_PATH" : "/home/uikai/financialData/gmailDataIndustry/data",
+    "GMAIL_DATA_INDUSTRY_LOG_PATH" : "/home/uikai/financialData/gmailDataIndustry/log",
+    "GMAIL_DATA_DATA_PATH" : "/home/uikai/financialData/gmailData/data",
+    "GMAIL_DATA_DATAFRAME_PATH" : "/home/uikai/financialData/gmailData/dataFrame",
+    "GMAIL_DATA_LOG_PATH" : "/home/uikai/financialData/gmailData/log"
 }

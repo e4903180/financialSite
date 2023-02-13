@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/cosbi/financialSite/DB/FRED
+cd /home/uikai/financialSite/DB/FRED
 python3 FredMonthUpdate.py

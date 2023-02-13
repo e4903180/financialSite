@@ -4,6 +4,10 @@ import MySQLdb
 import MySQLdb.cursors
 import yfinance as yf
 import pandas as pd
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 
 class DxyJnkUpdate():
     """Update yfinance data, include
@@ -12,8 +16,8 @@ class DxyJnkUpdate():
     """
 
     def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
-                            db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
         self.JNK_table_data = None
         self.DXY_table_data = None
@@ -100,7 +104,7 @@ class DxyJnkUpdate():
         return True
 
 if __name__ == "__main__":
-    sys.stderr = open("/home/cosbi/桌面/financialData/DXY_JNK/" + str(datetime.date.today()) + '.log', 'w')
+    sys.stderr = open(root_path["FRED_DAY_UPDATE_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
 
     DJU = DxyJnkUpdate()
     DJU.update()

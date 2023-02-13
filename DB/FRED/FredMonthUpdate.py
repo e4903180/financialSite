@@ -6,6 +6,10 @@ import pandas as pd
 import sys
 from dateutil.relativedelta import relativedelta
 import warnings
+import json
+
+db_config = json.load(open("../../db_config.json"))
+root_path = json.load(open("../../root_path.json"))
 warnings.filterwarnings("ignore")
 
 class FredUpdate():
@@ -19,8 +23,8 @@ class FredUpdate():
         7. RPCEG => Real Personal Consumption Expenditures: Goods
     """
     def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = "localhost", user = "debian-sys-maint", passwd = "CEMj8ptYHraxNxFt",
-                                   db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
         self.fred = Fred(api_key = '5e9f3697af9fec1e2e4c436a02a614b1')
@@ -204,7 +208,7 @@ class FredUpdate():
         return True
 
 if __name__ == "__main__":
+    sys.stderr = open(root_path["FRED_MONTH_UPDATE_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
     fredUpdate = FredUpdate()
 
-    sys.stderr = open("/home/cosbi/桌面/financialData/FRED/" + str(datetime.date.today()) + '.log', 'w')
     fredUpdate.update()

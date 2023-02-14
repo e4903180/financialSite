@@ -41,10 +41,10 @@ class NewsDayUpdate():
             Return :
                 None 
         """
-        self._ctee.run()
         self._moneydj.run()
         self._money.run()
         self._statementdog.run()
+        self._ctee.run()
 
 if __name__ == "__main__":
     sys.stderr = open(root_path["NEWS_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')

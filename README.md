@@ -2,8 +2,7 @@
 使用者登入狀態
 
 # 上線
-1. 上線要設定http-proxy-middleware (./frontend/src/setupProxy.js) 不然CRA會主動連到localhost
-2. 開發模式跟上線config要分開
+1. 開發模式跟上線config要分開
 
 # shell script
 30 1 * * * sh /home/cosbi/financialSite/DB/crawler/twse/twseCrawler.sh  

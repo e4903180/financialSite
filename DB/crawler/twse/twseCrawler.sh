@@ -1,3 +1,3 @@
 #!/bin/sh
 cd /home/uikai/financialSite/DB/crawler/twse
-python3 twseCrawler.py
+/home/uikai/anaconda3/bin/python twseCrawler.py

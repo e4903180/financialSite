@@ -1,3 +1,3 @@
 #!/bin/sh
 cd /home/uikai/financialSite/DB/FRED
-python3 FredDayUpdate.py
+/home/uikai/anaconda3/bin/python FredDayUpdate.py

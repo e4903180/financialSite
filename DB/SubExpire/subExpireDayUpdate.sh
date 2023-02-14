@@ -1,3 +1,3 @@
 #!/bin/sh
 cd /home/uikai/financialSite/DB/SubExpire
-python3 subExpireDayUpdate.py
+/home/uikai/anaconda3/bin/python subExpireDayUpdate.py

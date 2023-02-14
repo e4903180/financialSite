@@ -1,3 +1,3 @@
 #!/bin/sh
 cd /home/uikai/financialSite/DB/News
-python3 newsDayUpdate.py
+/home/uikai/anaconda3/bin/python newsDayUpdate.py

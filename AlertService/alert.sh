@@ -1,3 +1,3 @@
 #!/bin/sh
 cd /home/uikai/financialSite/AlertService
-python3 alert.py
+/home/uikai/anaconda3/bin/python alert.py

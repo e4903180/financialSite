@@ -44,7 +44,7 @@ exports.financialDataIndustry_title_update = async function(req, res){
 }
 
 exports.financialDataIndustry_delete = async function(req, res){
-    let query = "DELETE FROM financialDataIndustry; WHERE ID=?"
+    let query = "DELETE FROM financialDataIndustry WHERE ID=?"
     let param = [req.body.ID]
 
     try {

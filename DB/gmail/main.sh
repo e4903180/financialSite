@@ -1,4 +1,4 @@
 #!/bin/sh
 cd /home/uikai/financialSite/DB/gmail/
-python3 getGmail_main.py
-python3 update2SQL.py
+/home/uikai/anaconda3/bin/python getGmail_main.py
+/home/uikai/anaconda3/bin/python update2SQL.py

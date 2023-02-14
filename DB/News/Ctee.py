@@ -7,6 +7,7 @@ from tqdm import tqdm
 import requests
 from bs4 import BeautifulSoup
 import sys
+import time
 
 class Ctee(NewsBase):
     """Update news from https://ctee.com.tw
@@ -111,10 +112,16 @@ class Ctee(NewsBase):
             Return :
                 repoter
         """
-        r = requests.get(link)
+        stop = False
+        while not stop:
+            try:
+                r = requests.get(link)
 
-        soup = BeautifulSoup(r.text, "html.parser")
-        repoter = soup.select_one(".author.url.fn").text
+                soup = BeautifulSoup(r.text, "html.parser")
+                repoter = soup.select_one(".author.url.fn").text
+                stop = True
+            except:
+                time.sleep(30)
 
         return repoter
 

@@ -11,7 +11,6 @@
 0 15 * * * sh /home/cosbi/financialSite/DB/TWII/TwiiDayUpdate.sh  
 0 10 26-28 * * sh /home/cosbi/financialSite/DB/FRED/FredMonthUpdate.sh  
 0 7 * * 2,3,4,5,6 sh /home/cosbi/financialSite/DB/FRED/FredDayUpdate.sh  
-30 8 * * * sh /home/cosbi/financialSite/DB/News/newsDayUpdate.sh  
 0 7,12,18 * * * sh /home/cosbi/financialSite/DB/News/newsDayUpdate.sh  
 0 17 * * * sh /home/cosbi/financialSite/AlertService/alert.sh  
 0 7,18 * * * sh /home/cosbi/financialSite/DB/gmail/main.sh  

@@ -87,7 +87,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'financial',
-        'USER': 'finanicalSite',
+        'USER': 'financialSite',
         'PASSWORD': '624001479',
         'HOST': '140.116.214.134',
     }

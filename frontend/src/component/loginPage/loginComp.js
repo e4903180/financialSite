@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { rootApiIP } from '../../constant'
+import { config } from '../../constant';
 
 function LoginComp() {
     const nav = useNavigate()
@@ -9,7 +9,7 @@ function LoginComp() {
     const [password, setPassword] = useState("");
 
     function login(){
-        axios.post(rootApiIP + "/user/login", {
+        axios.post(config["rootApiIP"] + "/user/login", {
             userName : userName,
             password : password
         }).then(res => {

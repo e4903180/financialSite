@@ -2,12 +2,12 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import PerRiverComp from './PerRiverComp';
 import { PerRiverExplain, PerRiverInit } from './PER_River_Init';
-import { rootApiIP } from '../../constant'
 import { AutoCom } from '../../autoCom';
 import axios from 'axios';
 import HighchartBarComp from '../highchart/highchartBarComp';
 import HighchartStockComp from '../highchart/highchatStockComp';
 import TickerSearchComp from '../tickerSearchComp';
+import { config } from '../../constant';
 
 function PERRiverComp() {
     const [loading, setLoading] = useState(false);
@@ -131,7 +131,7 @@ function PERRiverComp() {
         if((autocom.map(element => element.stock_num_name).includes(ticker))){
             setInputError(false)
 
-            axios.get(rootApiIP + "/data/PER_River", {
+            axios.get(config["rootApiIP"] + "/data/PER_River", {
                 params : {
                     "stockNum" : ticker.split(" ")[0],
                 }

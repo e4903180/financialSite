@@ -2,7 +2,7 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import axios from 'axios';
-import { rootApiIP } from '../../constant'
+import { config } from '../../constant';
 
 function CalendarItem() {
     function clickEvent(info){
@@ -14,7 +14,7 @@ function CalendarItem() {
             let temp_year = fetchInfo.start.getFullYear()
             let temp_month = (fetchInfo.start.getMonth() + 1).toString().padStart(2, '0');
 
-            const response = await axios.post(rootApiIP + "/data/calender", { "year" : temp_year, "month" : temp_month })
+            const response = await axios.post(config["rootApiIP"] + "/data/calender", { "year" : temp_year, "month" : temp_month })
 
             successCallback(
                 response.data.map(event => {

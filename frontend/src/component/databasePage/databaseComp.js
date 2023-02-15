@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { rootApiIP } from '../../constant'
 import { columns, columns1, columns2, columns3, columns4 } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
+import { config } from '../../constant';
 
 function DatabaseComp() {
     var date = new Date();
@@ -60,7 +60,7 @@ function DatabaseComp() {
             if(input5 === "綜合查詢"){
                 setSearch(false)
 
-                axios.post(rootApiIP + "/data/financial_search", {
+                axios.post(config["rootApiIP"] + "/data/financial_search", {
                     "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
@@ -77,7 +77,7 @@ function DatabaseComp() {
                     setPage1(0)
                 })
 
-                axios.post(rootApiIP + "/data/post_board_search", {
+                axios.post(config["rootApiIP"] + "/data/post_board_search", {
                     "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
@@ -95,7 +95,7 @@ function DatabaseComp() {
                     setPage2(0)
                 })
 
-                axios.post(rootApiIP + "/data/lineMemo_search", {
+                axios.post(config["rootApiIP"] + "/data/lineMemo_search", {
                     "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
@@ -111,7 +111,7 @@ function DatabaseComp() {
                     setPage3(0)
                 })
 
-                axios.post(rootApiIP + "/data/calender_search", {
+                axios.post(config["rootApiIP"] + "/data/calender_search", {
                     "stock_num_name" : ticker,
                     "startDate" : input2,
                     "endDate" : input3,
@@ -131,7 +131,7 @@ function DatabaseComp() {
 
                 switch(input5){
                     case "financialData" : {
-                        axios.post(rootApiIP + "/data/financial_search", {
+                        axios.post(config["rootApiIP"] + "/data/financial_search", {
                             "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
@@ -151,7 +151,7 @@ function DatabaseComp() {
                     }
 
                     case "post_board_memo" : {
-                        axios.post(rootApiIP + "/data/post_board_search", {
+                        axios.post(config["rootApiIP"] + "/data/post_board_search", {
                             "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
@@ -174,7 +174,7 @@ function DatabaseComp() {
                     }
 
                     case "lineMemo" : {
-                        axios.post(rootApiIP + "/data/lineMemo_search", {
+                        axios.post(config["rootApiIP"] + "/data/lineMemo_search", {
                             "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
@@ -195,7 +195,7 @@ function DatabaseComp() {
                     }
 
                     case "calender" : {
-                        axios.post(rootApiIP + "/data/calender_search", {
+                        axios.post(config["rootApiIP"] + "/data/calender_search", {
                             "stock_num_name" : ticker,
                             "startDate" : input2,
                             "endDate" : input3,
@@ -222,14 +222,14 @@ function DatabaseComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/allData")
+        axios.get(config["rootApiIP"] + "/data/allData")
         .then(res => {
             setData(res.data);
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.post(rootApiIP + "/data/financial_search", {
+        axios.post(config["rootApiIP"] + "/data/financial_search", {
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
@@ -246,7 +246,7 @@ function DatabaseComp() {
             setPage1(0)
         })
 
-        axios.post(rootApiIP + "/data/post_board_search", {
+        axios.post(config["rootApiIP"] + "/data/post_board_search", {
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
@@ -264,7 +264,7 @@ function DatabaseComp() {
             setPage2(0)
         })
 
-        axios.post(rootApiIP + "/data/lineMemo_search", {
+        axios.post(config["rootApiIP"] + "/data/lineMemo_search", {
             "stock_num_name" : ticker,
             "startDate" : last3Month,
             "endDate" : today,
@@ -280,7 +280,7 @@ function DatabaseComp() {
             setPage3(0)
         })
 
-        axios.post(rootApiIP + "/data/calender_search", {
+        axios.post(config["rootApiIP"] + "/data/calender_search", {
             "stock_num_name" : ticker,
             "startDate" : last3Month,
             "endDate" : today,

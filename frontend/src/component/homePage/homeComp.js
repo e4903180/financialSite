@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import bgimage from "../../image/coins_on_chart.jpg"
 import { GridToolbar } from '@mui/x-data-grid';
-import { rootApiIP } from '../../constant'
 import { columns1, columns_news } from '../column/column'
 import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
+import { config } from '../../constant';
 
 function HomeComp() {
     const [data, setData] = useState([]);
@@ -14,14 +14,14 @@ function HomeComp() {
     const [newsPageSize, setNewsPageSize] = useState(10)
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/newest15")
+        axios.get(config["rootApiIP"] + "/data/newest15")
         .then(res => {
             setData(res.data);
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get(rootApiIP + "/data/news")
+        axios.get(config["rootApiIP"] + "/data/news")
         .then(res => {
             setNewsData(res.data);
         }).catch(res => {

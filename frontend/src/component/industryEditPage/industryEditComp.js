@@ -1,9 +1,8 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-
+import { config } from '../../constant';
 
 function IndustryEditComp() {
     var date = new Date();
@@ -19,7 +18,7 @@ function IndustryEditComp() {
     const [superUser, setSuperUser] = useState(0)
 
     function handle_delete(rowData){
-        axios.delete(rootApiIP + "/data/financialDataIndustry", {
+        axios.delete(config["rootApiIP"] + "/data/financialDataIndustry", {
             data : {
                 ID : rowData.row.ID
             }
@@ -37,14 +36,14 @@ function IndustryEditComp() {
         { field: "investmentCompany", headerName : "投顧公司", flex: 1, headerAlign: 'center', align: 'center' },
         { field: "title", headerName : "標題", flex: 1, headerAlign: 'center', align: 'center', editable: true },
         { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-            renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialDataIndustry?filename=" + rowData.value } 
+            renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialDataIndustry?filename=" + rowData.value } 
         target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
         { field: 'edit', headerName: '確認修改', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
             renderCell : (params) => {
                 const onClick = (e) => {
                     const thisRow = params.row
         
-                    axios.patch(rootApiIP + "/data/financialDataIndustry_title", {
+                    axios.patch(config["rootApiIP"] + "/data/financialDataIndustry_title", {
                         "date" : thisRow.date,
                         "title" : thisRow.title,
                         "investmentCompany" : thisRow.investmentCompany,
@@ -65,11 +64,11 @@ function IndustryEditComp() {
     ];
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/superUser")
+        axios.get(config["rootApiIP"] + "/data/superUser")
         .then((res) => {
             setSuperUser(res.data[0]["superUser"])
 
-            axios.get(rootApiIP + "/data/industry_search", { params : {
+            axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
                 "startDate" : last3Month,
                 "endDate" : today,
                 "pattern" : "",

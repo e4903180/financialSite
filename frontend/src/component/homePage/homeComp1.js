@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant'
 import axios from 'axios';
 import NewsItem from './newsItem';
 import ReasearchItem from './researchItem';
 import CalendarItem from './calendarItem';
 import DbSearchItem from './dbSearchItem';
+import { config } from '../../constant';
 
 function HomeComp1() {
     const [type, setType] = useState("news")
@@ -12,14 +12,14 @@ function HomeComp1() {
     const [research, setResearch] = useState([])
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/newestNews20")
+        axios.get(config["rootApiIP"] + "/data/newestNews20")
         .then(res => {
             setNews(res.data)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get(rootApiIP + "/data/newestResearch20")
+        axios.get(config["rootApiIP"] + "/data/newestResearch20")
         .then(res => {
             setResearch(res.data)
         }).catch(res => {

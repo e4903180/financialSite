@@ -3,7 +3,7 @@ import { AutoCom } from '../../autoCom';
 import TickerSearchComp from '../tickerSearchComp';
 import { Alert, Snackbar } from '@mui/material';
 import axios from 'axios';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 
 function PerRiverCard(props) {
     var Today = new Date();
@@ -25,7 +25,7 @@ function PerRiverCard(props) {
 
         if((autocom.map(element => element.stock_num_name).includes(ticker)) && (endDate !== "")){
             try {
-                await axios.post(rootApiIP + "/data/handle_per_river_sub", {
+                await axios.post(config["rootApiIP"] + "/data/handle_per_river_sub", {
                     "stockNum" : ticker.split(" ")[0],
                     "endDate" : endDate,
                     "alertCondition" : alertCondition
@@ -43,7 +43,7 @@ function PerRiverCard(props) {
             }
 
             try {
-                const response = await axios.get(rootApiIP + "/data/get_sub")
+                const response = await axios.get(config["rootApiIP"] + "/data/get_sub")
 
                 props.setRows(response.data)
             } catch (error) {

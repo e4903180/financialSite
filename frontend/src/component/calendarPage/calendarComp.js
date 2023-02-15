@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import axios from 'axios';
-import { rootApiIP } from '../../constant'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { columns4 } from '../column/column';
+import { config } from '../../constant';
 
 function CalendarComp() {
     const [data, setData] = useState([])
@@ -14,7 +14,7 @@ function CalendarComp() {
     const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        axios.post(rootApiIP + "/data/calenderData", { "year" : year, "month" : month })
+        axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : year, "month" : month })
         .then(res => {
             setPage(0)
             setData(res.data)
@@ -24,7 +24,7 @@ function CalendarComp() {
     }, [year, month])
 
     function clickEvent(info){
-        window.open("/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
+        window.open(config["rootPathPrefix"] + "/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
     }
 
     async function getCalendarData(fetchInfo, successCallback, failureCallback) {
@@ -35,7 +35,7 @@ function CalendarComp() {
             setYear(temp_year)
             setMonth(temp_month)
 
-            const response = await axios.post(rootApiIP + "/data/calender", { "year" : temp_year, "month" : temp_month })
+            const response = await axios.post(config["rootApiIP"] + "/data/calender", { "year" : temp_year, "month" : temp_month })
 
             successCallback(
                 response.data.map(event => {

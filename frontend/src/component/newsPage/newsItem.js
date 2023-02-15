@@ -1,7 +1,7 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import { columns_news } from '../column/column';
 import { categoryList } from './categoryList';
 
@@ -21,7 +21,7 @@ function NewsItem(props) {
         e.preventDefault()
         props.setLoading(true)
 
-        axios.get(rootApiIP + "/data/news_search", { params :{
+        axios.get(config["rootApiIP"] + "/data/news_search", { params :{
             "startDate" : startDate,
             "endDate" : endDate,
             "column" : column,

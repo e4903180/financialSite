@@ -2,7 +2,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { AutoCom } from '../../autoCom';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import { columns_support_resistance } from '../column/column';
 import HighchartStockComp from '../highchart/highchatStockComp';
 import TickerSearchComp from '../tickerSearchComp';
@@ -93,7 +93,7 @@ function SupportResistanceComp() {
         if(autocom.map(element => element.stock_num_name).includes(ticker)){
             setInputError(false)
             
-            axios.get(rootApiIP + "/data/support_resistance", { params : {
+            axios.get(config["rootApiIP"] + "/data/support_resistance", { params : {
                 "stockNum" : ticker.split(" ")[0],
                 "startDate" : startDate,
                 "ma_type" : maType,

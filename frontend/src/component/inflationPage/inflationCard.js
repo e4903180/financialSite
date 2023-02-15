@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import HighchartStockComp from '../highchart/highchatStockComp';
 import { inflationInit } from './inflationInit';
 
@@ -151,7 +151,7 @@ function InflationCard() {
     });
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/inflation")
+        axios.get(config["rootApiIP"] + "/data/inflation")
         .then((res) => {
             setOptions1({
                 series : [

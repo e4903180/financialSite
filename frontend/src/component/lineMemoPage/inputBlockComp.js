@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { AutoCom } from '../../autoCom';
-import { rootApiIP } from '../../constant'
+import { config } from '../../constant';
 import TickerSearchComp from '../tickerSearchComp';
 
 function InputBlockComp() {
@@ -21,7 +21,7 @@ function InputBlockComp() {
             set_input1Validation(false)
             set_input2Validation(false)
 
-            axios.post(rootApiIP + "/data/upload/line_memo_upload", {
+            axios.post(config["rootApiIP"] + "/data/upload/line_memo_upload", {
                 stock_num_name : ticker,
                 date : Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0'),
                 content : input2
@@ -42,7 +42,7 @@ function InputBlockComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/username")
+        axios.get(config["rootApiIP"] + "/data/username")
         .then(res => {
             setUsername(res.data)
         }).catch(res => {

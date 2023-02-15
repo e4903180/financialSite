@@ -1,6 +1,6 @@
 import CustomA from "../customA";
-import { rootApiIP } from '../../constant'
 import React from 'react';
+import { config } from "../../constant";
 
 export const columns = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -17,7 +17,7 @@ export const columns1 = [
     { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } 
+        renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialData?filename=" + rowData.value } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
@@ -62,7 +62,7 @@ export const columns5 = [
     { field: 'title', headerName: '上傳檔案標題', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_industry_analysis?filename=" + rowData.value.replace("%", "percentTransform") } 
+        renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_industry_analysis?filename=" + rowData.value.replace("%", "percentTransform") } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
@@ -71,7 +71,7 @@ export const columns6 = [
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_meetingData?filename=" + rowData.value } 
+        renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_meetingData?filename=" + rowData.value } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
@@ -163,7 +163,7 @@ export const columns_financialDataIndustry = [
     { field: "investmentCompany", headerName : "投顧公司", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "title", headerName : "標題", flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-        renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialDataIndustry?filename=" + rowData.value } 
+        renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialDataIndustry?filename=" + rowData.value } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
@@ -171,7 +171,7 @@ const check_single_post_board_memo_NULL = (value) => {
     if(value === "nan" || value === "NULL"){
         return <>沒有檔案</>
     }else{
-        return <CustomA value = { rootApiIP + "/data/download/single_post_board_memo?filename=" + value } />
+        return <CustomA value = { config["rootApiIP"] + "/data/download/single_post_board_memo?filename=" + value } />
     }
 }
 
@@ -179,7 +179,7 @@ const check_single_lineMemo_memo_NULL = (value) => {
     if(value === "nan" || value === "NULL"){
         return <>沒有檔案</>
     }else{
-        return <CustomA value = { rootApiIP + "/data/download/single_line_memo?filename=" + value } />
+        return <CustomA value = { config["rootApiIP"] + "/data/download/single_line_memo?filename=" + value } />
     }
 }
 
@@ -189,7 +189,7 @@ const check_single_twse_chPDF_NULL = (value) => {
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_chPDF?filename=" + value } 
+        return <a href = { config["rootApiIP"] + "/data/download/single_twse_chPDF?filename=" + value } 
         target = "_blank" rel = "noreferrer noopener" download = { value }>Download</a>
     }
 }
@@ -200,7 +200,7 @@ const check_single_twse_enPDF_NULL = (value) => {
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
     }else{
-        return <a href = { rootApiIP + "/data/download/single_twse_enPDF?filename=" + value } 
+        return <a href = { config["rootApiIP"] + "/data/download/single_twse_enPDF?filename=" + value } 
         target = "_blank" rel = "noreferrer noopener" download = { value }>Download</a>
     }
 }

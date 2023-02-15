@@ -2,8 +2,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import IndustryAnalysisUploadComp from './Industry_analysis_uploadComp';
-import { rootApiIP } from '../../constant'
 import { columns5 } from '../column/column';
+import { config } from '../../constant';
 
 function IndustryAnalysisComp() {
     const [data, setData] = useState([]);
@@ -11,7 +11,7 @@ function IndustryAnalysisComp() {
     const [pageSize, setPageSize] = useState(5);
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/industry_analysis")
+        axios.get(config["rootApiIP"] + "/data/industry_analysis")
         .then(res => {
             setData(res.data);
         }).catch(res => {

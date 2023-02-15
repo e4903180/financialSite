@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { AutoCom } from '../../autoCom';
-import { rootApiIP } from '../../constant'
+import { config } from '../../constant';
 import TickerSearchComp from '../tickerSearchComp';
 var FormData = require('form-data');
 
@@ -35,7 +35,7 @@ function InputBlockComp() {
             formData.append("selectFile", file);
             formData.append("filename", fileName);
 
-            axios.post(rootApiIP + "/data/upload/post_board_upload", formData, {
+            axios.post(config["rootApiIP"] + "/data/upload/post_board_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 setTicker("")
@@ -65,7 +65,7 @@ function InputBlockComp() {
     };
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/username")
+        axios.get(config["rootApiIP"] + "/data/username")
         .then(res => {
             setUsername(res.data)
         }).catch(res => {

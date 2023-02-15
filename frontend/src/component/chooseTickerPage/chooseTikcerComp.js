@@ -2,7 +2,7 @@ import { Alert, Backdrop, Button, CircularProgress, Snackbar } from '@mui/materi
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { createContext, useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import { columns_choose_ticker } from '../column/column';
 import AnalysisComp from './analysisComp';
 import CurrentConditionComp from './currentConditionComp';
@@ -63,7 +63,7 @@ function ChooseTickerComp() {
             return
         }
 
-        axios.get(rootApiIP + "/data/filter_ticker", {
+        axios.get(config["rootApiIP"] + "/data/filter_ticker", {
             params : {
                 "conditions" : conditions
             }

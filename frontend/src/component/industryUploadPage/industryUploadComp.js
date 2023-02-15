@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 
 function IndustryUploadComp() {
     var Today = new Date();
@@ -38,7 +38,7 @@ function IndustryUploadComp() {
             formData.append("title", title);
             formData.append("selectFile", file);
 
-            axios.post(rootApiIP + "/data/upload/industry_upload", formData, {
+            axios.post(config["rootApiIP"] + "/data/upload/industry_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 setFile(null)
@@ -58,7 +58,7 @@ function IndustryUploadComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/superUser")
+        axios.get(config["rootApiIP"] + "/data/superUser")
         .then((res) => {
             setSuperUser(res.data[0]["superUser"])
         })

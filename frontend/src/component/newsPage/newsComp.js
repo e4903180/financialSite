@@ -2,7 +2,7 @@ import { Backdrop, Button, CircularProgress } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import NewsItem from './newsItem';
 import StatementdogItem from './statementdogItem';
 
@@ -47,7 +47,7 @@ function NewsComp() {
         setLoading(true)
         setType("news")
 
-        axios.get(rootApiIP + `/data/news_search_${date}`, { params : {
+        axios.get(config["rootApiIP"] + `/data/news_search_${date}`, { params : {
             "date" : todayDate,
             "category" : buttonCategory
         }})
@@ -70,7 +70,7 @@ function NewsComp() {
         setLoading(true)
         setType("statementdog")
 
-        axios.get(rootApiIP + `/data/news_statmentdog_search_${date}`, { params : {
+        axios.get(config["rootApiIP"] + `/data/news_statmentdog_search_${date}`, { params : {
             "date" : todayDate,
         }})
         .then((res) => {
@@ -89,7 +89,7 @@ function NewsComp() {
     }   
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/news_summary", {params :{
+        axios.get(config["rootApiIP"] + "/data/news_summary", {params :{
             "date" : todayDate,
         }})
         .then((res) => {
@@ -99,7 +99,7 @@ function NewsComp() {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get(rootApiIP + "/data/news_summary_statementdog", {params :{
+        axios.get(config["rootApiIP"] + "/data/news_summary_statementdog", {params :{
             "date" : todayDate,
         }})
         .then((res) => {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { rootApiIP } from '../../constant'
+import { config } from '../../constant';
 
 function IndustryAnalysisUploadComp() {
     const [file, setFile] = useState(null);
@@ -26,7 +26,7 @@ function IndustryAnalysisUploadComp() {
             formData.append("selectFile", file);
             formData.append("filename", fileName);
 
-            axios.post(rootApiIP + "/data/upload/industry_analysis_upload", formData, {
+            axios.post(config["rootApiIP"] + "/data/upload/industry_analysis_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 alert("上傳成功")

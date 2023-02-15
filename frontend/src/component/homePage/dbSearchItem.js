@@ -2,8 +2,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AutoCom } from '../../autoCom';
-import { rootApiIP } from '../../constant';
-import { columns1, columns2, columns3, columns4, columns_financialDataIndustry, columns_news, columns_statementdog } from '../column/column';
+import { config } from '../../constant';
+import { columns1, columns4, columns_financialDataIndustry, columns_news } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
 function DbSearchItem() {
@@ -52,7 +52,7 @@ function DbSearchItem() {
         }else{
             set_input1Error(false)
 
-            axios.post(rootApiIP + "/data/financial_search", {
+            axios.post(config["rootApiIP"] + "/data/financial_search", {
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
@@ -68,7 +68,7 @@ function DbSearchItem() {
                 setPage1(0)
             })
             
-            axios.get(rootApiIP + "/data/industry_search", { params : {
+            axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
                 "startDate" : input2,
                 "endDate" : input3,
                 "pattern" : ticker.split(" ")[1],
@@ -86,7 +86,7 @@ function DbSearchItem() {
                 setPage2(0)
             })
 
-            axios.get(rootApiIP + "/data/news_search", { params :{
+            axios.get(config["rootApiIP"] + "/data/news_search", { params :{
                 "startDate" : input2,
                 "endDate" : input3,
                 "column" : "title",
@@ -105,7 +105,7 @@ function DbSearchItem() {
                 setPage3(0)
             })
 
-            axios.post(rootApiIP + "/data/calender_search", {
+            axios.post(config["rootApiIP"] + "/data/calender_search", {
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
@@ -120,7 +120,7 @@ function DbSearchItem() {
                 setPage4(0)
             })
 
-            // axios.get(rootApiIP + "/data/news_statmentdog_search", { params :{
+            // axios.get(config["rootApiIP"] + "/data/news_statmentdog_search", { params :{
             //     "startDate" : input2,
             //     "endDate" : input3,
             //     "pattern" : ticker.split(" ")[1],
@@ -140,7 +140,7 @@ function DbSearchItem() {
     }
 
     useEffect(() => {
-        axios.post(rootApiIP + "/data/financial_search", {
+        axios.post(config["rootApiIP"] + "/data/financial_search", {
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
@@ -156,7 +156,7 @@ function DbSearchItem() {
             setPage1(0)
         })
 
-        axios.get(rootApiIP + "/data/industry_search", { params : {
+        axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
             "startDate" : last3Month,
             "endDate" : today,
             "pattern" : "",
@@ -174,7 +174,7 @@ function DbSearchItem() {
             setPage2(0)
         })
         
-        axios.get(rootApiIP + "/data/news_search", { params :{
+        axios.get(config["rootApiIP"] + "/data/news_search", { params :{
             "startDate" : last3Month,
             "endDate" : today,
             "column" : "title",
@@ -193,7 +193,7 @@ function DbSearchItem() {
             setPage3(0)
         })
 
-        axios.post(rootApiIP + "/data/calender_search", {
+        axios.post(config["rootApiIP"] + "/data/calender_search", {
             "stock_num_name" : ticker,
             "startDate" : last3Month,
             "endDate" : today,
@@ -208,7 +208,7 @@ function DbSearchItem() {
             setPage4(0)
         })
 
-        // axios.get(rootApiIP + "/data/news_statmentdog_search", { params :{
+        // axios.get(config["rootApiIP"] + "/data/news_statmentdog_search", { params :{
         //     "startDate" : last3Month,
         //     "endDate" : today,
         //     "pattern" : "",

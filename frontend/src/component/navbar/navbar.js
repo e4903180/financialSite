@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { rootApiIP, WSContext } from '../../constant'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FiDatabase } from "react-icons/fi";
@@ -15,6 +14,7 @@ import NavbarNotifyComp from './navbarNotifyComp';
 import Badge from '@mui/material/Badge';
 import "./navbar.css";
 import { IconButton, Tooltip } from '@mui/material';
+import { config, WSContext } from '../../constant';
 
 function NavbarComp() {
     const [show, setShow] = useState(false);
@@ -34,7 +34,7 @@ function NavbarComp() {
     function logout(e){
         e.preventDefault()
 
-        axios.get(rootApiIP + "/user/logout")
+        axios.get(config["rootApiIP"] + "/user/logout")
             .then(res => {
                 socket.disconnect()
                 nav("/login")
@@ -45,7 +45,7 @@ function NavbarComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/get_notify_quantity")
+        axios.get(config["rootApiIP"] + "/data/get_notify_quantity")
         .then((res) => {
             setBadgeNumber(res.data)
             setLoading(false)
@@ -54,7 +54,7 @@ function NavbarComp() {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get(rootApiIP + "/data/superUser")
+        axios.get(config["rootApiIP"] + "/data/superUser")
         .then((res) => {
             setSuperUser(res.data[0]["superUser"])
         })

@@ -1,8 +1,8 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { config } from '../../constant';
 
 function SelfEditComp() {
     var date = new Date();
@@ -18,7 +18,7 @@ function SelfEditComp() {
     const [superUser, setSuperUser] = useState(0)
 
     function handle_delete(rowData){
-        axios.delete(rootApiIP + "/data/financial", {
+        axios.delete(config["rootApiIP"] + "/data/financial", {
             data : {
                 ID : rowData.row.ID
             }
@@ -37,14 +37,14 @@ function SelfEditComp() {
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center', editable: true },
         { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
-            renderCell : rowData => <a href = { rootApiIP + "/data/download/single_financialData?filename=" + rowData.value } 
+            renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialData?filename=" + rowData.value } 
         target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
         { field: 'edit', headerName: '確認修改', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
             renderCell : (params) => {
                 const onClick = (e) => {
                     const thisRow = params.row
         
-                    axios.patch(rootApiIP + "/data/financial_recommend", {
+                    axios.patch(config["rootApiIP"] + "/data/financial_recommend", {
                         "ticker_id" : thisRow.ticker_id,
                         "date" : thisRow.date,
                         "investmentCompany" : thisRow.investmentCompany,
@@ -66,11 +66,11 @@ function SelfEditComp() {
     ];
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/superUser")
+        axios.get(config["rootApiIP"] + "/data/superUser")
         .then((res) => {
             setSuperUser(res.data[0]["superUser"])
 
-            axios.post(rootApiIP + "/data/financial_search", {
+            axios.post(config["rootApiIP"] + "/data/financial_search", {
                 "stock_num_name" : "",
                 "startDate" : last3Month,
                 "endDate" : today,

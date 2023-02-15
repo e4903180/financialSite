@@ -2,7 +2,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import { columns_financialDataIndustry } from '../column/column'
 
 function IndustryComp() {
@@ -26,7 +26,7 @@ function IndustryComp() {
         e.preventDefault()
         setLoading(true)
 
-        axios.get(rootApiIP + "/data/industry_search", { params : {
+        axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
             "startDate" : startDate,
             "endDate" : endDate,
             "pattern" : pattern,
@@ -43,7 +43,7 @@ function IndustryComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/industry_search", { params : {
+        axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
             "startDate" : last3Month,
             "endDate" : today,
             "pattern" : pattern,

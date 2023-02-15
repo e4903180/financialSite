@@ -1,7 +1,6 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SupportResisCard from './support_resistance_card';
 import PricingStratagyCard from './pricing_stratagy_card';
@@ -9,6 +8,7 @@ import PerRiverCard from './PER_river_card';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { config } from '../../constant';
 
 function SubListComp() {
     const [page, setPage] = useState(0);
@@ -21,7 +21,7 @@ function SubListComp() {
     const handleLineChange = (event) => {
         setLineSub(event.target.checked)
 
-        axios.put(rootApiIP + "/data/update_user_lineNotify_type", {
+        axios.put(config["rootApiIP"] + "/data/update_user_lineNotify_type", {
             "switch" : event.target.checked
         })
         .catch(res => {
@@ -32,7 +32,7 @@ function SubListComp() {
     const handleEmailChange = (event) => {
         setEmailSub(event.target.checked)
 
-        axios.put(rootApiIP + "/data/update_user_emailNotify_type", {
+        axios.put(config["rootApiIP"] + "/data/update_user_emailNotify_type", {
             "switch" : event.target.checked
         })
         .catch(res => {
@@ -54,7 +54,7 @@ function SubListComp() {
     ]
     
     function handle_sub_list_cancel(rowData){
-        axios.delete(rootApiIP + "/data/cancel_sub", {
+        axios.delete(config["rootApiIP"] + "/data/cancel_sub", {
             data : {
                 subTime : rowData.row.subTime
             }
@@ -68,7 +68,7 @@ function SubListComp() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/get_sub")
+        axios.get(config["rootApiIP"] + "/data/get_sub")
         .then(res => {
             setRows(res.data)
         })
@@ -76,7 +76,7 @@ function SubListComp() {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        axios.get(rootApiIP + "/data/get_user_notify_type")
+        axios.get(config["rootApiIP"] + "/data/get_user_notify_type")
         .then(res => {
             setLineSub(Boolean(res.data[0]["lineNotify"]))
             setEmailSub(Boolean(res.data[0]["emailNotify"]))

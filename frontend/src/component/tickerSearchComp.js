@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { rootApiIP } from '../constant';
+import { config } from '../constant';
 
 function TickerSearchComp(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -11,7 +11,7 @@ function TickerSearchComp(props) {
         setIsLoading(true);
         props.setTicker(pattern)
         
-        axios.post(rootApiIP + "/data/ticker_search", {
+        axios.post(config["rootApiIP"] + "/data/ticker_search", {
             "pattern" : pattern
         })
         .then((res) => {

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import { IconButton, Tooltip } from '@mui/material';
 import axios from 'axios';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 
 function NotifyCardComp(props) {
     const [hover, setHover] = useState(false)
@@ -11,7 +11,7 @@ function NotifyCardComp(props) {
     const handleUnreadClick = useCallback((e, time) => {
         e.preventDefault()
 
-        axios.patch(rootApiIP + "/data/notify_handle_unread", {
+        axios.patch(config["rootApiIP"] + "/data/notify_handle_unread", {
             time : time
         })
         .then((res) => {
@@ -25,7 +25,7 @@ function NotifyCardComp(props) {
     const handleReadClick = useCallback((e, time) => {
         e.preventDefault()
 
-        axios.patch(rootApiIP + "/data/notify_handle_read", {
+        axios.patch(config["rootApiIP"] + "/data/notify_handle_read", {
             time : time
         })
         .then((res) => {

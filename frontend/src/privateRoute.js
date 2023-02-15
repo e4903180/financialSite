@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import NavbarComp from './component/navbar/navbar';
 import axios from "axios";
-import { rootApiIP, WebSocketIP, WSContext } from './constant';
+import { config, WSContext } from './constant';
 import socketio from 'socket.io-client'
 import { Button, Modal } from 'react-bootstrap';
 
@@ -23,7 +23,7 @@ function PrivateRoute() {
     };
 
     const handleLogOut = () => {
-        axios.get(rootApiIP + "/user/logout")
+        axios.get(config["rootApiIP"] + "/user/logout")
         .then(res => {
             if(ws) ws.disconnect()
         })
@@ -39,10 +39,10 @@ function PrivateRoute() {
     ];
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/isAuth")
+        axios.get(config["rootApiIP"] + "/data/isAuth")
         .then(res => {
             setIsAuth(true)
-            setWs(socketio.connect(WebSocketIP + res.data))
+            setWs(socketio.connect(config["WebSocketIP"] + res.data))
         }).catch(res => {
             setIsAuth(false)
             setShow(true)

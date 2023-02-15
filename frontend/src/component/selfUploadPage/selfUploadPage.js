@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { AutoCom } from '../../autoCom';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import TickerSearchComp from '../tickerSearchComp';
 
 const autocom = AutoCom.AutoComList;
@@ -45,7 +45,7 @@ function SelfUploadPage() {
             formData.append("ticker", ticker);
             formData.append("selectFile", file);
 
-            axios.post(rootApiIP + "/data/upload/self_upload", formData, {
+            axios.post(config["rootApiIP"] + "/data/upload/self_upload", formData, {
                 headers : { "Content-Type": "multipart/form-data" }
             }).then(res => {
                 setFile(null)
@@ -67,7 +67,7 @@ function SelfUploadPage() {
     }
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/superUser")
+        axios.get(config["rootApiIP"] + "/data/superUser")
         .then((res) => {
             setSuperUser(res.data[0]["superUser"])
         })

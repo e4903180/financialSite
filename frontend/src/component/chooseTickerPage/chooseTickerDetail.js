@@ -1,8 +1,6 @@
 import { Backdrop, CircularProgress } from '@mui/material';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { rootApiIP } from '../../constant';
 import HighchartStockComp from '../highchart/highchatStockComp';
 
 function ChooseTickerDetail() {

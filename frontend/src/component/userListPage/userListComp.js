@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { config } from '../../constant';
 import CustomListComp from './customListComp';
 
 function UserListComp() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        axios.get("http://140.116.214.154:3000/api/data/userList")
+        axios.get(config["rootApiIP"] + "/api/data/userList")
         .then((res) => {
             setUsers(res.data)
         }).catch((res) => {

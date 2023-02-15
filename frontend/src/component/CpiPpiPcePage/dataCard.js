@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { rootApiIP } from '../../constant';
+import { config } from '../../constant';
 import HighchartStockComp from '../highchart/highchatStockComp';
 
 function DataCard() {
@@ -55,7 +55,7 @@ function DataCard() {
     });
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/cpi_ppi")
+        axios.get(config["rootApiIP"] + "/data/cpi_ppi")
         .then((res) => {
             setOptions({
                 series : [

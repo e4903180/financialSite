@@ -2,8 +2,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import MeetingDataUploadComp from './meetingDataUploadComp';
-import { rootApiIP } from '../../constant'
 import { columns6 } from '../column/column';
+import { config } from '../../constant';
 
 function MeetingDataComp() {
     const [data, setData] = useState([]);
@@ -11,7 +11,7 @@ function MeetingDataComp() {
     const [pageSize, setPageSize] = useState(5);
 
     useEffect(() => {
-        axios.get(rootApiIP + "/data/meetingData")
+        axios.get(config["rootApiIP"] + "/data/meetingData")
         .then(res => {
             setData(res.data);
         }).catch(res => {

@@ -17,8 +17,8 @@ gGC = getGmail_Class.gmailService()
 Num, Name, investment_company, Date, Filename, ID, Recommend = [[] for i in range(7)]
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-# logging.basicConfig(level = logging.INFO, filename = root_path["GMAIL_DATA_LOG_PATH"] + "/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
-# logging.info('Updating email start')
+logging.basicConfig(level = logging.INFO, filename = root_path["GMAIL_DATA_LOG_PATH"] + "/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
+logging.info('Updating email start')
 
 # request a list of all the messages
 result = gGC.service.users().messages().list(userId = 'me', maxResults = 500, labelIds = ["INBOX"]).execute()
@@ -29,8 +29,8 @@ messages = result.get('messages')
 # print(labelsList)
 
 if messages == None:
-    # logging.info('Inbox quantity is 0')
-    # logging.info('Updating email end')
+    logging.info('Inbox quantity is 0')
+    logging.info('Updating email end')
     sys.exit(0)
 
 # get mail ID from messages
@@ -85,8 +85,8 @@ for i in trange(len(ID)):
 
 df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : investment_company, "Date" : Date, "Filename" : Filename, "Recommend" : Recommend })
 
-# logging.info('Updating email end')
+logging.info('Updating email end')
 
 # %%
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
-# df.to_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName, index = False)
+df.to_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName, index = False)

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-8y(9+rrdokyz8mt%a@qxrw34pb^s2)z1y9e#9)p+bsc=bhjgjw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["140.116.214.154"]
+ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://140.116.214.154:8080',
@@ -87,9 +87,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'financial',
-        'USER': 'debian-sys-maint',
-        'PASSWORD': 'CEMj8ptYHraxNxFt',
-        'HOST': 'localhost',
+        'USER': 'finanicalSite',
+        'PASSWORD': '624001479',
+        'HOST': '140.116.214.134',
     }
 }
 

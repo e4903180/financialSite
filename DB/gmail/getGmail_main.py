@@ -5,6 +5,8 @@ from tqdm import trange
 from datetime import datetime
 import pandas as pd
 import json
+import base64
+import os
 
 root_path = json.load(open("../../root_path.json"))
 
@@ -15,8 +17,8 @@ gGC = getGmail_Class.gmailService()
 Num, Name, investment_company, Date, Filename, ID, Recommend = [[] for i in range(7)]
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-logging.basicConfig(level = logging.INFO, filename = root_path["GMAIL_DATA_LOG_PATH"] + "/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
-logging.info('Updating email start')
+# logging.basicConfig(level = logging.INFO, filename = root_path["GMAIL_DATA_LOG_PATH"] + "/" + datetime.now().strftime("%Y_%m_%d") + '.log', filemode = 'w', format = FORMAT)
+# logging.info('Updating email start')
 
 # request a list of all the messages
 result = gGC.service.users().messages().list(userId = 'me', maxResults = 500, labelIds = ["INBOX"]).execute()
@@ -27,8 +29,8 @@ messages = result.get('messages')
 # print(labelsList)
 
 if messages == None:
-    logging.info('Inbox quantity is 0')
-    logging.info('Updating email end')
+    # logging.info('Inbox quantity is 0')
+    # logging.info('Updating email end')
     sys.exit(0)
 
 # get mail ID from messages
@@ -40,9 +42,20 @@ for i in trange(len(ID)):
     # Get the message from its id
     txt = gGC.service.users().messages().get(userId = 'me', id = ID[i]).execute()
 
-    # 把辜睿齊移到手動處理
+    # 把辜睿齊移到手動處理並放入unzip
     if "辜睿齊" in txt['payload']['headers'][-7]["value"]:
+        if not os.path.isdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
+            os.mkdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d"))
+
+        if txt['payload']['parts'][1]['filename'] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
+            att = gGC.service.users().messages().attachments().get(userId = 'me', messageId = ID[i], id = txt['payload']['parts'][1]['body']['attachmentId']).execute()
+            file = att['data']
+            file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
+
+            with open(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + txt['payload']['parts'][1]['filename'], 'wb') as f:
+                f.write(file_data)
         gGC.modifyLabels(ID[i], "Label_3480553467383697550")
+
         continue
 
     payload = txt['payload']
@@ -72,8 +85,8 @@ for i in trange(len(ID)):
 
 df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : investment_company, "Date" : Date, "Filename" : Filename, "Recommend" : Recommend })
 
-logging.info('Updating email end')
+# logging.info('Updating email end')
 
 # %%
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
-df.to_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName, index = False)
+# df.to_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName, index = False)

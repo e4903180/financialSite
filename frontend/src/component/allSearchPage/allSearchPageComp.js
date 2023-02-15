@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { rootApiIP } from '../../constant'
+import { config, rootApiIP } from '../../constant'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import { Backdrop, CircularProgress } from '@mui/material';
@@ -22,7 +22,7 @@ function AllSearchPageComp() {
     const [pageSize3, setPage3Size] = useState(5);
 
     useEffect(() => {
-        axios.post(rootApiIP + "/data/dbsearch", {
+        axios.post(config["rootApiIP"] + "/data/dbsearch", {
             "stockName_or_Num" : [{ "stock_num_name" : stockNum }],
             "startDate" : "",
             "endDate" : "",

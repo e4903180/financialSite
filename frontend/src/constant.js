@@ -7,8 +7,8 @@ const dev = {
 }
 
 const prod = {
-    rootApiIP : "",
-    WebSocketIP : "",
+    rootApiIP : "http://140.116.214.134:3000/api",
+    WebSocketIP : "http://140.116.214.134:3000?username=",
     rootPathPrefix : "/financial"
 }
 

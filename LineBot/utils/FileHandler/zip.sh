@@ -1,5 +1,5 @@
 #!/bin/sh
-cd "/home/cosbi/桌面/financialData/unzip"
+cd "/home/uikai/financialData/unzip"
 today=$(date +'%Y%m%d')
 
 if [ -d "./$today" ]; then

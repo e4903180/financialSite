@@ -1,3 +1,4 @@
+const { config } = require('../constant')
 const con = require('../Model/connectTwStock')
 
 exports.filter_ticker = async function(req, res){
@@ -33,7 +34,7 @@ exports.filter_ticker = async function(req, res){
         const [rows, fields] = await con.promise().query(query);
 
         for(let i = 0; i < rows.length; i++){
-            rows[i]["detail"] = `http://140.116.214.154:8080/choose_ticker/detail?stock_num=${rows[i]["stock_name"].split(" ")[0]}&conditions=${conditions}`
+            rows[i]["detail"] = `${config["CLIENT_IP"]}/choose_ticker/detail?stock_num=${rows[i]["stock_name"].split(" ")[0]}&conditions=${conditions}`
         };
         res.status(200).send(rows)
     } catch (error) {

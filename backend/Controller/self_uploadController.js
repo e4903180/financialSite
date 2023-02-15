@@ -1,11 +1,12 @@
 var multer  = require('multer')
 const fs = require('fs')
 const con = require('../Model/connectFinancial')
+const { config } = require('../constant')
 
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
         let temp = req.body.ticker.split(" ")
-        let dir = `/home/cosbi/桌面/financialData/gmailData/data/${temp[0]}`
+        let dir = `${config["FINANCIALDATA_PATH"]}${temp[0]}`
 
         if(!fs.existsSync(dir)) fs.mkdirSync(dir)
 

@@ -1,10 +1,10 @@
 let { PythonShell } = require('python-shell')
-const { DJANGO_REST_IP } = require('../constant')
+const { config } = require('../constant')
 const { default: axios } = require('axios')
 
 exports.pricingData = async function(req, res){    
     try {
-        result = await axios.get(DJANGO_REST_IP + "/PricingStrategy", {
+        result = await axios.get(config["DJANGO_REST_IP"] + "/PricingStrategy", {
             params : {
                 "stockNum" : req.query.stockNum,
                 "year" : req.query.year
@@ -19,7 +19,7 @@ exports.pricingData = async function(req, res){
 
 exports.PER_river_Data = async function(req, res){    
     try {
-        result = await axios.get(DJANGO_REST_IP + "/PER_River", {
+        result = await axios.get(config["DJANGO_REST_IP"] + "/PER_River", {
             params : {
                 "stockNum" : req.query.stockNum,
             }
@@ -34,7 +34,7 @@ exports.PER_river_Data = async function(req, res){
 
 exports.support_resistance_data = async function(req, res){
     try {
-        result = await axios.get(DJANGO_REST_IP + "/SupportResistanceStrategy", {
+        result = await axios.get(config["DJANGO_REST_IP"] + "/SupportResistanceStrategy", {
             params : {
                 "stockNum" : req.query.stockNum,
                 "startDate" : req.query.startDate,
@@ -85,7 +85,7 @@ exports.get_realtime_price = async function(req, res){
 
 exports.inflation = async function(req, res){
     try {
-        result = await axios.get(DJANGO_REST_IP + "/inflation")
+        result = await axios.get(config["DJANGO_REST_IP"] + "/inflation")
     } catch (error) {
         console.log(error) 
         return res.status(400).send(error)
@@ -96,7 +96,7 @@ exports.inflation = async function(req, res){
 
 exports.cpi_ppi = async function(req, res){
     try {
-        result = await axios.get(DJANGO_REST_IP + "/cpi_ppi_pce")
+        result = await axios.get(config["DJANGO_REST_IP"] + "/cpi_ppi_pce")
     } catch (error) {
         return res.status(400).send(error)
     }

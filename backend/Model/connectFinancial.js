@@ -1,10 +1,11 @@
 var mysql2 = require('mysql2');
+const { config } = require('../constant')
 
 var con = mysql2.createPool({
-    host : "140.116.214.134",
-    user : "financialSite",
-    password : "624001479",
-    database : "financial",
+    host : config["DB_HOST"],
+    user : config["DB_USER"],
+    password : config["DB_PASSWORD"],
+    database : config["DB_DATABASE_FINANCIAL"],
     charset : "utf8",
     multipleStatements : true,
     connectionLimit: 10,

@@ -1,10 +1,11 @@
-var multer  = require('multer')
+var multer  = require('multer');
+const { config } = require('../constant');
 var Today = new Date();
 const con = require('../Model/connectFinancial')
 
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
-        callBack(null, '/home/cosbi/桌面/financialData/meeting_data')
+        callBack(null, config["MEETING_DATA_MEMO_PATH"])
     },
     filename: (req, file, callBack) => {
         callBack(null, file.originalname)

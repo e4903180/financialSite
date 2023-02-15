@@ -241,12 +241,12 @@ function DbSearchItem() {
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>
                             <div className = 'col-md-2'>
-                                <input type = "date" id = "date1" className = "form-control" onChange = {e => setInput2(e.target.value)} value = { last3Month }></input>
+                                <input type = "date" id = "date1" className = "form-control" onChange = {e => setInput2(e.target.value)} value = { input2 }></input>
                             </div>
 
                             <label htmlFor = "date2" className = "col-md-1 col-form-label text-center">到</label>
                             <div className = 'col-md-2'>
-                                <input type = "date" id = "date2" className = "form-control" onChange = {e => setInput3(e.target.value)} value = { today }></input>
+                                <input type = "date" id = "date2" className = "form-control" onChange = {e => setInput3(e.target.value)} value = { input3 }></input>
                             </div>
                         </div>
 

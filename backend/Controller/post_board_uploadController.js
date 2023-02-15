@@ -1,10 +1,11 @@
-var multer  = require('multer')
+var multer  = require('multer');
+const { config } = require('../constant');
 var Today = new Date();
 const con = require('../Model/connectFinancial')
 
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
-        callBack(null, '/home/cosbi/桌面/financialData/post_board_data')
+        callBack(null, config["POST_BOARD_MEMO_PATH"])
     },
     filename: (req, file, callBack) => {
         callBack(null, Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0') + "_" + file.originalname)

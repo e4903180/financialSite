@@ -33,8 +33,8 @@ function DatabaseComp() {
     const [columnTable, set_colume_table] = useState([]);
     const [ticker, setTicker] = useState("");
     const [input1Error, set_input1Error] = useState(false);
-    const [input2, setInput2] = useState("");
-    const [input3, setInput3] = useState("");
+    const [input2, setInput2] = useState(last3Month);
+    const [input3, setInput3] = useState(today);
     const [input4, setInput4] = useState("");
     const [input5, setInput5] = useState("綜合查詢");
 
@@ -330,12 +330,12 @@ function DatabaseComp() {
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>
                             <div className = 'col-md-2'>
-                                <input type = "date" id = "date1" className = "form-control" onChange = {e => setInput2(e.target.value)}></input>
+                                <input type = "date" id = "date1" className = "form-control" onChange = {e => setInput2(e.target.value)} value = { input2 }></input>
                             </div>
 
                             <label htmlFor = "date2" className = "col-md-1 col-form-label text-center">到</label>
                             <div className = 'col-md-2'>
-                                <input type = "date" id = "date2" className = "form-control" onChange = {e => setInput3(e.target.value)}></input>
+                                <input type = "date" id = "date2" className = "form-control" onChange = {e => setInput3(e.target.value)} value = { input3 }></input>
                             </div>
                         </div>
 

@@ -1,11 +1,11 @@
 var multer  = require('multer')
 const fs = require('fs')
 const con = require('../Model/connectFinancial')
-const root = require('../dirRootPath')
+const { config } = require('../constant')
 
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
-        let dir = root.industryUpload
+        let dir = config["FINANCIALDATAINDUSTRY_PATH"]
 
         if(!fs.existsSync(dir)) fs.mkdirSync(dir)
 

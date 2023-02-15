@@ -1,6 +1,7 @@
 const con = require('../Model/connectFinancial')
 var Today = new Date();
 const fs = require('fs');
+const { config } = require('../constant');
 
 exports.lineMemo_upload = async function(req, res){
     const temp = req.body.stock_num_name.split(" ")
@@ -33,7 +34,7 @@ exports.lineMemo_upload = async function(req, res){
         username
     ]
 
-    fs.writeFileSync("/home/cosbi/桌面/financialData/lineMemo_data/" + filename, content);
+    fs.writeFileSync(config["LINE_MEMO_PATH"] + filename, content);
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

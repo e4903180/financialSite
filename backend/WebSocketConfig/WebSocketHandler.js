@@ -1,7 +1,6 @@
 const { sessionMaxAge } = require('../constant');
 const con = require('../Model/connectFinancial');
-const { HandleNotifyQuantityTimeInterval, HandleRealTimePriceInterval, HandleSubListInterval, HandleRealTimeInterval } = require('./WebSocketConstant');
-let { PythonShell } = require('python-shell')
+const { HandleNotifyQuantityTimeInterval, HandleSubListInterval, HandleRealTimeInterval } = require('./WebSocketConstant');
 
 //Define a dict to record user timer
 var IntervalID = {}
@@ -48,25 +47,25 @@ exports.HandleSessionExpired = (socket) => {
     IntervalID[socket.handshake.query.username].push(SessionID)
 }
 
-exports.HandleRealTimePrice = (socket) => {
-    socket.on("REQUEST_REAL_TIME_PRICE", (arg) => {
-        arg["args"] = arg["args"].toString()
+// exports.HandleRealTimePrice = (socket) => {
+//     socket.on("REQUEST_REAL_TIME_PRICE", (arg) => {
+//         arg["args"] = arg["args"].toString()
 
-        const RealTimePriceID = setInterval(async () => {
-            const result = await new Promise((resolve, reject) => {
-                PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/RealTimePrice.py', arg, (err, data) => {
-                    if (err) reject(err)
+//         const RealTimePriceID = setInterval(async () => {
+//             const result = await new Promise((resolve, reject) => {
+//                 PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/RealTimePrice.py', arg, (err, data) => {
+//                     if (err) reject(err)
                     
-                    const parsedString = JSON.parse(data)
-                    return resolve(parsedString);
-                })
-            })
-            socket.emit("REGISTER_REAL_TIME_PRICE", result)
-        }, HandleRealTimePriceInterval)
+//                     const parsedString = JSON.parse(data)
+//                     return resolve(parsedString);
+//                 })
+//             })
+//             socket.emit("REGISTER_REAL_TIME_PRICE", result)
+//         }, HandleRealTimePriceInterval)
 
-        IntervalID[socket.handshake.query.username].push(RealTimePriceID)
-    })
-}
+//         IntervalID[socket.handshake.query.username].push(RealTimePriceID)
+//     })
+// }
 
 exports.HandleRealTime = (socket) => {
     const RealTimeID = setInterval(async () => {

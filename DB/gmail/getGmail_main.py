@@ -42,6 +42,8 @@ for i in trange(len(ID)):
     # Get the message from its id
     txt = gGC.service.users().messages().get(userId = 'me', id = ID[i]).execute()
 
+    early_stop = False
+
     # 把辜睿齊移到手動處理並放入unzip
     for header in txt['payload']['headers']:
         if header["name"] == "From":
@@ -58,8 +60,10 @@ for i in trange(len(ID)):
                         with open(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + txt['payload']['parts'][file_ptr]['filename'], 'wb') as f:
                             f.write(file_data)
                 gGC.modifyLabels(ID[i], "Label_3480553467383697550")
-
-            break
+                early_stop = True
+                
+    if early_stop:
+        continue
 
     payload = txt['payload']
     headers = payload['headers']

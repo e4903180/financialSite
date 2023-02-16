@@ -19,9 +19,10 @@ class FileHandler():
             if not os.path.isdir(dir):
                 os.mkdir(dir)
             
-            with open(f"{dir}/{event.message.file_name}", 'wb') as fd:
-                for chunk in message_content.iter_content():
-                    fd.write(chunk)
+            if event.message.file_name not in os.listdir(dir):
+                with open(f"{dir}/{event.message.file_name}", 'wb') as fd:
+                    for chunk in message_content.iter_content():
+                        fd.write(chunk)
         elif ((".zip" in event.message.file_name) or
               (".rar" in event.message.file_name)):
             with open(f"{root_path['COMPRESS_DIR_PATH']}/{event.message.file_name}", 'wb') as fd:

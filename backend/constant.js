@@ -26,7 +26,7 @@ const dev = {
 }
 
 const prod = {
-    CLIENT_IP : "http://140.116.214.134:8080",
+    CLIENT_IP : "http://cosbi5.ee.ncku.edu.tw",
     DJANGO_REST_IP : "http://140.116.214.134:3847/api",
     FINANCIALDATA_PATH : "/home/uikai/financialData/gmailData/data/",
     FINANCIALDATAINDUSTRY_PATH : "/home/uikai/financialData/gmailDataIndustry/data/",

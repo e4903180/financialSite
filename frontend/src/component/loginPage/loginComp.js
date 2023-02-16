@@ -13,7 +13,7 @@ function LoginComp() {
             userName : userName,
             password : password
         }).then(res => {
-            nav("/home");
+            nav(config["rootPathPrefix"] + "/home");
         }).catch(err => {
             alert("Username or password error")
         });

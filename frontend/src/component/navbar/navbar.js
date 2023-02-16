@@ -37,7 +37,7 @@ function NavbarComp() {
         axios.get(config["rootApiIP"] + "/user/logout")
             .then(res => {
                 socket.disconnect()
-                nav("/login")
+                nav(config["rootPathPrefix"] + "/login")
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
                 alert("something error, please try again")
@@ -95,7 +95,7 @@ function NavbarComp() {
 
             <Navbar bg = "dark" variant = "dark" expand = "lg" fixed = 'top'>
                 <Container fluid>
-                    <Navbar.Brand href = "/home">Financial</Navbar.Brand>
+                    <Navbar.Brand href = {config["rootPathPrefix"] + "/home"}>Financial</Navbar.Brand>
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
                     <Navbar.Collapse id =" basic-navbar-nav">
                         <Nav className = "ms-auto">
@@ -109,21 +109,21 @@ function NavbarComp() {
                                     資料庫相關功能
                                 </>
                             } align = "end">
-                                <NavDropdown.Item href = "/database">個股綜合資料庫查詢</NavDropdown.Item>
-                                <NavDropdown.Item href = "/industry">產業研究資料庫查詢</NavDropdown.Item>
-                                <NavDropdown.Item href = "/news">新聞資料庫查詢</NavDropdown.Item>
-                                <NavDropdown.Item href = "/post_board">個股推薦</NavDropdown.Item>
-                                <NavDropdown.Item href = "/line_memo">Line memo</NavDropdown.Item>
-                                <NavDropdown.Item href = "/calendar">法說會行事曆</NavDropdown.Item>
-                                <NavDropdown.Item href = "/meeting_data">Meeting data</NavDropdown.Item>
-                                <NavDropdown.Item href = "/industry_analysis">產業分析上傳</NavDropdown.Item>
-                                { superUser === 1 && <NavDropdown.Item href = "/industry_upload">產業研究報告上傳</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = "/industry_edit">產業研究報告修改</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = "/self_upload">個股研究報告上傳</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = "/self_edit">個股研究報告修改</NavDropdown.Item> }
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/database"}>個股綜合資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry"}>產業研究資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/news"}>新聞資料庫查詢</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/post_board"}>個股推薦</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/line_memo"}>Line memo</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/calendar"}>法說會行事曆</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/meeting_data"}>Meeting data</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_analysis"}>產業分析上傳</NavDropdown.Item>
+                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_upload"}>產業研究報告上傳</NavDropdown.Item> }
+                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_edit"}>產業研究報告修改</NavDropdown.Item> }
+                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_upload"}>個股研究報告上傳</NavDropdown.Item> }
+                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_edit"}>個股研究報告修改</NavDropdown.Item> }
                             </NavDropdown>
                             
-                            <Nav.Link href = "/tool_nav">
+                            <Nav.Link href = {config["rootPathPrefix"] + "/tool_nav"}>
                                 <Tooltip title = "分析工具" style = {{ height : "1vh" }}>
                                     <IconButton>
                                         <BuildOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
@@ -132,7 +132,7 @@ function NavbarComp() {
                                 分析工具
                             </Nav.Link>
 
-                            <Nav.Link href = "/subscibe_list">
+                            <Nav.Link href = {config["rootPathPrefix"] + "/subscibe_list"}>
                                 <Tooltip title = "警示訂閱" style = {{ height : "1vh" }}>
                                     <IconButton>
                                         <AccessAlarmsOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
@@ -141,7 +141,7 @@ function NavbarComp() {
                                 警示訂閱
                             </Nav.Link>
 
-                            <Nav.Link href = "/choose_ticker">
+                            <Nav.Link href = {config["rootPathPrefix"] + "/choose_ticker"}>
                                 <Tooltip title = "選股(開發中)" style = {{ height : "1vh" }}>
                                     <IconButton>
                                         <FilterListOutlinedIcon style = {{ color : "rgba(255, 255, 255, 0.55)" }} />
@@ -173,8 +173,8 @@ function NavbarComp() {
                                     </IconButton>
                                 </Tooltip>
                             } align = "end">
-                                <NavDropdown.Item href = "/Line">加入Line</NavDropdown.Item>
-                                <NavDropdown.Item href = "/userList">成員檔案</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/Line"}>加入Line</NavDropdown.Item>
+                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/userList"}>成員檔案</NavDropdown.Item>
                                 <NavDropdown.Item onClick = { handleShow }>登出</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>

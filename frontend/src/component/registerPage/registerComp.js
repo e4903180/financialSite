@@ -25,7 +25,7 @@ function RegisterComp() {
             password : password
         }).then(res => {
             alert("Register successfully")
-            nav("/login");
+            nav(config["rootPathPrefix"] + "/login");
         }).catch(err => {
             if(err.response.status === 401){
                 alert(err.response.data)

@@ -43,20 +43,23 @@ for i in trange(len(ID)):
     txt = gGC.service.users().messages().get(userId = 'me', id = ID[i]).execute()
 
     # 把辜睿齊移到手動處理並放入unzip
-    if "辜睿齊" in txt['payload']['headers'][-7]["value"]:
-        if not os.path.isdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
-            os.mkdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d"))
+    for header in txt['payload']['headers']:
+        if header["name"] == "From":
+            if "辜睿齊" in header["value"]:
+                if not os.path.isdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
+                    os.mkdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d"))
 
-        if txt['payload']['parts'][1]['filename'] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
-            att = gGC.service.users().messages().attachments().get(userId = 'me', messageId = ID[i], id = txt['payload']['parts'][1]['body']['attachmentId']).execute()
-            file = att['data']
-            file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
+                for file_ptr in range(1, len(txt['payload']['parts']), 1):
+                    if txt['payload']['parts'][file_ptr]['filename'] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
+                        att = gGC.service.users().messages().attachments().get(userId = 'me', messageId = ID[i], id = txt['payload']['parts'][file_ptr]['body']['attachmentId']).execute()
+                        file = att['data']
+                        file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
 
-            with open(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + txt['payload']['parts'][1]['filename'], 'wb') as f:
-                f.write(file_data)
-        gGC.modifyLabels(ID[i], "Label_3480553467383697550")
+                        with open(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + txt['payload']['parts'][file_ptr]['filename'], 'wb') as f:
+                            f.write(file_data)
+                gGC.modifyLabels(ID[i], "Label_3480553467383697550")
 
-        continue
+            break
 
     payload = txt['payload']
     headers = payload['headers']

@@ -20,7 +20,7 @@ function ToolNavComp() {
                                     <ul key = {i} className = "list-group list-group-horizontal text-center">
                                         {
                                             baseAna.slice(i, i + 3).map(function(ele, idx){
-                                                return <li key = {idx} className = "list-group-item flex-fill"><a href = {config["rootPathPrefix"] + ele["url"]}>{ele["method"]}</a></li>
+                                                return <li key = {idx} className = "list-group-item flex-fill"><a href = {ele["url"]}>{ele["method"]}</a></li>
                                             })
                                         }
                                     </ul>
@@ -51,7 +51,7 @@ function ToolNavComp() {
                                     <ul key = {i} className = "list-group list-group-horizontal text-center">
                                         {
                                             techAna.slice(i, i + 3).map(function(ele, idx){
-                                                return <li key = {idx} className = "list-group-item flex-fill"><a href = {config["rootPathPrefix"] + ele["url"]}>{ele["method"]}</a></li>
+                                                return <li key = {idx} className = "list-group-item flex-fill"><a href = {ele["url"]}>{ele["method"]}</a></li>
                                             })
                                         }
                                     </ul>
@@ -82,7 +82,7 @@ function ToolNavComp() {
                                     <ul key = {i} className = "list-group list-group-horizontal text-center">
                                         {
                                             elseAna.slice(i, i + 3).map(function(ele, idx){
-                                                return <li key = {idx} className = "list-group-item flex-fill"><a href = {config["rootPathPrefix"] + ele["url"]}>{ele["method"]}</a></li>
+                                                return <li key = {idx} className = "list-group-item flex-fill"><a href = {ele["url"]}>{ele["method"]}</a></li>
                                             })
                                         }
                                     </ul>

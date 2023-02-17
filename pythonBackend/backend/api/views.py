@@ -23,7 +23,7 @@ def zip_download(request):
         try:
             FilePointer = open(f"{root_path['ZIP_PATH']}/{filename}", "rb")
             response = HttpResponse(FilePointer, content_type = 'application/zip')
-            response['Content-Disposition'] = f"attachment; filename={date.today().strftime('%Y%m%d')}.zip"
+            response['Content-Disposition'] = f"attachment; filename={filename}.zip"
 
             return response
         except Exception as e:

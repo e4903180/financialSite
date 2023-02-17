@@ -12,7 +12,8 @@ exports.login = async function(req, res){
 
         if(bcrypt.compareSync(password, row[0].password)){
             req.session.userName = userName;
-            
+            let time = new Date()
+            console.log("Login time: ", time.toString())
             return res.status(200).send("success");
         }else{
             return res.status(400).send("Username or password error");

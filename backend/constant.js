@@ -50,7 +50,7 @@ const sessionMiddleware = session({
     secret: 'secretkey',
     rolling: true,
     saveUninitialized: false,
-    resave: true,
+    resave: false,
     cookie: {
         maxAge : sessionMaxAge,
         secure : false

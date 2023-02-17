@@ -14,7 +14,7 @@ function PrivateRoute() {
 
     const handleClose =() => {
         setShow(false)
-        nav("/login")
+        nav(config["rootPathPrefix"] + "/login")
     }
 
     const handleTimeout = () => {

@@ -21,7 +21,7 @@ function LoginRoute() {
 
     if (isAuth === undefined) return null
 
-    return isAuth ? <Navigate to = "/home" /> : <Outlet />;
+    return isAuth ? <Navigate to = {config["rootPathPrefix"] + "/home"} /> : <Outlet />;
 }
 
 export default LoginRoute;

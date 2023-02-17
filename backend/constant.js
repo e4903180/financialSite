@@ -53,7 +53,9 @@ const sessionMiddleware = session({
     resave: false,
     cookie: {
         maxAge : sessionMaxAge,
-        secure : false
+        secure : false,
+        httpOnly : process.env.NODE_ENV === "development" ? false : true,
+        sameSite : process.env.NODE_ENV === "development" ? false : "strict"
     }
 })
 

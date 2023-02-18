@@ -445,6 +445,6 @@ class gmailService:
             # CTBC-奇鋐(3017,UG,OW)TP133-高階伺服器帶動長期營運動能-230217
             temp = subject.split("-")
 
-            result.append(temp[1])
+            result.append(temp[2])
             return result
         return ["NULL" for i in range(len(stockNum))]

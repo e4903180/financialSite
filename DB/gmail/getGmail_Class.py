@@ -415,31 +415,36 @@ class gmailService:
             return result
 
         elif "元富投顧" in subject:
-            for i in stockNum:
-                idx_left_brackets = subject.find(i + ")")
-                # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
-                end = len(subject)
+            idx_left_brackets = subject.find(stockNum[0] + ")")
+            # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
+            end = len(subject)
 
-                for idx in range(idx_left_brackets + 5, len(subject), 1):
-                    # Fwd: 元富投顧個股報告--聯電(2303)維持買進，1H23為營運毛利率谷底，評價低
-                    if subject[idx] == "，":
-                        end = idx
-                        break
+            for idx in range(idx_left_brackets + 5, len(subject), 1):
+                # Fwd: 元富投顧個股報告--聯電(2303)維持買進，1H23為營運毛利率谷底，評價低
+                if subject[idx] == "，":
+                    end = idx
+                    break
 
-                result.append(subject[idx_left_brackets + 5:end])
+            result.append(subject[idx_left_brackets + 5:end])
             return result
         
         elif "永豐投顧" in subject:
-            for i in stockNum:
-                # Fwd: 【永豐投顧】上奇（6123 TT，B，80）/ 評價具提升空間_20230202
-                idx_slash = subject.find("/")
-                end = len(subject)
+            # Fwd: 【永豐投顧】上奇（6123 TT，B，80）/ 評價具提升空間_20230202
+            idx_slash = subject.find("/")
+            end = len(subject)
 
-                for idx in range(idx_slash + 2, len(subject), 1):
-                    if subject[idx] == "_":
-                        end = idx
-                        break
+            for idx in range(idx_slash + 2, len(subject), 1):
+                if subject[idx] == "_":
+                    end = idx
+                    break
 
-                result.append(subject[idx_slash + 2:end])
+            result.append(subject[idx_slash + 2:end])
+            return result
+        
+        elif (("CTBC" in subject) and ("台股晨報" not in subject)):
+            # CTBC-奇鋐(3017,UG,OW)TP133-高階伺服器帶動長期營運動能-230217
+            temp = subject.split("-")
+
+            result.append(temp[1])
             return result
         return ["NULL" for i in range(len(stockNum))]

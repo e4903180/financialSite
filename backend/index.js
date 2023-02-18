@@ -5,7 +5,7 @@ const cors = require('cors');
 const router = require("./router");
 const http = require('http');
 const server = http.createServer(app);
-const { API_PORT, API_ROUTE_IP, API_BASE_IP, sessionMiddleware, wrap, corsSetting, WebSocketMiddlewareHandler, ioOptions } = require('./constant');
+const { API_ROUTE_IP, sessionMiddleware, wrap, corsSetting, WebSocketMiddlewareHandler, ioOptions, config } = require('./constant');
 const { WebSocketManager } = require("./WebSocketConfig/WebSocketManager");
 
 //<--------------------------------HTTP settings-------------------------------->
@@ -36,6 +36,6 @@ io.use(WebSocketMiddlewareHandler);
 io.on("connection", WebSocketManager);
 
 //<--------------------------------Start listen-------------------------------->
-server.listen(API_PORT, API_BASE_IP, function () {
-    console.log(`Backend listening on port ${API_PORT}!`);
+server.listen(config["API_PORT"], config["API_BASE_IP"], function () {
+    console.log(`Backend listening on port ${config["API_PORT"]}!`);
 });

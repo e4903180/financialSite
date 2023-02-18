@@ -2,11 +2,11 @@ require('dotenv').config()
 const session = require('express-session');
 
 const sessionMaxAge = 15 * 60 * 1000
-const API_BASE_IP = "0.0.0.0"
 const API_ROUTE_IP = "/api"
-const API_PORT = 3000
 
 const dev = {
+    API_BASE_IP : "0.0.0.0",
+    API_PORT : 3000,
     CLIENT_IP : "http://140.116.214.154:8080",
     DJANGO_REST_IP : "http://140.116.214.154:3847/api",
     FINANCIALDATA_PATH : "/home/cosbi/桌面/financialData/gmailData/data/",
@@ -26,6 +26,8 @@ const dev = {
 }
 
 const prod = {
+    API_BASE_IP : "127.0.0.1",
+    API_PORT : 3000,
     CLIENT_IP : "http://cosbi5.ee.ncku.edu.tw",
     DJANGO_REST_IP : "http://140.116.214.134:3847/api",
     FINANCIALDATA_PATH : "/home/uikai/financialData/gmailData/data/",
@@ -78,9 +80,7 @@ const WebSocketMiddlewareHandler = (socket, next) => {
 
 module.exports = { 
     sessionMaxAge, 
-    API_BASE_IP,
     API_ROUTE_IP,
-    API_PORT,
     sessionMiddleware, 
     corsSetting, 
     ioOptions, 

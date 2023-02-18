@@ -6,7 +6,7 @@ import { config } from '../../constant';
 
 function CalendarItem() {
     function clickEvent(info){
-        window.open("/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
+        window.open(config["rootPathPrefix"] + "/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
     }
 
     async function getCalendarData(fetchInfo, successCallback, failureCallback) {

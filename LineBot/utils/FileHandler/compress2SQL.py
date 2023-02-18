@@ -89,6 +89,10 @@ class Compress2SQL():
             os.rename(self._decompress_dir + dir_name + "/" + origin_filename, self._destination_dir + stock_num + "/" + new_filename)
 
 if __name__ == "__main__":
-    c2sql = Compress2SQL()
+    db = MySQLdb.connect(host = "140.116.214.134", user = "financialSite", passwd = "624001479",
+        db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+    cursor = db.cursor()
+    
+    c2sql = Compress2SQL(db, cursor)
 
     c2sql.run()

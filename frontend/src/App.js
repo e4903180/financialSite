@@ -33,6 +33,7 @@ import { config } from './constant';
 import IndustryComp from './component/industryPage/industryComp';
 import IndustryUploadComp from './component/industryUploadPage/industryUploadComp';
 import IndustryEditComp from './component/industryEditPage/industryEditComp';
+import DbAutoSearch from './component/homePage/dbAutoSearch';
 
 axios.defaults.withCredentials = true;
 
@@ -49,7 +50,8 @@ function App() {
           </Route>
           
           <Route element = { <PrivateRoute /> } >
-            <Route exact path = { config.rootPathPrefix + "/home" } element = { <HomeComp1 /> }></Route>
+            <Route path = { config.rootPathPrefix + "/home" } element = { <HomeComp1 /> }></Route>
+            <Route exact path = { config.rootPathPrefix + "/home/search/:stock_num_name" } element = { <DbAutoSearch /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/calendar" } element = { <CalendarComp /> }></Route>
             <Route path = { config.rootPathPrefix + "/database" } element = { <DatabaseComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/industry" } element = { <IndustryComp /> }></Route>

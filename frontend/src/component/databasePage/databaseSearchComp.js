@@ -27,7 +27,6 @@ function DatabaseSearchComp() {
     const [pageSize4, setPageSize4] = useState(10);
     const [columnTable, set_colume_table] = useState([]);
     const [input1Error, set_input1Error] = useState(false);
-    const [init, setInit] = useState(false)
     const [ticker, setTicker] = useState("");
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
@@ -217,12 +216,7 @@ function DatabaseSearchComp() {
         setPage1(0)
         set_colume_table([])
 
-        if(!init){
-            searchHandler(param.stock_num_name)
-            setInit(true)
-        }else{
-            searchHandler(ticker)
-        }
+        searchHandler(ticker)
     }
 
     useEffect(() => {
@@ -233,12 +227,12 @@ function DatabaseSearchComp() {
             if(res.response.data === "Session expired") window.location.reload()
         })
 
-        document.getElementById("submit").click()
+        searchHandler(param.stock_num_name)
     }, [])
 
     return (
         <>
-            <div className = 'row mx-auto py-5' style = {{ width : "40vw" }}>
+            <div className = 'row mx-auto' style = {{ width : "40vw", paddingTop : "56px" }}>
                 <div className = 'col-md-10 mx-auto py-3'>
                     <h3 className = "display-6 text-center">資料庫總表</h3>
 

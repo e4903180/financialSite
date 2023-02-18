@@ -1,12 +1,14 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
 import { columns1, columns4, columns_financialDataIndustry, columns_news } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
-function DbSearchItem() {
+function DbAutoSearch() {
+    const param = useParams();
     var date = new Date();
     const today = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
     date.setDate(1);
@@ -141,7 +143,7 @@ function DbSearchItem() {
 
     useEffect(() => {
         axios.post(config["rootApiIP"] + "/data/financial_search", {
-            "stock_num_name" : "",
+            "stock_num_name" : param.stock_num_name,
             "startDate" : last3Month,
             "endDate" : today,
             "investmentCompany" : "",
@@ -159,7 +161,7 @@ function DbSearchItem() {
         axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
             "startDate" : last3Month,
             "endDate" : today,
-            "pattern" : "",
+            "pattern" : param.stock_num_name.split(" ")[1],
             "investmentCompany" : ""
         } })
         .then((res) => {
@@ -178,7 +180,7 @@ function DbSearchItem() {
             "startDate" : last3Month,
             "endDate" : today,
             "column" : "title",
-            "pattern" : "",
+            "pattern" : param.stock_num_name.split(" ")[1],
             "category" : "全部"
         }})
         .then((res) => {
@@ -194,7 +196,7 @@ function DbSearchItem() {
         })
 
         axios.post(config["rootApiIP"] + "/data/calender_search", {
-            "stock_num_name" : "",
+            "stock_num_name" : param.stock_num_name,
             "startDate" : last3Month,
             "endDate" : today,
         }).then(res => {
@@ -228,7 +230,7 @@ function DbSearchItem() {
 
     return (
         <>
-            <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto' style = {{ width : "90%", paddingTop : "56px" }}>
                 <div className = 'container-fluid py-3'>
                     <h3 className = "display-6 text-center">資料庫查詢</h3>
 
@@ -236,7 +238,7 @@ function DbSearchItem() {
                         <div className = 'form-group row'>
                             <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>
                             <div className = 'col-md-3'>
-                                <TickerSearchComp init = "" setTicker = {setTicker}/>
+                                <TickerSearchComp init = {param.stock_num_name} setTicker = {setTicker}/>
                             </div>
                             
                             <label htmlFor = "date1" className = "col-md-1 col-form-label text-center">日期:</label>
@@ -260,7 +262,7 @@ function DbSearchItem() {
 
             <h3 className = "display-6 text-center">查詢結果</h3>
 
-            <hr className = 'mx-auto'/>
+            <hr className = 'mx-auto' style = {{ width : "95vw" }}/>
 
             <div className = 'row mx-auto py-4' style = {{ width : "90%" }}>
                 <h4 className = "text-center">個股研究資料</h4>
@@ -381,4 +383,4 @@ function DbSearchItem() {
     );
 }
 
-export default DbSearchItem;
+export default DbAutoSearch;

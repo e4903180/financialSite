@@ -43,7 +43,7 @@ export const columns3 = [
 
 export const columns4 = [
     { field: 'stock_name', headerName: '股票名稱', width: 200, headerAlign: 'center', align: 'center' },
-    { field: 'date', headerName: '法說會日期', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'date', headerName: '法說會日期', width: 200, headerAlign: 'center', align: 'center' },
     { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },

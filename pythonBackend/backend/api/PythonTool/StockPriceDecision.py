@@ -65,8 +65,8 @@ class CrawlerData(Selenium):
         self.dividend = pd.read_html(form.get_attribute('innerHTML'), header = 3)[0]
 
         for i in range(len(self.dividend)):
-            if (self.dividend["股利 發放 年度"][i] == "股利 發放 年度" or self.dividend["股利 發放 年度"][i] == "股 利 政 策" or
-                self.dividend["股利 發放 年度"][i] == "∟"):
+            if (self.dividend["股利發放年度"][i] == "股利發放年度" or self.dividend["股利發放年度"][i] == "股 利 政 策" or
+                self.dividend["股利發放年度"][i] == "∟"):
                 self.dividend.drop(i, inplace = True)
 
         self.dividend.reset_index(drop = True, inplace = True)
@@ -102,7 +102,7 @@ class Dividend(TableDataBase):
         self.year = int(year)
     
     def _dividend_preprocessing(self) -> None:
-        self.dividend = self.dividend_table["股利 合計"][2:self.year+1]
+        self.dividend = self.dividend_table["股利合計"][2:self.year+1]
         self.dividend.reset_index(drop = True, inplace = True)
 
     def _calculate(self) -> None:
@@ -194,16 +194,16 @@ class Per(TableDataBase):
         self.year = int(year)
     
     def _per_preprocessing(self) -> None:
-        self.PER_high = self.PER_table["最高 PER"][2:self.year+1]
+        self.PER_high = self.PER_table["最高PER"][2:self.year+1]
         self.PER_high.reset_index(drop = True, inplace = True)
 
-        self.PER_low = self.PER_table["最低 PER"][2:self.year+1]
+        self.PER_low = self.PER_table["最低PER"][2:self.year+1]
         self.PER_low.reset_index(drop = True, inplace = True)
 
-        self.PER_avg = self.PER_table["平均 PER"][2:self.year+1]
+        self.PER_avg = self.PER_table["平均PER"][2:self.year+1]
         self.PER_avg.reset_index(drop = True, inplace = True)
 
-        self.EPS = self.PER_table["EPS (元)"][2:self.year+1]
+        self.EPS = self.PER_table["EPS(元)"][2:self.year+1]
         self.EPS.reset_index(drop = True, inplace = True)
 
     def _handle_table_data(self) -> None:
@@ -251,17 +251,17 @@ class Pbr(TableDataBase):
         self.year = int(year)
     
     def _pbr_preprocessing(self) -> None:
-        self.PBR_high = self.PBR_table["最高 PBR"][2:self.year+1]
+        self.PBR_high = self.PBR_table["最高PBR"][2:self.year+1]
         self.PBR_high.reset_index(drop = True, inplace = True)
 
-        self.PBR_low = self.PBR_table["最低 PBR"][2:self.year+1]
+        self.PBR_low = self.PBR_table["最低PBR"][2:self.year+1]
         self.PBR_low.reset_index(drop = True, inplace = True)
 
-        self.PBR_avg = self.PBR_table["平均 PBR"][2:self.year+1]
+        self.PBR_avg = self.PBR_table["平均PBR"][2:self.year+1]
         self.PBR_avg.reset_index(drop = True, inplace = True)
 
-        self.BPS = self.PBR_table["BPS (元)"][2:self.year+1]
-        self.BPS_now = self.PBR_table["BPS (元)"][1]
+        self.BPS = self.PBR_table["BPS(元)"][2:self.year+1]
+        self.BPS_now = self.PBR_table["BPS(元)"][1]
         self.BPS.reset_index(drop = True, inplace = True)
 
     def _handle_table_data(self) -> None:

@@ -152,6 +152,8 @@ exports.news_search = async function(req, res){
         param.push(req.query.category)
     }
 
+    query += " ORDER BY date DESC"
+
     try {
         const [rows, fields] = await con.promise().query(query, param);
 
@@ -180,6 +182,8 @@ exports.news_statmentdog_search = async function(req, res){
 	    param.push(`%${req.query.pattern}%`)
     }
 
+    query += " ORDER BY date DESC"
+    
     try {
         const [rows, fields] = await con.promise().query(query, param);
 

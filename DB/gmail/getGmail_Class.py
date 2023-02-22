@@ -408,8 +408,9 @@ class gmailService:
                             break
 
                         end += 1
-                        
-                    result.append(subject[start:end])
+                    
+                    temp = subject[start:end].replace("/", "")
+                    result.append(temp)
                 else:
                     result.append("NULL")
             return result
@@ -424,8 +425,9 @@ class gmailService:
                 if subject[idx] == "，":
                     end = idx
                     break
-
-            result.append(subject[idx_left_brackets + 5:end])
+            
+            temp = subject[idx_left_brackets + 5:end].replace("/", "")
+            result.append(temp)
             return result
         
         elif "永豐投顧" in subject:
@@ -437,14 +439,16 @@ class gmailService:
                 if subject[idx] == "_":
                     end = idx
                     break
-
-            result.append(subject[idx_slash + 2:end])
+            
+            temp = subject[idx_slash + 2:end].replace("/", "")
+            
+            result.append(temp)
             return result
         
         elif (("CTBC" in subject) and ("台股晨報" not in subject)):
             # CTBC-奇鋐(3017,UG,OW)TP133-高階伺服器帶動長期營運動能-230217
             temp = subject.split("-")
 
-            result.append(temp[2])
+            result.append(temp[2].replace("/", ""))
             return result
         return ["NULL" for i in range(len(stockNum))]

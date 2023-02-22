@@ -52,7 +52,8 @@ for i in trange(len(ID)):
                     os.mkdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d"))
 
                 for file_ptr in range(1, len(txt['payload']['parts']), 1):
-                    if txt['payload']['parts'][file_ptr]['filename'] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
+                    if (txt['payload']['parts'][file_ptr]['filename'] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")) and 
+                        ('attachmentId' in txt['payload']['parts'][file_ptr]['body'])):
                         att = gGC.service.users().messages().attachments().get(userId = 'me', messageId = ID[i], id = txt['payload']['parts'][file_ptr]['body']['attachmentId']).execute()
                         file = att['data']
                         file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))

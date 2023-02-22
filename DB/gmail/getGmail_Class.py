@@ -392,7 +392,6 @@ class gmailService:
         self.service.users().messages().modify(userId = 'me', id = ID, body = Body).execute()
     
     def recommend(self, subject, stockNum):
-        subject = subject.replace("/", "")
         result = []
         
         if (("統一投顧" in subject) or 

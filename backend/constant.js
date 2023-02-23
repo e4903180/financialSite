@@ -18,11 +18,11 @@ const dev = {
     TWSE_CHPDF_PATH : "/home/cosbi/桌面/financialData/twseData/data/ch/",
     TWSE_ENPDF_PATH : "/home/cosbi/桌面/financialData/twseData/data/en/",
     CSV_PATH : "/home/cosbi/桌面/financialData/",
-    DB_HOST : "140.116.214.134",
-    DB_USER : "financialSite",
-    DB_PASSWORD : "624001479",
-    DB_DATABASE_FINANCIAL : "financial",
-    DB_DATABASE_TWSTOCK : "twStock"
+    DB_HOST : process.env.DB_HOST,
+    DB_USER : process.env.DB_USER,
+    DB_PASSWORD : process.env.DB_PASSWORD,
+    DB_DATABASE_FINANCIAL : process.env.DB_DATABASE_FINANCIAL,
+    DB_DATABASE_TWSTOCK : process.env.DB_DATABASE_TWSTOCK
 }
 
 const prod = {
@@ -39,11 +39,11 @@ const prod = {
     TWSE_CHPDF_PATH : "/home/uikai/financialData/twseData/data/ch/",
     TWSE_ENPDF_PATH : "/home/uikai/financialData/twseData/data/en/",
     CSV_PATH : "/home/uikai/financialData/",
-    DB_HOST : "140.116.214.134",
-    DB_USER : "financialSite",
-    DB_PASSWORD : "624001479",
-    DB_DATABASE_FINANCIAL : "financial",
-    DB_DATABASE_TWSTOCK : "twStock"
+    DB_HOST : process.env.DB_HOST,
+    DB_USER : process.env.DB_USER,
+    DB_PASSWORD : process.env.DB_PASSWORD,
+    DB_DATABASE_FINANCIAL : process.env.DB_DATABASE_FINANCIAL,
+    DB_DATABASE_TWSTOCK : process.env.DB_DATABASE_TWSTOCK
 }
 
 const config = process.env.NODE_ENV === "development" ? dev : prod

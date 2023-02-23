@@ -217,7 +217,8 @@ class GetGmailIndustry():
         result_subject_date = self._get_date_subject(headers)
         investmentCompany = self._get_investment_company(result_subject_date["subject"])
 
-        if investmentCompany == "not found":
+        if ((investmentCompany == "not found") or
+            ("parts" not in payload)):
             return
         
         filename = self._getAttachments(payload['parts'][1:], id)

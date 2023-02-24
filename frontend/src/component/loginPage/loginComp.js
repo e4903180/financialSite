@@ -57,7 +57,7 @@ function LoginComp() {
                         </div>
 
                         <div className = 'd-grid px-4'>
-                            <p className = "text-center" style = {{ color : "red" }}>Don't have an account? <a href = '/register'>Register</a></p>
+                            <p className = "text-center" style = {{ color : "red" }}>Don't have an account? <a href = { config["rootPathPrefix"] + '/register' }>Register</a></p>
                         </div>
                     </form>
                 </div>

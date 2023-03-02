@@ -95,11 +95,7 @@ dataRouter.post("/ticker_search", dbSearch.ticker_search)
 dataRouter.get("/news_search_today", dbSearch.news_search_today)
 dataRouter.get("/news_search_past", dbSearch.news_search_past)
 dataRouter.get("/news_search", dbSearch.news_search)
-dataRouter.get("/news_statmentdog_search_today", dbSearch.news_statmentdog_search_today)
-dataRouter.get("/news_statmentdog_search_past", dbSearch.news_statmentdog_search_past)
-dataRouter.get("/news_statmentdog_search", dbSearch.news_statmentdog_search)
 dataRouter.get("/news_summary", dbSearch.news_summary)
-dataRouter.get("/news_summary_statementdog", dbSearch.news_summary_statementdog)
 
 /* DB edit router */
 dataRouter.patch("/financial_recommend", dbUpdate.financial_recommend_update)

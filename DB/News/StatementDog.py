@@ -57,10 +57,11 @@ class StatementDog(NewsBase):
             Return:
                 None
         """
-        query = f'INSERT INTO statementdog (`date`, `title`, `link`) \
-            VALUES("{date}", "{title}", "{link}")'
+        query = 'INSERT INTO news (`title`, `repoter`, `link`, `date`, `category`) \
+            VALUES(%s, %s, %s, %s, %s)'
+        param = (title, "無", link, date, "財報狗")
 
-        self._cursor.execute(query)
+        self._cursor.execute(query, param)
         self._db.commit()
 
     def _isDuplicate(self, title : str) -> bool:
@@ -72,7 +73,7 @@ class StatementDog(NewsBase):
             Return:
                 bool
         """
-        query = f'SELECT * FROM statementdog WHERE title="{title}"'
+        query = f'SELECT * FROM news WHERE title="{title}"'
 
         self._cursor.execute(query)
         self._db.commit()

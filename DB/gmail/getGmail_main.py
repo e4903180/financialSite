@@ -61,14 +61,6 @@ for i in trange(len(ID)):
 
                         with open(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + txt['payload']['parts'][file_ptr]['filename'], 'wb') as f:
                             f.write(file_data)
-                    else:
-                        content = gGC.getMessages(txt['payload']['parts'][1]['body']['data'])
-                        a_tags = content.find_all('a', href = True)
-
-                        for a_tag in a_tags:
-                            if "drive.google.com/file" in a_tag["href"]:
-                                if a_tag["aria-label"] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d")):
-                                    urllib.request.urlretrieve(a_tag["href"], root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + a_tag["aria-label"])
 
                 gGC.modifyLabels(ID[i], "Label_3480553467383697550")
                 early_stop = True

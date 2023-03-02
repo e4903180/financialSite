@@ -418,15 +418,8 @@ class gmailService:
         elif "元富投顧" in subject:
             idx_left_brackets = subject.find(stockNum[0] + ")")
             # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
-            end = len(subject)
-
-            for idx in range(idx_left_brackets + 5, len(subject), 1):
-                # Fwd: 元富投顧個股報告--聯電(2303)維持買進，1H23為營運毛利率谷底，評價低
-                if subject[idx] == "，":
-                    end = idx
-                    break
             
-            temp = subject[idx_left_brackets + 5:end].replace("/", "")
+            temp = subject[idx_left_brackets + 5:].replace("/", "")
             result.append(temp)
             return result
         

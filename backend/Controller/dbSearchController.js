@@ -200,7 +200,7 @@ exports.news_search_past = async function(req, res){
         param.push(req.query.category)
     }
 
-    query += " ORDER BY date"
+    query += " ORDER BY date DESC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

@@ -33,7 +33,6 @@ class gmailService:
         self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
         self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['股票名稱']
         self.list_investment_company = self.df_investment_company['中文名稱'].to_list()
-        print(self.list_investment_company)
         self.rootPath = root_path["GMAIL_DATA_DATA_PATH"]
     
     def getCreds(self):

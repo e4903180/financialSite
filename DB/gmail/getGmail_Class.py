@@ -29,10 +29,10 @@ class gmailService:
         self.creds = self.getCreds()
         # Connect to the Gmail API
         self.service = build('gmail', 'v1', credentials = self.creds)
-        self.df_stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", index_col = 0, names = ['name'] , sheet_name = 0)
-        self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", index_col = 0, names = ['name'], sheet_name = 1)
-        self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['name']
-        self.dict_investment_company = self.df_investment_company.to_dict(orient = 'dict')['name']
+        self.df_stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
+        self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
+        self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['股票名稱']
+        self.dict_investment_company = self.df_investment_company.to_dict(orient = 'dict')['中文名稱']
         self.rootPath = root_path["GMAIL_DATA_DATA_PATH"]
     
     def getCreds(self):

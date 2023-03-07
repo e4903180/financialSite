@@ -110,7 +110,7 @@ class Money(NewsBase):
             return False
         return True
 
-    def run(self):
+    def run(self) -> None:
         """Run
 
             Args :

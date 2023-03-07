@@ -30,7 +30,7 @@ class Ctee(NewsBase):
         self.driver = webdriver.Chrome(options = options, service = service)
         self.driver.set_page_load_timeout(10)
     
-    def run(self):
+    def run(self) -> None:
         """Run
 
             Args :
@@ -79,7 +79,7 @@ class Ctee(NewsBase):
 
         page = 2
 
-        # Infinite loop until article date is not today or yeasterday
+        # Infinite loop until duplicate_count == 10
         while True:
             articles = self.driver.find_elements(by = By.TAG_NAME, value = "article")
             duplicate_count = 0

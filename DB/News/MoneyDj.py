@@ -27,7 +27,7 @@ class MoneyDj(NewsBase):
         self._cursor = cursor
         self.driver = webdriver.Chrome(options = options, service = service)
     
-    def run(self):
+    def run(self) -> None:
         """Run
 
             Args :

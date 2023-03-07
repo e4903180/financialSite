@@ -32,7 +32,7 @@ class NewsDayUpdate():
         self._money = Money(db, cursor)
         self._statementdog = StatementDog(db, cursor)
     
-    def run(self):
+    def run(self) -> None:
         """Run
 
             Args :

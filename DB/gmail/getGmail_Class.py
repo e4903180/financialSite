@@ -32,7 +32,8 @@ class gmailService:
         self.df_stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
         self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
         self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['股票名稱']
-        self.dict_investment_company = self.df_investment_company.to_dict(orient = 'dict')['中文名稱']
+        self.list_investment_company = self.df_investment_company['中文名稱'].to_list()
+        print(self.list_investment_company)
         self.rootPath = root_path["GMAIL_DATA_DATA_PATH"]
     
     def getCreds(self):
@@ -309,7 +310,7 @@ class gmailService:
                 (list)Num, Name, Path
         """     
         Num, Name, Path, mimeType, Recommend, stock_num_name, _stock_num, _stock_name = [[] for i in range(8)]
-        investment_company_res = [key for key, value in self.dict_investment_company.items() if key in subject]
+        investment_company_res = [name for name in self.list_investment_company if name in subject]
         
         for i in range(len(stock_num)):
             if int(stock_num[i]) in self.dict_stock_num2name.keys():

@@ -31,7 +31,7 @@ class gmailService:
         self.service = build('gmail', 'v1', credentials = self.creds)
         self.df_stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
         self.df_investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
-        self.dict_stock_num2name = self.df_stock_num2name.to_dict(orient = 'dict')['股票名稱']
+        self.dict_stock_num2name = dict(zip(self.df_stock_num2name["股票代號"], self.df_stock_num2name["股票名稱"]))
         self.list_investment_company = self.df_investment_company['中文名稱'].to_list()
         self.rootPath = root_path["GMAIL_DATA_DATA_PATH"]
     
@@ -312,10 +312,10 @@ class gmailService:
         investment_company_res = [name for name in self.list_investment_company if name in subject]
         
         for i in range(len(stock_num)):
-            if int(stock_num[i]) in self.dict_stock_num2name.keys():
-                stock_num_name.append([stock_num[i], self.dict_stock_num2name[int(stock_num[i])]])
+            if stock_num[i] in self.dict_stock_num2name.keys():
+                stock_num_name.append([stock_num[i], self.dict_stock_num2name[stock_num[i]]])
                 _stock_num.append(stock_num[i])
-                _stock_name.append(self.dict_stock_num2name[int(stock_num[i])])
+                _stock_name.append(self.dict_stock_num2name[stock_num[i]])
          
         investment_company_res = [x for x in investment_company_res if x not in _stock_name]
 

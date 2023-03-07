@@ -61,12 +61,15 @@ class Money(NewsBase):
                 if self._isDuplicate(article_title):
                     duplicate_count += 1
                     continue
-
+                
+                # href ex: /money/story/5612/7014949?from=edn_subcatelist_cate
                 article_href = self._root + tag.get('href')
 
                 r1 = requests.get(article_href)
                 soup1 = BeautifulSoup(r1.text, "html.parser")
+                # date ex: 2023/03/07 15:47:51
                 article_date = soup1.select_one(".article-body__time").text.split(" ")[0].replace("/", "-")
+                # repoter ex: 經濟日報 記者楊伶雯
                 article_repoter = soup1.select_one(".article-body__info").text.replace("\n", "").split("／")[0]
 
                 self._insert(article_title, article_href, article_repoter, category, article_date)

@@ -56,8 +56,11 @@ class Ctee(NewsBase):
             }
         ]
         print("工商時報", file = sys.stderr)
+
         for news_setting in tqdm(news_settings):
             print("\n" + news_setting["table_category"], file = sys.stderr)
+
+            # get the news
             self._get(news_setting["category"], news_setting["table_category"])
 
     def _get(self, category : str, table_category : str) -> None:
@@ -70,7 +73,7 @@ class Ctee(NewsBase):
                 None
         """
         # first page url
-        # If access the url too much, IP will be banned
+        # If access the url too frequently, IP will be banned
         try:
             self.driver.get(f"https://ctee.com.tw/category/news/{category}")
         except:
@@ -84,7 +87,7 @@ class Ctee(NewsBase):
             articles = self.driver.find_elements(by = By.TAG_NAME, value = "article")
             duplicate_count = 0
 
-            # traverse articles
+            # traverse 10 articles
             for article in tqdm(articles):
                 title, link = self._find_title_link(article)
 

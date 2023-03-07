@@ -46,6 +46,7 @@ class MoneyDj(NewsBase):
         table_category = "MoneyDj 科技"
         print("\nMoneyDj", file = sys.stderr)
 
+        # loop two categorys
         for i in range(2):
             print("\n" + table_category, file = sys.stderr)
             aes = industry_li[i].find_elements(by = By.TAG_NAME, value = "a")
@@ -61,8 +62,10 @@ class MoneyDj(NewsBase):
                 r = requests.get(link)
                 soup = BeautifulSoup(r.text, "html.parser")
                 repoter = soup.select_one('p').text
+                # date ex: 2023/03/07 11:04
                 date = soup.find("span", {"id" : "MainContent_Contents_lbDate"}).text.split(" ")[0].replace("/", "-")
 
+                # repoter ex: MoneyDJ新聞 2023-03-07 11:04:48 記者 許曉嘉 報導
                 if repoter[-2:] != "報導" :
                     repoter = "NULL"
                 else:

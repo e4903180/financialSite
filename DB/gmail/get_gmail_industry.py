@@ -202,7 +202,7 @@ class GetGmailIndustry():
         self._db.commit()
 
     def _handle_mail(self, id : str) -> None:
-        """Handle all mail
+        """Handle single mail
 
             Args :
                 id : (str) mail id

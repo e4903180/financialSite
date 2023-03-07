@@ -1,4 +1,3 @@
-# %%
 import getGmail_Class
 import sys, logging
 from tqdm import trange
@@ -7,14 +6,11 @@ import pandas as pd
 import json
 import base64
 import os
-import urllib
 
 root_path = json.load(open("../../root_path.json"))
 
-# %%
 gGC = getGmail_Class.gmailService()
 
-# %%
 Num, Name, investment_company, Date, Filename, ID, Recommend = [[] for i in range(7)]
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
@@ -97,6 +93,5 @@ df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : invest
 
 logging.info('Updating email end')
 
-# %%
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
 df.to_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName, index = False)

@@ -19,7 +19,7 @@ exports.newestNews20 = async function(req, res){
     let query = `SELECT date, title, link FROM news WHERE category LIKE "%工商時報%" ORDER BY date DESC LIMIT 20;\
                 SELECT date, title, link FROM news WHERE category LIKE "%MoneyDj%" ORDER BY date DESC LIMIT 20;\
                 SELECT date, title, link FROM news WHERE category LIKE "%經濟日報%" ORDER BY date DESC LIMIT 20;\
-                SELECT date, title, link FROM statementdog ORDER BY date DESC LIMIT 20;`
+                SELECT date, title, link FROM news WHERE category="財報狗" ORDER BY date DESC LIMIT 20;`
     let result = []
 
     try {

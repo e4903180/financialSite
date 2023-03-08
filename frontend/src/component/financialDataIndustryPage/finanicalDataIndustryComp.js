@@ -13,8 +13,8 @@ function FinancialDataIndustryComp() {
     
     const last3Month = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
    
-    const [startDate, setStartDate] = useState("")
-    const [endDate, setEndDate] = useState("")
+    const [startDate, setStartDate] = useState(last3Month)
+    const [endDate, setEndDate] = useState(today)
     const [column, setColumn] = useState("title")
     const [investmentCompany, setInvestmentCompany] = useState("")
     const [pattern, setPattern] = useState("")
@@ -30,6 +30,7 @@ function FinancialDataIndustryComp() {
         axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
             "startDate" : startDate,
             "endDate" : endDate,
+            "column" : column,
             "pattern" : pattern,
             "investmentCompany" : investmentCompany
         } })
@@ -92,12 +93,12 @@ function FinancialDataIndustryComp() {
                     <div className = 'form-group row py-3'>
                         <label htmlFor = "startDate" className = "col-md-3 col-form-label text-center">日期:</label>
                         <div className = 'col-md-3'>
-                            <input type = "date" id = "startDate" className = "form-control" onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
+                            <input type = "date" id = "startDate" className = "form-control" onChange = {e => setStartDate(e.target.value)} value = { last3Month }></input>
                         </div>
 
                         <label htmlFor = "endDate" className = "col-md-3 col-form-label text-center">到</label>
                         <div className = 'col-md-3'>
-                            <input type = "date" id = "endDate" className = "form-control" onChange = {e => setEndDate(e.target.value)} value = { endDate }></input>
+                            <input type = "date" id = "endDate" className = "form-control" onChange = {e => setEndDate(e.target.value)} value = { today }></input>
                         </div>
                     </div>
 

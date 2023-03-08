@@ -15,6 +15,8 @@ import Badge from '@mui/material/Badge';
 import "./navbar.css";
 import { IconButton, Tooltip } from '@mui/material';
 import { config, WSContext } from '../../constant';
+import { NavDropdownMenu, DropdownSubmenu } from "react-bootstrap-submenu";
+import "react-bootstrap-submenu/dist/index.css";
 
 function NavbarComp() {
     const [show, setShow] = useState(false);
@@ -99,7 +101,7 @@ function NavbarComp() {
                     <Navbar.Toggle aria-controls = "basic-navbar-nav" />
                     <Navbar.Collapse id =" basic-navbar-nav">
                         <Nav className = "ms-auto">
-                            <NavDropdown title = {
+                            <NavDropdownMenu title = {
                                 <>
                                     <Tooltip title = "資料庫相關功能" style = {{ height : "1vh" }}>
                                         <IconButton>
@@ -109,19 +111,33 @@ function NavbarComp() {
                                     資料庫相關功能
                                 </>
                             } align = "end">
-                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/database"}>個股綜合資料庫查詢</NavDropdown.Item>
-                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry"}>產業研究資料庫查詢</NavDropdown.Item>
-                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/news"}>新聞資料庫查詢</NavDropdown.Item>
+                                <DropdownSubmenu href = "#" title = '資料庫查詢' alignRight>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/database"}>個股綜合資料庫</NavDropdown.Item>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/financialDataIndustry"}>產業研究報告資料庫</NavDropdown.Item>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/financialDataOther"}>其他研究報告資料庫</NavDropdown.Item>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/news"}>新聞資料庫</NavDropdown.Item>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/calendar"}>法說會</NavDropdown.Item>
+                                </DropdownSubmenu>
+                                
                                 <NavDropdown.Item href = {config["rootPathPrefix"] + "/post_board"}>個股推薦</NavDropdown.Item>
                                 <NavDropdown.Item href = {config["rootPathPrefix"] + "/line_memo"}>Line memo</NavDropdown.Item>
-                                <NavDropdown.Item href = {config["rootPathPrefix"] + "/calendar"}>法說會行事曆</NavDropdown.Item>
                                 <NavDropdown.Item href = {config["rootPathPrefix"] + "/meeting_data"}>Meeting data</NavDropdown.Item>
                                 <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_analysis"}>產業分析上傳</NavDropdown.Item>
-                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_upload"}>產業研究報告上傳</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_edit"}>產業研究報告修改</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_upload"}>個股研究報告上傳</NavDropdown.Item> }
-                                { superUser === 1 && <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_edit"}>個股研究報告修改</NavDropdown.Item> }
-                            </NavDropdown>
+
+                                { superUser === 1 && <DropdownSubmenu href = "#" title = '其他產業研究報告編輯' alignRight>
+                                        <NavDropdown.Item href = {config["rootPathPrefix"] + "/other_upload"}>其他產業研究報告上傳</NavDropdown.Item>
+                                        <NavDropdown.Item href = {config["rootPathPrefix"] + "/other_edit"}>其他產業研究報告修改</NavDropdown.Item>
+                                    </DropdownSubmenu> }
+
+                                { superUser === 1 && <DropdownSubmenu href = "#" title = '個股研究報告編輯' alignRight>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_upload"}>個股研究報告上傳</NavDropdown.Item>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_edit"}>個股研究報告修改</NavDropdown.Item>
+                                </DropdownSubmenu> }
+
+                                { superUser === 1 && <DropdownSubmenu href = "#" title = '產業研究報告編輯' alignRight>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/industry_upload"}>產業研究報告上傳</NavDropdown.Item>
+                                </DropdownSubmenu> }
+                            </NavDropdownMenu>
                             
                             <Nav.Link href = {config["rootPathPrefix"] + "/tool_nav"}>
                                 <Tooltip title = "分析工具" style = {{ height : "1vh" }}>

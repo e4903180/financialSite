@@ -4,7 +4,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { config } from '../../constant';
 import NewsItem from './newsItem';
-import StatementdogItem from './statementdogItem';
 
 function NewsComp() {
     var Today = new Date()
@@ -17,7 +16,6 @@ function NewsComp() {
     const [pageSize0, setPageSize0] = useState(10)
 
     const [dataNews, setDataNews] = useState([])
-    const [dataStatementdog, setDataStatementdog] = useState([])
 
     const columns_summary_news = [
         { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },

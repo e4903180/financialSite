@@ -264,8 +264,8 @@ exports.news_summary = async function(req, res){
     } 
 }
 
-exports.industry_search = async function(req, res){
-    let query = "SELECT * FROM financialDataIndustry WHERE 1=1"
+exports.other_search = async function(req, res){
+    let query = "SELECT * FROM financialDataOther WHERE 1=1"
     let param = []
 
     if(req.query.pattern !== ""){
@@ -293,4 +293,29 @@ exports.industry_search = async function(req, res){
         console.log(error)
         return res.status(400).send("error")
     } 
+}
+
+exports.industry_search = async function(req, res){
+    let query = `SELECT * FROM financialDataIndustry WHERE 1=1`
+    let param = []
+
+    if(req.query.startDate !== "" && req.query.endDate !== ""){
+        query += " AND date BETWEEN ? AND ?"
+        param.push(req.query.startDate, req.query.endDate)
+    }
+
+    if(req.query.pattern !== ""){
+        query += " AND ?? LIKE ?"
+	    param.push(req.query.column, `%${req.query.pattern}%`)
+    }
+
+    query += " ORDER BY date DESC"
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 }

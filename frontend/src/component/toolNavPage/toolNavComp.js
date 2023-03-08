@@ -1,5 +1,5 @@
 import React from 'react';
-import { baseAna, config, elseAna, techAna } from '../../constant';
+import { baseAna, elseAna, techAna } from '../../constant';
 
 function ToolNavComp() {
     return (

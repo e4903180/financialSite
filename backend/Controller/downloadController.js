@@ -32,8 +32,8 @@ exports.single_financialData_download = async function(req, res){
     }
 };
 
-exports.single_financialDataIndustry_download = function(req, res){
-    res.download(config["FINANCIALDATAINDUSTRY_PATH"] + req.query.filename)
+exports.single_financialDataOther_download = function(req, res){
+    res.download(config["FINANCIALDATAOTHER_PATH"] + req.query.filename)
 };
 
 exports.single_post_board_memo_download = function(req, res){

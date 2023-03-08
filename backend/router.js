@@ -14,9 +14,10 @@ const StockTool = require('./Controller/StockToolContrtoller');
 const meetingDataUp = require('./Controller/meeting_data_uploadController');
 const PostUp = require('./Controller/post_board_uploadController');
 const industry_analysisUp = require('./Controller/industry_analysis_uploadController')
+const gmailIndustry_analysisUp = require('./Controller/industryUpdateController');
 const LineMemoUp = require('./Controller/lineMemo_uploadController');
 const SelfUp = require('./Controller/self_uploadController');
-const InUp = require('./Controller/industryUploadController');
+const OtUp = require('./Controller/otherUploadController');
 const Download = require('./Controller/downloadController');
 
 const Limiter = rateLimit({
@@ -53,13 +54,13 @@ dataRouter.get("/download/single_meetingData", Download.single_meetingData_memo_
 dataRouter.get("/download/single_industry_analysis", Download.single_industry_analysis_download)
 dataRouter.get("/download/single_twse_chPDF", Download.single_twse_chPDF_download)
 dataRouter.get("/download/single_twse_enPDF", Download.single_twse_enPDF_download)
+dataRouter.get("/download/single_financialDataOther", Download.single_financialDataOther_download)
 
 /* Download table router */
 dataRouter.get("/download/financialData", Download.financialData2csv_download)
 dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
 dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
 dataRouter.get("/download/calender", Download.calender2csv_download)
-dataRouter.get("/download/single_financialDataIndustry", Download.single_financialDataIndustry_download)
 
 /* Upload files router */
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
@@ -67,7 +68,8 @@ dataRouter.post("/upload/meeting_data_upload", meetingDataUp.meetingData_middleW
 dataRouter.post("/upload/industry_analysis_upload", industry_analysisUp.industry_analysis_middleWare, industry_analysisUp.industry_analysis_upload)
 dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 dataRouter.post("/upload/self_upload", SelfUp.self_upload_middleWare, SelfUp.self_upload)
-dataRouter.post("/upload/industry_upload", InUp.industry_upload_middleWare, InUp.industry_upload)
+dataRouter.post("/upload/other", OtUp.other_upload_middleWare, OtUp.other_upload)
+dataRouter.post("/upload/industry", gmailIndustry_analysisUp.industry_upload_middleWare, gmailIndustry_analysisUp.industry_upload)
 
 /* Get DB data */
 dataRouter.get("/newestNews20", Data.newestNews20)
@@ -87,11 +89,12 @@ dataRouter.get("/news", Data.news)
 
 /* DB search router */
 dataRouter.post("/financial_search", dbSearch.financial_search)
-dataRouter.get("/industry_search", dbSearch.industry_search)
+dataRouter.get("/other_search", dbSearch.other_search)
 dataRouter.post("/calender_search", dbSearch.calender_search)
 dataRouter.post("/post_board_search", dbSearch.post_board_search)
 dataRouter.post("/lineMemo_search", dbSearch.lineMemo_search)
 dataRouter.post("/ticker_search", dbSearch.ticker_search)
+dataRouter.post("/industry_search", dbSearch.industry_search)
 dataRouter.get("/news_search_today", dbSearch.news_search_today)
 dataRouter.get("/news_search_past", dbSearch.news_search_past)
 dataRouter.get("/news_search", dbSearch.news_search)

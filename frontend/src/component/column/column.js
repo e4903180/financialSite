@@ -158,9 +158,19 @@ export const columns_home_news = [
         rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
 ];
 
+export const columns_financialDataOther = [
+    { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+    { field: "investmentCompany", headerName : "投顧公司", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: "title", headerName : "標題", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
+        renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialDataOther?filename=" + rowData.value } 
+    target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
+];
+
 export const columns_financialDataIndustry = [
     { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "investmentCompany", headerName : "投顧公司", flex: 1, headerAlign: 'center', align: 'center' },
+    { field: "category", headerName : "產業類別", flex: 1, headerAlign: 'center', align: 'center' },
     { field: "title", headerName : "標題", flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
         renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialDataIndustry?filename=" + rowData.value } 

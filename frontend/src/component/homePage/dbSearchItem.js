@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
-import { columns1, columns4, columns_financialDataIndustry, columns_news } from '../column/column';
+import { columns1, columns4, columns_financialDataOther, columns_news } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
 function DbSearchItem() {
@@ -68,7 +68,7 @@ function DbSearchItem() {
                 setPage1(0)
             })
             
-            axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
+            axios.get(config["rootApiIP"] + "/data/other_search", { params : {
                 "startDate" : input2,
                 "endDate" : input3,
                 "pattern" : ticker.split(" ")[1],
@@ -156,7 +156,7 @@ function DbSearchItem() {
             setPage1(0)
         })
 
-        axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
+        axios.get(config["rootApiIP"] + "/data/other_search", { params : {
             "startDate" : last3Month,
             "endDate" : today,
             "pattern" : "",
@@ -310,10 +310,10 @@ function DbSearchItem() {
             </div>
 
             <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
-                <h4 className = "text-center">產業研究報告</h4>
+                <h4 className = "text-center">其他研究報告</h4>
 
                 <DataGrid
-                    columns = { columns_financialDataIndustry }
+                    columns = { columns_financialDataOther }
                     rows = { data2 }
                     page = { page2 }
                     onPageChange={(newPage) => setPage2(newPage)}
@@ -354,29 +354,6 @@ function DbSearchItem() {
                     disableSelectionOnClick = { true }
                 />
             </div>
-
-            {/* <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
-                <h4 className = "text-center">新聞狗</h4>
-
-                <DataGrid
-                    columns = { columns_statementdog }
-                    rows = { data5 }
-                    page = { page5 }
-                    onPageChange={(newPage) => setPage5(newPage)}
-                    pageSize = { pageSize5 }
-                    onPageSizeChange={ (newPageSize) => setPageSize5(newPageSize) }
-                    rowsPerPageOptions = {[5, 10, 20]}
-                    getRowId = { row => row.ID }
-                    components = {{ Toolbar: GridToolbar }}
-                    componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                    pagination
-                    disableColumnMenu
-                    disableColumnSelector
-                    disableDensitySelector
-                    disableColumnFilter
-                    disableSelectionOnClick = { true }
-                />
-            </div> */}
         </>
     );
 }

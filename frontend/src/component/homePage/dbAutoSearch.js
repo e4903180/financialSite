@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
-import { columns1, columns4, columns_financialDataIndustry, columns_news } from '../column/column';
+import { columns1, columns4, columns_financialDataOther, columns_news } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
 function DbAutoSearch() {
@@ -20,7 +20,6 @@ function DbAutoSearch() {
     const [data2, setData2] = useState([]);
     const [data3, setData3] = useState([]);
     const [data4, setData4] = useState([]);
-    // const [data5, setData5] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page1, setPage1] = useState(0);
     const [pageSize1, setPageSize1] = useState(20);
@@ -30,8 +29,6 @@ function DbAutoSearch() {
     const [pageSize3, setPageSize3] = useState(20);
     const [page4, setPage4] = useState(0);
     const [pageSize4, setPageSize4] = useState(20);
-    // const [page5, setPage5] = useState(0);
-    // const [pageSize5, setPageSize5] = useState(20);
     const [ticker, setTicker] = useState("");
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState(last3Month);
@@ -70,7 +67,7 @@ function DbAutoSearch() {
                 setPage1(0)
             })
             
-            axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
+            axios.get(config["rootApiIP"] + "/data/other_search", { params : {
                 "startDate" : input2,
                 "endDate" : input3,
                 "pattern" : ticker.split(" ")[1],
@@ -121,23 +118,6 @@ function DbAutoSearch() {
                 setData4([])
                 setPage4(0)
             })
-
-            // axios.get(config["rootApiIP"] + "/data/news_statmentdog_search", { params :{
-            //     "startDate" : input2,
-            //     "endDate" : input3,
-            //     "pattern" : ticker.split(" ")[1],
-            // }})
-            // .then((res) => {
-            //     setData5(res.data)
-            //     setLoading(false)
-            //     setPage5(0)
-            // })
-            // .catch((res) => {
-            //     if(res.response.data === "Session expired") window.location.reload()
-
-            //     setData5([])
-            //     setPage5(0)
-            // })
         }
     }
 
@@ -158,7 +138,7 @@ function DbAutoSearch() {
             setPage1(0)
         })
 
-        axios.get(config["rootApiIP"] + "/data/industry_search", { params : {
+        axios.get(config["rootApiIP"] + "/data/other_search", { params : {
             "startDate" : last3Month,
             "endDate" : today,
             "pattern" : param.stock_num_name.split(" ")[1],
@@ -312,10 +292,10 @@ function DbAutoSearch() {
             </div>
 
             <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
-                <h4 className = "text-center">產業研究報告</h4>
+                <h4 className = "text-center">其他研究報告</h4>
 
                 <DataGrid
-                    columns = { columns_financialDataIndustry }
+                    columns = { columns_financialDataOther }
                     rows = { data2 }
                     page = { page2 }
                     onPageChange={(newPage) => setPage2(newPage)}
@@ -356,29 +336,6 @@ function DbAutoSearch() {
                     disableSelectionOnClick = { true }
                 />
             </div>
-
-            {/* <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
-                <h4 className = "text-center">新聞狗</h4>
-
-                <DataGrid
-                    columns = { columns_statementdog }
-                    rows = { data5 }
-                    page = { page5 }
-                    onPageChange={(newPage) => setPage5(newPage)}
-                    pageSize = { pageSize5 }
-                    onPageSizeChange={ (newPageSize) => setPageSize5(newPageSize) }
-                    rowsPerPageOptions = {[5, 10, 20]}
-                    getRowId = { row => row.ID }
-                    components = {{ Toolbar: GridToolbar }}
-                    componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                    pagination
-                    disableColumnMenu
-                    disableColumnSelector
-                    disableDensitySelector
-                    disableColumnFilter
-                    disableSelectionOnClick = { true }
-                />
-            </div> */}
         </>
     );
 }

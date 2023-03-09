@@ -35,7 +35,7 @@ function ReasearchItem(props) {
             </div>
 
             <div className = 'row pt-3 mx-auto'>
-                <h4 className = "text-center">其他研究報告</h4>
+                <h4 className = "text-center">產業研究報告</h4>
 
                 <StripedDataGrid
                     columns = { columns_financialDataOther }

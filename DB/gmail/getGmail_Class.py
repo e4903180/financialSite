@@ -168,7 +168,8 @@ class gmailService:
         
         a_tags = content.find_all('a')
         temp_num, temp_name, temp_filename, temp_recommend = [[] for i in range(4)]
-
+        duplicate = []
+        
         for a in range(len(a_tags)):
             if re.findall(r"https://report.yuanta-consulting.com.tw/DL.aspx\?r\=\d{6}", a_tags[a].getText()):
                 try:
@@ -183,8 +184,17 @@ class gmailService:
                         return [num], [name],  [num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"], [recommend]
                 except:
                     return temp_num, temp_name, temp_filename, temp_recommend
-            elif "https://www.ibfs.com.tw/CancelConsulting" in a_tags[a].getText():
+            
+            elif "https://www.ibfs.com.tw/CancelConsulting" in a_tags[a]["href"]:
+                if a_tags[a]["href"] in duplicate:
+                    continue
+
+                duplicate.append(a_tags[a]["href"])
+                
                 for num, name in stock_num_name:
+                    if not os.path.isdir(self.rootPath + "/" + num + "/temp"):
+                        os.mkdir(self.rootPath + "/" + num + "/temp")
+
                     options = webdriver.ChromeOptions()
                     options.add_argument('--headless')
                     options.add_experimental_option('prefs', {
@@ -196,7 +206,7 @@ class gmailService:
 
                     s = Service(ChromeDriverManager().install())
                     driver = webdriver.Chrome(options = options, service = s)
-                    driver.get(a_tags[a].getText())
+                    driver.get(a_tags[a]["href"])
 
                     for file in os.listdir(self.rootPath + "/" + num + "/temp/"):
                         shutil.move(self.rootPath + "/" + num + "/temp/" + file,
@@ -206,7 +216,7 @@ class gmailService:
                     temp_name.append(name)
                     temp_filename.append(num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
                     temp_recommend.append(recommend[0])
-                os.rmdir(self.rootPath + "/" + num + "/temp")
+                    os.rmdir(self.rootPath + "/" + num + "/temp")
 
         return temp_num, temp_name, temp_filename, temp_recommend
     

@@ -55,6 +55,7 @@ dataRouter.get("/download/single_industry_analysis", Download.single_industry_an
 dataRouter.get("/download/single_twse_chPDF", Download.single_twse_chPDF_download)
 dataRouter.get("/download/single_twse_enPDF", Download.single_twse_enPDF_download)
 dataRouter.get("/download/single_financialDataOther", Download.single_financialDataOther_download)
+dataRouter.get("/download/single_financialDataIndustry", Download.single_financialDataIndustry_download)
 
 /* Download table router */
 dataRouter.get("/download/financialData", Download.financialData2csv_download)

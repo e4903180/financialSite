@@ -36,6 +36,10 @@ exports.single_financialDataOther_download = function(req, res){
     res.download(config["FINANCIALDATAOTHER_PATH"] + req.query.filename)
 };
 
+exports.single_financialDataIndustry_download = function(req, res){
+    res.download(config["FINANCIALDATAINDUSTRY_PATH"] + req.query.filename)
+};
+
 exports.single_post_board_memo_download = function(req, res){
     res.download(config["POST_BOARD_MEMO_PATH"] + req.query.filename)
 };

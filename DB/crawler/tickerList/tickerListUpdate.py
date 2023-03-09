@@ -10,8 +10,11 @@ from selenium.webdriver.common.by import By
 import MySQLdb
 import MySQLdb.cursors
 import json
+import sys
+import datetime
 
 db_config = json.load(open("../../../db_config.json"))
+root_path = json.load(open("../../../root_path.json"))
 
 class TickerUpdate():
     def __init__(self) -> None:
@@ -142,6 +145,7 @@ class TickerUpdate():
             self._update(categorys, key)
 
 if __name__ == "__main__":
+    sys.stderr = open(root_path["TICKER_UPDATE_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     TLU = TickerUpdate()
 
     TLU.run()

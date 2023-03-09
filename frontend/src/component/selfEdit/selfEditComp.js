@@ -35,7 +35,7 @@ function SelfEditComp() {
         { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
         { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
-        { field: 'recommend', headerName: '推薦', flex: 1, headerAlign: 'center', align: 'center', editable: true },
+        { field: 'recommend', headerName: '投資建議', flex: 1, headerAlign: 'center', align: 'center', editable: true },
         { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
             renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialData?filename=" + rowData.value } 
         target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },

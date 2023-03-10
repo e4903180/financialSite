@@ -41,7 +41,8 @@ try:
     for i in trange(len(df)):
         temp = df.iloc[i]
         key = find_key(temp["Number"])
-        
+        logging.info(temp)
+
         cursor.execute('INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend) '
                 'VALUES (%s, %s, %s, %s, %s);', (key, temp["Date"].replace("_", "-"), temp["Investment company"], temp["Filename"], temp["Recommend"]))
         db.commit()

@@ -95,7 +95,6 @@ for i in trange(len(ID)):
 
 df = pd.DataFrame({ "Number" : Num, "Name" : Name, "Investment company" : investment_company, "Date" : Date, "Filename" : Filename, "Recommend" : Recommend })
 
-logging.info(df)
 logging.info('Updating email end')
 
 csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"

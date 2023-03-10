@@ -31,6 +31,19 @@ def find_key(stock_num):
         
     return result["ID"][0]
 
+def isDuplicate(ticker_id, date, investmentCompany, filename, recommend):
+    query = "SELECT * from financialData WHERE ticker_id=%s AND date=%s AND \
+        investmentCompany=%s AND filename=%s AND recommend=%s;"
+
+    param = (ticker_id, date, investmentCompany, filename, recommend)
+
+    cursor.execute(query, param)
+    db.commit()
+    
+    result = pd.DataFrame.from_dict(cursor.fetchall())
+
+    return False if result.empty else True
+
 try:
     csvName = datetime.now().strftime("%Y_%m_%d") + ".csv"
     df = pd.read_csv(root_path["GMAIL_DATA_DATAFRAME_PATH"] + "/" + csvName)
@@ -41,8 +54,11 @@ try:
     for i in trange(len(df)):
         temp = df.iloc[i]
         key = find_key(temp["Number"])
-        logging.info(temp)
 
+        if isDuplicate(key, temp["Date"].replace("_", "-"), temp["Investment company"], temp["Filename"], temp["Recommend"]):
+            continue
+        
+        logging.info(temp)
         cursor.execute('INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend) '
                 'VALUES (%s, %s, %s, %s, %s);', (key, temp["Date"].replace("_", "-"), temp["Investment company"], temp["Filename"], temp["Recommend"]))
         db.commit()

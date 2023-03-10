@@ -26,7 +26,7 @@ class GetGmailIndustry():
         self._service = build('gmail', 'v1', credentials = self._creds)
         self._monthMap = { "Jan" : "01", "Feb" : "02", "Mar" : "03", "Apr" : "04", "May" : "05", "Jun" : "06",
            "Jul" : "07", "Aug" : "08", "Sep" : "09", "Oct" : "10", "Nov" : "11", "Dec" : "12" }
-        self._rootPath = root_path["GMAIL_DATA_INDUSTRY_DATA_PATH"]
+        self._rootPath = root_path["GMAIL_DATA_OTHER_DATA_PATH"]
         self._investment_company = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)['中文名稱'].to_list()
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
@@ -248,7 +248,7 @@ class GetGmailIndustry():
             self._modifyLabels(message['id'])
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["GMAIL_DATA_INDUSTRY_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["GMAIL_DATA_OTHER_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     GGI = GetGmailIndustry()
 
     GGI.run()

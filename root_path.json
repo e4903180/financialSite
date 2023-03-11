@@ -11,6 +11,8 @@
     "FRED_MONTH_UPDATE_LOG_PATH" : "/home/uikai/financialData/FRED",
     "GMAIL_DATA_INDUSTRY_LOG_PATH" : "/home/uikai/financialData/gmailDataIndustry/log",
     "GMAIL_DATA_INDUSTRY_DATA_PATH" : "/home/uikai/financialData/gmailDataIndustry/data",
+    "GMAIL_DATA_OTHER_LOG_PATH" : "/home/uikai/financialData/gmailDataOther/log",
+    "GMAIL_DATA_OTHER_DATA_PATH" : "/home/uikai/financialData/gmailDataOther/data",
     "GMAIL_DATA_LOG_PATH" : "/home/uikai/financialData/gmailData/log",
     "GMAIL_DATA_DATA_PATH" : "/home/uikai/financialData/gmailData/data",
     "GMAIL_DATA_DATAFRAME_PATH" : "/home/uikai/financialData/gmailData/dataFrame",

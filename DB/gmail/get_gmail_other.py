@@ -169,7 +169,7 @@ class GetGmailIndustry():
             Return :
                 bool
         """
-        query = "SELECT * from financialDataIndustry WHERE date=%s AND investmentCompany=%s AND title=%s AND filename=%s;"
+        query = "SELECT * from financialDataOther WHERE date=%s AND investmentCompany=%s AND title=%s AND filename=%s;"
 
         param = (date, investmentCompany, title, filename)
 
@@ -193,7 +193,7 @@ class GetGmailIndustry():
             Return :
                 None
         """
-        query = "INSERT INTO financialDataIndustry (date, investmentCompany, title, filename) \
+        query = "INSERT INTO financialDataOther (date, investmentCompany, title, filename) \
             VALUE (%s, %s, %s, %s);"
 
         param = (date, investmentCompany, title, filename)

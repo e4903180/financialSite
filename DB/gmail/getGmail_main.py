@@ -58,11 +58,13 @@ for i in trange(len(ID)):
                         with open(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d") + "/" + txt['payload']['parts'][file_ptr]['filename'], 'wb') as f:
                             f.write(file_data)
 
+                # 手動處理
                 gGC.modifyLabels(ID[i], "Label_3480553467383697550")
                 early_stop = True
+
         elif ((header['name'] == 'Subject') and
                 ("CTBC-台股晨報" in header['value'])):
-            gGC.modifyLabels(ID[i], "Label2")
+            gGC.modifyLabels(ID[i], "Label3")
             early_stop = True
 
     if early_stop:

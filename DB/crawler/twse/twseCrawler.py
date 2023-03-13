@@ -148,8 +148,8 @@ class MySQL():
                 None
         """
         query = ("UPDATE calender SET `Time`=%s, `Form`=%s, `Message`=%s, `chPDF`=%s, `enPDF`=%s, `More_information`=%s, `Video_address`=%s, "\
-            "`Attention`=%s WHERE `ticker_id`=%s AND `date`=%s;")
-        param = (Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention, key, Date)
+            "`Attention`=%s WHERE `ticker_id`=%s AND `date`=%s AND `Time`=%s;")
+        param = (Time, Form, Message, chPDF, enPDF, More_information, Video_address, Attention, key, Date, Time)
 
         self._cursor.execute(query, param)
         self._db.commit()

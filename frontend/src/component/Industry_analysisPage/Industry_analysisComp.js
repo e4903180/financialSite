@@ -2,7 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import IndustryAnalysisUploadComp from './Industry_analysis_uploadComp';
-import { columns5 } from '../column/column';
+import { columns_industry_analysis } from '../column/column';
 import { config } from '../../constant';
 
 function IndustryAnalysisComp() {
@@ -25,7 +25,7 @@ function IndustryAnalysisComp() {
 
             <div className = 'row mx-auto mt-5 text-center' style = {{ width : "80%", height : "400px" }}>
                 <DataGrid
-                    columns = { columns5 }
+                    columns = { columns_industry_analysis }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}

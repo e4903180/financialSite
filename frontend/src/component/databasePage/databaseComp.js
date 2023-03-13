@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { columns, columns1, columns2, columns3, columns4 } from '../column/column';
+import { columns_financialData, columns_post_board_memo, columns_line_memo, columns_twse, columns_all_table_summary } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
@@ -137,7 +137,7 @@ function DatabaseComp() {
                             "endDate" : input3,
                             "investmentCompany" : input4,
                         }).then(res => {
-                            set_colume_table(columns1)
+                            set_colume_table(columns_financialData)
                             setData1(res.data)
                             setSearch(true)
                             setLoading(false)
@@ -158,7 +158,7 @@ function DatabaseComp() {
                             "recommend" : "",
                             "provider" : ""
                         }).then(res => {
-                            set_colume_table(columns2)
+                            set_colume_table(columns_post_board_memo)
                             setData1(res.data)
                             setSearch(true)
                             setLoading(false)
@@ -179,7 +179,7 @@ function DatabaseComp() {
                             "startDate" : input2,
                             "endDate" : input3,
                         }).then(res => {
-                            set_colume_table(columns3)
+                            set_colume_table(columns_line_memo)
                             setData1(res.data)
                             setSearch(true)
                             setLoading(false)
@@ -200,7 +200,7 @@ function DatabaseComp() {
                             "startDate" : input2,
                             "endDate" : input3,
                         }).then(res => {
-                            set_colume_table(columns4)
+                            set_colume_table(columns_twse)
                             setData1(res.data)
                             setSearch(true)
                             setLoading(false)
@@ -304,7 +304,7 @@ function DatabaseComp() {
                     <h3 className = "display-6 text-center">資料庫總表</h3>
 
                     <DataGrid
-                        columns = { columns } 
+                        columns = { columns_all_table_summary } 
                         rows = { data }
                         getRowId = { row => row.dbName }
                         autoHeight
@@ -413,7 +413,7 @@ function DatabaseComp() {
                     <h4 className = "text-center">個股研究資料</h4>
 
                     <DataGrid
-                        columns = { columns1 }
+                        columns = { columns_financialData }
                         rows = { data1 }
                         page = { page1 }
                         onPageChange={(newPage) => setPage1(newPage)}
@@ -436,7 +436,7 @@ function DatabaseComp() {
                     <h4 className = "text-center">Post board memo</h4>
 
                     <DataGrid
-                        columns = { columns2 }
+                        columns = { columns_post_board_memo }
                         rows = { data2 }
                         page = { page2 }
                         onPageChange={(newPage) => setPage2(newPage)}
@@ -459,7 +459,7 @@ function DatabaseComp() {
                     <h4 className = "text-center">Line memo</h4>
 
                     <DataGrid
-                        columns = { columns3 }
+                        columns = { columns_line_memo }
                         rows = { data3 }
                         page = { page3 }
                         onPageChange={(newPage) => setPage3(newPage)}
@@ -483,7 +483,7 @@ function DatabaseComp() {
                     <h4 className = "text-center">法說會</h4>
 
                     <DataGrid
-                        columns = { columns4 }
+                        columns = { columns_twse }
                         rows = { data4 }
                         page = { page4 }
                         onPageChange={(newPage) => setPage4(newPage)}

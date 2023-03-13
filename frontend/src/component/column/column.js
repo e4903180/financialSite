@@ -2,7 +2,7 @@ import CustomA from "../customA";
 import React from 'react';
 import { config } from "../../constant";
 
-export const columns = [
+export const columns_all_table_summary = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -11,7 +11,7 @@ export const columns = [
     download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
 ];
 
-export const columns1 = [
+export const columns_financialData = [
     { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
@@ -21,7 +21,7 @@ export const columns1 = [
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
-export const columns2 = [
+export const columns_post_board_memo = [
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
@@ -32,7 +32,7 @@ export const columns2 = [
         renderCell : (rowData) => (check_single_post_board_memo_NULL(rowData.value))},
 ];
 
-export const columns3 = [
+export const columns_line_memo = [
     { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
@@ -41,7 +41,7 @@ export const columns3 = [
     { field: 'username', headerName: 'Username', flex: 1, headerAlign: 'center', align: 'center' },
 ];
 
-export const columns4 = [
+export const columns_twse = [
     { field: 'stock_name', headerName: '股票名稱', width: 200, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '法說會日期', width: 200, headerAlign: 'center', align: 'center' },
     { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
@@ -56,7 +56,7 @@ export const columns4 = [
     { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
 ];
 
-export const columns5 = [
+export const columns_industry_analysis = [
     { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'title', headerName: '上傳檔案標題', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},
@@ -66,7 +66,7 @@ export const columns5 = [
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a>  },
 ];
 
-export const columns6 = [
+export const columns_meeting_data = [
     { field: 'username', headerName: '上傳者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '上傳日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'fileName', headerName: '上傳檔案名稱', flex: 1, headerAlign: 'center', sortable: false, align: 'center'},

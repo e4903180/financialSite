@@ -2,7 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import MeetingDataUploadComp from './meetingDataUploadComp';
-import { columns6 } from '../column/column';
+import { columns_meeting_data } from '../column/column';
 import { config } from '../../constant';
 
 function MeetingDataComp() {
@@ -25,7 +25,7 @@ function MeetingDataComp() {
 
             <div className = 'row mx-auto mt-5 text-center' style = {{ width : "80%", height : "400px" }}>
                 <DataGrid
-                    columns = { columns6 }
+                    columns = { columns_meeting_data }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}

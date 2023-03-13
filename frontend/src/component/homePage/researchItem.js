@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { columns1, columns_financialDataIndustry } from '../column/column';
+import { columns_financialData, columns_financialDataIndustry } from '../column/column';
 import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
 import { GridToolbar } from '@mui/x-data-grid';
 
@@ -13,7 +13,7 @@ function ReasearchItem(props) {
                 <h4 className = "text-center">個股研究報告</h4>
 
                 <StripedDataGrid
-                    columns = { columns1 }
+                    columns = { columns_financialData }
                     rows = { props.data[0] }
                     pageSize = { pageSize }
                     onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }

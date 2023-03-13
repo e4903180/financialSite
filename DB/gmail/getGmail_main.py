@@ -62,10 +62,10 @@ for i in trange(len(ID)):
                 gGC.modifyLabels(ID[i], "Label_3480553467383697550")
                 early_stop = True
 
-        elif ((header['name'] == 'Subject') and
-                ("CTBC-台股晨報" in header['value'])):
-            gGC.modifyLabels(ID[i], "Label3")
-            early_stop = True
+        elif header['name'] == 'Subject':
+            if (("CTBC-台股晨報" in header['value']) or ("CTBC-前日" in header['value'])):
+                gGC.modifyLabels(ID[i], "Label3")
+                early_stop = True
 
     if early_stop:
         continue

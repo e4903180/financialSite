@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
-import { columns2 } from '../column/column';
+import { columns_post_board_memo } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
 function SearchBlockComp() {
@@ -122,7 +122,7 @@ function SearchBlockComp() {
 
                 <DataGrid
                     autoHeight
-                    columns = { columns2 }
+                    columns = { columns_post_board_memo }
                     rows = { data }
                     page = { page }
                     onPageChange={(newPage) => setPage(newPage)}

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
-import { columns1, columns4, columns_financialDataOther, columns_news } from '../column/column';
+import { columns_financialData, columns_twse, columns_financialDataOther, columns_news } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
 function DbAutoSearch() {
@@ -248,7 +248,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">個股研究資料</h4>
 
                 <DataGrid
-                    columns = { columns1 }
+                    columns = { columns_financialData }
                     rows = { data1 }
                     page = { page1 }
                     onPageChange={(newPage) => setPage1(newPage)}
@@ -272,7 +272,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
-                    columns = { columns4 }
+                    columns = { columns_twse }
                     rows = { data4 }
                     page = { page4 }
                     onPageChange={(newPage) => setPage4(newPage)}

@@ -231,6 +231,7 @@ class Twse(TwseSelenium, MySQL):
             key = self._get_foreign_key_id(data_td[0].getText().replace("'", ""))
 
             if key == -1:
+                print(f"{data_td[0].getText()} cannot find", file = sys.stderr)
                 continue
 
             self._download_pdf("ch", data_td[0].getText(), data_td[6].getText())
@@ -263,15 +264,15 @@ if __name__ == "__main__":
             twse.run(year = str(current_year), month = str(today.month - 1))
 
     current_month = today.month
-    next_moth = (current_month + 1) % 12
+    next_month = (current_month + 1) % 12
 
-    if next_moth == 0:
-        next_moth = 12
+    if next_month == 0:
+        next_month = 12
 
     twse.run(year = str(current_year), month = str(current_month))
 
     # 判斷下個月是否跨年
-    if next_moth == 1:
-        twse.run(year = str(current_year + 1), month = str(next_moth))
+    if next_month == 1:
+        twse.run(year = str(current_year + 1), month = str(next_month))
     else:
-        twse.run(year = str(current_year), month = str(next_moth))
+        twse.run(year = str(current_year), month = str(next_month))

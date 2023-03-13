@@ -1,6 +1,6 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { config } from '../../constant';
 import { columns_news } from '../column/column';
 import { categoryList } from './categoryList';
@@ -37,6 +37,10 @@ function NewsItem(props) {
             props.setLoading(false)
         })
     }
+
+    useEffect(() => {
+        setPage(0)
+    }, [props.data])
 
     return (
         <>

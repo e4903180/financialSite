@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { columns4 } from '../column/column';
+import { columns_twse } from '../column/column';
 import { config } from '../../constant';
 
 function CalendarComp() {
@@ -80,7 +80,7 @@ function CalendarComp() {
             <div className = 'row mt-3 mx-auto' style = {{minheight : "600px", height : "900px"}}>
                 <div className = 'col-md-10 mx-auto'>
                     <DataGrid
-                        columns = { columns4 }
+                        columns = { columns_twse }
                         rows = { data }
                         page = { page }
                         onPageChange = {(newPage) => setPage(newPage)}

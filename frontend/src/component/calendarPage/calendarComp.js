@@ -18,9 +18,11 @@ function CalendarComp() {
         .then(res => {
             setPage(0)
             setData(res.data)
+
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
+        
     }, [year, month])
 
     function clickEvent(info){

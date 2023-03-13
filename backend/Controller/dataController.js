@@ -187,8 +187,10 @@ exports.calender = async function(req, res){
 
 exports.calenderData = async function(req, res){
     let query = "SELECT calender.*, ticker_list.stock_name\
-        FROM calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE YEAR(date)=? AND MONTH(date)=?;"
+        FROM calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE YEAR(date)=? AND MONTH(date)=?"
     let param = [req.body.year, req.body.month]
+
+    query += " ORDER BY date ASC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

@@ -116,7 +116,7 @@ function NavbarComp() {
                                     <NavDropdown.Item href = {config["rootPathPrefix"] + "/financialDataIndustry"}>產業研究報告資料庫</NavDropdown.Item>
                                     <NavDropdown.Item href = {config["rootPathPrefix"] + "/financialDataOther"}>其他研究報告資料庫</NavDropdown.Item>
                                     <NavDropdown.Item href = {config["rootPathPrefix"] + "/news"}>新聞資料庫</NavDropdown.Item>
-                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/calendar"}>法說會</NavDropdown.Item>
+                                    <NavDropdown.Item href = {config["rootPathPrefix"] + "/calendar"}>法說會資料庫</NavDropdown.Item>
                                 </DropdownSubmenu>
                                 
                                 <NavDropdown.Item href = {config["rootPathPrefix"] + "/post_board"}>個股推薦</NavDropdown.Item>

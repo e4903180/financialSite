@@ -1,27 +1,21 @@
-# %%
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
 import pickle
 import os.path
 import base64
-from tqdm import trange
 from bs4 import BeautifulSoup
 import pandas as pd
 from apiclient import errors
 import re
 import requests
 import urllib
-import shutil
 import json
+import urllib.parse
+from urllib.parse import urlparse, parse_qs, quote
 
 root_path = json.load(open("../../root_path.json"))
 
-# %%
 class gmailService:
     def __init__(self):
         # Define the SCOPES. If modifying it, delete the token.pickle file.
@@ -123,23 +117,23 @@ class gmailService:
                 if investment_company_res != "":
                     self.check_pdf_dir(num)
 
-                    with open(self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf", 'wb') as f:
+                    with open(f"{self.rootPath}/{num}/{num}_{name}_{date.replace('-', '')}_{investment_company_res}_{recommend[i]}.pdf", 'wb') as f:
                         f.write(file_data)
                     
                     numList.append(num)
                     nameList.append(name)
-                    filenameList.append(num + "-" + name + "-" + date + "-" + investment_company_res + "-" + recommend[i] + ".pdf")
+                    filenameList.append(f"{num}_{name}_{date.replace('-', '')}_{investment_company_res}_{recommend[i]}.pdf")
                     recommendList.append(recommend[i])
                     i += 1
                 else:
                     self.check_pdf_dir(num)
                     
-                    with open(self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf", 'wb') as f:
+                    with open(f"{self.rootPath}/{num}/{num}_{name}_{date.replace('-', '')}_NULL_{recommend[i]}.pdf", 'wb') as f:
                         f.write(file_data)
                         
                     numList.append(num)
                     nameList.append(name)
-                    filenameList.append(num + "-" + name + "-" + date + "-NULL-" + recommend[i] + ".pdf")
+                    filenameList.append(f"{num}_{name}_{date.replace('-', '')}_NULL_{recommend[i]}.pdf")
                     recommendList.append(recommend[i])
                     i += 1
 
@@ -179,9 +173,9 @@ class gmailService:
 
                     for num, name in stock_num_name:
                         self.check_pdf_dir(num)
-                        file_rename = self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"
+                        file_rename = f"{self.rootPath}/{num}/{num}_{name}_{date.replace('-', '')}_元大_{recommend[0]}.pdf"
                         urllib.request.urlretrieve(pdfurl, file_rename)
-                        return [num], [name],  [num + "-" + name + "-" + date + "-元大-" + recommend[0] + ".pdf"], [recommend]
+                        return [num], [name],  [f"{num}_{name}_{date.replace('-', '')}_元大_{recommend[0]}.pdf"], [recommend]
                 except:
                     return temp_num, temp_name, temp_filename, temp_recommend
             
@@ -192,31 +186,19 @@ class gmailService:
                 duplicate.append(a_tags[a]["href"])
                 
                 for num, name in stock_num_name:
-                    if not os.path.isdir(self.rootPath + "/" + num + "/temp"):
-                        os.mkdir(self.rootPath + "/" + num + "/temp")
+                    date_split = date.split("-")
+                    origin_url = urlparse(a_tags[a]["href"])
+                    param_name = name.replace("*", "")
 
-                    options = webdriver.ChromeOptions()
-                    options.add_argument('--headless')
-                    options.add_experimental_option('prefs', {
-                        "download.default_directory": self.rootPath + "/" + num + "/temp",
-                        "download.prompt_for_download": False, #To auto download the file
-                        "download.directory_upgrade": True,
-                        "plugins.always_open_pdf_externally": True #It will not show PDF directly in chrome
-                    })
-
-                    s = Service(ChromeDriverManager().install())
-                    driver = webdriver.Chrome(options = options, service = s)
-                    driver.get(a_tags[a]["href"])
-
-                    for file in os.listdir(self.rootPath + "/" + num + "/temp/"):
-                        shutil.move(self.rootPath + "/" + num + "/temp/" + file,
-                                    self.rootPath + "/" + num + "/" + num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
+                    pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \
+                    f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{num}{param_name}'.encode('utf-8'))}{date_split[1]}{date_split[2]}{date_split[0]}.pdf"
+                    file_rename = f"{self.rootPath}/{num}/{num}_{name}_{date.replace('-', '')}_國票_{recommend[0]}.pdf"
+                    urllib.request.urlretrieve(pdfurl, file_rename)
                     
                     temp_num.append(num)
                     temp_name.append(name)
-                    temp_filename.append(num + "-" + name + "-" + date + "-國票-" + recommend[0] + ".pdf")
+                    temp_filename.append(f"{num}_{name}_{date.replace('-', '')}_國票_{recommend[0]}.pdf")
                     temp_recommend.append(recommend[0])
-                    os.rmdir(self.rootPath + "/" + num + "/temp")
 
         return temp_num, temp_name, temp_filename, temp_recommend
     
@@ -274,7 +256,7 @@ class gmailService:
                     month = str(monthMap[temp[1]]).zfill(2)
                     year = temp[2]
 
-                    date = year + "_" + month + "_" + day
+                    date = year + "-" + month + "-" + day
                     
                     if display:
                         print("Date: ", date)
@@ -289,7 +271,7 @@ class gmailService:
                     month = str(monthMap[temp[1]]).zfill(2)
                     year = temp[2]
 
-                    date = year + "_" + month + "_" + day
+                    date = year + "-" + month + "-" + day
                     
                     if display:
                         print("Date: ", date)

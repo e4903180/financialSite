@@ -106,7 +106,7 @@ exports.calender_search = async function(req, res){
         param.push(req.body.startDate, req.body.endDate)
     }
 
-    query += " ORDER BY date DESC"
+    query += " ORDER BY date ASC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

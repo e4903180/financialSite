@@ -55,12 +55,12 @@ try:
         temp = df.iloc[i]
         key = find_key(temp["Number"])
 
-        if isDuplicate(key, temp["Date"].replace("_", "-"), temp["Investment company"], temp["Filename"], temp["Recommend"]):
+        if isDuplicate(key, temp["Date"], temp["Investment company"], temp["Filename"], temp["Recommend"]):
             continue
         
         logging.info(temp)
         cursor.execute('INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend) '
-                'VALUES (%s, %s, %s, %s, %s);', (key, temp["Date"].replace("_", "-"), temp["Investment company"], temp["Filename"], temp["Recommend"]))
+                'VALUES (%s, %s, %s, %s, %s);', (key, temp["Date"], temp["Investment company"], temp["Filename"], temp["Recommend"]))
         db.commit()
 
     db.close()

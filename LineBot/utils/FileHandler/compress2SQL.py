@@ -41,7 +41,7 @@ class Compress2SQL():
             if key == -1:
                 continue
             
-            db_filename = f"{field[0]}-{field[1]}-{date}-{field[2]}-{field[-1][:-4]}.pdf"
+            db_filename = f"{field[0]}_{field[1]}_{date}_{field[2]}_{field[-1][:-4]}.pdf"
 
             if not self._isDuplicate(key, date[0:4] + "-" + date[4:6] + "-" + date[6:8], field[2], db_filename, field[-1][:-4]):
                 self._insert(key, date[0:4] + "-" + date[4:6] + "-" + date[6:8], field[2], db_filename, field[-1][:-4])

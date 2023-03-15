@@ -414,8 +414,8 @@ class gmailService:
 
             # Fwd: 元富投顧個股報告--大成鋼(2027)維持買進，最壞狀況已過，客戶拉貨回穩
             # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
-            while ((subject[idx_end] != "，") or 
-                (idx_end != len(subject))):
+            while ((idx_end != len(subject)) and 
+                (subject[idx_end] != "，")):
                 idx_end += 1
 
             temp = subject[idx_left_brackets + 5:idx_end].replace("/", "")

@@ -21,7 +21,7 @@ class Compress2SQL():
         compress_files = os.listdir(self._copmpress_dir)
 
         for compress_file in tqdm(compress_files):
-            date = compress_file[0:4] + "_" + compress_file[4:6] + "_" + compress_file[6:8]
+            date = compress_file[0:8]
 
             self._compress(compress_file)
             self._decompress_handle(compress_file, date)
@@ -43,8 +43,8 @@ class Compress2SQL():
             
             db_filename = f"{field[0]}-{field[1]}-{date}-{field[2]}-{field[-1][:-4]}.pdf"
 
-            if not self._isDuplicate(key, date.replace("_", "-"), field[2], db_filename, field[-1][:-4]):
-                self._insert(key, date.replace("_", "-"), field[2], db_filename, field[-1][:-4])
+            if not self._isDuplicate(key, date[0:4] + "-" + date[4:6] + "-" + date[6:8], field[2], db_filename, field[-1][:-4]):
+                self._insert(key, date[0:4] + "-" + date[4:6] + "-" + date[6:8], field[2], db_filename, field[-1][:-4])
                 self._move_file(filename[:-4], field[0], decompress_file, db_filename)
         shutil.rmtree(self._decompress_dir + filename[:-4])
 

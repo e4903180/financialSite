@@ -404,6 +404,9 @@ class GmailResearchHandle():
         """
 
         for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
+            stock_name = self.stock_num2name[stock_num]
+            date = mail_pattern['date'].replace('-', '')
+            
             if f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir):
                 continue
 
@@ -411,9 +414,6 @@ class GmailResearchHandle():
                 att = self._service.users().messages().attachments().get(userId = 'me', messageId = mail_id, id = attachment_id).execute()
                 file = att['data']
                 file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
-
-                date = mail_pattern['date'].replace('-', '')
-                stock_name = self.stock_num2name[stock_num]
 
                 filename = f"{self.unhandle_dir}/" + \
                     f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf"

@@ -229,8 +229,16 @@ class gmailService:
 
             return result
         
-        # 4個數字(\d{4}) 後面不能接數字(\d) or/ or 年 or . or 營
-        return re.findall(r'\d{4}(?=[^\d\/\年\.\營])', subject)
+        elif "CTBC" in subject:
+            # 4個數字前面為(後面為, (2317,OW)
+            result =  re.findall(r'\(\d{4}\,', subject)
+            # 拿掉( ,
+            result = [ele[1:-1] for ele in result]
+
+            return result
+    
+        # 4個數字(\d{4}) 後面不能接數字(\d) or/ or 年 or .
+        return re.findall(r'\d{4}(?=[^\d\/\年\.])', subject)
             
     def getDate(self, header, display = False):
         """Get the mail date

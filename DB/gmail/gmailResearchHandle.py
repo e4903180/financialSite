@@ -399,7 +399,7 @@ class GmailResearchHandle():
                 date = mail_pattern['date'].replace('-', '')
                 stock_name = self.stock_num2name[stock_num]
 
-                filename = f"{self.rootPath}/{stock_num}/" + \
+                filename = f"{self.unhandle_dir}/" + \
                     f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf"
                 
                 with open(filename, 'wb') as f:
@@ -447,7 +447,7 @@ class GmailResearchHandle():
                     date = mail_pattern['date'].replace('-', '')
                     stock_name = self.stock_num2name[stock_num]
 
-                    filename = f"{self.rootPath}/{stock_num}/" + \
+                    filename = f"{self.unhandle_dir}/" + \
                         f"{stock_num}_{stock_name}_{date}_元大_{recommend}_{remark}.pdf"
                     urllib.request.urlretrieve(pdfurl, filename)
                     
@@ -466,7 +466,7 @@ class GmailResearchHandle():
                     pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \
                         f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{date_split[1]}{date_split[2]}{date_split[0]}.pdf"
                     
-                    filename = f"{self.rootPath}/{stock_num}/" + \
+                    filename = f"{self.unhandle_dir}/" + \
                         f"{stock_num}_{stock_name}_{date.replace('-', '')}_國票_{recommend}_{remark}.pdf"
 
                     urllib.request.urlretrieve(pdfurl, filename)

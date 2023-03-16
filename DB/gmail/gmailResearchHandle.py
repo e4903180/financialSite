@@ -518,7 +518,10 @@ class GmailResearchHandle():
             for attachmentId in mimeType["pdf"]:
                 self._download_pdf(mail_id, attachmentId, mail_pattern)
         else:
-            self._download_from_href(mimeType["html"], mail_pattern)
+            if mimeType["html"] != "":
+                self._download_from_href(mimeType["html"], mail_pattern)
+            else:
+                print(f"subject: {info['subject']} failed download", file = sys.stderr)
 
     def run(self) -> None:
         """Run
@@ -576,6 +579,7 @@ class GmailResearchHandle():
             self._modifyLabel(mail_id, "handled")
 
 if __name__ == "__main__":
+    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     GRH = GmailResearchHandle()
 
     GRH.run()

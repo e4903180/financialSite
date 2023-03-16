@@ -424,6 +424,7 @@ class gmailService:
                 
                 idx_end = idx_left_brackets + 6
 
+                # Fwd: 元富投顧0316每日股市彙報--世芯-KY(3661)維持買進、群聯(8299)維持買進、櫻花(9911)維持買進、華夏(1305)維持買進
                 # Fwd: 元富投顧個股報告--大成鋼(2027)維持買進，最壞狀況已過，客戶拉貨回穩
                 # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
                 while ((idx_end != len(subject)) and 

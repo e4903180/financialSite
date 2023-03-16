@@ -563,7 +563,7 @@ class GmailResearchHandle():
                 continue
             
             # Handle mail which exists stock number
-            self._handle_normal()
+            self._handle_normal(mail_id, stock_nums, info, content["payload"])
 
             # Modify mail to manual handled
             self._modifyLabel(mail_id, "handled")

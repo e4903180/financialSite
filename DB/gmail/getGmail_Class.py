@@ -419,18 +419,20 @@ class gmailService:
             return result
 
         elif "元富投顧" in subject:
-            idx_left_brackets = subject.find(stockNum[0] + ")")
-            
-            idx_end = idx_left_brackets + 6
+            for i in stockNum:
+                idx_left_brackets = subject.find(i + ")")
+                
+                idx_end = idx_left_brackets + 6
 
-            # Fwd: 元富投顧個股報告--大成鋼(2027)維持買進，最壞狀況已過，客戶拉貨回穩
-            # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
-            while ((idx_end != len(subject)) and 
-                (subject[idx_end] != "，")):
-                idx_end += 1
+                # Fwd: 元富投顧個股報告--大成鋼(2027)維持買進，最壞狀況已過，客戶拉貨回穩
+                # Fwd: 元富投顧訪談速報--旭富(4119)中立轉買進
+                while ((idx_end != len(subject)) and 
+                    (subject[idx_end] != "，") and 
+                    (subject[idx_end] != "、")):
+                    idx_end += 1
 
-            temp = subject[idx_left_brackets + 5:idx_end].replace("/", "")
-            result.append(temp)
+                temp = subject[idx_left_brackets + 5:idx_end].replace("/", "")
+                result.append(temp)
             return result
         
         elif "永豐投顧" in subject:

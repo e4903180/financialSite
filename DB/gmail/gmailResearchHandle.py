@@ -20,7 +20,8 @@ root_path = json.load(open("../../root_path.json"))
 
 class Pattern():
     def __init__(self) -> None:
-        pass
+        self.investment_companys = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
+        self.investment_companys = self.investment_companys['中文名稱'].to_list()
 
     def find_stock_nums(self, info : Dict) -> List:
         """Find stock nums in subject
@@ -88,6 +89,11 @@ class Pattern():
 
         if (("統一投顧" in info["subject"]) or 
             ("國票投顧【個股報告】" in info["subject"])):
+            end_char = ")"
+
+            if "國票投顧【個股報告】" in info["subject"]:
+                end_char = "，"
+            
             for stock_num in stock_nums:
                 offset = info["subject"].find(stock_num + ".TT")
                 
@@ -95,10 +101,8 @@ class Pattern():
                     start = offset + 8
                     end = start + 2
                     
-                    while(info["subject"][end] != ")"):
-                        if end == len(info["subject"]) - 1:
-                            break
-
+                    while ((end != len(info["subject"]) and
+                        (info["subject"][end] != end_char))):
                         end += 1
                     
                     temp = info["subject"][start:end].replace("/", "")
@@ -161,6 +165,13 @@ class Pattern():
 
             return result
         
+        elif "國票投顧【個股報告】" in info["subject"]:
+            # Fwd: 國票投顧【個股報告】漢翔(2634.TT)買進，目標價NT$45
+            comma_idx = info["subject"].find("，")
+            result.append(info["subject"][comma_idx + 1:])
+
+            return result
+        
         return ["NULL" for i in range(len(stock_nums))]
 
 class GmailResearchHandle():
@@ -173,13 +184,12 @@ class GmailResearchHandle():
         self.monthMap = { "Jan" : 1, "Feb" : 2, "Mar" : 3, "Apr" : 4, "May" : 5, "Jun" : 6,
            "Jul" : 7, "Aug" : 8, "Sep" : 9, "Oct" : 10, "Nov" : 11, "Dec" : 12 }
         self.skip_subjects = ["CTBC-台股晨報", "CTBC-前日"]
-        self.unhandle_dir = f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')}"
+        self.unhandle_dir = f"/home/cosbi/桌面/test"
+        # self.unhandle_dir = f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')}"
         self._check_unhandle_dir()
 
         self.stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
-        self.investment_companys = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
         self.stock_num2name = dict(zip(self.stock_num2name["股票代號"], self.stock_num2name["股票名稱"]))
-        self.investment_companys = self.investment_companys['中文名稱'].to_list()
         self.pattern = Pattern()
 
     def _check_unhandle_dir(self) -> None:
@@ -363,7 +373,7 @@ class GmailResearchHandle():
                 None
         """
         for file_ptr in range(1, len(payload['parts']), 1):
-            if ((payload['parts'][file_ptr]['filename'] not in os.listdir(root_path["UNZIP_PATH"] + "/" + datetime.now().strftime("%Y%m%d"))) and 
+            if ((payload['parts'][file_ptr]['filename'] not in os.listdir(self.unhandle_dir)) and 
                     ('attachmentId' in payload['parts'][file_ptr]['body'])):
 
                 att = self._service.users().messages().attachments().get(userId = 'me', messageId = mail_id, 
@@ -391,6 +401,9 @@ class GmailResearchHandle():
         """
 
         for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
+            if f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir):
+                continue
+
             try:
                 att = self._service.users().messages().attachments().get(userId = 'me', messageId = mail_id, id = attachment_id).execute()
                 file = att['data']
@@ -439,26 +452,15 @@ class GmailResearchHandle():
         downloaded_href = []
         a_tags = soup.find_all('a')
 
-        for a_tag in a_tags:
-            if "https://report.yuanta-consulting.com.tw/DL.aspx" in a_tag.getText():
-                pdfurl = requests.get(a_tag.getText(), allow_redirects = True).url
-
-                for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
-                    date = mail_pattern['date'].replace('-', '')
-                    stock_name = self.stock_num2name[stock_num]
-
-                    filename = f"{self.unhandle_dir}/" + \
-                        f"{stock_num}_{stock_name}_{date}_元大_{recommend}_{remark}.pdf"
-                    urllib.request.urlretrieve(pdfurl, filename)
-                    
-            elif "https://www.ibfs.com.tw/CancelConsulting" in a_tag["href"]:
+        for a_tag in a_tags:                    
+            if "https://www.ibfs.com.tw/CancelConsulting" in a_tag["href"]:
                 if a_tag["href"] in downloaded_href:
                     continue
 
                 downloaded_href.append(a_tag["href"])
                 
                 for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
-                    date_split = date.split("-")
+                    date_split = mail_pattern['date'].split("-")
                     origin_url = urlparse(a_tag["href"])
                     stock_name = self.stock_num2name[stock_num]
                     param_name = stock_name.replace("*", "")
@@ -467,7 +469,7 @@ class GmailResearchHandle():
                         f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{date_split[1]}{date_split[2]}{date_split[0]}.pdf"
                     
                     filename = f"{self.unhandle_dir}/" + \
-                        f"{stock_num}_{stock_name}_{date.replace('-', '')}_國票_{recommend}_{remark}.pdf"
+                        f"{stock_num}_{stock_name}_{mail_pattern['date'].replace('-', '')}_國票_{recommend}_{remark}.pdf"
 
                     urllib.request.urlretrieve(pdfurl, filename)
 
@@ -491,12 +493,13 @@ class GmailResearchHandle():
 
         if "parts" not in payload:
             return
-        
-        for i in range(1, len(payload), 1):
+
+        for i in range(1, len(payload['parts']), 1):
             if payload['parts'][i]['mimeType'] == "application/pdf":
                 mimeType["pdf"].append(payload['parts'][i]['body']['attachmentId'])
 
-            elif payload['parts'][i]['mimeType'] == "text/html":
+            elif (("國票投顧" in info["subject"]) and 
+                (payload['parts'][i]['mimeType'] == "text/html")):
                 mimeType["html"] = payload['parts'][i]['body']['data']
 
         mail_pattern = {
@@ -506,6 +509,7 @@ class GmailResearchHandle():
             "remark" : remark,
             "date" : info["date"]
         }
+
         if len(mimeType["pdf"]) != 0:
             for attachmentId in mimeType["pdf"]:
                 self._download_pdf(mail_id, attachmentId, mail_pattern)
@@ -565,7 +569,7 @@ class GmailResearchHandle():
             # Handle mail which exists stock number
             self._handle_normal(mail_id, stock_nums, info, content["payload"])
 
-            # Modify mail to manual handled
+            # Modify mail to handled
             self._modifyLabel(mail_id, "handled")
 
 if __name__ == "__main__":

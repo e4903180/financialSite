@@ -396,6 +396,11 @@ class gmailService:
         
         if (("統一投顧" in subject) or 
             ("國票投顧【個股報告】" in subject)):
+            end_char = ")"
+
+            if "國票投顧【個股報告】" in subject:
+                end_char = "，"
+
             for i in stockNum:
                 offset = subject.find(i + ".TT")
                 
@@ -403,10 +408,8 @@ class gmailService:
                     start = offset + 8
                     end = start + 2
                     
-                    while(subject[end] != ")"):
-                        if end == len(subject) - 1:
-                            break
-
+                    while ((end != len(subject)) and
+                        (subject[end] != end_char)):
                         end += 1
                     
                     temp = subject[start:end].replace("/", "")
@@ -451,4 +454,5 @@ class gmailService:
 
             result.append(temp[2].replace("/", ""))
             return result
+
         return ["NULL" for i in range(len(stockNum))]

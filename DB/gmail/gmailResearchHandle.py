@@ -501,9 +501,10 @@ class GmailResearchHandle():
             if payload['parts'][i]['mimeType'] == "application/pdf":
                 mimeType["pdf"].append(payload['parts'][i]['body']['attachmentId'])
 
-            elif (("國票投顧" in info["subject"]) and 
-                (payload['parts'][i]['mimeType'] == "text/html")):
-                mimeType["html"] = payload['parts'][i]['body']['data']
+            elif payload['parts'][i]['mimeType'] == "text/html":
+                if (("國票投顧" in info["subject"]) and
+                    ("body" in payload['parts'][i])):
+                    mimeType["html"] = payload['parts'][i]['body']['data']
 
         mail_pattern = {
             "stock_nums" : stock_nums,
@@ -516,7 +517,6 @@ class GmailResearchHandle():
         if len(mimeType["pdf"]) != 0:
             for attachmentId in mimeType["pdf"]:
                 self._download_pdf(mail_id, attachmentId, mail_pattern)
-
         else:
             self._download_from_href(mimeType["html"], mail_pattern)
 

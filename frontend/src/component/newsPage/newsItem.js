@@ -42,6 +42,17 @@ function NewsItem(props) {
         setPage(0)
     }, [props.data])
 
+    useEffect(() => {
+        if(props.startDate !== "" && props.endDate !== ""){
+            setStartDate(props.startDate)
+            setEndDate(props.endDate)
+        }
+    }, [props.startDate, props.endDate])
+
+    useEffect(() => {
+        setCategory(props.category)
+    }, [props.category])
+
     return (
         <>
             <div className = 'row mx-auto py-3' style = {{ width : "50vw" }}>
@@ -64,7 +75,7 @@ function NewsItem(props) {
                     <div className = 'form-group row py-3'>
                         <label htmlFor = "category" className = "col-md-3 col-form-label text-center">新聞類別:</label>
                         <div className = 'col-md-4'>
-                            <select id = "category" className = "form-select" onChange = {e => setCategory(e.target.value)}>
+                            <select id = "category" className = "form-select" value = { category } onChange = {e => setCategory(e.target.value)}>
                                 { 
                                     categoryList.map((ele, idx) => 
                                         <option value = { ele } key = { idx }>{ele}</option>) 

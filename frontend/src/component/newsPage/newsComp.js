@@ -14,6 +14,8 @@ function NewsComp() {
     const [data0, setData0] = useState([])
     const [page0, setPage0] = useState(0)
     const [pageSize0, setPageSize0] = useState(10)
+    const [startDate, setStartDate] = useState("")
+    const [category, setCategory] = useState("全部")
 
     const [dataNews, setDataNews] = useState([])
 
@@ -30,6 +32,14 @@ function NewsComp() {
     const buttonNewsHandle = (date, buttonCategory) => {
         setLoading(true)
         setType("news")
+
+        if (date === "today"){
+            setStartDate(todayDate)
+        }else if (date === "past"){
+            setStartDate("2023-01-01")
+        }
+
+        setCategory(buttonCategory)
 
         axios.get(config["rootApiIP"] + `/data/news_search_${date}`, { params : {
             "date" : todayDate,
@@ -110,7 +120,14 @@ function NewsComp() {
                                 </li>
                             </ul>
 
-                            { type === "news" && <NewsItem setLoading = { setLoading } data = { dataNews } setData = { setDataNews }/>}
+                            { type === "news" && <NewsItem 
+                                    setLoading = { setLoading } 
+                                    data = { dataNews } 
+                                    setData = { setDataNews } 
+                                    startDate = { startDate } 
+                                    endDate = { todayDate }
+                                    category = { category }
+                                />}
                         </div>
                     </div>
                 </div>

@@ -4,7 +4,6 @@ from google.auth.transport.requests import Request
 from typing import List, Dict
 from tqdm import tqdm
 from bs4 import BeautifulSoup
-import requests
 import pickle
 import json
 import os
@@ -187,8 +186,9 @@ class GmailResearchHandle():
         self.monthMap = { "Jan" : 1, "Feb" : 2, "Mar" : 3, "Apr" : 4, "May" : 5, "Jun" : 6,
            "Jul" : 7, "Aug" : 8, "Sep" : 9, "Oct" : 10, "Nov" : 11, "Dec" : 12 }
         self.skip_subjects = ["CTBC-台股晨報", "CTBC-前日"]
-        self.unhandle_dir = f"/home/cosbi/桌面/test"
-        # self.unhandle_dir = f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')}"
+        self.unhandle_dir = [f"/home/cosbi/桌面/test"]
+        # self.unhandle_dir = [f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')/1}",
+        #                       f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')/2}"]
         self._check_unhandle_dir()
 
         self.stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
@@ -203,8 +203,9 @@ class GmailResearchHandle():
             Return :
                 None
         """
-        if not os.path.isdir(self.unhandle_dir):
-            os.mkdir(self.unhandle_dir)
+        for path in self.unhandle_dir:
+            if not os.path.isdir(path):
+                os.mkdir(path)
 
     def _verify_gmail_api(self) -> str:
         """Get the token from google api before accesing gmail api
@@ -376,7 +377,7 @@ class GmailResearchHandle():
                 None
         """
         for file_ptr in range(1, len(payload['parts']), 1):
-            if ((payload['parts'][file_ptr]['filename'] not in os.listdir(self.unhandle_dir)) and 
+            if ((payload['parts'][file_ptr]['filename'] not in os.listdir(self.unhandle_dir[0])) and 
                     ('attachmentId' in payload['parts'][file_ptr]['body'])):
 
                 att = self._service.users().messages().attachments().get(userId = 'me', messageId = mail_id, 
@@ -387,7 +388,7 @@ class GmailResearchHandle():
 
                 field = payload['parts'][file_ptr]['filename'].split(" ")
 
-                with open(f"{self.unhandle_dir}/{field[0][:4]}_{self.stock_num2name[field[0][:4]]}_{info['date'].replace('-','')}_{field[1]}_NULL_NULL.pdf",
+                with open(f"{self.unhandle_dir[0]}/{field[0][:4]}_{self.stock_num2name[field[0][:4]]}_{info['date']}_{field[1].replace('.pdf', '')}_NULL_NULL.pdf",
                         'wb') as f:
                     f.write(file_data)
 
@@ -407,7 +408,7 @@ class GmailResearchHandle():
             stock_name = self.stock_num2name[stock_num]
             date = mail_pattern['date'].replace('-', '')
             
-            if f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir):
+            if f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir[0]):
                 continue
 
             try:
@@ -415,7 +416,7 @@ class GmailResearchHandle():
                 file = att['data']
                 file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
 
-                filename = f"{self.unhandle_dir}/" + \
+                filename = f"{self.unhandle_dir[0]}/" + \
                     f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf"
                 
                 with open(filename, 'wb') as f:
@@ -471,7 +472,7 @@ class GmailResearchHandle():
                     pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \
                         f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{date_split[1]}{date_split[2]}{date_split[0]}.pdf"
                     
-                    filename = f"{self.unhandle_dir}/" + \
+                    filename = f"{self.unhandle_dir[0]}/" + \
                         f"{stock_num}_{stock_name}_{mail_pattern['date'].replace('-', '')}_國票_{recommend}_{remark}.pdf"
 
                     urllib.request.urlretrieve(pdfurl, filename)

@@ -24,5 +24,6 @@
     "DESTINATION_DIR_PATH" : "/home/uikai/financialData/gmailData/data",
     "UNZIP_PATH" : "/home/uikai/financialData/unzip",
     "ZIP_PATH" : "/home/uikai/financialData/zip",
-    "TICKER_UPDATE_PATH" : "/home/uikai/financialData/tickerUpdate/"
+    "TICKER_UPDATE_LOG_PATH" : "/home/uikai/financialData/tickerUpdate/",
+    "TICKER_LIST_DIR_PATH" : "/home/uikai/financialData/src/"
 }

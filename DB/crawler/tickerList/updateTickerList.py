@@ -37,6 +37,6 @@ chinese = ["台新投顧", "元大", "宏遠", "麥格理", "美林", "摩根史
 
 df1 = pd.DataFrame({"中文名稱" : chinese})
 
-with pd.ExcelWriter("24932_個股代號及券商名稱.xlsx") as writer:
+with pd.ExcelWriter(root_path["TICKER_LIST_DIR_PATH"] + "24932_個股代號及券商名稱.xlsx") as writer:
     df.to_excel(writer, sheet_name = '股票代號', index = False)
     df1.to_excel(writer, sheet_name = '券商名稱', index = False)

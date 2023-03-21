@@ -145,7 +145,7 @@ class TickerUpdate():
             self._update(categorys, key)
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["TICKER_UPDATE_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["TICKER_UPDATE_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     TLU = TickerUpdate()
 
     TLU.run()

@@ -192,7 +192,7 @@ class GmailResearchHandle():
         #                       f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')/2}"]
         self._check_unhandle_dir()
 
-        self.stock_num2name = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
+        self.stock_num2name = pd.read_excel(root_path["TICKER_LIST_DIR_PATH"] + "24932_個股代號及券商名稱.xlsx", sheet_name = 0)
         self.stock_num2name = dict(zip(self.stock_num2name["股票代號"], self.stock_num2name["股票名稱"]))
         self.pattern = Pattern()
 

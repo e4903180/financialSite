@@ -463,12 +463,13 @@ class GmailResearchHandle():
                 downloaded_href.append(a_tag["href"])
                 
                 for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
+                    date_mail = soup.find_all('td')[1].getText()[:10].replace(".", "")
                     origin_url = urlparse(a_tag["href"])
                     stock_name = self.stock_num2name[stock_num]
                     param_name = stock_name.replace("*", "")
 
                     pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \
-                        f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{mail_pattern['date'][4:]}{mail_pattern['date'][0:4]}.pdf"
+                        f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{date_mail[4:]}{date_mail[0:4]}.pdf"
                     
                     filename = f"{self.unhandle_dir[0]}/" + \
                         f"{stock_num}_{stock_name}_{mail_pattern['date']}_國票_{recommend}_{remark}.pdf"

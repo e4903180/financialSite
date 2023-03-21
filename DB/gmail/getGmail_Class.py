@@ -186,12 +186,13 @@ class gmailService:
                 duplicate.append(a_tags[a]["href"])
                 
                 for num, name in stock_num_name:
-                    date_split = date.split("-")
+                    date_mail = content.find_all('td')[1].getText()[:10].replace(".", "")
                     origin_url = urlparse(a_tags[a]["href"])
                     param_name = name.replace("*", "")
 
                     pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \
-                    f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{num}{param_name}'.encode('utf-8'))}{date_split[1]}{date_split[2]}{date_split[0]}.pdf"
+                        f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{num}{param_name}'.encode('utf-8'))}{date_mail[4:]}{date_mail[:4]}.pdf"
+
                     file_rename = f"{self.rootPath}/{num}/{num}_{name}_{date.replace('-', '')}_國票_{recommend[0]}.pdf"
                     urllib.request.urlretrieve(pdfurl, file_rename)
                     

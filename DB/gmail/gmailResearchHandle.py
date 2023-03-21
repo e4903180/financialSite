@@ -176,6 +176,7 @@ class Pattern():
         
         return ["NULL" for i in range(len(stock_nums))]
 
+
 class GmailResearchHandle():
     """Handle research in gmail
     """
@@ -186,7 +187,7 @@ class GmailResearchHandle():
         self.monthMap = { "Jan" : 1, "Feb" : 2, "Mar" : 3, "Apr" : 4, "May" : 5, "Jun" : 6,
            "Jul" : 7, "Aug" : 8, "Sep" : 9, "Oct" : 10, "Nov" : 11, "Dec" : 12 }
         self.skip_subjects = ["CTBC-台股晨報", "CTBC-前日"]
-        self.unhandle_dir = [f"/home/cosbi/桌面/test"]
+        self.unhandle_dir = [f"/home/uikai/financialData/test/1", "/home/uikai/financialData/test/2"]
         # self.unhandle_dir = [f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')/1}",
         #                       f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')/2}"]
         self._check_unhandle_dir()
@@ -205,7 +206,7 @@ class GmailResearchHandle():
         """
         for path in self.unhandle_dir:
             if not os.path.isdir(path):
-                os.mkdir(path)
+                os.makedirs(path)
 
     def _verify_gmail_api(self) -> str:
         """Get the token from google api before accesing gmail api
@@ -281,7 +282,7 @@ class GmailResearchHandle():
         month = str(self.monthMap[temp[1]]).zfill(2)
         year = temp[2]
 
-        transformed_date = year + "-" + month + "-" + day
+        transformed_date = year + month + day
 
         return transformed_date
 
@@ -317,7 +318,6 @@ class GmailResearchHandle():
             Return :
                 None
         """
-        
         # 已處理
         if label == "handled":
             Body = { "addLabelIds": ["Label_2"], "removeLabelIds" : ["INBOX"] }
@@ -406,9 +406,8 @@ class GmailResearchHandle():
 
         for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
             stock_name = self.stock_num2name[stock_num]
-            date = mail_pattern['date'].replace('-', '')
             
-            if f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir[0]):
+            if f"{stock_num}_{stock_name}_{mail_pattern['date']}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir[0]):
                 continue
 
             try:
@@ -417,7 +416,7 @@ class GmailResearchHandle():
                 file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
 
                 filename = f"{self.unhandle_dir[0]}/" + \
-                    f"{stock_num}_{stock_name}_{date}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf"
+                    f"{stock_num}_{stock_name}_{mail_pattern['date']}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf"
                 
                 with open(filename, 'wb') as f:
                     f.write(file_data)
@@ -464,16 +463,15 @@ class GmailResearchHandle():
                 downloaded_href.append(a_tag["href"])
                 
                 for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
-                    date_split = mail_pattern['date'].split("-")
                     origin_url = urlparse(a_tag["href"])
                     stock_name = self.stock_num2name[stock_num]
                     param_name = stock_name.replace("*", "")
 
                     pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \
-                        f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{date_split[1]}{date_split[2]}{date_split[0]}.pdf"
+                        f"{parse_qs(origin_url.query)['EpaperID'][0]}/{quote(f'國票{stock_num}{param_name}'.encode('utf-8'))}{mail_pattern['date'][4:]}{mail_pattern['date'][0:4]}.pdf"
                     
                     filename = f"{self.unhandle_dir[0]}/" + \
-                        f"{stock_num}_{stock_name}_{mail_pattern['date'].replace('-', '')}_國票_{recommend}_{remark}.pdf"
+                        f"{stock_num}_{stock_name}_{mail_pattern['date']}_國票_{recommend}_{remark}.pdf"
 
                     urllib.request.urlretrieve(pdfurl, filename)
 

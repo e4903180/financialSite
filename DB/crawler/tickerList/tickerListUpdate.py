@@ -156,7 +156,7 @@ class UpdateLocal():
                     "國泰證期", "大和國泰", "華南投顧", "凱基", "富邦台灣", "群益",
                     "中信投顧", "匯豐", "法國巴黎", "里昂", "永豐金", "玉山金", "永豐投顧",
                     "CTBC"]
-        self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CN"], root_path["TWSEDATA_EN"]]
+        self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CH"], root_path["TWSEDATA_EN"]]
 
     def _get_ticker_list(self) -> pd.DataFrame:
         query = 'SELECT stock_name FROM ticker_list'

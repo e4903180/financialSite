@@ -220,7 +220,12 @@ class gmailService:
         
         elif "永豐投顧" in subject:
             # 4個數字(\d{4})但後面是 空白加英文 EX:5288 TT
-            return re.findall(r'\d{4}(?=\s[A-Z])', subject)
+            result = re.findall(r'\d{4}(?=\s[A-Z])', subject)
+            
+             # 4個數字(\d{4})但後面是英文 EX:5288TT
+            result.extend(re.findall(r'\d{4}(?=[A-Z])', subject))
+
+            return result
         
         elif "元富投顧" in subject:
             # 4個數字前後為() EX:(5288)

@@ -2,7 +2,6 @@ import pandas as pd
 import time
 from tqdm import tqdm
 from typing import Dict, List
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -12,6 +11,7 @@ import MySQLdb.cursors
 import json
 import sys
 import datetime
+import os
 
 db_config = json.load(open("../../../db_config.json"))
 root_path = json.load(open("../../../root_path.json"))
@@ -144,8 +144,56 @@ class TickerUpdate():
             # 更新每個產業類別
             self._update(categorys, key)
 
+
+class UpdateLocal():
+    def __init__(self) -> None:
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._cursor = self._db.cursor()
+        self._investment_company_chinese = ["台新投顧", "元大", "宏遠", "麥格理", "美林", "摩根史丹利",
+                    "高勝", "瑞士信貸", "德意志", "野村", "花旗", "第一金", "日盛投顧",
+                    "統一投顧", "元富", "德信", "兆豐金", "國票", "摩根大通", "康和",
+                    "國泰證期", "大和國泰", "華南投顧", "凱基", "富邦台灣", "群益",
+                    "中信投顧", "匯豐", "法國巴黎", "里昂", "永豐金", "玉山金", "永豐投顧",
+                    "CTBC"]
+        self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CN"], root_path["TWSEDATA_EN"]]
+
+    def _get_ticker_list(self) -> pd.DataFrame:
+        query = 'SELECT stock_name FROM ticker_list'
+
+        self._cursor.execute(query)
+        self._db.commit()
+
+        return pd.DataFrame.from_dict(self._cursor.fetchall())
+    
+    def _update_local(self) -> None:
+        result = self._get_ticker_list()
+
+        stock_num = []
+        stock_name = []
+
+        for i in result["stock_name"].to_list():
+            temp = i.split(" ")
+            stock_num.append(temp[0])
+            stock_name.append(temp[1])
+
+            for dir_path in self._dir_paths:
+                if not os.path.isdir(f"{dir_path}/{temp[0]}"):
+                    os.mkdir(f"{dir_path}/{temp[0]}")
+
+        with pd.ExcelWriter(root_path["TICKER_LIST_DIR_PATH"] + "24932_個股代號及券商名稱.xlsx") as writer:
+            pd.DataFrame({"股票代號" : stock_num, "股票名稱" : stock_name}).to_excel(writer, 
+                                                                            sheet_name = '股票代號', index = False)
+            pd.DataFrame({"中文名稱" : self._investment_company_chinese}).to_excel(writer, 
+                                                                            sheet_name = '券商名稱', index = False)
+    
+    def run(self) -> None:
+        self._update_local()
+
 if __name__ == "__main__":
     sys.stderr = open(root_path["TICKER_UPDATE_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     TLU = TickerUpdate()
-
+    UL = UpdateLocal()
+    
     TLU.run()
+    UL.run()

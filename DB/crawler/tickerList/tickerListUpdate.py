@@ -172,7 +172,7 @@ class UpdateLocal():
         stock_num = []
         stock_name = []
 
-        for i in result["stock_name"].to_list():
+        for i in tqdm(result["stock_name"].to_list()):
             temp = i.split(" ")
             stock_num.append(temp[0])
             stock_name.append(temp[1])

@@ -80,8 +80,9 @@ exports.allData = async function(req, res){
         return res.status(200).send([Object.assign({ "dbName" : "個股研究資料" }, rows[0][0], rows[1][0], {"downloadUrl" : "http://140.116.214.154:3000/api/data/download/financialData"}),
                                         Object.assign({ "dbName" : "個股推薦" }, rows[2][0], rows[3][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/post_board_memo" }),
                                         Object.assign({ "dbName" : "Line memo" }, rows[4][0], rows[5][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/lineMemo" }), 
-                                        Object.assign({ "dbName" : "法說會" }, rows[6][0], rows[7][0], { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/calender" })])
+                                        Object.assign({ "dbName" : "法說會" }, rows[6][0], { newestDate: rows[7][0]["newestDate"].slice(0, 10) }, { "downloadUrl" : "http://140.116.214.154:3000/api/data/download/calender" })])
     } catch (error) {
+
         return res.status(400).send("error")
     }
 };
@@ -202,7 +203,7 @@ exports.calenderData = async function(req, res){
 }
 
 exports.tickerList = async function(req, res){
-    let query = "SELECT ID, stock_name as stock_num_name FROM ticker_list"
+    let query = "SELECT ID, stock_name as stock_num_name FROM ticker_list WHERE CHAR_LENGTH(stock_num)=4"
 
     try {
         const [rows, fields] = await con.promise().query(query);

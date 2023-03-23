@@ -271,7 +271,7 @@ function SupportResistanceComp() {
                     </div>
                 </form>
 
-                { inputError ? <p className = 'text-center' style = {{ color : "red" }}>股票代號格式錯誤或不適用</p> : <></> }
+                { inputError ? <p className = 'text-center' style = {{ color : "red" }}>格式錯誤(必須符合自動完成格式 股票代號 名稱)</p> : <></> }
             </div>
 
             <div className = 'row mx-auto py-3' style = {{ width : "90%" }}>

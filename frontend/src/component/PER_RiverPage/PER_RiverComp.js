@@ -211,7 +211,7 @@ function PERRiverComp() {
                         </div>
                     </div>
                 </form>
-                { inputError ? <p className = 'text-center' style = {{ color : "red" }}>股票代號&名稱格式錯誤</p> : <></> }
+                { inputError ? <p className = 'text-center' style = {{ color : "red" }}>格式錯誤(必須符合自動完成格式 股票代號 名稱)</p> : <></> }
             </div>
 
             <div className = 'row mx-auto py-3'>

@@ -306,7 +306,7 @@ function DatabaseSearchComp() {
                         </div>
 
                         <div className = 'form-group pt-4 text-center'>
-                            { input1Error ? <p style = {{ color : "red" }}>股票代號&名稱格式或資料表錯誤</p> : <></> }
+                            { input1Error ? <p style = {{ color : "red" }}>格式錯誤(必須符合自動完成格式 股票代號 名稱)</p> : <></> }
                             { loading ? <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }} disabled><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button> : <button id = 'submit' type = "submit" className = "btn btn-primary" style = {{ width : "200px" }}>搜尋</button>}
                         </div>
                     </form>

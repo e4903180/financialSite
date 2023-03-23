@@ -121,7 +121,7 @@ exports.ticker_search = async function(req, res){
         res.status(200).json({})
     }
 
-    let query = `SELECT stock_name FROM ticker_list WHERE stock_name LIKE ?`
+    let query = `SELECT stock_name FROM ticker_list WHERE stock_name LIKE ? AND CHAR_LENGTH(stock_num)=4`
     let param = [`%${req.body.pattern}%`]
 
     try {

@@ -19,7 +19,7 @@ root_path = json.load(open("../../root_path.json"))
 
 class Pattern():
     def __init__(self) -> None:
-        self.investment_companys = pd.read_excel("./src/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
+        self.investment_companys = pd.read_excel(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
         self.investment_companys = self.investment_companys['中文名稱'].to_list()
 
     def find_stock_nums(self, info : Dict) -> List:

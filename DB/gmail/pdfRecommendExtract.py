@@ -331,7 +331,7 @@ class PdfRecommendExtract():
             elif 'CTBC' or '中信' in info[1]:
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
 
-            new_filename = f"{info[:4]}_{info[4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
+            new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
 

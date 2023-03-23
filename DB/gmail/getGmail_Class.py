@@ -23,8 +23,8 @@ class gmailService:
         self.creds = self.getCreds()
         # Connect to the Gmail API
         self.service = build('gmail', 'v1', credentials = self.creds)
-        self.df_stock_num2name = pd.read_excel(root_path["TICKER_LIST_DIR_PATH"] + "24932_個股代號及券商名稱.xlsx", sheet_name = 0)
-        self.df_investment_company = pd.read_excel(root_path["TICKER_LIST_DIR_PATH"] + "24932_個股代號及券商名稱.xlsx", sheet_name = 1)
+        self.df_stock_num2name = pd.read_excel(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
+        self.df_investment_company = pd.read_excel(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
         self.dict_stock_num2name = dict(zip(self.df_stock_num2name["股票代號"], self.df_stock_num2name["股票名稱"]))
         self.list_investment_company = self.df_investment_company['中文名稱'].to_list()
         self.rootPath = root_path["GMAIL_DATA_DATA_PATH"]

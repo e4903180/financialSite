@@ -322,13 +322,13 @@ class PdfRecommendExtract():
 
             new_rate = "NULL"
 
-            if '永豐' in info[3]:
+            if '永豐' in info[1]:
                 new_rate = self._ER.sino_pac(f"{dir_path}/{filename}")
                 
-            elif '國票' in info[3]:
+            elif '國票' in info[1]:
                 new_rate = self._ER.ibf(f"{dir_path}/{filename}")
 
-            elif 'CTBC' or '中信' in info[3]:
+            elif 'CTBC' or '中信' in info[1]:
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
 
             new_filename = f"{info[:4]}_{info[4:]}_{datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"

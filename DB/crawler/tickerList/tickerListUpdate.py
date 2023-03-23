@@ -181,7 +181,7 @@ class UpdateLocal():
                 if not os.path.isdir(f"{dir_path}/{temp[0]}"):
                     os.mkdir(f"{dir_path}/{temp[0]}")
 
-        with pd.ExcelWriter(root_path["TICKER_LIST_DIR_PATH"] + "24932_個股代號及券商名稱.xlsx") as writer:
+        with pd.ExcelWriter(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx") as writer:
             pd.DataFrame({"股票代號" : stock_num, "股票名稱" : stock_name}).to_excel(writer, 
                                                                             sheet_name = '股票代號', index = False)
             pd.DataFrame({"中文名稱" : self._investment_company_chinese}).to_excel(writer, 

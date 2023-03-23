@@ -298,6 +298,10 @@ class PdfRecommendExtract():
             info = filename.split("_")
             info[-1].replace(".pdf", "")
 
+            if info[4] == "NULL":
+                os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{filename}")
+                continue
+
             new_rate = "NULL"
 
             if '永豐' in info[3]:

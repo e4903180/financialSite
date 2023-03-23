@@ -287,7 +287,7 @@ class ExtractRate():
 
 class PdfRecommendExtract():
     def __init__(self) -> None:
-        # self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.now().strftime('%Y%m%d')}"
+        # self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}"
         self._unhandle_path = f"{root_path['UNZIP_PATH']}/test"
         self._ER = ExtractRate()
 
@@ -331,7 +331,7 @@ class PdfRecommendExtract():
             elif 'CTBC' or '中信' in info[1]:
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
 
-            new_filename = f"{info[:4]}_{info[4:]}_{datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
+            new_filename = f"{info[:4]}_{info[4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
 

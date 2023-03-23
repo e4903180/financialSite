@@ -312,6 +312,7 @@ class PdfRecommendExtract():
             new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{new_rate}_{info[5]}.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
+        os.rmdir(dir_path)
     
     def _handle_2_dir(self) -> None:
         dir_path = f"{self._unhandle_path}/2"
@@ -324,17 +325,20 @@ class PdfRecommendExtract():
 
             if '永豐' in info[1]:
                 new_rate = self._ER.sino_pac(f"{dir_path}/{filename}")
+                info[1] = "永豐投顧"
                 
             elif '國票' in info[1]:
                 new_rate = self._ER.ibf(f"{dir_path}/{filename}")
 
             elif 'CTBC' or '中信' in info[1]:
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
+                info[1] = "CTBC"
 
             new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
-
+        os.rmdir(dir_path)
+    
     def run(self) -> None:
         print("Handle 1 dir ...", file = sys.stderr)
         self._handle_1_dir()

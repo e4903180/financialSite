@@ -294,7 +294,7 @@ class PdfRecommendExtract():
     def _handle_1_dir(self) -> None:
         dir_path = f"{self._unhandle_path}/1"
 
-        for filename in os.listdir(dir_path):
+        for filename in tqdm(os.listdir(dir_path)):
             info = filename.split("_")
             info[-1].replace(".pdf", "")
 
@@ -316,7 +316,7 @@ class PdfRecommendExtract():
     def _handle_2_dir(self) -> None:
         dir_path = f"{self._unhandle_path}/2"
 
-        for filename in os.listdir(dir_path):
+        for filename in tqdm(os.listdir(dir_path)):
             info = filename.split(" ")
             info[-1].replace(".pdf", "")
 

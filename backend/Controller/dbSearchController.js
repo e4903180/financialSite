@@ -15,7 +15,7 @@ exports.financial_search = async function(req, res){
         param.push(req.body.startDate, req.body.endDate)
     }
 
-    if(req.body.investmentCompany !== ""){
+    if(req.body.investmentCompany !== "全部"){
         query += ` AND investmentCompany=?`
         param.push(req.body.investmentCompany)
     }

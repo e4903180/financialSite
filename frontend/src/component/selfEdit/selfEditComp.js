@@ -74,7 +74,7 @@ function SelfEditComp() {
                 "stock_num_name" : "",
                 "startDate" : last3Month,
                 "endDate" : today,
-                "investmentCompany" : "",
+                "investmentCompany" : "全部",
             }).then(res => {
                 setData(res.data)
                 setPage(0)
@@ -92,7 +92,7 @@ function SelfEditComp() {
 
     return (
         <>
-            { superUser === 1 ? 
+            { superUser === 1 ? <>
                 <div className = 'row mx-auto'>
                     <DataGrid
                         columns = { columns1_edit }
@@ -114,7 +114,13 @@ function SelfEditComp() {
                         autoHeight
                         experimentalFeatures={{ newEditingApi: true }}
                     />
-                </div> : <p color = "red">權限不足</p> }
+                </div>
+                
+                <div className = 'col-md-4 offset-8 py-3 text-center'>
+                    <label htmlFor = 'page'>快速換頁</label>
+                    <input id = "page" type = "text" onChange = { (e) => setPage(e.target.value) }></input>
+                </div>
+            </> : <p color = "red">權限不足</p> }
         </>
     );
 }

@@ -8,11 +8,20 @@ import fitz
 root_path = json.load(open("../../root_path.json"))
 
 class ExtractRate():
+    """Create handle for vary investment companies
+    """
     def __init__(self) -> None:
         pass
 
     def sino_pac(self, directory_path : str) -> str:
-        # for 永豐
+        """Handle 永豐投顧(SinoPac) pdf
+
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        """
         possible_ans = ['買進', '中立']
         rate_1 = None
         rate_2 = None
@@ -90,7 +99,14 @@ class ExtractRate():
         return rate
     
     def ibf(self, directory_path : str) -> str:
-        # for 國票
+        """Handle 國票 pdf
+
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        """
         possible_ans = ['買進', '區間操作', '強力買進']
         rate_1 = None
         rate_2 = None
@@ -205,7 +221,14 @@ class ExtractRate():
         return rate
 
     def ctbc(self, directory_path : str) -> str:
-        # for 中信託
+        """Handle 中信託(CTBC) pdf
+
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        """
         possible_ans = ['中立', '買進', '增加持股(Overweight)', '中立(Neutral)', 
                         '買進(Buy)', '增加持股', '-', '降低持股(Underweight)', '未評等']
         rate_1 = None
@@ -286,17 +309,29 @@ class ExtractRate():
 
 
 class PdfRecommendExtract():
+    """Extract recommend from pdf
+    """
     def __init__(self) -> None:
         # self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}"
         self._unhandle_path = f"{root_path['UNZIP_PATH']}/test"
         self._ER = ExtractRate()
 
     def _handle_1_dir(self) -> None:
+        """Handle directory 1 (gmail handled)
+
+            Args :
+                None
+            
+            Return :
+                None
+        """
         dir_path = f"{self._unhandle_path}/1"
 
+        # Travse all file in directory 1
         for filename in tqdm(os.listdir(dir_path)):
+            # 1216_統一_20230321_永豐投顧_NULL_ 受惠於內需增溫與殖利率題材.pdf
             info = filename.split("_")
-            info[-1].replace(".pdf", "")
+            info[-1] = info[-1].replace(".pdf", "")
 
             if info[4] != "NULL":
                 os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{filename}")
@@ -306,12 +341,15 @@ class PdfRecommendExtract():
 
             if '永豐' in info[3]:
                 new_rate = self._ER.sino_pac(f"{dir_path}/{filename}")
+                info[3] = "永豐投顧"
 
             elif '國票' in info[3]:
                 new_rate = self._ER.ibf(f"{dir_path}/{filename}")
+                info[3] = "國票"
 
             elif 'CTBC' or '中信' in info[3]:
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
+                info[3] = "CTBC"
 
             new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{new_rate}_{info[5]}.pdf"
 
@@ -319,11 +357,21 @@ class PdfRecommendExtract():
         os.rmdir(dir_path)
     
     def _handle_2_dir(self) -> None:
-        dir_path = f"{self._unhandle_path}/2"
+        """Handle directory 2 (gmail cannot handle and line)
 
+            Args :
+                None
+            
+            Return :
+                None
+        """
+        dir_path = f"{self._unhandle_path}/2"
+        
+        # Travse all file in directory 2
         for filename in tqdm(os.listdir(dir_path)):
+            # 2727王品 永豐.pdf
             info = filename.split(" ")
-            info[-1].replace(".pdf", "")
+            info[-1] = info[-1].replace(".pdf", "")
 
             new_rate = "NULL"
 
@@ -333,6 +381,7 @@ class PdfRecommendExtract():
                 
             elif '國票' in info[1]:
                 new_rate = self._ER.ibf(f"{dir_path}/{filename}")
+                info[1] = "國票"
 
             elif 'CTBC' or '中信' in info[1]:
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
@@ -344,6 +393,14 @@ class PdfRecommendExtract():
         os.rmdir(dir_path)
     
     def run(self) -> None:
+        """Run
+
+            Args :
+                None
+
+            Return :
+                None
+        """
         print("Handle 1 dir ...", file = sys.stderr)
         self._handle_1_dir()
 

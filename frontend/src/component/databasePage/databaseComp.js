@@ -4,7 +4,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { columns_financialData, columns_post_board_memo, columns_line_memo, columns_twse, columns_all_table_summary } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
-import { config } from '../../constant';
+import { config, investment_company } from '../../constant';
 
 function DatabaseComp() {
     var date = new Date();
@@ -233,7 +233,7 @@ function DatabaseComp() {
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
-            "investmentCompany" : "",
+            "investmentCompany" : "全部",
         }).then(res => {
             setData1(res.data)
             setSearch1(true)
@@ -355,18 +355,11 @@ function DatabaseComp() {
                                 <label htmlFor = "provider" className = "col-md-1 col-form-label text-center">券商名稱:</label>
                                 <div className = 'col-md-3'>
                                     <select id = "provider" className = "form-select" onChange = {e => setInput4(e.target.value)}>
-                                        <option value = "">全部</option>
-                                        <option value = "台新投顧">台新投顧</option>
-                                        <option value = "中信投顧">中信投顧</option>
-                                        <option value = "元富">元富</option>
-                                        <option value = "國票">國票</option>
-                                        <option value = "元大">元大</option>
-                                        <option value = "統一投顧">統一投顧</option>
-                                        <option value = "第一金">第一金</option>
-                                        <option value = "富邦台灣">富邦台灣</option>
-                                        <option value = "SinoPac">永豐金證券</option>
-                                        <option value = "CTBC">CTBC</option>
-                                        <option value = "永豐投顧">永豐投顧</option>
+                                        {
+                                            investment_company.map(function(ele, idx){
+                                                return <option key = {idx} value = {ele}>{ele}</option>
+                                            })
+                                        }
                                     </select>
                                 </div>
                             </>}

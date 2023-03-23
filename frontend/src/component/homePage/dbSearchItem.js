@@ -18,7 +18,6 @@ function DbSearchItem() {
     const [data2, setData2] = useState([]);
     const [data3, setData3] = useState([]);
     const [data4, setData4] = useState([]);
-    // const [data5, setData5] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page1, setPage1] = useState(0);
     const [pageSize1, setPageSize1] = useState(20);
@@ -28,8 +27,6 @@ function DbSearchItem() {
     const [pageSize3, setPageSize3] = useState(20);
     const [page4, setPage4] = useState(0);
     const [pageSize4, setPageSize4] = useState(20);
-    // const [page5, setPage5] = useState(0);
-    // const [pageSize5, setPageSize5] = useState(20);
     const [ticker, setTicker] = useState("");
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState(last3Month);
@@ -56,7 +53,7 @@ function DbSearchItem() {
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
-                "investmentCompany" : "",
+                "investmentCompany" : "全部",
             }).then(res => {
                 setData1(res.data)
                 setLoading(false)
@@ -119,23 +116,6 @@ function DbSearchItem() {
                 setData4([])
                 setPage4(0)
             })
-
-            // axios.get(config["rootApiIP"] + "/data/news_statmentdog_search", { params :{
-            //     "startDate" : input2,
-            //     "endDate" : input3,
-            //     "pattern" : ticker.split(" ")[1],
-            // }})
-            // .then((res) => {
-            //     setData5(res.data)
-            //     setLoading(false)
-            //     setPage5(0)
-            // })
-            // .catch((res) => {
-            //     if(res.response.data === "Session expired") window.location.reload()
-
-            //     setData5([])
-            //     setPage5(0)
-            // })
         }
     }
 
@@ -144,7 +124,7 @@ function DbSearchItem() {
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
-            "investmentCompany" : "",
+            "investmentCompany" : "全部",
         }).then(res => {
             setData1(res.data)
             setLoading(false)
@@ -207,23 +187,6 @@ function DbSearchItem() {
             setData4([])
             setPage4(0)
         })
-
-        // axios.get(config["rootApiIP"] + "/data/news_statmentdog_search", { params :{
-        //     "startDate" : last3Month,
-        //     "endDate" : today,
-        //     "pattern" : "",
-        // }})
-        // .then((res) => {
-        //     setData5(res.data)
-        //     setLoading(false)
-        //     setPage5(0)
-        // })
-        // .catch((res) => {
-        //     if(res.response.data === "Session expired") window.location.reload()
-            
-        //     setData5([])
-        //     setPage5(0)
-        // })
     }, [])
 
     return (

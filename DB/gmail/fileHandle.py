@@ -7,7 +7,75 @@ import fitz
 
 root_path = json.load(open("../../root_path.json"))
 
-class ExtractRate():
+def sino_pac_ex(directory_path : str) -> str:
+    possible_ans = ['買進', '中立']
+
+    # Worest case is NULL
+    rate_1, rate_2 = "NULL"
+
+    # Avoid nested struct
+    # Nested struct, lower than 3 layers
+
+    # If the error is clear definition, use if else rather then try except
+    with fitz.open(directory_path) as doc:
+        page = doc.load_page(0)
+        rect = page.rect
+
+        page_check_source = doc.load_page(-1)
+        text_check_source = page_check_source.get_text()
+
+        if '永豐證券投資顧問股份有限公司' in text_check_source:
+            # 報告為舊版 提取評價的第一種方法
+            # Cannot find which errors will occur
+            clip_old_version_1 = fitz.Rect(220, 80, 560, 140)
+            text_old_version_1 = page.get_text(clip=clip_old_version_1).strip()
+            text_old_version_1 = text_old_version_1.split('）')[1].strip()
+            rate_1 = text_old_version_1.split('\n')[1].strip()
+
+            # 提取評價的第二種方法
+            # Cannot find which errors will occur
+            clip_old_version_2 = fitz.Rect(425, 90, 560, 130)
+            rate_2 = page.get_text(clip=clip_old_version_2).strip()
+
+        elif 'SinoPac Securities' in text_check_source:
+            # 報告為新版 檢查報告版本
+            clip_check_report = fitz.Rect(0, 0, rect.width, 150)
+            text_check_report = page.get_text(clip=clip_check_report, sort=True).strip()
+
+            if '個股聚焦' in text_check_report:
+                # 提取評價的第一種方法
+                # Cannot find which errors will occur
+                clip_new_version_1 = fitz.Rect(0, 0, 200, 400)
+                text_new_version_1 = page.get_text(clip=clip_new_version_1).strip()
+                text_new_version_1 = text_new_version_1.split('投資建議')[1]
+                rate_1 = text_new_version_1.split('\n')[0].strip()
+
+                # 提取評價的第二種方法
+                # Cannot find which errors will occur
+                clip_new_version_2 = fitz.Rect(75, 200, 120, 235)
+                text_new_version_1 = page.get_text(clip=clip_new_version_2).strip()
+                rate_2 = text_new_version_1
+    
+    # 檢查兩種方法提取的評價是否相同
+    if rate_1 == rate_2:
+        return rate_1 if rate_1 != "NULL" else "NULL"
+
+    # "in" operator in python, time complexity is O(n)
+    # If rate_1 not in possible_ans, time complexity is O(n)
+    # If rate_2 not in possible_ans, time complexity is O(n)
+    # Total time complexity = O(n) + O(n)
+
+    # If traver list, time complexity is O(n)
+    for possible in possible_ans:
+        if possible == rate_1:
+            return possible
+
+        elif possible == rate_2:
+            return possible
+
+    return "NULL"
+
+class ExtractPdfRate():
     """Create handle for vary investment companies
     """
     def __init__(self) -> None:
@@ -308,13 +376,13 @@ class ExtractRate():
         return rate
 
 
-class PdfRecommendExtract():
-    """Extract recommend from pdf
+class FileHandle():
+    """Handle pdf file
     """
     def __init__(self) -> None:
         # self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}"
         self._unhandle_path = f"{root_path['UNZIP_PATH']}/test"
-        self._ER = ExtractRate()
+        self._ER = ExtractPdfRate()
 
     def _handle_1_dir(self) -> None:
         """Handle directory 1 (gmail handled)
@@ -327,9 +395,12 @@ class PdfRecommendExtract():
         """
         dir_path = f"{self._unhandle_path}/1"
 
+        if not os.path.isdir(dir_path):
+            print(f"{dir_path} is not exist", file = sys.stderr)
+
         # Travse all file in directory 1
         for filename in tqdm(os.listdir(dir_path)):
-            # 1216_統一_20230321_永豐投顧_NULL_ 受惠於內需增溫與殖利率題材.pdf
+            # 1216_統一_20230321_永豐投顧_NULL_受惠於內需增溫與殖利率題材.pdf
             info = filename.split("_")
             info[-1] = info[-1].replace(".pdf", "")
 
@@ -366,6 +437,9 @@ class PdfRecommendExtract():
                 None
         """
         dir_path = f"{self._unhandle_path}/2"
+
+        if not os.path.isdir(dir_path):
+            print(f"{dir_path} is not exist", file = sys.stderr)
         
         # Travse all file in directory 2
         for filename in tqdm(os.listdir(dir_path)):
@@ -392,23 +466,27 @@ class PdfRecommendExtract():
             os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
         os.rmdir(dir_path)
     
-    def run(self) -> None:
+    def run(self, mode : str = "handle") -> None:
         """Run
 
             Args :
-                None
+                mode : (str) mode
 
             Return :
                 None
         """
-        print("Handle 1 dir ...", file = sys.stderr)
-        self._handle_1_dir()
+        if mode == "handle":
+            print("Handle 1 dir ...", file = sys.stderr)
+            self._handle_1_dir()
 
-        print("Handle 2 dir ...", file = sys.stderr)
-        self._handle_2_dir()
+            print("Handle 2 dir ...", file = sys.stderr)
+            self._handle_2_dir()
+
+        elif mode == "update":
+            pass
 
 if __name__ == "__main__":
     sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + "/pdf_extract_" + str(datetime.datetime.now()) + '.log', 'w')
-    PRE = PdfRecommendExtract()
+    FH = FileHandle()
 
-    PRE.run()
+    FH.run(mode = sys.argv[1])

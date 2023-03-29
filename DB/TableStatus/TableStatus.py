@@ -2,6 +2,8 @@ import MySQLdb
 import MySQLdb.cursors
 import json
 import pandas as pd
+import sys
+import datetime
 
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
@@ -153,6 +155,7 @@ class TableStatus2CSV():
         self._post_board_memo2csv()
 
 if __name__ == "__main__":
+    sys.stderr = open(root_path["GMAIL_DATA_OTHER_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
     table_status = TableStatus2CSV()
 
     table_status.run()

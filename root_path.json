@@ -28,6 +28,6 @@
     "TICKER_LIST_DIR_PATH" : "/home/uikai/financialData/src",
     "TWSEDATA_CH" : "/home/uikai/financialData/twseData/data/ch",
     "TWSEDATA_EN" : "/home/uikai/financialData/twseData/data/en",
-    "CSV_PATH" : "/home/uikai/financialData/table_status/log",
-    "CSV_LOG" : "/home/uikai/financialData/table_status/data"
+    "CSV_PATH" : "/home/uikai/financialData/table_status/data",
+    "CSV_LOG" : "/home/uikai/financialData/table_status/log"
 }

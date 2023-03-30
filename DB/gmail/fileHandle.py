@@ -100,52 +100,46 @@ class Update2SQL():
             
         return result["ID"][0]
     
-    def _isDuplicate(self, key : int, info : List, filename : str) -> bool:
+    def _isDuplicate(self, info : List) -> bool:
         """Check if data is duplicate
 
             Args :
-                key : (int) foreign key id
                 info : (List) list of information got from filename
                     ex:
-                        [2886, 兆豐金, 2023-03-22, CTBC, 中立, 兆豐銀資本相對充足，尚無AT1直接衝擊影響]
-                filename : (str) filename
-                    ex:
-                        2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf
+                        [foreign key id, 2023-03-22, CTBC, 2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf,
+                            中立, 兆豐銀資本相對充足，尚無AT1直接衝擊影響]
 
                 Return :
                     bool
         """
         query = "SELECT * from financialData WHERE ticker_id=%s AND date=%s AND \
             investmentCompany=%s AND filename=%s AND recommend=%s AND remark=%s;"
-        param = [key] + info[2:4] + [filename] + info[4:]
+        param = tuple(info)
 
-        self._cursor.execute(query, tuple(param))
+        self._cursor.execute(query, param)
         self._db.commit()
         
         result = pd.DataFrame.from_dict(self._cursor.fetchall())
 
         return False if result.empty else True
     
-    def _insert(self, key : int, info : List, filename : str) -> None:
+    def _insert(self, info : List) -> None:
         """Insert data to table
 
             Args :
-                key : (int) foreign key id
                 info : (List) list of information got from filename
                     ex:
-                        [2886, 兆豐金, 2023-03-22, CTBC, 中立, 兆豐銀資本相對充足，尚無AT1直接衝擊影響]
-                filename : (str) filename
-                    ex:
-                        2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf
+                        [foreign key id, 2023-03-22, CTBC, 2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf,
+                            中立, 兆豐銀資本相對充足，尚無AT1直接衝擊影響]
 
                 Return :
                     None
         """
         query = "INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend, remark) \
                 VALUES (%s, %s, %s, %s, %s, %s);"
-        param = [key] + info[2:4] + [filename] + info[4:]
+        param = tuple(info)
 
-        self._cursor.execute(query, tuple(param))
+        self._cursor.execute(query, param)
         self._db.commit()
     
     def _move_file(self, origin_path : str, fileanme : str, stock_num : str) -> None:
@@ -187,17 +181,20 @@ class Update2SQL():
 
             # find foreign key id
             key = self._find_key(info[0])
+            stock_num = info[0]
 
             if key == -1:
                 print(f"{key} not exist in foreign key", file = sys.stderr)
                 continue
+            
+            info = [key] + info[2:4] + [filename] + info[4:]
 
-            if self._isDuplicate(key, info, filename):
+            if self._isDuplicate(info):
                 print(f"{filename} is existed", file = sys.stderr)
                 continue
-
-            self._insert(key, info, filename)
-            self._move_file(f"{dir}/{filename}", filename, info[0])
+            
+            self._insert(info)
+            self._move_file(f"{dir}/{filename}", filename, stock_num)
 
 
 class ExtractPdfRate():

@@ -6,6 +6,7 @@ import shutil
 import pandas as pd
 from tqdm import tqdm
 import json
+from typing import List
 
 root_path = json.load(open("../root_path.json"))
 
@@ -41,10 +42,11 @@ class Compress2SQL():
             if key == -1:
                 continue
             
-            db_filename = f"{field[0]}_{field[1]}_{date}_{field[2]}_{field[-1][:-4]}.pdf"
+            db_filename = f"{field[0]}_{field[1]}_{date}_{field[2]}_{field[3]}_{field[4][:-4]}.pdf"
+            info = [key, f"{date[0:4]}-{date[4:6]}-{date[6:8]}", field[2], db_filename, field[3], field[4][:-4]]
 
-            if not self._isDuplicate(key, date[0:4] + "-" + date[4:6] + "-" + date[6:8], field[2], db_filename, field[-1][:-4]):
-                self._insert(key, date[0:4] + "-" + date[4:6] + "-" + date[6:8], field[2], db_filename, field[-1][:-4])
+            if not self._isDuplicate(key, info):
+                self._insert(info)
                 self._move_file(filename[:-4], field[0], decompress_file, db_filename)
         shutil.rmtree(self._decompress_dir + filename[:-4])
 
@@ -61,11 +63,11 @@ class Compress2SQL():
             
         return result["ID"][0]
 
-    def _isDuplicate(self, key : str, date : str, investmentCompany : str, filename : str, recommend : str) -> bool:
+    def _isDuplicate(self, info : List) -> bool:
         query = "SELECT * from financialData WHERE ticker_id=%s AND date=%s AND investmentCompany=%s AND \
-            filename=%s AND recommend=%s;"
+            filename=%s AND recommend=%s AND remark=%s;"
 
-        param = (key, date, investmentCompany, filename, recommend)
+        param = tuple(info)
 
         self._cursor.execute(query, param)
         self._db.commit()
@@ -76,11 +78,11 @@ class Compress2SQL():
             return False
         return True
 
-    def _insert(self, key : str, date : str, investmentCompany : str, filename : str, recommend : str) -> None:
-        query = "INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend) \
-            VALUE (%s, %s, %s, %s, %s);"
+    def _insert(self, info : List) -> None:
+        query = "INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend, remark) \
+            VALUE (%s, %s, %s, %s, %s, %s);"
 
-        param = (key, date, investmentCompany, filename, recommend)
+        param = tuple(info)
         self._cursor.execute(query, param)
         self._db.commit()
     

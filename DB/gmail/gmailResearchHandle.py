@@ -150,15 +150,18 @@ class Pattern():
 
         if "永豐投顧" in info["subject"]:
             # Fwd: 【永豐投顧】上奇（6123 TT，B，80）/ 評價具提升空間_20230202
-            idx_slash = info["subject"].find("/")
+            start = info["subject"].find("/") + 1
             end = len(info["subject"])
 
-            for idx in range(idx_slash + 2, len(info["subject"]), 1):
+            while info["subject"][start] == " ":
+                start += 1
+
+            for idx in range(start, len(info["subject"]), 1):
                 if info["subject"][idx] == "_":
                     end = idx
                     break
             
-            temp = info["subject"][idx_slash + 2:end].replace("/", "")
+            temp = info["subject"][start:end].replace("/", "")
             
             result.append(temp)
             

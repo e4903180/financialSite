@@ -45,9 +45,10 @@ class Update2SQL():
         """
         query = "SELECT * from financialData WHERE ticker_id=%s AND date=%s AND \
             investmentCompany=%s AND filename=%s AND recommend=%s AND remark=%s;"
-        param = tuple([key].extend(info[1:]))
+        param = [key]
+        param.extend(info[1:])
 
-        self._cursor.execute(query, param)
+        self._cursor.execute(query, tuple(param))
         self._db.commit()
         
         result = pd.DataFrame.from_dict(self._cursor.fetchall())
@@ -68,9 +69,10 @@ class Update2SQL():
         """
         query = "INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend, remark) \
                 VALUES (%s, %s, %s, %s, %s, %s);"
-        param = tuple([key].extend(info[1:]))
+        param = [key]
+        param.extend(info[1:])
 
-        self._cursor.execute(query, param)
+        self._cursor.execute(query, tuple(param))
         self._db.commit()
     
     def _move_file(self, origin_path : str, fileanme : str, stock_num : str) -> None:

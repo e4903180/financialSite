@@ -100,7 +100,7 @@ class Update2SQL():
             
         return result["ID"][0]
     
-    def _isDuplicate(self, key : int, info : List) -> bool:
+    def _isDuplicate(self, key : int, info : List, filename : str) -> bool:
         """Check if data is duplicate
 
             Args :
@@ -108,14 +108,16 @@ class Update2SQL():
                 info : (List) list of information got from filename
                     ex:
                         [2886, 兆豐金, 2023-03-22, CTBC, 中立, 兆豐銀資本相對充足，尚無AT1直接衝擊影響]
-            
+                filename : (str) filename
+                    ex:
+                        2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf
+
                 Return :
                     bool
         """
         query = "SELECT * from financialData WHERE ticker_id=%s AND date=%s AND \
             investmentCompany=%s AND filename=%s AND recommend=%s AND remark=%s;"
-        param = [key]
-        param.extend(info[2:])
+        param = [key] + info[2:4] + [filename] + info[4:]
 
         self._cursor.execute(query, tuple(param))
         self._db.commit()
@@ -124,7 +126,7 @@ class Update2SQL():
 
         return False if result.empty else True
     
-    def _insert(self, key : int, info : List) -> None:
+    def _insert(self, key : int, info : List, filename : str) -> None:
         """Insert data to table
 
             Args :
@@ -132,14 +134,16 @@ class Update2SQL():
                 info : (List) list of information got from filename
                     ex:
                         [2886, 兆豐金, 2023-03-22, CTBC, 中立, 兆豐銀資本相對充足，尚無AT1直接衝擊影響]
-            
+                filename : (str) filename
+                    ex:
+                        2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf
+
                 Return :
                     None
         """
         query = "INSERT INTO financialData (ticker_id, date, investmentCompany, filename, recommend, remark) \
                 VALUES (%s, %s, %s, %s, %s, %s);"
-        param = [key]
-        param.extend(info[2:])
+        param = [key] + info[2:4] + [filename] + info[4:]
 
         self._cursor.execute(query, tuple(param))
         self._db.commit()
@@ -188,11 +192,11 @@ class Update2SQL():
                 print(f"{key} not exist in foreign key", file = sys.stderr)
                 continue
 
-            if self._isDuplicate(key, info):
+            if self._isDuplicate(key, info, filename):
                 print(f"{filename} is existed", file = sys.stderr)
                 continue
 
-            self._insert(key, info)
+            self._insert(key, info, filename)
             self._move_file(f"{dir}/{filename}", filename, info[0])
 
 

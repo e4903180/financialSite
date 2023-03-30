@@ -195,9 +195,8 @@ class GmailResearchHandle():
         self.monthMap = { "Jan" : 1, "Feb" : 2, "Mar" : 3, "Apr" : 4, "May" : 5, "Jun" : 6,
            "Jul" : 7, "Aug" : 8, "Sep" : 9, "Oct" : 10, "Nov" : 11, "Dec" : 12 }
         self.skip_subjects = ["CTBC-台股晨報", "CTBC-前日"]
-        self.unhandle_dir = [f"/home/uikai/financialData/unzip/test/1", "/home/uikai/financialData/unzip/test/2"]
-        # self.unhandle_dir = [f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1",
-        #                       f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2"]
+        self.unhandle_dir = [f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1",
+                              f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2"]
         self._check_unhandle_dir()
 
         self.stock_num2name = pd.read_excel(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx", sheet_name = 0)

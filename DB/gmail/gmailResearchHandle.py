@@ -586,7 +586,7 @@ class GmailResearchHandle():
             self._modifyLabel(mail_id, "handled")
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/gmail_handle_{str(datetime.datetime.now())}.log", 'w')
     GRH = GmailResearchHandle()
 
     GRH.run()

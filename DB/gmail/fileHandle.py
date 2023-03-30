@@ -405,7 +405,6 @@ class FileHandle():
             info[-1] = info[-1].replace(".pdf", "")
 
             if info[4] != "NULL":
-                os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{filename}")
                 continue
 
             new_rate = "NULL"

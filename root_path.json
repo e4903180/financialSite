@@ -15,7 +15,6 @@
     "GMAIL_DATA_OTHER_DATA_PATH" : "/home/uikai/financialData/gmailDataOther/data",
     "GMAIL_DATA_LOG_PATH" : "/home/uikai/financialData/gmailData/log",
     "GMAIL_DATA_DATA_PATH" : "/home/uikai/financialData/gmailData/data",
-    "GMAIL_DATA_DATAFRAME_PATH" : "/home/uikai/financialData/gmailData/dataFrame",
     "NEWS_LOG_PATH" : "/home/uikai/financialData/news",
     "SUBEXPIRE_LOG_PATH" : "/home/uikai/financialData/SubExpire",
     "TWII_LOG_PATH" : "/home/uikai/financialData/TWII",

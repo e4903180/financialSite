@@ -424,8 +424,7 @@ class FileHandle():
 
             new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{new_rate}_{info[5]}.pdf"
 
-            os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
-        os.rmdir(dir_path)
+            os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
     def _handle_2_dir(self) -> None:
         """Handle directory 2 (gmail cannot handle and line)
@@ -463,10 +462,9 @@ class FileHandle():
 
             new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
 
-            os.rename(f"{dir_path}/{filename}", f"{self._unhandle_path}/{new_filename}")
-        os.rmdir(dir_path)
+            os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
-    def run(self, mode : str = "handle") -> None:
+    def run(self) -> None:
         """Run
 
             Args :
@@ -475,18 +473,14 @@ class FileHandle():
             Return :
                 None
         """
-        if mode == "handle":
-            print("Handle 1 dir ...", file = sys.stderr)
-            self._handle_1_dir()
+        print("Handle 1 dir ...", file = sys.stderr)
+        self._handle_1_dir()
 
-            print("Handle 2 dir ...", file = sys.stderr)
-            self._handle_2_dir()
-
-        elif mode == "update":
-            pass
+        print("Handle 2 dir ...", file = sys.stderr)
+        self._handle_2_dir()
 
 if __name__ == "__main__":
     sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + "/pdf_extract_" + str(datetime.datetime.now()) + '.log', 'w')
     FH = FileHandle()
 
-    FH.run(mode = sys.argv[1])
+    FH.run()

@@ -125,7 +125,7 @@ class Update2SQL():
             self._move_file(f"{dir}/{filename}", filename, info[0])
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"{str(datetime.datetime.now())}_SQL.log", 'w')
+    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/{str(datetime.datetime.now())}_SQL.log", 'w')
 
     update_2_sql = Update2SQL()
 

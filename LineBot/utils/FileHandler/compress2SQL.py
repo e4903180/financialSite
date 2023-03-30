@@ -45,7 +45,7 @@ class Compress2SQL():
             db_filename = f"{field[0]}_{field[1]}_{date}_{field[2]}_{field[3]}_{field[4][:-4]}.pdf"
             info = [key, f"{date[0:4]}-{date[4:6]}-{date[6:8]}", field[2], db_filename, field[3], field[4][:-4]]
 
-            if not self._isDuplicate(key, info):
+            if not self._isDuplicate(info):
                 self._insert(info)
                 self._move_file(filename[:-4], field[0], decompress_file, db_filename)
         shutil.rmtree(self._decompress_dir + filename[:-4])

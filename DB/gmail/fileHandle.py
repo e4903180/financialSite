@@ -517,6 +517,7 @@ class FileHandle():
 
         if not os.path.isdir(dir_path):
             print(f"{dir_path} is not exist", file = sys.stderr)
+            return
 
         # Travse all file in directory 1
         for filename in tqdm(os.listdir(dir_path)):
@@ -558,6 +559,7 @@ class FileHandle():
 
         if not os.path.isdir(dir_path):
             print(f"{dir_path} is not exist", file = sys.stderr)
+            return
         
         # Travse all file in directory 2
         for filename in tqdm(os.listdir(dir_path)):

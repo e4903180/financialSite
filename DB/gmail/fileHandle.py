@@ -191,6 +191,7 @@ class Update2SQL():
 
             if self._isDuplicate(info):
                 print(f"{filename} is existed", file = sys.stderr)
+                os.remove(f"{dir}/{filename}")
                 continue
             
             self._insert(info)

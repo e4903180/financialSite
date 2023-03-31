@@ -16,14 +16,14 @@ exports.financial_recommend_update = async function(req, res){
         return res.status(400).send("error")
     }
 
-    query = "UPDATE financialData SET recommend=? WHERE ticker_id=? AND \
-                date=? AND investmentCompany=? AND filename=?"
+    query = "UPDATE financialData SET recommend=?, filename=? WHERE ticker_id=? AND \
+                date=? AND investmentCompany=?"
 
     let info = req.body.filename.split("_")
     let new_filename = `${info[0]}_${info[1]}_${info[2]}_${info[3]}_${req.body.recommend}_${info[5]}`
 
-    param = [req.body.recommend, req.body.ticker_id, req.body.date, 
-            req.body.investmentCompany, new_filename]
+    param = [req.body.recommend, new_filename, req.body.ticker_id, req.body.date, 
+            req.body.investmentCompany]
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

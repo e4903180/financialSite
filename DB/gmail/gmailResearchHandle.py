@@ -395,7 +395,7 @@ class GmailResearchHandle():
 
                 field = payload['parts'][file_ptr]['filename'].split(" ")
 
-                with open(f"{self.unhandle_dir[1]}/{field[0][:4]}_{self.stock_num2name[field[0][:4]]}_{info['date']}_{field[1].replace('.pdf', '')}_NULL_NULL.pdf",
+                with open(f"{self.unhandle_dir[0]}/{field[0][:4]}_{self.stock_num2name[field[0][:4]]}_{info['date']}_{field[1][:-4]}_NULL_NULL.pdf",
                         'wb') as f:
                     f.write(file_data)
 

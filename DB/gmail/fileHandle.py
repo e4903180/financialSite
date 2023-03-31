@@ -540,7 +540,8 @@ class FileHandle():
                 new_rate = self._ER.ibf(f"{dir_path}/{filename}")
                 info[3] = "國票"
 
-            elif 'CTBC' or '中信' in info[3]:
+            elif (('CTBC' in info[3]) or
+                ('中信' in info[3])):
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
                 info[3] = "CTBC"
 
@@ -579,7 +580,8 @@ class FileHandle():
                 new_rate = self._ER.ibf(f"{dir_path}/{filename}")
                 info[1] = "國票"
 
-            elif 'CTBC' or '中信' in info[1]:
+            elif (('CTBC' in info[3]) or
+                ('中信' in info[3])):
                 new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
                 info[1] = "CTBC"
 

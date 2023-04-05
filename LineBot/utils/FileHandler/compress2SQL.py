@@ -22,16 +22,14 @@ class Compress2SQL():
         compress_files = os.listdir(self._copmpress_dir)
 
         for compress_file in tqdm(compress_files):
-            date = compress_file[0:8]
-
             self._compress(compress_file)
-            self._decompress_handle(compress_file, date)
+            self._decompress_handle(compress_file)
             os.remove(self._copmpress_dir + compress_file)
 
     def _compress(self, filename : str) -> None:
         patoolib.extract_archive(self._copmpress_dir + filename, outdir = self._decompress_dir)
 
-    def _decompress_handle(self, filename : str, date : str) -> None:
+    def _decompress_handle(self, filename : str) -> None:
         decompress_files = os.listdir(self._decompress_dir + filename[:-4])
 
         for decompress_file in decompress_files:
@@ -42,12 +40,11 @@ class Compress2SQL():
             if key == -1:
                 continue
             
-            db_filename = f"{field[0]}_{field[1]}_{date}_{field[2]}_{field[3]}_{field[4][:-4]}.pdf"
-            info = [key, f"{date[0:4]}-{date[4:6]}-{date[6:8]}", field[2], db_filename, field[3], field[4][:-4]]
+            info = [key, field[2], field[3], decompress_file] + field[4:]
 
             if not self._isDuplicate(info):
                 self._insert(info)
-                self._move_file(filename[:-4], field[0], decompress_file, db_filename)
+                self._move_file(filename[:-4], field[0], decompress_file, decompress_file)
         shutil.rmtree(self._decompress_dir + filename[:-4])
 
     def _find_key(self, stock_num : str) -> int:

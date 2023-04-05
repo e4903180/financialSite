@@ -34,6 +34,7 @@ class Compress2SQL():
 
         for decompress_file in decompress_files:
             field = decompress_file.split("_")
+            field[2] = f"{field[2][:4]}-{field[2][4:6]}-{field[2][6:]}"
             field[-1] = field[-1][:-4]
 
             key = self._find_key(field[0])

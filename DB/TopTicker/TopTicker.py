@@ -17,7 +17,7 @@ class TopTicker():
         self._cursor = self._db.cursor()
 
         self._buy_pattern = ["增加持股", "中立轉買進", "買進", "買進–維持買進", "買入", "強力買進", "維持買進", "強力買進/買進", "優於大盤", "buy", "Buy", "BUY", "Overweight"]
-        self._hold_pattern = ["維持中立", "中立", "買進轉中立", "持有-超越同業(維持評等)", "hold", "Hold", "HOLD", "Neutral", "neutral"]
+        self._hold_pattern = ["維持中立", "中立", "買進轉中立", "持有-超越同業(維持評等)", "hold", "Hold", "HOLD", "Neutral", "neutral", "NEUTRAL"]
         self._sell_pattern = ["賣出", "劣於大盤", "sell", "Sell", "SELL", "Underweight", "REDUCE", "reduce", "Reduce"]
         self._interval_pattern = ["區間操作"]
 

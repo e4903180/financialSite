@@ -182,7 +182,8 @@ class Pattern():
 
             return result
         
-        elif "統一投顧" in info["subject"] and "投資速報" in info["subject"]:
+        elif (("統一投顧" in info["subject"]) and
+              ("投資速報" in info["subject"])):
             # Fwd: 統一投顧-邱岳霖-【投資速報】 系統電(5309.TT，買進) 儲能車用IPC三引擎啟動，2023維持高速成長
             start = info["subject"].find(")")
             result.append(info["subject"][start + 2:])

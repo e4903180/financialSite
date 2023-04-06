@@ -434,7 +434,7 @@ class FileHandle():
             Return :
                 None
         """
-        dir_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d') - datetime.timedelta(days = 1)}/2"
+        dir_path = f"{root_path['UNZIP_PATH']}/{(datetime.datetime.now() - datetime.timedelta(days = 1)).strftime('%Y%m%d')}/2"
 
         if not os.path.isdir(dir_path):
             print(f"{dir_path} is not exist", file = sys.stderr)

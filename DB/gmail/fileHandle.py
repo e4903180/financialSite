@@ -488,4 +488,4 @@ class FileHandle():
 
 if __name__ == "__main__":
     file_handle = FileHandle()
-    file_handle.run(sys.argv[1])
+    file_handle.run(int(sys.argv[1]))

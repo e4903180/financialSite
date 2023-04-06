@@ -14,6 +14,8 @@ import re
 import pandas as pd
 import urllib
 from urllib.parse import urlparse, parse_qs, quote
+from update2SQL import Update2SQL
+from fileHandle import FileHandle
 
 root_path = json.load(open("../../root_path.json"))
 
@@ -593,6 +595,15 @@ class GmailResearchHandle():
 
 if __name__ == "__main__":
     sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/gmail_handle_{str(datetime.datetime.now())}.log", 'w')
-    GRH = GmailResearchHandle()
+    gmail_reasearch_handle = GmailResearchHandle()
+    update_2_sql = Update2SQL()
 
-    GRH.run()
+    print("Handle gmail pdf...", file = sys.stderr)
+    gmail_reasearch_handle.run()
+
+    print("Handle recommend...", file = sys.stderr)
+    file_handle = FileHandle()
+    file_handle.run(1)
+
+    print("Update data to sql...", file = sys.stderr)
+    update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1")

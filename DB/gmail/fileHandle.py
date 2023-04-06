@@ -472,12 +472,7 @@ class FileHandle():
 
             Return :
                 None
-        """
-        if ((type(mode) != int) or 
-            (mode != 1) or 
-            (mode != 2)):
-            raise Exception("mode param error")
-        
+        """        
         if mode == 1:
             print("Handle 1 dir ...", file = sys.stderr)
             self._handle_1_dir()

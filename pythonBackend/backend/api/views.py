@@ -17,20 +17,6 @@ root_path = json.load(open("../../root_path.json"))
 DB = DataBaseManager()
 
 @api_view(['GET'])
-def zip_download(request):
-    if request.method == "GET":
-        filename = request.query_params.get("filename")
-        try:
-            FilePointer = open(f"{root_path['ZIP_PATH']}/{filename}", "rb")
-            response = HttpResponse(FilePointer, content_type = 'application/zip')
-            response['Content-Disposition'] = f"attachment; filename={filename}.zip"
-
-            return response
-        except Exception as e:
-            print(e)
-            return JsonResponse({"message" :"File not existed"}, status = status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
 def analysis_download(request):
     if request.method == "GET":
         filename = request.query_params.get("filename")

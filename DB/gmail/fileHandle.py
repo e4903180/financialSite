@@ -175,5 +175,7 @@ class FileHandle():
             self._handle_2_dir()
 
 if __name__ == "__main__":
+    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/line_handle_{str(datetime.datetime.now())}.log", 'w')
+    
     file_handle = FileHandle()
     file_handle.run(int(sys.argv[1]))

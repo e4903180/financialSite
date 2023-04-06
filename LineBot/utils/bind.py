@@ -1,6 +1,6 @@
 from linebot import LineBotApi
 import pandas as pd
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextSendMessage
 
 class Bind():
     def __init__(self) -> None:

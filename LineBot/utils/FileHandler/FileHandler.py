@@ -1,6 +1,6 @@
 from typing import Any, Dict
 from datetime import date
-from .compress2SQL import Compress2SQL
+from linebot.models import TextSendMessage
 import os
 import json
 
@@ -10,8 +10,7 @@ class FileHandler():
     def __init__(self, line_bot_api : Any) -> None:
         self._api = line_bot_api
 
-    def handle_pdf(self, event : Dict, db, cursor) -> None:
-        c2sql = Compress2SQL(db, cursor)
+    def handle_pdf(self, event : Dict) -> None:
         message_content = self._api.get_message_content(event.message.id)
         dir = f"{root_path['UNZIP_PATH']}/{date.today().strftime('%Y%m%d')}/2"
 
@@ -23,10 +22,8 @@ class FileHandler():
                 with open(f"{dir}/{event.message.file_name}", 'wb') as fd:
                     for chunk in message_content.iter_content():
                         fd.write(chunk)
-
-        elif ((".zip" in event.message.file_name) or
-              (".rar" in event.message.file_name)):
-            with open(f"{root_path['COMPRESS_DIR_PATH']}/{event.message.file_name}", 'wb') as fd:
-                for chunk in message_content.iter_content():
-                    fd.write(chunk)
-            c2sql.run()
+                
+                self._api.reply_message(event.reply_token, TextSendMessage(text = f"{event.message.file_name}上傳成功"))
+                return
+            
+            self._api.reply_message(event.reply_token, TextSendMessage(text = f"{event.message.file_name}已存在"))

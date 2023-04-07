@@ -91,7 +91,7 @@ function DbAutoSearch() {
                 "endDate" : input3,
                 "column" : "title",
                 "pattern" : ticker.split(" ")[1],
-                "category" : "全部"
+                "category" : "all"
             }})
             .then((res) => {
                 setData3(res.data)

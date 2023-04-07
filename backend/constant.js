@@ -80,6 +80,16 @@ const WebSocketMiddlewareHandler = (socket, next) => {
     }
 }
 
+const init_table_status = [
+    { "dbName" : "新聞", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "news" },
+    { "dbName" : "法說會", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "calender" },
+    { "dbName" : "個股研究報告", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "financialData" },
+    { "dbName" : "其他研究報告", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "financialOther" },
+    { "dbName" : "產業研究報告", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "financialIndustry" },
+    { "dbName" : "linememo", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "lineMemo" },
+    { "dbName" : "個股推薦", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "post_board_memo" },
+]
+
 module.exports = { 
     sessionMaxAge, 
     API_ROUTE_IP,
@@ -88,5 +98,6 @@ module.exports = {
     ioOptions, 
     wrap, 
     WebSocketMiddlewareHandler, 
-    config
+    config,
+    init_table_status
 }

@@ -7,7 +7,7 @@ function NewsItem(props) {
 
     return (
         <>
-            <div className = 'row pt-3 mx-auto'>
+            <div className = 'row py-3 mx-auto'>
                 <StripedDataGrid
                     columns = { columns_home_news }
                     rows = { props.data }

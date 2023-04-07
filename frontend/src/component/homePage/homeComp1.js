@@ -31,7 +31,7 @@ function HomeComp1() {
         <>
             <div className = 'row mx-auto'>
                 <div className = 'col-md-11 mx-auto py-3'>
-                    <div className = "card h-100 p-0 mt-3">
+                    <div className = "card p-0 mt-3">
                         <div className = 'mx-3 mt-2'>
                             <ul className = "nav nav-tabs">
                                 <li className = "nav-item">
@@ -51,10 +51,12 @@ function HomeComp1() {
                                 </li>
                             </ul>
 
-                            { type === "news" && <NewsItem data = { news } />}
-                            { type === "research" && <ReasearchItem data = { research } />}
-                            { type === "calendar" && <CalendarItem />}
-                            { type === "dbSearch" && <DbSearchItem /> }
+                            <div className = "tab-content">
+                                { type === "news" && <NewsItem data = { news } />}
+                                { type === "research" && <ReasearchItem data = { research } />}
+                                { type === "calendar" && <CalendarItem />}
+                                { type === "dbSearch" && <DbSearchItem /> }
+                            </div>
                         </div>
                     </div>
                 </div>

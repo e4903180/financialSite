@@ -3,16 +3,9 @@ import React from 'react';
 // import HomeComp from './component/homePage/homeComp';
 import LoginComp from './component/loginPage/loginComp';
 import RegisterComp from './component/registerPage/registerComp';
-import CalendarComp from './component/calendarPage/calendarComp';
 import PrivateRoute from './privateRoute';
 import LoginRoute from './login_privateRoute';
-import DatabaseComp from './component/databasePage/databaseComp';
-import PostBoardComp from './component/postBoardPage/postBoardComp';
-import LineMemoComp from './component/lineMemoPage/lineMemoComp';
-import MeetingDataComp from './component/meetingDataPage/meetingDataComp';
-import IndustryAnalysisComp from './component/Industry_analysisPage/Industry_analysisComp';
 import UserListComp from './component/userListPage/userListComp';
-import DatabaseSearchComp from './component/databasePage/databaseSearchComp';
 import StockPricingStratagyComp from './component/stock_pricing_stratagyPage/stock_pricing_stratagyComp';
 import PERRiverComp from './component/PER_RiverPage/PER_RiverComp';
 import SupportResistanceComp from './component/support_resistance_page/support_resistance_comp';
@@ -26,16 +19,14 @@ import InflationComp from './component/inflationPage/inflationComp';
 import CpiPpiPceComp from './component/CpiPpiPcePage/CpiPpiPceComp';
 import LineComp from './component/LinePage/LineComp';
 import ChooseTickerDetail from './component/chooseTickerPage/chooseTickerDetail';
-import NewsComp from './component/newsPage/newsComp'
 import HomeComp1 from './component/homePage/homeComp1';
 import SelfEditComp from './component/selfEdit/selfEditComp';
 import { config } from './constant';
-import FinancialDataOtherComp from './component/financialDataOtherPage/financialDataOtherComp';
-import DbAutoSearch from './component/homePage/dbAutoSearch';
 import OtherUploadComp from './component/financialDataOtherUploadPage/financialDataOtherUploadComp';
 import OtherEditComp from './component/financialDataOtherEditPage/financialDataOtherEditComp';
-import FinancialDataIndustryComp from './component/financialDataIndustryPage/finanicalDataIndustryComp';
 import FinancialDataIndustryUploadComp from './component/financialDataIndustryUploadPage/financialDataIndustryUploadComp';
+import DbAutoSearch from './component/dbSearchPage/dbAutoSearch';
+import DatabaseComp from './component/databasePage/databaseComp';
 
 axios.defaults.withCredentials = true;
 
@@ -53,17 +44,8 @@ function App() {
           
           <Route element = { <PrivateRoute /> } >
             <Route path = { config.rootPathPrefix + "/home" } element = { <HomeComp1 /> }></Route>
-            <Route exact path = { config.rootPathPrefix + "/home/search/:stock_num_name" } element = { <DbAutoSearch /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/calendar" } element = { <CalendarComp /> }></Route>
             <Route path = { config.rootPathPrefix + "/database" } element = { <DatabaseComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/financialDataOther" } element = { <FinancialDataOtherComp /> }></Route>
-            <Route exact path = { config.rootPathPrefix + "/financialDataIndustry" } element = { <FinancialDataIndustryComp /> }></Route>
-            <Route exact path = { config.rootPathPrefix + "/database/search/:stock_num_name" } element = { <DatabaseSearchComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/post_board" } element = { <PostBoardComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/news" } element = { <NewsComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/line_memo" } element = { <LineMemoComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/meeting_data" } element = { <MeetingDataComp /> } ></Route>
-            <Route exact path = { config.rootPathPrefix + "/industry_analysis" } element = { <IndustryAnalysisComp /> } ></Route>
+            <Route exact path = { config.rootPathPrefix + "/database/search/:stock_num_name" } element = { <DbAutoSearch /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/userList" } element = { <UserListComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/stock_pricing_stratagy" } element = { <StockPricingStratagyComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/PER_River" } element = { <PERRiverComp /> } ></Route>

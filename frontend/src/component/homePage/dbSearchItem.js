@@ -53,7 +53,8 @@ function DbSearchItem() {
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
-                "investmentCompany" : "全部",
+                "investmentCompany" : "all",
+                "recommend" : "all"
             }).then(res => {
                 setData1(res.data)
                 setLoading(false)
@@ -88,7 +89,7 @@ function DbSearchItem() {
                 "endDate" : input3,
                 "column" : "title",
                 "pattern" : ticker.split(" ")[1],
-                "category" : "全部"
+                "category" : "all"
             }})
             .then((res) => {
                 setData3(res.data)
@@ -124,7 +125,7 @@ function DbSearchItem() {
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
-            "investmentCompany" : "全部",
+            "investmentCompany" : "all",
         }).then(res => {
             setData1(res.data)
             setLoading(false)
@@ -159,7 +160,7 @@ function DbSearchItem() {
             "endDate" : today,
             "column" : "title",
             "pattern" : "",
-            "category" : "全部"
+            "category" : "all"
         }})
         .then((res) => {
             setData3(res.data)
@@ -225,7 +226,7 @@ function DbSearchItem() {
 
             <hr className = 'mx-auto'/>
 
-            <div className = 'row mx-auto py-4' style = {{ width : "90%" }}>
+            <div className = 'row mx-auto py-3'>
                 <h4 className = "text-center">個股研究資料</h4>
 
                 <DataGrid
@@ -249,7 +250,7 @@ function DbSearchItem() {
                 />
             </div>
 
-            <div className = 'row mx-auto py-4' style = {{ width : "90%", "height" : "800px" }}>
+            <div className = 'row mx-auto py-3' style = {{ "height" : "600px" }}>
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
@@ -272,7 +273,7 @@ function DbSearchItem() {
                 />
             </div>
 
-            <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
+            <div className = 'row mx-auto py-3'>
                 <h4 className = "text-center">其他研究報告</h4>
 
                 <DataGrid
@@ -292,10 +293,11 @@ function DbSearchItem() {
                     disableDensitySelector
                     disableColumnFilter
                     disableSelectionOnClick = { true }
+                    autoHeight
                 />
             </div>
 
-            <div className = 'row mx-auto py-4' style = {{ width : "90%", height : "600px" }}>
+            <div className = 'row mx-auto py-3'>
                 <h4 className = "text-center">新聞</h4>
 
                 <DataGrid
@@ -315,6 +317,7 @@ function DbSearchItem() {
                     disableDensitySelector
                     disableColumnFilter
                     disableSelectionOnClick = { true }
+                    autoHeight
                 />
             </div>
         </>

@@ -2,7 +2,8 @@ const con = require('../Model/connectFinancial')
 
 exports.financial_search = async function(req, res){
     let query = `SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
-    FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE 1=1`
+                FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID \
+                WHERE 1=1`
     let param = []
 
     if(req.body.stock_num_name !== ""){
@@ -15,12 +16,38 @@ exports.financial_search = async function(req, res){
         param.push(req.body.startDate, req.body.endDate)
     }
 
-    if(req.body.investmentCompany !== "全部"){
+    if(req.body.investmentCompany !== "all"){
         query += ` AND investmentCompany=?`
         param.push(req.body.investmentCompany)
     }
 
-    query += " ORDER BY date DESC"
+    if(req.body.recommend !== "all"){
+        switch(req.body.recommend){
+            case "buy":
+                query += ` AND recommend RLIKE '增加持股|中立轉買進|買進|優於大盤|buy|Buy|BUY|Overweight'`
+                break
+            
+            case "sell":
+                query += ` AND recommend RLIKE '賣出|劣於大盤|sell|Sell|SELL|Underweight|reduce|Reduce\
+                        |REDUCE'`
+                break
+            
+            case "neutral":
+                query += ` AND recommend RLIKE '維持中立|中立|買進轉中立|持有-超越同業(維持評等)|\
+                        hold|Hold|HOLD|neutral|Nertual|NEUTRAL'`
+                break
+
+            case "interval":
+                    query += ` AND recommend RLIKE '區間操作'`
+                    break
+            default:
+                break
+        }
+        
+    }
+
+    query += " ORDER BY financialData.date DESC, ticker_list.stock_name ASC, \
+                financialData.investmentCompany DESC, financialData.recommend ASC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
@@ -94,7 +121,7 @@ exports.lineMemo_search = async function(req, res){
 
 exports.calender_search = async function(req, res){
     let query = `SELECT calender.*, ticker_list.stock_name\
-    from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
+                from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
 
     if(req.body.stock_num_name !== ""){
@@ -106,7 +133,7 @@ exports.calender_search = async function(req, res){
         param.push(req.body.startDate, req.body.endDate)
     }
 
-    query += " ORDER BY date ASC"
+    query += " ORDER BY date ASC, ticker_list.stock_name ASC, Time ASC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
@@ -147,12 +174,12 @@ exports.news_search = async function(req, res){
 	    param.push(req.query.column, `%${req.query.pattern}%`)
     }
 
-    if(req.query.category !== "全部"){
+    if(req.query.category !== "all"){
         query += " AND category=?"
         param.push(req.query.category)
     }
 
-    query += " ORDER BY date DESC"
+    query += " ORDER BY date DESC, category ASC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
@@ -283,7 +310,7 @@ exports.other_search = async function(req, res){
         param.push(req.query.investmentCompany)
     }
 
-    query += " ORDER BY date DESC"
+    query += " ORDER BY date DESC, investmentCompany DESC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param)

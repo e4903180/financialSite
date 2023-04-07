@@ -6,9 +6,9 @@ export const columns_all_table_summary = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-    { field: 'downloadUrl', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', 
-        renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener" 
-    download = { rowData.value.split("/")[-1] + ".csv" }>Download</a> , sortable: false},
+    { field: 'table', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', 
+        renderCell : rowData => <a href = { config["rootApiIP"] + `data/download/table_status?table_name=${rowData.value}.csv` } target = "_blank" rel = "noreferrer noopener" 
+    download = { rowData.value + ".csv" }>Download</a> , sortable: false},
 ];
 
 export const columns_financialData = [
@@ -16,6 +16,7 @@ export const columns_financialData = [
     { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'recommend', headerName: '投資建議', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'remark', headerName: '備註', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
         renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialData?filename=" + rowData.value } 
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },

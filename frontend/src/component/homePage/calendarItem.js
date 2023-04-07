@@ -24,7 +24,7 @@ function CalendarItem() {
     }, [year, month])
 
     function clickEvent(info){
-        window.open(config["rootPathPrefix"] + "/home/search/" + info.event.title, '_blank', 'noopener,noreferrer')
+        window.open(config["rootPathPrefix"] + "/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
     }
 
     async function getCalendarData(fetchInfo, successCallback, failureCallback) {
@@ -53,7 +53,7 @@ function CalendarItem() {
     
     return (
         <>
-            <div className = 'row mt-3 mx-auto'>
+            <div className = 'row py-3 mx-auto'>
                 <div className = 'col-md-8 mx-auto'>
                     <FullCalendar
                         plugins={[ dayGridPlugin ]}
@@ -68,12 +68,9 @@ function CalendarItem() {
                 </div>
             </div>
 
-            <div className = 'row mt-5 mx-auto text-center'>
-                <h2>法說會詳細資訊</h2>
-            </div>
-
-            <div className = 'row mt-3 mx-auto' style = {{minheight : "600px"}}>
-                <div className = 'col-md-10 mx-auto'>
+            <div className = 'row py-3 mx-auto' style = {{minheight : "600px"}}>
+                <h2 className = 'text-center'>法說會詳細資訊</h2>
+                <div className = 'col-md-11 mx-auto'>
                     <DataGrid
                         columns = { columns_twse }
                         rows = { data }

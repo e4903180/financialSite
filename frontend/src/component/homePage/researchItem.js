@@ -9,7 +9,7 @@ function ReasearchItem(props) {
 
     return (
         <>
-            <div className = 'row pt-3 mx-auto'>
+            <div className = 'row py-3 mx-auto'>
                 <h4 className = "text-center">個股研究報告</h4>
 
                 <StripedDataGrid
@@ -34,7 +34,7 @@ function ReasearchItem(props) {
                 />
             </div>
 
-            <div className = 'row pt-3 mx-auto'>
+            <div className = 'row py-3 mx-auto'>
                 <h4 className = "text-center">產業研究報告</h4>
 
                 <StripedDataGrid

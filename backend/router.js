@@ -10,15 +10,13 @@ const Sub = require('./Controller/subController');
 const dbSearch = require('./Controller/dbSearchController');
 const dbUpdate = require('./Controller/dbUpdateController');
 const FilterTicker = require('./Controller/filterTickerController');
-const StockTool = require('./Controller/StockToolContrtoller');
-const meetingDataUp = require('./Controller/meeting_data_uploadController');
-const PostUp = require('./Controller/post_board_uploadController');
-const industry_analysisUp = require('./Controller/industry_analysis_uploadController')
-const gmailIndustry_analysisUp = require('./Controller/industryUpdateController');
-const LineMemoUp = require('./Controller/lineMemo_uploadController');
-const SelfUp = require('./Controller/self_uploadController');
-const OtUp = require('./Controller/otherUploadController');
-const Download = require('./Controller/downloadController');
+const StockTool = require('./Controller/stockToolContrtoller');
+const PostUp = require('./Controller/upload/uploadPostBoardMemoController');
+const gmailIndustry_analysisUp = require('./Controller/upload/uploadFinancialDataIndustryController');
+const LineMemoUp = require('./Controller/upload/uploadLinememoController');
+const SelfUp = require('./Controller/upload/uploadFinancialDataController');
+const OtUp = require('./Controller/upload/uploadFinancialDataOtherController');
+const Download = require('./Controller/download/downloadController');
 
 const Limiter = rateLimit({
     windowMs: 60 * 1000,
@@ -58,15 +56,10 @@ dataRouter.get("/download/single_financialDataOther", Download.single_financialD
 dataRouter.get("/download/single_financialDataIndustry", Download.single_financialDataIndustry_download)
 
 /* Download table router */
-dataRouter.get("/download/financialData", Download.financialData2csv_download)
-dataRouter.get("/download/post_board_memo", Download.post_board_memo2csv_download)
-dataRouter.get("/download/lineMemo", Download.lineMemo2csv_download)
-dataRouter.get("/download/calender", Download.calender2csv_download)
+dataRouter.get("/download/table_status", Download.table_status)
 
 /* Upload files router */
 dataRouter.post("/upload/post_board_upload", PostUp.post_board_middleWare, PostUp.post_board_upload)
-dataRouter.post("/upload/meeting_data_upload", meetingDataUp.meetingData_middleWare, meetingDataUp.meetingData_upload)
-dataRouter.post("/upload/industry_analysis_upload", industry_analysisUp.industry_analysis_middleWare, industry_analysisUp.industry_analysis_upload)
 dataRouter.post("/upload/line_memo_upload", LineMemoUp.lineMemo_upload)
 dataRouter.post("/upload/self_upload", SelfUp.self_upload_middleWare, SelfUp.self_upload)
 dataRouter.post("/upload/other", OtUp.other_upload_middleWare, OtUp.other_upload)
@@ -75,7 +68,7 @@ dataRouter.post("/upload/industry", gmailIndustry_analysisUp.industry_upload_mid
 /* Get DB data */
 dataRouter.get("/newestNews20", Data.newestNews20)
 dataRouter.get("/newestResearch20", Data.newestResearch20)
-dataRouter.get("/allData", Data.allData)
+dataRouter.get("/table_status", Data.table_status)
 dataRouter.get("/post_board_state", Data.post_board_state)
 dataRouter.get("/lineMemo_state", Data.lineMemo_state)
 dataRouter.get("/superUser", Data.superUser)

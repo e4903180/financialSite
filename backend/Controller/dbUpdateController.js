@@ -1,5 +1,4 @@
 const con = require('../Model/connectFinancial')
-const fs = require('fs');
 const { config } = require('../constant');
 const fsPromises = require('fs').promises;
 
@@ -17,7 +16,7 @@ exports.financial_recommend_update = async function(req, res){
     }
 
     query = "UPDATE financialData SET recommend=?, filename=? WHERE ticker_id=? AND \
-                date=? AND investmentCompany=?"
+            date=? AND investmentCompany=?"
 
     let info = req.body.filename.split("_")
     let new_filename = `${info[0]}_${info[1]}_${info[2]}_${info[3]}_${req.body.recommend}_${info[5]}`
@@ -51,7 +50,7 @@ exports.financial_delete = async function(req, res){
 
 exports.financialDataIndustry_title_update = async function(req, res){
     let query = "UPDATE financialDataOther SET title=? WHERE date=? AND \
-    investmentCompany=? AND filename=?"
+                investmentCompany=? AND filename=?"
 
     let param = [req.body.title, req.body.date, req.body.investmentCompany, req.body.filename]
 

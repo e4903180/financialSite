@@ -117,7 +117,8 @@ class Pattern():
                     result.append("NULL")
             return result
 
-        elif "元富投顧" in info["subject"]:
+        elif (("元富投顧" in info["subject"]) or
+              ("元富證券--每日股市彙報" in info["subject"])):
             for stock_num in stock_nums:
                 idx_left_brackets = info["subject"].find(stock_num + ")")
                 

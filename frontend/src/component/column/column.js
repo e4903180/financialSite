@@ -7,7 +7,7 @@ export const columns_all_table_summary = [
     { field: 'dataQuantity', headerName: '資料總筆數', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'newestDate', headerName: '最新資料日期', flex: 1, headerAlign: 'center', align: 'center', sortable: false },
     { field: 'table', headerName: '資料總表下載', flex: 1, headerAlign: 'center', align: 'center', 
-        renderCell : rowData => <a href = { config["rootApiIP"] + `data/download/table_status?table_name=${rowData.value}.csv` } target = "_blank" rel = "noreferrer noopener" 
+        renderCell : rowData => <a href = { config["rootApiIP"] + `/data/download/table_status?table_name=${rowData.value}.csv` } target = "_blank" rel = "noreferrer noopener" 
     download = { rowData.value + ".csv" }>Download</a> , sortable: false},
 ];
 

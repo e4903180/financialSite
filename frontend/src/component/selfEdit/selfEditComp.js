@@ -74,7 +74,7 @@ function SelfEditComp() {
                 "stock_num_name" : "",
                 "startDate" : last3Month,
                 "endDate" : today,
-                "investmentCompany" : "全部",
+                "investmentCompany" : "all",
             }).then(res => {
                 setData(res.data)
                 setPage(0)

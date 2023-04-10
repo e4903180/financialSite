@@ -24,21 +24,23 @@ exports.financial_search = async function(req, res){
     if(req.body.recommend !== "all"){
         switch(req.body.recommend){
             case "buy":
-                query += ` AND recommend RLIKE '增加持股|中立轉買進|買進|優於大盤|buy|Buy|BUY|Overweight'`
+                query += ` AND recommend IN ('增加持股','中立轉買進','買進','優於大盤','buy',\
+                                            'Buy','BUY','overweight','Overweight','OVERWEIGHT',\
+                                            '增加持股(Overweight)')`
                 break
             
             case "sell":
-                query += ` AND recommend RLIKE '賣出|劣於大盤|sell|Sell|SELL|Underweight|reduce|Reduce\
-                        |REDUCE'`
+                query += ` AND recommend IN ('賣出','劣於大盤','sell','Sell','SELL',\
+                                            'Underweight','reduce','Reduce','REDUCE')`
                 break
             
             case "neutral":
-                query += ` AND recommend RLIKE '維持中立|中立|買進轉中立|持有-超越同業(維持評等)|\
-                        hold|Hold|HOLD|neutral|Nertual|NEUTRAL'`
+                query += ` AND recommend IN ('維持中立','中立','買進轉中立','持有-超越同業(維持評等)','hold',\
+                                            'Hold','HOLD','neutral','Nertual','NEUTRAL')`
                 break
 
             case "interval":
-                    query += ` AND recommend RLIKE '區間操作'`
+                    query += ` AND recommend IN ('區間操作')`
                     break
             default:
                 break
@@ -54,6 +56,7 @@ exports.financial_search = async function(req, res){
 
         return res.status(200).send(rows)
     } catch (error) {
+        console.log(error)
         return res.status(400).send("error")
     }
 }

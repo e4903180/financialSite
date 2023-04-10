@@ -3,10 +3,10 @@ const { init_table_status } = require('../constant');
 
 exports.newestResearch20 = async function(req, res){
     let query = "SELECT financialData.*, ticker_list.stock_name \
-        FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY \
-        financialData.date DESC, ticker_list.stock_name ASC, financialData.investmentCompany DESC, \
-        financialData.recommend ASC, ticker_list.stock_name ASC Limit 20;\
-        SELECT * FROM financialDataIndustry ORDER BY `date` DESC Limit 20;"
+                FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY \
+                financialData.date DESC, ticker_list.stock_name ASC, financialData.investmentCompany DESC, \
+                financialData.recommend ASC, ticker_list.stock_name ASC Limit 20;\
+                SELECT * FROM financialDataIndustry ORDER BY `date` DESC Limit 20;"
 
     try {
         const [rows, fields] = await con.promise().query(query);

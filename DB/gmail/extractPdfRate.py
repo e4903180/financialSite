@@ -591,3 +591,287 @@ class ExtractPdfRate():
                     rate_2 = page.get_text(clip=clip_english_report_2, sort=True).strip()
                     
         return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def ffhc(self, directory_path : str) -> str:
+        '''Handle 第一金(First Financial Holding Co.) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['買進', '區間操作', '中立', 'Trading Buy', '區間', '強力買進', '- -', 'buy', 'Buy', 'Neutral']
+
+        with fitz.open(directory_path) as doc:
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if '第一金證券投資顧問' in text_check_source :
+                # 檢查版本                
+                clip_check_report = fitz.Rect(rect.width/2, 0, rect.width, 150)
+                text_check_report = page.get_text(clip=clip_check_report)
+                check_new_report = ['個股報告', '動態更新', '近況更新', '新股報告', '新 股 報 告', '新 股 掛 牌', '新股掛牌', '新 股 報 告 ', '個股速報']
+
+                if any(keyword in text_check_report for keyword in check_new_report):
+                    # 提取評價的第一種方法
+                    clip_new_report_1 = fitz.Rect(0, 130, 170, 300)
+                    text_new_report_1 = page.get_text(clip=clip_new_report_1).strip()
+                    rate_1 = text_new_report_1.split('\n')[0].strip()
+                    # 提取評價的第二種方法
+                    clip_new_report_2 = fitz.Rect(0, 140, 170, 300)
+                    rate_2 = page.get_text(clip=clip_new_report_2).strip()
+                    for keyword in possible_rate:
+                        if keyword in rate_2:
+                            rate_2 = keyword
+
+                elif '個 股 速 報' in text_check_report :
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(0, 130, 170, 300)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1).strip()
+                    rate_1 = text_old_report_1.split('\n')[0].strip()
+                    # 提取評價的第二種方法
+                    clip_old_report_2 = fitz.Rect(0, 140, 170, 300)
+                    rate_2 = page.get_text(clip=clip_old_report_2).strip()
+
+                    for keyword in possible_rate:
+                        if keyword in rate_2:
+                            rate_2 = keyword
+
+        return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def jihsun(self, directory_path : str) -> str:
+        '''Handle 日盛(JihSun) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['買進', '持有', '中立', '買進買進', '中立中立']
+
+        with fitz.open(directory_path) as doc:
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if '日盛證券投資顧問' in text_check_source :
+                # 檢查版本                
+                clip_check_report = fitz.Rect(rect.width/2, 0, rect.width, 150)
+                text_check_report = page.get_text(clip=clip_check_report)
+
+                if any(keyword in text_check_report for keyword in ['訪談報告', '公司速報']):
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(100, 0, 165, 200)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1, sort=True).strip()
+
+                    try:
+                        text_old_report_1 = text_old_report_1.split('投資評等')[1].strip()
+                        rate_1 = text_old_report_1.split('\n')[0].strip()
+                    except:
+                        rate_1 = 'NULL'
+
+                    # 提取評價的第二種方法
+                    clip_old_report_2 = fitz.Rect(100, 120, 165, 145)
+                    rate_2 = page.get_text(clip=clip_old_report_2).strip()
+
+        return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def esun(self, directory_path : str) -> str:
+        '''Handle 玉山(ESun) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['買進(維持)', '逢低買進(維持)', '買進(初次)']
+
+        with fitz.open(directory_path) as doc:
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if '玉山證券投資顧問' in text_check_source :
+                # 檢查版本                
+                clip_check_report = fitz.Rect(0, 0, rect.width, 100)
+                text_check_report = page.get_text(clip=clip_check_report)
+
+                if any(keyword in text_check_report for keyword in ['研 究 報 告']):
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(220, 80, rect.width, 180)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1, sort=True).strip()
+
+                    try:
+                        text_old_report_1 = text_old_report_1.split('TP')[0].strip()
+                        rate_1 = text_old_report_1.split('\n')[-1].strip()
+                    except:
+                        rate_1 = 'NILL'
+
+                    # 提取評價的第二種方法
+                    clip_old_report_2 = fitz.Rect(230, 120, 430, 160)
+                    rate_2 = page.get_text(clip=clip_old_report_2).strip()
+
+        return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def cathay(self, directory_path : str) -> str:
+        '''Handle 國泰(Cathay) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['中立 – 維持中立', '買進 – 維持買進', '買進', '中立 – 初次評等中立', '中立 – 買進轉中立', '中立 – 初次評等', '買進– 維持買進']
+
+        with fitz.open(directory_path) as doc:   
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if '國泰金融控股公司' in text_check_source :
+                # 檢查版本                
+                clip_check_report = fitz.Rect(rect.width/2, 0, rect.width, 150)
+                text_check_report = page.get_text(clip=clip_check_report)
+
+                if any(keyword in text_check_report for keyword in ['個股報告']):
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(350, 80, rect.width, 160)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1, sort=True).strip()
+                    rate_1 = text_old_report_1.split('\n')[0].strip()
+                    # 提取評價的第二種方法
+                    clip_old_report_2 = fitz.Rect(350, 80, 550, 130)
+                    rate_2 = page.get_text(clip=clip_old_report_2).strip()
+
+        return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def mega(self, directory_path : str) -> None:
+        '''Handle 兆豐(Mega) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['逢低買進', '區間操作', '買進']
+
+        with fitz.open(directory_path) as doc:
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if '本刊所刊載之內容僅做為參考，惟已力求正確與完整' in text_check_source :
+                # 檢查版本                
+                clip_check_new_report = fitz.Rect(rect.width/2, 0, rect.width, 150)
+                text_check_new_report = page.get_text(clip=clip_check_new_report)
+
+                if '訪談速報' in text_check_new_report or '個股報告' in text_check_new_report:
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(400, 0, rect.width, 200)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1).strip()
+
+                    try:
+                        text_old_report_1 = text_old_report_1.split('目標價')[1].strip()
+                        rate_1 = text_old_report_1.split('\n')[0].strip()
+                    except:
+                        rate_1 = 'NULL'
+
+                # 提取評價的第二種方法
+                clip_old_report_2 = fitz.Rect(410, 140, 490, 165)
+                rate_2 = page.get_text(clip=clip_old_report_2).strip()
+
+            return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def gfortune(self, directory_path : str) -> None:
+        '''Handle 福邦(Grand Fortune) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['中立', '優於大盤']
+
+        with fitz.open(directory_path) as doc:
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if 'Grand Fortune Securities' in text_check_source :
+                # 檢查版本                
+                clip_check_report = fitz.Rect(0, 0, rect.width, 100)
+                text_check_report = page.get_text(clip=clip_check_report)
+
+                if any(keyword in text_check_report for keyword in ['股市個股早報']):
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(0, 0, 200, 300)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1, sort=True).strip()
+
+                    try:
+                        text_old_report_1 = text_old_report_1.split('投資評等')[1].strip()
+                        rate_1 = text_old_report_1.split('\n')[0].strip()
+                    except:
+                        rate_1 = 'NULL'
+
+                    # 提取評價的第二種方法
+                    clip_old_report_2 = fitz.Rect(30, 200, 220, 250)
+                    rate_2 = page.get_text(clip=clip_old_report_2).strip()
+
+        return self._check_rate(rate_1, rate_2, possible_rate)
+
+    def concords(self, directory_path : str) -> str:
+        '''Handle 康和(Concord Securities) pdf
+        
+            Args :
+                directory_path : (str) pdf path
+            
+            Return :
+                rate : (str) recommend
+        '''
+        rate_1, rate_2 = 'NULL', 'NULL'
+        possible_rate = ['買進 (維持評等)', '中性', '中性 (維持評等)', '買進(維持評等)', '中 性 (維 持 評 等 )', '中性 (調降評等)',
+                    '買進 (調升評等)', '買進(首次評等)', '未評等', '未 評 等', '買進 (首次評等)', '新股掛牌 (未評等)', '新 股 掛 牌',
+                    '買進-維持', '逢低買進-首次', '逢低買進', '逢低買進-維持', '買進-首次', '買進']
+
+        with fitz.open(directory_path) as doc:
+            page = doc.load_page(0)
+            rect = page.rect
+            page_check_source = doc.load_page(-1)
+            text_check_source = page_check_source.get_text()
+
+            if '康 和 投 資 顧 問' in text_check_source :
+                # 檢查版本                
+                clip_check_report = fitz.Rect(rect.width/2, 0, rect.width, 150)
+                text_check_report = page.get_text(clip=clip_check_report)
+
+                if any(keyword in text_check_report for keyword in ['個股報告', '個 股 報 告', '投  資  速  報', '投 資 速 報']):
+                    # 提取評價的第一種方法
+                    clip_old_report_1 = fitz.Rect(0, 100, 400, 160)
+                    text_old_report_1 = page.get_text(clip=clip_old_report_1, sort=True).strip()
+
+                    if '，' in text_old_report_1:
+                        rate_1 = text_old_report_1.split('，')[0].strip()
+                    elif '目標價' in text_old_report_1:
+                        rate_1 = text_old_report_1.split('目標價')[0].strip()
+                    else:
+                        rate_1 = text_old_report_1.split('\n')[0].strip()
+
+        return self._check_rate(rate_1, rate_2, possible_rate)

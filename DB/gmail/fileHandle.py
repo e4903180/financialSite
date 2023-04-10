@@ -64,10 +64,6 @@ class FileHandle():
             elif "宏遠" in info[3]:
                 new_rate = self._ER.honsec(f"{dir_path}/{filename}")
                 info[3] = "宏遠"
-            
-            elif "宏遠" in info[3]:
-                new_rate = self._ER.honsec(f"{dir_path}/{filename}")
-                info[3] = "宏遠"
 
             elif "台新" in info[3]:
                 new_rate = self._ER.taishin(f"{dir_path}/{filename}")
@@ -84,6 +80,34 @@ class FileHandle():
             elif "元富" in info[3]:
                 new_rate = self._ER.masterlink(f"{dir_path}/{filename}")
                 info[3] = "元富"
+
+            elif "第一金" in info[3]:
+                new_rate = self._ER.ffhc(f"{dir_path}/{filename}")
+                info[3] = "第一金"
+
+            elif "日盛" in info[3]:
+                new_rate = self._ER.jihsun(f"{dir_path}/{filename}")
+                info[3] = "日盛"
+
+            elif "玉山" in info[3]:
+                new_rate = self._ER.esun(f"{dir_path}/{filename}")
+                info[3] = "玉山"
+            
+            elif "國泰" in info[3]:
+                new_rate = self._ER.cathay(f"{dir_path}/{filename}")
+                info[3] = "國泰"
+
+            elif "兆豐" in info[3]:
+                new_rate = self._ER.mega(f"{dir_path}/{filename}")
+                info[3] = "兆豐"
+            
+            elif "福邦" in info[3]:
+                new_rate = self._ER.gfortune(f"{dir_path}/{filename}")
+                info[3] = "福邦"
+
+            elif "康和" in info[3]:
+                new_rate = self._ER.concords(f"{dir_path}/{filename}")
+                info[3] = "康和"
 
             new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{new_rate}_{info[5]}.pdf"
 
@@ -152,6 +176,34 @@ class FileHandle():
             elif "元富" in info[1]:
                 new_rate = self._ER.masterlink(f"{dir_path}/{filename}")
                 info[1] = "元富"
+            
+            elif "第一金" in info[1]:
+                new_rate = self._ER.ffhc(f"{dir_path}/{filename}")
+                info[1] = "第一金"
+            
+            elif "日盛" in info[1]:
+                new_rate = self._ER.jihsun(f"{dir_path}/{filename}")
+                info[1] = "日盛"
+
+            elif "玉山" in info[1]:
+                new_rate = self._ER.esun(f"{dir_path}/{filename}")
+                info[1] = "玉山"
+            
+            elif "國泰" in info[1]:
+                new_rate = self._ER.cathay(f"{dir_path}/{filename}")
+                info[1] = "國泰"
+            
+            elif "兆豐" in info[1]:
+                new_rate = self._ER.mega(f"{dir_path}/{filename}")
+                info[1] = "兆豐"
+            
+            elif "福邦" in info[1]:
+                new_rate = self._ER.gfortune(f"{dir_path}/{filename}")
+                info[1] = "福邦"
+
+            elif "康和" in info[1]:
+                new_rate = self._ER.concords(f"{dir_path}/{filename}")
+                info[1] = "康和"
 
             new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
 

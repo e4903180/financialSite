@@ -41,7 +41,7 @@ const prod = {
     INDUSTRY_ANALYSIS_PATH : "/home/uikai/financialData/Industry_analysis/",
     TWSE_CHPDF_PATH : "/home/uikai/financialData/twseData/data/ch/",
     TWSE_ENPDF_PATH : "/home/uikai/financialData/twseData/data/en/",
-    CSV_PATH : "/home/uikai/financialData/",
+    CSV_PATH : "/home/uikai/financialData/table_status/data",
     RECOMMEND_JSON_PATH : "/home/uikai/financialSite/recommend.json",
     DB_HOST : process.env.DB_HOST,
     DB_USER : process.env.DB_USER,

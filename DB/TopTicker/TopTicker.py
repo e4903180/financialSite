@@ -1,13 +1,12 @@
 import json
 import MySQLdb
 import MySQLdb.cursors
-import datetime
 import pandas as pd
-import calendar
 from typing import Dict
 
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
+recommend = json.load(open("../../recommend.json"))
 
 class TopTicker():
     def __init__(self) -> None:
@@ -15,21 +14,16 @@ class TopTicker():
                                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
-        self._buy_pattern = ["增加持股", "中立轉買進", "買進", "買進–維持買進", "買入",
-                            "強力買進", "維持買進", "強力買進/買進", "優於大盤", "buy",
-                            "Buy", "BUY", "overweight", "Overweight", "OVERWEIGHT",
-                            "增加持股(Overweight)"]
+        self._buy_pattern = recommend["buy"]
 
-        self._hold_pattern = ["維持中立", "中立", "買進轉中立", "持有-超越同業(維持評等)", "hold",
-                            "Hold", "HOLD", "Neutral", "neutral", "NEUTRAL"]
+        self._hold_pattern = recommend["hold"]
 
-        self._sell_pattern = ["賣出", "劣於大盤", "sell", "Sell", "SELL",
-                            "Underweight", "REDUCE", "reduce", "Reduce"]
+        self._sell_pattern = recommend["sell"]
 
-        self._interval_pattern = ["區間操作"]
+        self._interval_pattern = recommend["interval"]
 
     def _get_month_data(self, start_date : str,  end_date : str) -> pd.DataFrame:
-        query = f"SELECT ticker_list.ID, financialData.date, financialData.investmentCompany, financialData.recommend \
+        query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, financialData.date, financialData.investmentCompany, financialData.recommend \
                 FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID WHERE date BETWEEN %s AND %s"
         param = (start_date, end_date)
 
@@ -38,10 +32,25 @@ class TopTicker():
 
         result = pd.DataFrame.from_dict(self._cursor.fetchall())
 
-        return result.sort_values(by = ['ID', 'date'])
+        return result.sort_values(by = ['stock_num', 'date'])
 
-    def _filter_top(self, data : pd.DataFrame, top : int) -> Dict:
-        ele_quantity = data["ID"].value_counts()[:top]
+    def _filter_top(self, data : pd.DataFrame, top : int, recommend : str) -> Dict:
+        if recommend == "all":
+            temp = data
+
+        elif recommend == "buy":
+            temp = data[data["recommend"].isin(self._buy_pattern)]
+
+        elif recommend == "hold":
+            temp = data[data["recommend"].isin(self._hold_pattern)]
+        
+        elif recommend == "sell":
+            temp = data[data["recommend"].isin(self._sell_pattern)]
+        
+        elif recommend == "interval":
+            temp = data[data["recommend"].isin(self._interval_pattern)]
+            
+        ele_quantity = temp["stock_num"].value_counts()[:top]
 
         return ele_quantity.to_dict()
 
@@ -49,7 +58,7 @@ class TopTicker():
         result = {}
 
         for ticker in top.keys():
-            temp = top_data[top_data["ID"] == ticker]
+            temp = top_data[top_data["stock_num"] == ticker]
 
             recommend_distribution = {
                 "buy" : 0,
@@ -73,35 +82,20 @@ class TopTicker():
                     recommend_distribution["interval"] += 1
             
             recommend_distribution["result"] = max(recommend_distribution, key = recommend_distribution.get)
-            result[ticker] = recommend_distribution
+
+            result[ticker] = {"stock_num" : ticker, "stock_name" : temp.iloc[0]["stock_name"], "recommend_distribution" : recommend_distribution}
 
         return result
 
-    def run(self) -> None:
-        today_date = datetime.datetime.now().today()
-        start_date = datetime.datetime(today_date.year, today_date.month, 1).strftime("%Y-%m-%d")
-        end_date = datetime.datetime(today_date.year, today_date.month, calendar.monthrange(today_date.year, today_date.month)[1]).strftime('%Y-%m-%d')
-
+    def run(self, start_date : str, end_date : str, top : int = 20, recommend : str = "all") -> None:
         month_data = self._get_month_data(start_date, end_date)
-        top = self._filter_top(month_data, 20)
-        month_data = month_data[month_data["ID"].isin(top.keys())]
-        recommend_distribution_result = self._recommend_distribution(month_data, top)
+        top_ticker_list = self._filter_top(month_data, top, recommend)
+        month_data = month_data[month_data["stock_num"].isin(top_ticker_list.keys())]
 
-        for x in recommend_distribution_result:
-            print(f"ticker_id: {x} summary is {recommend_distribution_result[x]['result']}")
-            # temp = 0
-            # for y in recommend_distribution_result[x]:
-            #     if y == "result":
-            #         continue
-            #     temp += recommend_distribution_result[x][y]
-
-            # if temp != top[x]:
-            #     print(top[x])
-            #     print(recommend_distribution_result[x])
-
-        # print(recommend_distribution_result)
+        recommend_distribution_result = self._recommend_distribution(month_data, top_ticker_list)
+        print(recommend_distribution_result)
 
 if __name__ == "__main__":
     top_ticker = TopTicker()
 
-    top_ticker.run()
+    top_ticker.run("2023-01-01", "2023-04-10", 20, "all")

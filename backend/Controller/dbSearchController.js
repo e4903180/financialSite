@@ -1,4 +1,7 @@
 const con = require('../Model/connectFinancial')
+var fs = require('fs')
+const { config } = require('../constant')
+var recommend_obj = JSON.parse(fs.readFileSync(config["RECOMMEND_JSON_PATH"], 'utf8'))
 
 exports.financial_search = async function(req, res){
     let query = `SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
@@ -24,23 +27,19 @@ exports.financial_search = async function(req, res){
     if(req.body.recommend !== "all"){
         switch(req.body.recommend){
             case "buy":
-                query += ` AND recommend IN ('增加持股','中立轉買進','買進','優於大盤','buy',\
-                                            'Buy','BUY','overweight','Overweight','OVERWEIGHT',\
-                                            '增加持股(Overweight)')`
+                query += ` AND recommend IN ${recommend_obj["buy_query"]}`
                 break
             
             case "sell":
-                query += ` AND recommend IN ('賣出','劣於大盤','sell','Sell','SELL',\
-                                            'Underweight','reduce','Reduce','REDUCE')`
+                query += ` AND recommend IN ${recommend_obj["sell_query"]}`
                 break
             
             case "neutral":
-                query += ` AND recommend IN ('維持中立','中立','買進轉中立','持有-超越同業(維持評等)','hold',\
-                                            'Hold','HOLD','neutral','Nertual','NEUTRAL')`
+                query += ` AND recommend IN ${recommend_obj["hold_query"]}`
                 break
 
             case "interval":
-                    query += ` AND recommend IN ('區間操作')`
+                    query += ` AND recommend IN ${recommend_obj["interval_query"]}`
                     break
             default:
                 break

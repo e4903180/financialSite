@@ -453,7 +453,7 @@ class ExtractPdfRate():
             Return :
                 rate : (str) recommend
         '''
-        possible_rate = ['中立', '中立', '區間操作', '買進']
+        possible_rate = ['中立', '區間操作', '買進']
         rate_1, rate_2 = 'NULL', 'NULL'
 
         with fitz.open(directory_path) as doc:

@@ -4,6 +4,7 @@ import os
 import sys
 from tqdm import tqdm
 from extractPdfRate import ExtractPdfRate
+from update2SQL import Update2SQL
 
 root_path = json.load(open("../../root_path.json"))
 
@@ -137,7 +138,7 @@ class FileHandle():
             new_rate = "NULL"
 
             if '永豐' in info[1]:
-                new_rate = self._ER.sino_pac(f"{dir_path}/{filename}")
+                new_rate = self._ER.sinopac(f"{dir_path}/{filename}")
                 info[1] = "永豐投顧"
                 
             elif '國票' in info[1]:
@@ -230,4 +231,9 @@ if __name__ == "__main__":
     sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/line_handle_{str(datetime.datetime.now())}.log", 'w')
     
     file_handle = FileHandle()
-    file_handle.run(int(sys.argv[1]))
+
+    if sys.argv[1] == 2:
+        update_2_sql = Update2SQL()
+        file_handle.run(int(sys.argv[1]))
+        
+        update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2")

@@ -62,7 +62,7 @@ exports.financial_search = async function(req, res){
 
 exports.post_board_search = async function(req, res){
     let query = `SELECT post_board_memo.*, ticker_list.stock_name, ticker_list.stock_num \
-    FROM post_board_memo INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ID WHERE 1=1`
+                FROM post_board_memo INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
 
     if(req.body.stock_num_name !== ""){
@@ -98,7 +98,7 @@ exports.post_board_search = async function(req, res){
 
 exports.lineMemo_search = async function(req, res){
     let query = `SELECT lineMemo.*, ticker_list.stock_name, ticker_list.stock_num \
-    FROM lineMemo INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID WHERE 1=1`
+                FROM lineMemo INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
 
     if(req.body.stock_num_name !== ""){
@@ -185,7 +185,7 @@ exports.news_search = async function(req, res){
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
-
+        
         for(let i = 0; i < rows.length; i++){
             rows[i]["title"] = [rows[i]["title"], rows[i]["link"]]
             delete rows[i]["link"]

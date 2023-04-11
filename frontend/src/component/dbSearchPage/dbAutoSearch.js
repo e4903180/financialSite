@@ -163,7 +163,7 @@ function DbAutoSearch() {
             "endDate" : today,
             "column" : "title",
             "pattern" : param.stock_num_name.split(" ")[1],
-            "category" : "全部"
+            "category" : "all"
         }})
         .then((res) => {
             setData3(res.data)

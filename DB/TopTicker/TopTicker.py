@@ -6,7 +6,7 @@ from typing import Dict
 
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
-recommend = json.load(open("../../convertedRecommend.json"))
+recommend = json.load(open("../../recommend.json"))
 
 class TopTicker():
     def __init__(self) -> None:

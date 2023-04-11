@@ -14,7 +14,7 @@ export const columns_all_table_summary = [
 export const columns_financialData = [
     { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'date', headerName: '資料日期', flex: 1, headerAlign: 'center', align: 'center' },
-    { field: 'investmentCompany', headerName: '提供者', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'investmentCompany', headerName: '投顧公司', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'recommend', headerName: '投資建議', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'remark', headerName: '備註', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 

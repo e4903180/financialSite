@@ -63,7 +63,7 @@ exports.post_board_upload = async function(req, res){
     query = "SELECT ticker_list.stock_num, ticker_list.stock_name, post_board_memo.username, \
             post_board_memo.date, post_board_memo.evaluation, post_board_memo.price, \
             post_board_memo.reason, post_board_memo.filename FROM post_board_memo \
-            INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ticker.ID ORDER BY date DESC"
+            INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ID ORDER BY date DESC"
 
     try {
         const [rows, fields] = await con.promise().query(query);

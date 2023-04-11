@@ -63,7 +63,7 @@ exports.self_upload = async function(req, res){
 
     query = "SELECT ticker_list.stock_num, ticker_list.stock_name, financialData.date, \
             financialData.investmentComapany, financialData.filename, financialData.recommend, \
-            financialData.remark INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ticker.ID \
+            financialData.remark INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID \
             ORDER BY date DESC"
 
     try {

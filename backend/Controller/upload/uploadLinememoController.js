@@ -41,7 +41,7 @@ exports.lineMemo_upload = async function(req, res){
 
     query = "SELECT ticker_list.stock_num, ticker_list.stock_name, lineMemo.date, \
             lineMemo.filename, lineMemo.inputTime, lineMemo.username FROM lineMemo \
-            INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ticker.ID ORDER BY date DESC"
+            INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID ORDER BY date DESC"
 
     try {
         const [rows, fields] = await con.promise().query(query);

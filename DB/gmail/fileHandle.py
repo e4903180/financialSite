@@ -2,12 +2,22 @@ import json
 import datetime
 import os
 import sys
+import configparser
 from tqdm import tqdm
 from extractPdfRate import ExtractPdfRate
 from update2SQL import Update2SQL
 from typing import Dict, List
+from linebot import LineBotApi, WebhookHandler
+from linebot.models import TextSendMessage
+
+config = configparser.ConfigParser()
+config.read('../../LineBot/config.ini')
+
+line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
+handler = WebhookHandler(config.get('line-bot', 'channel_secret'))
 
 root_path = json.load(open("../../root_path.json"))
+recommend_json = json.load(open("../../recommend.json"))
 
 class FileHandle():
     """Handle pdf file
@@ -15,6 +25,14 @@ class FileHandle():
     def __init__(self) -> None:
         self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}"
         self._ER = ExtractPdfRate()
+        self._admin_line_id = "U45ee9e279e6d61434fffe46a9365b369"
+
+        self._recommend_pattern = {
+            "buy" : recommend_json["buy"],
+            "hold" : recommend_json["hold"],
+            "sell" : recommend_json["sell"],
+            "interval" : recommend_json["interval"]
+        }
 
         # funtion pointer and mapping investment company
         self._handle_method = {
@@ -72,6 +90,8 @@ class FileHandle():
 
             result = self._recommend_extract(info, 3, dir_path, filename)
             info = result["info"]
+
+            self._new_recommend_notify(result['new_rate'])
             
             new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{result['new_rate']}_{info[5]}.pdf"
 
@@ -101,6 +121,8 @@ class FileHandle():
             result = self._recommend_extract(info, 1, dir_path, filename)
             info = result["info"]
 
+            self._new_recommend_notify(result['new_rate'])
+
             new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{result['new_rate']}_NULL.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
@@ -114,6 +136,13 @@ class FileHandle():
             info[investment_company_ptr] = temp[1]
 
         return {"info" : info, "new_rate" : new_rate}
+
+    def _new_recommend_notify(self, recommend : str) -> None:
+        for key in self._recommend_pattern:
+            if recommend in self._recommend_pattern[key]:
+                continue
+            
+            line_bot_api.push_message(self._admin_line_id, TextSendMessage(text = f"{recommend} is new recommend"))
 
     def run(self, mode : str) -> None:
         """Run

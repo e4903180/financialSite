@@ -19,6 +19,7 @@ class FileHandle():
         # funtion pointer and mapping investment company
         self._handle_method = {
             "永豐" : [self._ER.sinopac, "永豐投顧"],
+            "永豐投顧" : [self._ER.sinopac, "永豐投顧"],
             "國票" : [self._ER.ibf, "國票"],
             "CTBC" : [self._ER.ctbc, "CTBC"],
             "中信" : [self._ER.ctbc, "中信"],
@@ -123,11 +124,11 @@ class FileHandle():
             Return :
                 None
         """        
-        if mode == 1:
+        if mode == "1":
             print("Handle 1 dir ...", file = sys.stderr)
             self._handle_1_dir()
 
-        elif mode == 2:
+        elif mode == "2":
             print("Handle 2 dir ...", file = sys.stderr)
             self._handle_2_dir()
 

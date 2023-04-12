@@ -5,6 +5,7 @@ import sys
 from tqdm import tqdm
 from extractPdfRate import ExtractPdfRate
 from update2SQL import Update2SQL
+from typing import Dict, List
 
 root_path = json.load(open("../../root_path.json"))
 
@@ -14,6 +15,35 @@ class FileHandle():
     def __init__(self) -> None:
         self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}"
         self._ER = ExtractPdfRate()
+
+        # funtion pointer and mapping investment company
+        self._handle_method = {
+            "永豐" : [self._ER.sinopac, "永豐投顧"],
+            "國票" : [self._ER.ibf, "國票"],
+            "CTBC" : [self._ER.ctbc, "CTBC"],
+            "中信" : [self._ER.ctbc, "中信"],
+            "富邦" : [self._ER.fubon, "富邦"],
+            "元大" : [self._ER.yuanta, "元大"],
+            "宏遠" : [self._ER.honsec, "宏遠"],
+            "台新" : [self._ER.taishin, "台新投顧"],
+            "統一" : [self._ER.pscnet, "統一投顧"],
+            "群益" : [self._ER.capital, "群益"],
+            "元富" : [self._ER.masterlink, "元富"],
+            "第一金" : [self._ER.ffhc, "第一金"],
+            "日盛" : [self._ER.jihsun, "日盛"],
+            "玉山" : [self._ER.esun, "玉山"],
+            "國泰" : [self._ER.cathay, "國泰"],
+            "兆豐" : [self._ER.mega, "兆豐"],
+            "福邦" : [self._ER.gfortune, "福邦"],
+            "康和" : [self._ER.concords, "康和"],
+            "MS" : [self._ER.morganstanley, "MS"],
+            "city" : [self._ER.citi, "city"],
+            "里昂" : [self._ER.clsa, "里昂"],
+            "高盛" : [self._ER.goldmansachs, "高盛"],
+            "HSBC" : [self._ER.hsbc, "HSBC"],
+            "摩根大通" : [self._ER.jpmorgan, "摩根大通"],
+            "野村" : [self._ER.nomura, "野村"],
+        }
 
     def _handle_1_dir(self) -> None:
         """Handle directory 1 (gmail handled)
@@ -39,78 +69,10 @@ class FileHandle():
             if info[4] != "NULL":
                 continue
 
-            new_rate = "NULL"
-
-            if '永豐' in info[3]:
-                new_rate = self._ER.sinopac(f"{dir_path}/{filename}")
-                info[3] = "永豐投顧"
-
-            elif '國票' in info[3]:
-                new_rate = self._ER.ibf(f"{dir_path}/{filename}")
-                info[3] = "國票"
-
-            elif (('CTBC' in info[3]) or 
-                  ('中信' in info[3])):
-                new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
-                info[3] = "CTBC"
+            result = self._recommend_extract(info, 3, dir_path, filename)
+            info = result["info"]
             
-            elif "富邦" in info[3]:
-                new_rate = self._ER.fubon(f"{dir_path}/{filename}")
-                info[3] = "富邦"
-
-            elif "元大" in info[3]:
-                new_rate = self._ER.yuanta(f"{dir_path}/{filename}")
-                info[3] = "元大"
-            
-            elif "宏遠" in info[3]:
-                new_rate = self._ER.honsec(f"{dir_path}/{filename}")
-                info[3] = "宏遠"
-
-            elif "台新" in info[3]:
-                new_rate = self._ER.taishin(f"{dir_path}/{filename}")
-                info[3] = "台新投顧"
-            
-            elif "統一" in info[3]:
-                new_rate = self._ER.pscnet(f"{dir_path}/{filename}")
-                info[3] = "統一投顧"
-            
-            elif "群益" in info[3]:
-                new_rate = self._ER.capital(f"{dir_path}/{filename}")
-                info[3] = "群益"
-            
-            elif "元富" in info[3]:
-                new_rate = self._ER.masterlink(f"{dir_path}/{filename}")
-                info[3] = "元富"
-
-            elif "第一金" in info[3]:
-                new_rate = self._ER.ffhc(f"{dir_path}/{filename}")
-                info[3] = "第一金"
-
-            elif "日盛" in info[3]:
-                new_rate = self._ER.jihsun(f"{dir_path}/{filename}")
-                info[3] = "日盛"
-
-            elif "玉山" in info[3]:
-                new_rate = self._ER.esun(f"{dir_path}/{filename}")
-                info[3] = "玉山"
-            
-            elif "國泰" in info[3]:
-                new_rate = self._ER.cathay(f"{dir_path}/{filename}")
-                info[3] = "國泰"
-
-            elif "兆豐" in info[3]:
-                new_rate = self._ER.mega(f"{dir_path}/{filename}")
-                info[3] = "兆豐"
-            
-            elif "福邦" in info[3]:
-                new_rate = self._ER.gfortune(f"{dir_path}/{filename}")
-                info[3] = "福邦"
-
-            elif "康和" in info[3]:
-                new_rate = self._ER.concords(f"{dir_path}/{filename}")
-                info[3] = "康和"
-
-            new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{new_rate}_{info[5]}.pdf"
+            new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{result['new_rate']}_{info[5]}.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
@@ -135,81 +97,23 @@ class FileHandle():
             info = filename.split(" ")
             info[-1] = info[-1].replace(".pdf", "")
 
-            new_rate = "NULL"
+            result = self._recommend_extract(info, 1, dir_path, filename)
+            info = result["info"]
 
-            if '永豐' in info[1]:
-                new_rate = self._ER.sinopac(f"{dir_path}/{filename}")
-                info[1] = "永豐投顧"
-                
-            elif '國票' in info[1]:
-                new_rate = self._ER.ibf(f"{dir_path}/{filename}")
-                info[1] = "國票"
-
-            elif (('CTBC' in info[1]) or
-                  ('中信' in info[1])):
-                new_rate = self._ER.ctbc(f"{dir_path}/{filename}")
-                info[1] = "CTBC"
-
-            elif "富邦" in info[1]:
-                new_rate = self._ER.fubon(f"{dir_path}/{filename}")
-                info[1] = "富邦"
-            
-            elif "元大" in info[1]:
-                new_rate = self._ER.yuanta(f"{dir_path}/{filename}")
-                info[1] = "元大"
-
-            elif "宏遠" in info[1]:
-                new_rate = self._ER.honsec(f"{dir_path}/{filename}")
-                info[1] = "宏遠"
-            
-            elif "台新" in info[1]:
-                new_rate = self._ER.taishin(f"{dir_path}/{filename}")
-                info[1] = "台新投顧"
-            
-            elif "統一" in info[1]:
-                new_rate = self._ER.pscnet(f"{dir_path}/{filename}")
-                info[1] = "統一投顧"
-            
-            elif "群益" in info[1]:
-                new_rate = self._ER.capital(f"{dir_path}/{filename}")
-                info[1] = "群益"
-            
-            elif "元富" in info[1]:
-                new_rate = self._ER.masterlink(f"{dir_path}/{filename}")
-                info[1] = "元富"
-            
-            elif "第一金" in info[1]:
-                new_rate = self._ER.ffhc(f"{dir_path}/{filename}")
-                info[1] = "第一金"
-            
-            elif "日盛" in info[1]:
-                new_rate = self._ER.jihsun(f"{dir_path}/{filename}")
-                info[1] = "日盛"
-
-            elif "玉山" in info[1]:
-                new_rate = self._ER.esun(f"{dir_path}/{filename}")
-                info[1] = "玉山"
-            
-            elif "國泰" in info[1]:
-                new_rate = self._ER.cathay(f"{dir_path}/{filename}")
-                info[1] = "國泰"
-            
-            elif "兆豐" in info[1]:
-                new_rate = self._ER.mega(f"{dir_path}/{filename}")
-                info[1] = "兆豐"
-            
-            elif "福邦" in info[1]:
-                new_rate = self._ER.gfortune(f"{dir_path}/{filename}")
-                info[1] = "福邦"
-
-            elif "康和" in info[1]:
-                new_rate = self._ER.concords(f"{dir_path}/{filename}")
-                info[1] = "康和"
-
-            new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{new_rate}_NULL.pdf"
+            new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{result['new_rate']}_NULL.pdf"
 
             os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
+    def _recommend_extract(self, info : List, investment_company_ptr : int, dir_path : str, filename : str) -> Dict:
+        new_rate = "NULL"
+
+        if info[investment_company_ptr] in self._handle_method:
+            temp = self._handle_method[info[investment_company_ptr]]
+            new_rate = temp[0](f"{dir_path}/{filename}")
+            info[investment_company_ptr] = temp[1]
+
+        return {"info" : info, "new_rate" : new_rate}
+
     def run(self, mode : str) -> None:
         """Run
 

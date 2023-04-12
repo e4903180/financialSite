@@ -43,26 +43,24 @@ function PrivateRoute() {
         .then(res => {
             setIsAuth(true)
             setWs(socketio.connect(config["WebSocketIP"] + res.data))
+
+            let timer = setTimeout(() => {
+                handleTimeout()
+            }, 14.9 * 60 * 1000);
+    
+            event.forEach((item, idx) => {
+                window.addEventListener(item, () => {
+                    clearTimeout(timer)
+    
+                    timer = setTimeout(() => {
+                        handleTimeout()
+                    }, 14.9 * 60 * 1000);
+                });
+            })
         }).catch(res => {
             setIsAuth(false)
             setShow(true)
             setWs(null)
-        })
-    }, [])
-
-    useEffect(() => {
-        let timer = setTimeout(() => {
-            handleTimeout()
-        }, 14.9 * 60 * 1000);
-
-        event.forEach((item, idx) => {
-            window.addEventListener(item, () => {
-                clearTimeout(timer)
-
-                timer = setTimeout(() => {
-                    handleTimeout()
-                }, 14.9 * 60 * 1000);
-            });
         })
     }, [])
 

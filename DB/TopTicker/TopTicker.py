@@ -3,29 +3,55 @@ import MySQLdb
 import MySQLdb.cursors
 import pandas as pd
 from typing import Dict
+import sys
 
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
-recommend = json.load(open("../../recommend.json"))
+recommend_json = json.load(open("../../recommend.json"))
 
 class TopTicker():
+    """Find the top ticker of financialData
+    """
     def __init__(self) -> None:
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
-        self._buy_pattern = recommend["buy"]
+        self._buy_pattern = recommend_json["buy"]
 
-        self._hold_pattern = recommend["hold"]
+        self._hold_pattern = recommend_json["hold"]
 
-        self._sell_pattern = recommend["sell"]
+        self._sell_pattern = recommend_json["sell"]
 
-        self._interval_pattern = recommend["interval"]
+        self._interval_pattern = recommend_json["interval"]
 
-    def _get_month_data(self, start_date : str,  end_date : str) -> pd.DataFrame:
-        query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, financialData.date, financialData.investmentCompany, financialData.recommend \
-                FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID WHERE date BETWEEN %s AND %s"
+    def _get_data(self, start_date : str, end_date : str, category : str, type : str) -> pd.DataFrame:
+        """Get the data from financialData table
+
+            Args :
+                start_date : (str) start date
+                end_date : (str) end date
+                category : (str) class of ticker ex: 水泥
+                type : (str) type of ticker ex: 上市
+
+            Return :
+                result : (pd.DataFrame) result of query 
+        """
+        query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.date, financialData.investmentCompany,\
+                financialData.recommend FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID WHERE date BETWEEN %s AND %s"
         param = (start_date, end_date)
+
+        if category != "all":
+            query += " AND ticker_list.class=%s"
+            param += (category,)
+
+        if type == "上市":
+            query += " AND ticker_list.class NOT LIKE %s"
+            param += ("%櫃%",)
+
+        elif type == "上櫃":
+            query += " AND ticker_list.class LIKE %s"
+            param += ("%櫃%",)
 
         self._cursor.execute(query, param)
         self._db.commit()
@@ -35,10 +61,21 @@ class TopTicker():
         return result.sort_values(by = ['stock_num', 'date'])
 
     def _filter_top(self, data : pd.DataFrame, top : int, recommend : str) -> Dict:
-        if recommend == "all":
-            temp = data
+        """Filter origin data with recommend with max quantity
 
-        elif recommend == "buy":
+            Args :
+                data : (pd.DataFrame) origin data
+                recommend : (str) recommend [買進, 賣出, 中立, 區間操作]
+            
+            Return :
+                ticker quantity : (Dict) 
+                    ex :
+                        {'1102': 4, '1101': 3, '1103': 1, '1104': 1, '1109': 1}
+        """
+        temp = data
+
+        # Filter by recommend pattern
+        if recommend == "buy":
             temp = data[data["recommend"].isin(self._buy_pattern)]
 
         elif recommend == "hold":
@@ -49,15 +86,56 @@ class TopTicker():
         
         elif recommend == "interval":
             temp = data[data["recommend"].isin(self._interval_pattern)]
-            
+        
         ele_quantity = temp["stock_num"].value_counts()[:top]
 
         return ele_quantity.to_dict()
 
     def _recommend_distribution(self, top_data : pd.DataFrame, top: Dict) -> Dict:
+        """Distribution of recommend
+
+            Args :
+                top_data : (pd.DataFrame) origin data
+                top : (Dict) top ticker
+                    ex :
+                        {'1102': 4, '1101': 3, '1103': 1, '1104': 1, '1109': 1}
+
+            Return :
+                result : (Dict)
+                    ex:
+                        {
+                            '1102': {
+                                'stock_num': '1102',
+                                'stock_name': '1102 亞泥',
+                                'category': '水泥',
+                                'quantity': 4,
+                                'recommend_distribution': {
+                                    'buy': 0,
+                                    'hold': 4,
+                                    'sell': 0,
+                                    'interval': 0,
+                                    'result': 'hold'
+                                }
+                            },
+                            '1101': {
+                                'stock_num': '1101',
+                                'stock_name': '1101 台泥',
+                                'quantity': 3,
+                                'category': '水泥',
+                                'recommend_distribution': {
+                                    'buy': 2,
+                                    'hold': 1,
+                                    'sell': 0,
+                                    'interval': 0,
+                                    'result': 'buy'
+                                }
+                            }
+                        } 
+        """
         result = {}
 
         for ticker in top.keys():
+            # Filter top ticker from origin data
             temp = top_data[top_data["stock_num"] == ticker]
 
             recommend_distribution = {
@@ -67,6 +145,7 @@ class TopTicker():
                 "interval" : 0,
             }
 
+            # Calculate all recommend quantity
             for recommend in temp["recommend"].to_list():
                 recommend = recommend.replace(" ", "")
                 if recommend in self._buy_pattern:
@@ -81,21 +160,36 @@ class TopTicker():
                 elif recommend in self._interval_pattern:
                     recommend_distribution["interval"] += 1
             
+            # Calculate the max recommed 
             recommend_distribution["result"] = max(recommend_distribution, key = recommend_distribution.get)
 
-            result[ticker] = {"stock_num" : ticker, "stock_name" : temp.iloc[0]["stock_name"], "recommend_distribution" : recommend_distribution}
+            result[ticker] = {"stock_num" : ticker, "stock_name" : temp.iloc[0]["stock_name"], "quantity" : top[ticker],
+                            "category" : temp.iloc[0]["class"], "recommend_distribution" : recommend_distribution}
 
         return result
 
-    def run(self, start_date : str, end_date : str, top : int = 20, recommend : str = "all") -> None:
-        month_data = self._get_month_data(start_date, end_date)
-        top_ticker_list = self._filter_top(month_data, top, recommend)
-        month_data = month_data[month_data["stock_num"].isin(top_ticker_list.keys())]
+    def run(self, start_date : str, end_date : str, top : int = 10, recommend : str = "all", category : str = "all", type : str = "all") -> None:
+        """Run
 
-        recommend_distribution_result = self._recommend_distribution(month_data, top_ticker_list)
+            Args :
+                start_date : (str) start date
+                end_date : (str) end date
+                top : (int) top ticker
+                recommend : (str) recommend [買進, 賣出, 中立, 區間操作]
+                category : (str) class of ticker ex: 水泥
+                type : (str) type of ticker ex: 上市
+
+            Return :
+                None 
+        """
+        data = self._get_data(start_date, end_date, category, type)
+        top_ticker_list = self._filter_top(data, top, recommend)
+        data = data[data["stock_num"].isin(top_ticker_list.keys())]
+
+        recommend_distribution_result = self._recommend_distribution(data, top_ticker_list)
         print(recommend_distribution_result)
 
 if __name__ == "__main__":
     top_ticker = TopTicker()
 
-    top_ticker.run("2023-01-01", "2023-04-10", 20, "all")
+    top_ticker.run("2023-01-01", "2023-04-10", 10, "all", "all", "上市")

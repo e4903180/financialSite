@@ -396,14 +396,16 @@ class GmailResearchHandle():
         for file_ptr in range(1, len(payload['parts']), 1):
             if ((payload['parts'][file_ptr]['filename'] not in os.listdir(self.unhandle_dir[0])) and 
                     ('attachmentId' in payload['parts'][file_ptr]['body'])):
+                field = payload['parts'][file_ptr]['filename'].split(" ")
+
+                if field[0][:4] not in self.stock_num2name.keys():
+                    continue
 
                 att = self._service.users().messages().attachments().get(userId = 'me', messageId = mail_id, 
                     id = payload['parts'][file_ptr]['body']['attachmentId']).execute()
 
                 file = att['data']
                 file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
-
-                field = payload['parts'][file_ptr]['filename'].split(" ")
 
                 with open(f"{self.unhandle_dir[0]}/{field[0][:4]}_{self.stock_num2name[field[0][:4]]}_{info['date']}_{field[1][:-4]}_NULL_NULL.pdf",
                         'wb') as f:

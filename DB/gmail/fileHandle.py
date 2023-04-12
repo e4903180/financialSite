@@ -210,7 +210,7 @@ class FileHandle():
 
             os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
-    def run(self, mode : int) -> None:
+    def run(self, mode : str) -> None:
         """Run
 
             Args :
@@ -232,11 +232,11 @@ if __name__ == "__main__":
     
     file_handle = FileHandle()
 
-    if sys.argv[1] == 2:
+    if sys.argv[1] == "2":
         update_2_sql = Update2SQL()
         
         print("Handle recommend...", file = sys.stderr)
-        file_handle.run(int(sys.argv[1]))
+        file_handle.run(sys.argv[1])
 
         print("Update data to sql...", file = sys.stderr)
         update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2")

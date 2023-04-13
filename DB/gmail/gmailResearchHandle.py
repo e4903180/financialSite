@@ -606,7 +606,7 @@ if __name__ == "__main__":
 
     print("Handle recommend...", file = sys.stderr)
     file_handle = FileHandle()
-    file_handle.run(1)
+    file_handle.run("1")
 
     print("Update data to sql...", file = sys.stderr)
     update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1")

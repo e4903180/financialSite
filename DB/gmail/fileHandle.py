@@ -141,9 +141,9 @@ class FileHandle():
     def _new_recommend_notify(self, recommend : str) -> None:
         for key in self._recommend_pattern:
             if recommend in self._recommend_pattern[key]:
-                continue
+                return
             
-            line_bot_api.push_message(self._admin_line_id, TextSendMessage(text = f"{recommend} is new recommend"))
+        line_bot_api.push_message(self._admin_line_id, TextSendMessage(text = f"{recommend} is new recommend"))
 
     def run(self, mode : str) -> None:
         """Run

@@ -16,7 +16,6 @@ function SearchBlockComp() {
     const [input5, setInput5] = useState("");
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [search, setSearch] = useState(false);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
     const [ticker, setTicker] = useState("")
@@ -43,13 +42,11 @@ function SearchBlockComp() {
                 "provider" : input5
             }).then(res => {
                 setData(res.data)
-                setSearch(true)
                 setLoading(false)
                 setPage(0)
             }).catch(res => {
                 if(res.response.data === "Session expired") window.location.reload()
                 setData([])
-                setSearch(true)
                 setLoading(false)
                 setPage(0)
             })

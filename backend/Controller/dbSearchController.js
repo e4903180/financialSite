@@ -138,10 +138,15 @@ exports.calender_search = async function(req, res){
                 from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
 
+    if(req.body.startDate === "" || req.body.endDate === ""){
+        return res.status(400).send("error")
+    }
+
     if(req.body.stock_num_name !== ""){
         query += ` AND stock_num=?`
         param.push(req.body.stock_num_name.split(" ")[0])
     }
+
     if(req.body.startDate !== "" && req.body.endDate !== ""){
         query += ` AND date BETWEEN ? AND ?`
         param.push(req.body.startDate, req.body.endDate)
@@ -151,6 +156,7 @@ exports.calender_search = async function(req, res){
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
+
         return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")

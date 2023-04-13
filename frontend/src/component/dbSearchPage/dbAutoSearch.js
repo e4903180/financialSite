@@ -253,10 +253,11 @@ function DbAutoSearch() {
                 />
             </div>
 
-            <div className = 'row mx-auto py-4' style = {{ width : "90%", "height" : "800px" }}>
+            <div className = 'row mx-auto py-4' style = {{ width : "90%" }}>
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
+                    style = {{ height : "600px" }}
                     columns = { columns_twse }
                     rows = { data4 }
                     page = { page4 }

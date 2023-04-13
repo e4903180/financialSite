@@ -68,10 +68,12 @@ function CalendarItem() {
                 </div>
             </div>
 
-            <div className = 'row py-3 mx-auto' style = {{minheight : "600px"}}>
+            <div className = 'row py-3 mx-auto'>
                 <h2 className = 'text-center'>法說會詳細資訊</h2>
-                <div className = 'col-md-11 mx-auto'>
+                
+                <div className = 'col-md-10 mx-auto'>
                     <DataGrid
+                        style = {{ height : "600px" }}
                         columns = { columns_twse }
                         rows = { data }
                         page = { page }
@@ -88,7 +90,6 @@ function CalendarItem() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
-                        autoHeight = { true }
                     />
                 </div>
             </div>

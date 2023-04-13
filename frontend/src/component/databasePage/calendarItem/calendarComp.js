@@ -1,61 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
 import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { config } from '../../../constant';
 import { columns_twse } from '../../column/column';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { AutoCom } from '../../../autoCom';
+import TickerSearchComp from '../../tickerSearchComp';
 
 function CalenderComp() {
+    var date = new Date();
+    
+    const thisMonth = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
+    date.setMonth(date.getMonth() + 2);
+    date.setDate(0);
+    const nextMoth = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
+    const autocom = AutoCom.AutoComList;
+
+    const [ticker, setTicker] = useState("")
     const [loading, setLoading] = useState(true)
+    const [startDate, setStartDate] = useState(thisMonth)
+    const [endDate, setEndDate] = useState(nextMoth)
+    const [tickerError, setTickerError] = useState(false)
     const [data, setData] = useState([])
-    const [year, setYear] = useState(new Date().getFullYear())
-    const [month, setMonth] = useState(new Date().getMonth() + 1)
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
+
+    const submit = (e) => {
+        e.preventDefault()
+        setTickerError(false)
+        setLoading(true)
+        setPage(0)
+
+        if((ticker !== "") && (!autocom.map(element => element.stock_num_name).includes(ticker))){
+            setTickerError(true)
+            setLoading(false)
+        }else{
+            axios.post(config["rootApiIP"] + "/data/calender_search", {
+                "stock_num_name" : ticker,
+                "startDate" : thisMonth,
+                "endDate" : nextMoth,
+            }).then(res => {
+                setData(res.data)
+                setLoading(false)
+            }).catch(res => {
+                if(res.response.data === "Session expired") window.location.reload()
+
+                setData([])
+                setPage(0)
+            })
+        }
+    }
 
     useEffect(() => {
         setLoading(true)
 
-        axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : year, "month" : month })
+        axios.post(config["rootApiIP"] + "/data/calender_search", {
+            "stock_num_name" : ticker,
+            "startDate" : thisMonth,
+            "endDate" : nextMoth,
+        })
         .then(res => {
-            setPage(0)
             setData(res.data)
             setLoading(false)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
         
-    }, [year, month])
-
-    function clickEvent(info){
-        window.open(config["rootPathPrefix"] + "/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
-    }
-
-    async function getCalendarData(fetchInfo, successCallback, failureCallback) {
-        try {
-            let temp_year = fetchInfo.start.getFullYear()
-            let temp_month = (fetchInfo.start.getMonth() + 1).toString().padStart(2, '0');
-
-            setYear(temp_year)
-            setMonth(temp_month)
-
-            const response = await axios.post(config["rootApiIP"] + "/data/calender", { "year" : temp_year, "month" : temp_month })
-
-            successCallback(
-                response.data.map(event => {
-                    return ({
-                        title: event.title,
-                        start: event.date.slice(0, 10),
-                    });
-                })
-            );
-        } catch (error) {
-            if(error.response.data === "Session expired") window.location.reload()
-            failureCallback(error)
-        }
-    }
+    }, [])
 
     return (
         <>
@@ -68,34 +79,59 @@ function CalenderComp() {
             </Backdrop>
 
             <div className = 'row py-3 mx-auto'>
-                <h1 className = 'text-center'>法說會行事曆</h1>
+                <h3 className = "text-center">法說會資料庫查詢</h3>
 
                 <div className = 'col-md-8 mx-auto'>
-                    <FullCalendar
-                        height = { "auto" }
-                        plugins={[ dayGridPlugin ]}
-                        initialView = "dayGridMonth"
-                        events = { (fetchInfo, successCallback, failureCallback) => getCalendarData(fetchInfo, successCallback, failureCallback) }
-                        dayMaxEventRows = { 3 }
-                        eventClick = { clickEvent }
-                        eventMouseEnter = { info => info.el.style.cursor = "pointer" }
-                        showNonCurrentDates = { false }
-                        fixedWeekCount = { false }
-                    />
+                    <form onSubmit = { submit }>
+                        <div className = 'form-group row py-3'>
+                            <label htmlFor = "ticker" className = "col-md-3 col-form-label text-center">股票代號&名稱:</label>
+                            
+                            <div className = 'col-md-4'>
+                                <TickerSearchComp init = "" setTicker = {setTicker}/>
+                            </div>
+                        </div>
+
+                        <div className = 'form-group row py-3'>
+                            <label htmlFor = "startDate" className = "col-md-3 col-form-label text-center">開始日期:</label>
+                            
+                            <div className = 'col-md-3'>
+                                <input type = "date" id = "startDate" className = "form-control" 
+                                    onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
+                            </div>
+                        </div>
+
+                        <div className = 'form-group row py-3'>
+                            <label htmlFor = "endDate" className = "col-md-3 col-form-label text-center">結束日期:</label>
+                            
+                            <div className = 'col-md-3'>
+                                <input type = "date" id = "endDate" className = "form-control"
+                                    onChange = {e => setEndDate(e.target.value)} value = { endDate }></input>
+                            </div>
+                        </div>
+
+                        <div className = 'form-group py-3 text-center'>
+                            { tickerError ? <p style = {{ color : "red" }}>格式錯誤(必須符合自動完成格式 股票代號 名稱)</p> : <></> }
+                            <button id = 'submit' type = "submit" className = "btn btn-primary" 
+                                style = {{ width : "200px" }}>搜尋</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <div className = 'row mt-3 mx-auto'>
-                <h2 className = 'text-center'>法說會詳細資訊</h2>
+            <div className = 'row mx-auto py-3'>
+                <h3 className = "text-center">查詢結果</h3>
                 
-                <div className = 'col-md-10 mx-auto' style = {{height : "800px"}}>
+                <div className = 'col-md-10 mx-auto'>
+                    <hr className = 'mx-auto'/>
+
                     <DataGrid
+                        style = {{ height : "600px" }}
                         columns = { columns_twse }
                         rows = { data }
                         page = { page }
                         onPageChange = {(newPage) => setPage(newPage)}
                         pageSize = { pageSize }
-                        onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
+                        onPageSizeChange = { (newPageSize) => setPageSize(newPageSize) }
                         rowsPerPageOptions = {[5, 10, 20]}
                         getRowId = { row => row.ID }
                         components = {{ Toolbar: GridToolbar }}

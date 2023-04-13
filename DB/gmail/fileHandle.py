@@ -85,7 +85,8 @@ class FileHandle():
             info = filename.split("_")
             info[-1] = info[-1].replace(".pdf", "")
 
-            if info[4] != "NULL":
+            if ((info[4] != "NULL") or
+                (info[3] == "NULL")):
                 continue
 
             result = self._recommend_extract(info, 3, dir_path, filename)

@@ -20,6 +20,7 @@ function CalenderComp() {
     const [loading, setLoading] = useState(true)
     const [startDate, setStartDate] = useState(thisMonth)
     const [endDate, setEndDate] = useState(nextMoth)
+    const [recommend, setRecommend] = useState("all")
     const [tickerError, setTickerError] = useState(false)
     const [data, setData] = useState([])
     const [page, setPage] = useState(0);
@@ -37,8 +38,9 @@ function CalenderComp() {
         }else{
             axios.post(config["rootApiIP"] + "/data/calender_search", {
                 "stock_num_name" : ticker,
-                "startDate" : thisMonth,
-                "endDate" : nextMoth,
+                "startDate" : startDate,
+                "endDate" : endDate,
+                "recommend" : recommend
             }).then(res => {
                 setData(res.data)
                 setLoading(false)
@@ -58,6 +60,7 @@ function CalenderComp() {
             "stock_num_name" : ticker,
             "startDate" : thisMonth,
             "endDate" : nextMoth,
+            "recommend" : recommend
         })
         .then(res => {
             setData(res.data)
@@ -106,6 +109,19 @@ function CalenderComp() {
                             <div className = 'col-md-3'>
                                 <input type = "date" id = "endDate" className = "form-control"
                                     onChange = {e => setEndDate(e.target.value)} value = { endDate }></input>
+                            </div>
+                        </div>
+
+                        <div className = 'form-group row py-3'>
+                            <label htmlFor = "provider" className = "col-md-3 col-form-label text-center">投資建議:</label>
+                            <div className = 'col-md-3'>
+                                <select id = "provider" className = "form-select" onChange = {e => setRecommend(e.target.value)}>
+                                    <option value = "all">無</option>
+                                    <option value = "buy">買進</option>
+                                    <option value = "sell">賣出</option>
+                                    <option value = "neutral">中立</option>
+                                    <option value = "interval">區間操作</option>
+                                </select>
                             </div>
                         </div>
 

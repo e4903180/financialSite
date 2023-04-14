@@ -40,6 +40,7 @@ class FileHandle():
             "永豐投顧" : [self._ER.sinopac, "永豐投顧"],
             "國票" : [self._ER.ibf, "國票"],
             "CTBC" : [self._ER.ctbc, "CTBC"],
+            "中信托" : [self._ER.ctbc, "CTBC"],
             "中信" : [self._ER.ctbc, "中信"],
             "富邦" : [self._ER.fubon, "富邦"],
             "元大" : [self._ER.yuanta, "元大"],

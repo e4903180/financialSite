@@ -38,7 +38,7 @@ class FileHandle():
         self._handle_method = {
             "永豐" : [self._ER.sinopac, "永豐投顧"],
             "永豐投顧" : [self._ER.sinopac, "永豐投顧"],
-            "國票" : [self._ER.ibf, "國票"],
+            "國票" : [self._ER.ibf, "國票投顧"],
             "CTBC" : [self._ER.ctbc, "CTBC"],
             "中信託" : [self._ER.ctbc, "CTBC"],
             "富邦" : [self._ER.fubon, "富邦"],
@@ -116,6 +116,10 @@ class FileHandle():
         # Travse all file in directory 2
         for filename in tqdm(os.listdir(dir_path)):
             # 2727王品 永豐.pdf
+            if filename.count(" ") != 1:
+                os.rename(f"{dir_path}/{filename}", f"{dir_path[:-2]}/{filename}")
+                continue
+
             info = filename.split(" ")
             info[-1] = info[-1].replace(".pdf", "")
 

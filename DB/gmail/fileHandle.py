@@ -50,7 +50,7 @@ class FileHandle():
             "元富" : [self._ER.masterlink, "元富"],
             "第一金" : [self._ER.ffhc, "第一金"],
             "日盛" : [self._ER.jihsun, "日盛"],
-            "玉山" : [self._ER.esun, "玉山"],
+            "玉山" : [self._ER.esun, "玉山投顧"],
             "國泰" : [self._ER.cathay, "國泰"],
             "兆豐" : [self._ER.mega, "兆豐"],
             "福邦" : [self._ER.gfortune, "福邦"],

@@ -6,7 +6,7 @@ const outputFile = './swagger.json';
 const endpointsFiles = ['./router.js'];
 
 const options = {
-    host: `${config["API_BASE_IP"]}:${config["API_PORT"]}`, 
+    host: config["SWAGGER_HOST"], 
     basePath: "/api",
     tags: [
         {

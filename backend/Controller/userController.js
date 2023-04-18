@@ -2,6 +2,21 @@ const bcrypt = require('bcrypt');
 const con = require('../Model/connectFinancial')
 
 exports.login = async function(req, res){
+    /*
+        #swagger.tags = ['User']
+        #swagger.description = 'User login.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Username and password.',
+            required: true,
+            type: 'object',
+            schema: {
+                $userName: "example_username",
+                $password: "example_passord",
+            }
+        }
+    */
     var userName = req.body.userName
     var password = req.body.password
     let query = `SELECT password FROM user WHERE userName=?`
@@ -24,6 +39,10 @@ exports.login = async function(req, res){
 }
 
 exports.logout = async function(req, res){
+    /*
+        #swagger.tags = ['User']
+        #swagger.description = 'User logout.'
+    */
     try {
         req.session.destroy();
         
@@ -34,6 +53,23 @@ exports.logout = async function(req, res){
 }
 
 exports.register = async function(req, res){
+    /*
+        #swagger.tags = ['User']
+        #swagger.description = 'Register user.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Register user.',
+            required: true,
+            type: 'object',
+            schema: {
+                $name: "test",
+                $userName: "test123",
+                $email: "test123@gmail.com",
+                $password: "Test123456",
+            }
+        }
+    */
     var name = req.body.name
     var userName = req.body.userName
     var email = req.body.email

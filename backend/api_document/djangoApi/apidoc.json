@@ -1,9 +1,0 @@
-{
-    "name": "Financial Django REST API",
-    "description": "Django REST api of financial site",
-    "url" : "140.116.214.154:3847/api",
-    "version": "0.0.1",
-    "template": {
-        "forceLanguage" : "en"
-    } 
-}

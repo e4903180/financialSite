@@ -17,6 +17,8 @@ const LineMemoUp = require('./Controller/upload/uploadLinememoController');
 const SelfUp = require('./Controller/upload/uploadFinancialDataController');
 const OtUp = require('./Controller/upload/uploadFinancialDataOtherController');
 const Download = require('./Controller/download/downloadController');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const Limiter = rateLimit({
     windowMs: 60 * 1000,
@@ -25,6 +27,10 @@ const Limiter = rateLimit({
 
 router.use("/user", userRouter)
 router.use('/data', dataRouter)
+router.use('/document', swaggerUi.serve)
+
+/* swagger router */
+router.get('/document', swaggerUi.setup(swaggerDocument))
 
 /* User router */
 userRouter.post('/login', User.login)

@@ -1,9 +1,0 @@
-{
-    "name": "Financial Express API",
-    "description": "Express api of financial site",
-    "url" : "140.116.214.154:3000/api",
-    "version": "0.0.1",
-    "template": {
-        "forceLanguage" : "en"
-    } 
-}

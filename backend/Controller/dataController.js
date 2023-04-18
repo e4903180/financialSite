@@ -150,7 +150,7 @@ exports.meetingData = async function(req, res){
 }
 
 exports.industry_analysis = async function(req, res){
-    let query ="SELECT *, filename as fileName FROM industry_analysis;"
+    let query = "SELECT *, filename as fileName FROM industry_analysis;"
 
     try {
         const [rows, fields] = await con.promise().query(query);
@@ -182,7 +182,7 @@ exports.userList = async function(req, res){
 
 exports.calender = async function(req, res){
     let query = "SELECT stock_name, date FROM calender \
-        INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
+                INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
     let param = [req.body.year, req.body.month]
     let re = [];
 
@@ -193,7 +193,7 @@ exports.calender = async function(req, res){
             re.push(Object.assign({"title" : rows[i]["stock_name"]}, {"date" : rows[i]["date"]}))
         };
 
-        return res.status(200).json(re)
+        return res.status(200).send(re)
     } catch (error) {
         return res.status(400).send("error")
     }
@@ -210,7 +210,7 @@ exports.calenderData = async function(req, res){
     try {
         const [rows, fields] = await con.promise().query(query, param);
 
-        return res.status(200).json(rows)
+        return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")
     }
@@ -222,7 +222,7 @@ exports.tickerList = async function(req, res){
     try {
         const [rows, fields] = await con.promise().query(query);
 
-        return res.status(200).json(rows)
+        return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")
     } 
@@ -239,7 +239,7 @@ exports.news = async function(req, res){
             delete rows[i]["link"]
         }
 
-        return res.status(200).json(rows)
+        return res.status(200).send(rows)
     } catch (error) {
         console.log(error)
         return res.status(400).send("error")
@@ -248,4 +248,24 @@ exports.news = async function(req, res){
 
 exports.username = async function(req, res){
     return res.status(200).send(req.session.userName)
+}
+
+exports.ticker_category = async function(req, res){
+    let query = ""
+
+    if(req.query.type === "上櫃"){
+        query = "SELECT class FROM ticker_list WHERE class RLIKE '櫃' AND class NOT IN ('櫃ETN','櫃ETF','櫃公司債','櫃認購','櫃認售') GROUP BY class ORDER BY class"
+    }else if(req.query.type === "上市"){
+        query = "SELECT class FROM ticker_list WHERE class NOT RLIKE '櫃' AND class NOT IN ('ETN','ETF','市牛證','市熊證','受益證券','市認購','市認售','指數類') GROUP BY class ORDER BY class"
+    }else{
+        query = "SELECT class FROM ticker_list WHERE class NOT IN ('ETN','ETF','市牛證','市熊證','受益證券','市認購','市認售','指數類','櫃ETN','櫃ETF','櫃公司債','櫃認購','櫃認售') GROUP BY class ORDER BY class"
+    }
+
+    try {
+        const [rows, fields] = await con.promise().query(query);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send("error")
+    } 
 }

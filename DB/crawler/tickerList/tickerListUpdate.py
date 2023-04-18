@@ -150,12 +150,12 @@ class UpdateLocal():
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
-        self._investment_company_chinese = ["台新投顧", "元大", "宏遠", "麥格理", "美林", "摩根史丹利",
-                                        "高勝", "瑞士信貸", "德意志", "野村", "花旗", "第一金", "日盛投顧",
-                                        "統一投顧", "元富", "德信", "兆豐金", "國票投顧", "摩根大通", "康和",
-                                        "國泰證期", "大和國泰", "華南投顧", "凱基", "富邦台灣", "群益",
-                                        "中信投顧", "匯豐", "法國巴黎", "里昂", "永豐金", "玉山金", "永豐投顧",
-                                        "CTBC"]
+        self._investment_company_chinese = ["元富", "統一投顧", "CTBC", "國票投顧", "台新投顧", "富邦", "元大",
+                                            "第一金", "兆豐", "永豐投顧", "宏遠", "康和", "群益", "國泰", "MS",
+                                            "玉山", "福邦", "GS", "Daiwa", "HSBC", "瑞信", "摩根大通", "citi",
+                                            "NMR", "麥格理", "NMR", "ubs", "凱基", "合庫", "jpm", "大和國泰",
+                                            "KGI", "capital", "里昂", "一銀", "HTI", "MR", "dw", "野村",
+                                            "華南", "高盛"]
         self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CH"], root_path["TWSEDATA_EN"]]
 
     def _get_ticker_list(self) -> pd.DataFrame:

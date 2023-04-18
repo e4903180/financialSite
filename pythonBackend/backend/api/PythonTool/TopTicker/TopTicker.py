@@ -2,20 +2,17 @@ import json
 import MySQLdb
 import MySQLdb.cursors
 import pandas as pd
-from typing import Dict
-import sys
+from typing import Dict, List
 
-db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 recommend_json = json.load(open("../../recommend.json"))
 
 class TopTicker():
     """Find the top ticker of financialData
     """
-    def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
-                                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
-        self._cursor = self._db.cursor()
+    def __init__(self, db : MySQLdb, cursor) -> None:
+        self._db = db
+        self._cursor = cursor
 
         self._buy_pattern = recommend_json["buy"]
 
@@ -37,8 +34,10 @@ class TopTicker():
             Return :
                 result : (pd.DataFrame) result of query 
         """
-        query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.date, financialData.investmentCompany,\
-                financialData.recommend FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID WHERE date BETWEEN %s AND %s"
+        query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.ID, \
+                financialData.date, financialData.investmentCompany, financialData.filename, financialData.recommend,\
+                financialData.remark FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID \
+                WHERE date BETWEEN %s AND %s"
         param = (start_date, end_date)
 
         if category != "all":
@@ -65,7 +64,7 @@ class TopTicker():
 
             Args :
                 data : (pd.DataFrame) origin data
-                recommend : (str) recommend [買進, 賣出, 中立, 區間操作]
+                recommend : (str) recommend [buy, hold, sell, interval]
             
             Return :
                 ticker quantity : (Dict) 
@@ -91,7 +90,7 @@ class TopTicker():
 
         return ele_quantity.to_dict()
 
-    def _recommend_distribution(self, top_data : pd.DataFrame, top: Dict) -> Dict:
+    def _recommend_distribution(self, top_data : pd.DataFrame, top: Dict) -> List:
         """Distribution of recommend
 
             Args :
@@ -132,7 +131,7 @@ class TopTicker():
                             }
                         } 
         """
-        result = {}
+        result = []
 
         for ticker in top.keys():
             # Filter top ticker from origin data
@@ -147,7 +146,6 @@ class TopTicker():
 
             # Calculate all recommend quantity
             for recommend in temp["recommend"].to_list():
-                recommend = recommend.replace(" ", "")
                 if recommend in self._buy_pattern:
                     recommend_distribution["buy"] += 1
 
@@ -159,14 +157,21 @@ class TopTicker():
 
                 elif recommend in self._interval_pattern:
                     recommend_distribution["interval"] += 1
+                
+                else:
+                    print(temp)
+                    print(recommend, len(recommend))
             
             # Calculate the max recommed 
             recommend_distribution["result"] = max(recommend_distribution, key = recommend_distribution.get)
 
-            result[ticker] = {"stock_num" : ticker, "stock_name" : temp.iloc[0]["stock_name"], "quantity" : top[ticker],
-                            "category" : temp.iloc[0]["class"], "recommend_distribution" : recommend_distribution}
+            result.append({"stock_num" : ticker, "stock_name" : temp.iloc[0]["stock_name"], "quantity" : top[ticker],
+                        "category" : temp.iloc[0]["class"], "recommend_distribution" : recommend_distribution})
 
-        return result
+        top_data["stock_num"] = pd.Categorical(top_data["stock_num"], ordered = True, categories = top.keys())
+        top_data = top_data.sort_values("stock_num")
+        
+        return {"recommend_result" : result, "row_data" : top_data.to_dict(orient = "records")}
 
     def run(self, start_date : str, end_date : str, top : int = 10, recommend : str = "all", category : str = "all", type : str = "all") -> None:
         """Run
@@ -175,7 +180,7 @@ class TopTicker():
                 start_date : (str) start date
                 end_date : (str) end date
                 top : (int) top ticker
-                recommend : (str) recommend [買進, 賣出, 中立, 區間操作]
+                recommend : (str) recommend [buy, hold, sell, interval]
                 category : (str) class of ticker ex: 水泥
                 type : (str) type of ticker ex: 上市
 
@@ -186,10 +191,15 @@ class TopTicker():
         top_ticker_list = self._filter_top(data, top, recommend)
         data = data[data["stock_num"].isin(top_ticker_list.keys())]
 
-        recommend_distribution_result = self._recommend_distribution(data, top_ticker_list)
-        print(recommend_distribution_result)
+        return self._recommend_distribution(data, top_ticker_list)
 
 if __name__ == "__main__":
-    top_ticker = TopTicker()
+    db_config = json.load(open("../../../db_config.json"))
+
+    db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+    cursor = db.cursor()
+
+    top_ticker = TopTicker(db, cursor)
 
     top_ticker.run("2023-01-01", "2023-04-10", 10, "all", "all", "上市")

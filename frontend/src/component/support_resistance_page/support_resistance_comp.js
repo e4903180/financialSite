@@ -186,7 +186,7 @@ function SupportResistanceComp() {
                         })
                     };
                 }
-                
+
                 setData(dataInit)
                 setData(res.data)
                 setLoading(false)

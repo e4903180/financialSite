@@ -32,9 +32,8 @@ function StockPricingStratagyComp() {
             categories: ['股利法', '高低價法', '本淨比法', '本益比法']
         },
         yAxis: {
-            title: 
-            {
-              text: '價格區間'
+            title: {
+                text: '價格區間'
             }
         },
         plotOptions: {

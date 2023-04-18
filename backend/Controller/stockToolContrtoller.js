@@ -103,3 +103,22 @@ exports.cpi_ppi = async function(req, res){
 
     return res.status(200).send(result.data)
 }
+
+exports.top_ticker = async function(req, res){
+    try {
+        result = await axios.get(config["DJANGO_REST_IP"] + "/top_ticker", {
+            params : {
+                "start_date" : req.query.start_date,
+                "end_date" : req.query.end_date,
+                "top" : req.query.top,
+                "recommend" : req.query.recommend,
+                "category" : req.query.category,
+                "type" : req.query.type,
+            }
+        })
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+
+    return res.status(200).send(result.data)
+}

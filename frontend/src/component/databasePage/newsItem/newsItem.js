@@ -40,6 +40,24 @@ function NewsItem(props) {
     }
 
     useEffect(() => {
+        axios.get(config["rootApiIP"] + "/data/news_search", { params :{
+            "startDate" : startDate,
+            "endDate" : endDate,
+            "column" : column,
+            "pattern" : pattern,
+            "category" : category
+        }})
+        .then((res) => {
+            props.setData(res.data)
+            props.setLoading(false)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+            props.setLoading(false)
+        })
+    }, [])
+
+    useEffect(() => {
         setPage(0)
     }, [props.data])
 

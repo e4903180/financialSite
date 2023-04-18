@@ -27,6 +27,7 @@ import OtherEditComp from './component/financialDataOtherEditPage/financialDataO
 import FinancialDataIndustryUploadComp from './component/financialDataIndustryUploadPage/financialDataIndustryUploadComp';
 import DbAutoSearch from './component/dbSearchPage/dbAutoSearch';
 import DatabaseComp from './component/databasePage/databaseComp';
+import TopTickerComp from './component/topTickerPage/topTickerComp';
 
 axios.defaults.withCredentials = true;
 
@@ -62,6 +63,7 @@ function App() {
             <Route exact path = { config.rootPathPrefix + "/inflation" } element = { <InflationComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/cpi_ppi_pce" } element = { <CpiPpiPceComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/Line" } element = { <LineComp /> } ></Route>
+            <Route exact path = { config.rootPathPrefix + "/top_ticker" } element = { <TopTickerComp /> } ></Route>
           </Route>
         </Routes>
       </BrowserRouter>

@@ -81,6 +81,7 @@ dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 dataRouter.get("/tickerList", Data.tickerList)
 dataRouter.get("/news", Data.news)
+dataRouter.get("/ticker_category", Data.ticker_category)
 
 /* DB search router */
 dataRouter.post("/financial_search", dbSearch.financial_search)
@@ -108,6 +109,7 @@ dataRouter.get("/support_resistance", StockTool.support_resistance_data)
 dataRouter.get("/realtime_price", StockTool.get_realtime_price)
 dataRouter.get("/inflation", StockTool.inflation)
 dataRouter.get("/cpi_ppi", StockTool.cpi_ppi)
+dataRouter.get("/top_ticker", StockTool.top_ticker)
 
 /* Subscribe router */
 dataRouter.get("/get_sub", Sub.get_sub)

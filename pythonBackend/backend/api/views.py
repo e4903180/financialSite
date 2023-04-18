@@ -7,8 +7,8 @@ from .PythonTool.PER_River import PerRiver
 from .PythonTool.SupportResistance.SupportResistance import SupportResistance
 from .PythonTool.FRED.Inflation import Inflation
 from .PythonTool.FRED.CPI_PPI_PCE import CpiPpiPce
+from .PythonTool.TopTicker.TopTicker import TopTicker
 from .DataBaseManager import DataBaseManager
-from datetime import date
 import json
 
 db_config = json.load(open("../../db_config.json"))
@@ -89,8 +89,6 @@ def support_resistance_strategy(request):
 
 @api_view(['GET'])
 def inflation(request):
-    DB.db.ping(True)
-
     if request.method == "GET":
         try:
             return JsonResponse(Inflation(DB.db, DB.cursor).get_data(), status = status.HTTP_200_OK)
@@ -102,13 +100,29 @@ def inflation(request):
 
 @api_view(['GET'])
 def cpi_ppi_pce(request):
-    DB.db.ping(True)
-    
     if request.method == "GET":
         try:            
             return JsonResponse(CpiPpiPce(DB.db, DB.cursor).get_data(), status = status.HTTP_200_OK)
 
         except Exception as e:
+            return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)
+
+    return JsonResponse({"message" : "error"}, status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def top_ticker(request):
+    if request.method == "GET":
+        result = TopTicker(DB.db, DB.cursor).run(request.query_params.get("start_date"),
+                                                    request.query_params.get("end_date"),
+                                                    int(request.query_params.get("top")),
+                                                    request.query_params.get("recommend"),
+                                                    request.query_params.get("category"),
+                                                    request.query_params.get("type"))
+        try:            
+            return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
+
+        except Exception as e:
+            print(e)
             return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)
 
     return JsonResponse({"message" : "error"}, status = status.HTTP_400_BAD_REQUEST)

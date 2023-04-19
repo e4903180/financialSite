@@ -177,7 +177,7 @@ exports.calender_search = async function(req, res){
     //                     '中立（調降）','長期持有','中立(維持評等)','中立(調降評等)','中立(初次評等)','中立 (維持評等)','中立(降低評等)',\
     //                     '中立(調升評等)','中立(下修評等)','中立 (調降評等)','評等中立','Downgrade to HOLD','持有','中立中立','中立 – 維持中立',\
     //                     '中立 – 初次評等中立','中立 – 買進轉中立','中立 – 初次評等','中性','中性 (維持評等)','中 性 (維 持 評 等 )','中性 (調降評等),\
-    //                     '中立 ','Equal-weight','未評等','未評等 ',' 中立') AND date BETWEEN ? AND ?)"
+    //                     '中立 ','Equal-weight','未評等','未評等 ',' 中立','Downgrade to NEUTRAL') AND date BETWEEN ? AND ?)"
     //             param.push(req.body.startDate, req.body.endDate)
 
     //             break

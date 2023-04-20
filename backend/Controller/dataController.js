@@ -2,6 +2,14 @@ const con = require('../Model/connectFinancial');
 const { init_table_status } = require('../constant');
 
 exports.newestResearch20 = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get newest 20 ticker research.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT financialData.*, ticker_list.stock_name \
                 FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY \
                 financialData.date DESC, ticker_list.stock_name ASC, financialData.investmentCompany DESC, \
@@ -19,6 +27,14 @@ exports.newestResearch20 = async function(req, res){
 };
 
 exports.newestNews20 = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get newest 20 news.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT date, title, link FROM news WHERE category LIKE "%工商時報%" ORDER BY date DESC LIMIT 20;\
                 SELECT date, title, link FROM news WHERE category LIKE "%MoneyDj%" ORDER BY date DESC LIMIT 20;\
                 SELECT date, title, link FROM news WHERE category LIKE "%經濟日報%" ORDER BY date DESC LIMIT 20;\
@@ -72,6 +88,14 @@ exports.newestNews20 = async function(req, res){
 }
 
 exports.table_status = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get table status.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM news;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM calender;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM financialData;\
@@ -101,6 +125,14 @@ exports.table_status = async function(req, res){
 };
 
 exports.post_board_state = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get post board memo table status.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT COUNT( * ) as dataQuantity, MAX(date) as newestDate FROM post_board_memo;"
 
     try {
@@ -113,6 +145,14 @@ exports.post_board_state = async function(req, res){
 }
 
 exports.lineMemo_state = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get line memo table status.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT COUNT( * ) as dataQuantity, MAX(date) as newestDate FROM lineMemo;"
 
     try {
@@ -125,6 +165,14 @@ exports.lineMemo_state = async function(req, res){
 }
 
 exports.superUser = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Check if user is super user.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT superUser FROM user WHERE userName=?"
     let param = [req.session.userName]
 
@@ -137,31 +185,15 @@ exports.superUser = async function(req, res){
     }
 }
 
-exports.meetingData = async function(req, res){
-    let query = "SELECT *, filename as fileName FROM meetingData;"
-
-    try {
-        const [rows, fields] = await con.promise().query(query);
-
-        return res.status(200).send(rows)
-    } catch (error) {
-        return res.status(400).send("error")
-    }  
-}
-
-exports.industry_analysis = async function(req, res){
-    let query = "SELECT *, filename as fileName FROM industry_analysis;"
-
-    try {
-        const [rows, fields] = await con.promise().query(query);
-
-        return res.status(200).send(rows)
-    } catch (error) {
-        return res.status(400).send("error")
-    }
-}
-
 exports.userList = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get user list.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT name, userName, email FROM user"
 
     try {
@@ -181,6 +213,25 @@ exports.userList = async function(req, res){
 }
 
 exports.calender = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get twse data and transorm to calender type.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Twse year and month.',
+            required: true,
+            type: 'object',
+            schema: {
+                $year: "2023",
+                $month: "04",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT stock_name, date FROM calender \
                 INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
     let param = [req.body.year, req.body.month]
@@ -200,6 +251,25 @@ exports.calender = async function(req, res){
 }
 
 exports.calenderData = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get twse data.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Twse year and month.',
+            required: true,
+            type: 'object',
+            schema: {
+                $year: "2023",
+                $month: "04",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT calender.*, ticker_list.stock_name\
                 FROM calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID \
                 WHERE YEAR(date)=? AND MONTH(date)=?"
@@ -216,7 +286,15 @@ exports.calenderData = async function(req, res){
     }
 }
 
-exports.tickerList = async function(req, res){
+exports.ticker_list = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = '4 number ticker list.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT ID, stock_name as stock_num_name FROM ticker_list WHERE CHAR_LENGTH(stock_num)=4"
 
     try {
@@ -228,29 +306,35 @@ exports.tickerList = async function(req, res){
     } 
 }
 
-exports.news = async function(req, res){
-    let query = "SELECT * FROM news WHERE date=(SELECT MAX(date) FROM news) ORDER BY category DESC"
-
-    try {
-        const [rows, fields] = await con.promise().query(query);
-        
-        for(let i = 0; i < rows.length; i++){
-            rows[i]["title"] = [rows[i]["title"], rows[i]["link"]]
-            delete rows[i]["link"]
-        }
-
-        return res.status(200).send(rows)
-    } catch (error) {
-        console.log(error)
-        return res.status(400).send("error")
-    } 
-}
-
 exports.username = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get username.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     return res.status(200).send(req.session.userName)
 }
 
 exports.ticker_category = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get ticker category.'
+
+        #swagger.parameters['type'] = {
+            in: 'query',
+            description: 'Type of ticker.',
+            required: true,
+            type: 'string',
+            schema: "上市"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = ""
 
     if(req.query.type === "上櫃"){

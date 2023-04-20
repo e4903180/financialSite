@@ -72,7 +72,7 @@ function OtherEditComp() {
                 "startDate" : last3Month,
                 "endDate" : today,
                 "pattern" : "",
-                "investmentCompany" : ""
+                "investmentCompany" : "all"
             } })
             .then((res) => {
                 setData(res.data)

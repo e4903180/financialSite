@@ -2,7 +2,31 @@ let { PythonShell } = require('python-shell')
 const { config } = require('../constant')
 const { default: axios } = require('axios')
 
-exports.pricingData = async function(req, res){    
+exports.pricingData = async function(req, res){  
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'Pricing strategy.'
+
+        #swagger.parameters['stockNum'] = {
+            in: 'query',
+            description: 'Stock number.',
+            required: true,
+            type: 'string',
+            schema: "2330"
+        }
+
+        #swagger.parameters['year'] = {
+            in: 'query',
+            description: 'Pricing strategy parameter.',
+            required: true,
+            type: 'string',
+            schema: "10"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */  
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/PricingStrategy", {
             params : {
@@ -18,6 +42,22 @@ exports.pricingData = async function(req, res){
 }
 
 exports.PER_river_Data = async function(req, res){    
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'Per river strategy.'
+
+        #swagger.parameters['stockNum'] = {
+            in: 'query',
+            description: 'Per river parameter.',
+            required: true,
+            type: 'string',
+            schema: "2330"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/PER_River", {
             params : {
@@ -33,6 +73,54 @@ exports.PER_river_Data = async function(req, res){
 
 
 exports.support_resistance_data = async function(req, res){
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'Support resistance strategy.'
+
+        #swagger.parameters['stockNum'] = {
+            in: 'query',
+            description: 'Support resistance parameter.',
+            required: true,
+            type: 'string',
+            schema: "2330"
+        }
+
+        #swagger.parameters['startDate'] = {
+            in: 'query',
+            description: 'Support resistance parameter.',
+            required: true,
+            type: 'string',
+            schema: "2023-01-01"
+        }
+
+        #swagger.parameters['ma_type'] = {
+            in: 'query',
+            description: 'Support resistance parameter.',
+            required: true,
+            type: 'string',
+            schema: "wma"
+        }
+
+        #swagger.parameters['maLen'] = {
+            in: 'query',
+            description: 'Support resistance parameter.',
+            required: true,
+            type: 'string',
+            schema: "20"
+        }
+
+        #swagger.parameters['method'] = {
+            in: 'query',
+            description: 'Support resistance parameter.',
+            required: true,
+            type: 'string',
+            schema: "method1"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/SupportResistanceStrategy", {
             params : {
@@ -63,27 +151,15 @@ exports.support_resistance_data = async function(req, res){
     };
 }
 
-
-exports.get_realtime_price = async function(req, res){
-    let options = {
-        args:[
-                req.query.tickerList.toString()
-        ]
-    }
-
-    const result = await new Promise((resolve, reject) => {
-        PythonShell.run('/home/cosbi/financialSite/backend/PythonTool/RealTimePrice.py', options, (err, data) => {
-            if (err) reject(err)
-
-            const parsedString = JSON.parse(data)
-            return resolve(parsedString);
-        })
-    })
-
-    return res.status(200).send(result)
-}
-
 exports.inflation = async function(req, res){
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'Inflation.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/inflation")
     } catch (error) {
@@ -95,6 +171,14 @@ exports.inflation = async function(req, res){
 }
 
 exports.cpi_ppi = async function(req, res){
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'cpi ppi pce.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/cpi_ppi_pce")
     } catch (error) {
@@ -105,6 +189,62 @@ exports.cpi_ppi = async function(req, res){
 }
 
 exports.top_ticker = async function(req, res){
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'Top ticker analysis.'
+
+        #swagger.parameters['start_date'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "2023-01-01"
+        }
+
+        #swagger.parameters['end_date'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-20"
+        }
+
+        #swagger.parameters['top'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "10"
+        }
+
+        #swagger.parameters['recommend'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "all"
+        }
+
+        #swagger.parameters['category'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "all"
+        }
+
+        #swagger.parameters['type'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "all"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/top_ticker", {
             params : {

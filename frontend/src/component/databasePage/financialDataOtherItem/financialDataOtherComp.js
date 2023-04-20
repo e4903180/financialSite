@@ -105,7 +105,7 @@ function FinancialDataOtherComp() {
                             <label htmlFor = "provider" className = "col-md-3 col-form-label text-center">券商名稱:</label>
                             <div className = 'col-md-3'>
                                 <select id = "provider" className = "form-select" onChange = {e => setInvestmentCompany(e.target.value)}>
-                                    <option value = "">全部</option>
+                                    <option value = "all">全部</option>
                                     <option value = "台新投顧">台新投顧</option>
                                     <option value = "中信投顧">中信投顧</option>
                                     <option value = "元富">元富</option>

@@ -8,7 +8,7 @@ const dev = {
     API_BASE_IP : "0.0.0.0",
     API_PORT : 3000,
     CORS_ORIGIN : ["http://140.116.214.154:8080", "http://140.116.214.154:3000"],
-    SWAGGER_HOST : "0.0.0.0:3000",
+    SWAGGER_HOST : "140.116.214.154:3000",
     CLIENT_IP : "http://140.116.214.154:8080",
     DJANGO_REST_IP : "http://140.116.214.154:3847/api",
     FINANCIALDATA_PATH : "/home/cosbi/桌面/financialData/gmailData/data/",
@@ -96,6 +96,8 @@ const init_table_status = [
     { "dbName" : "個股推薦", "dataQuantity" : 0, "newestDate" : "2023-01-01", "table" : "post_board_memo" },
 ]
 
+const swagger_password = "$2a$12$AtdRyQQhgx4BWCmXJGuhcerNUmCObgi42rzluiQ1OD1Sl2ZrBlYGi"
+
 module.exports = { 
     sessionMaxAge, 
     API_ROUTE_IP,
@@ -105,5 +107,6 @@ module.exports = {
     wrap, 
     WebSocketMiddlewareHandler, 
     config,
-    init_table_status
+    init_table_status,
+    swagger_password
 }

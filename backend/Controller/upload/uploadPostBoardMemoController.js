@@ -27,6 +27,26 @@ exports.post_board_middleWare = function(req, res, next){
 }
 
 exports.post_board_upload = async function(req, res){
+    /*
+        #swagger.tags = ['File upload']
+        #swagger.description = 'Upload post board memo.',
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Post board memo parameter\n
+                                ### Middleware-This API uses multer middleware to handle upload file.',
+            required: true,
+            type: 'object',
+            schema: {
+                $date: "2023-04-19",
+                $stock_num_name: "2330 台積電",
+                $recommend: "買進",
+                $price: "500",
+                $reason: "原因...",
+                $filename: "123.txt"
+            }
+        }
+    */
     const temp = req.body.stock_num_name.split(" ")
     let filename = "NULL"
     const date = req.body.date

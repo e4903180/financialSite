@@ -1,6 +1,14 @@
 const con = require('../Model/connectFinancial')
 
-exports.notify_all = async function(req, res){
+exports.get_all_notify = async function(req, res){
+    /*
+        #swagger.tags = ['Notify']
+        #swagger.description = 'Get user all notify.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT * FROM notify WHERE username=?"
     let param = [req.session.userName]
 
@@ -14,7 +22,15 @@ exports.notify_all = async function(req, res){
 }
 
 
-exports.notify_read = async function(req, res){
+exports.get_readed_notify = async function(req, res){
+    /*
+        #swagger.tags = ['Notify']
+        #swagger.description = 'Get user all readed notify.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT * FROM notify WHERE username=? AND `read`=?"
     let param = [req.session.userName, 1]
 
@@ -29,6 +45,24 @@ exports.notify_read = async function(req, res){
 
 
 exports.notify_handle_read = async function(req, res){
+    /*
+        #swagger.tags = ['Notify']
+        #swagger.description = 'Handle unread notify to readed.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Filter parameter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $time: "2022-10-25 15:59",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "UPDATE notify SET `read`=? WHERE notifyTime=? AND username=?"
     let param = [1, req.body.time, req.session.userName]
 
@@ -43,6 +77,24 @@ exports.notify_handle_read = async function(req, res){
 
 
 exports.notify_handle_unread = async function(req, res){
+    /*
+        #swagger.tags = ['Notify']
+        #swagger.description = 'Handle readed notify to unread.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Filter parameter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $time: "2022-10-25 15:59",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "UPDATE notify SET `read`=? WHERE notifyTime=? AND username=?"
     let param = [0, req.body.time, req.session.userName]
 
@@ -56,7 +108,15 @@ exports.notify_handle_unread = async function(req, res){
 }
 
 
-exports.get_notify_quantity = async function(req, res){
+exports.get_unread_notify = async function(req, res){
+    /*
+        #swagger.tags = ['Notify']
+        #swagger.description = 'Get user all unread notify.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT COUNT(*) FROM notify WHERE username=? AND `read`=?"
     let param = [req.session.userName, 0]
 

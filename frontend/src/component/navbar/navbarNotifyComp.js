@@ -12,7 +12,7 @@ function NavbarNotifyComp() {
         if(allRead === "read"){
             setAllRead("all")
 
-            axios.get(config["rootApiIP"] + "/data/notify_all")
+            axios.get(config["rootApiIP"] + "/data/all_notify")
             .then((res) => {
                 setNotifyList([])
                 let temp = []
@@ -37,7 +37,7 @@ function NavbarNotifyComp() {
             setAllRead("read")
 
             //update notifyList
-            axios.get(config["rootApiIP"] + "/data/notify_read")
+            axios.get(config["rootApiIP"] + "/data/readed_notify")
             .then((res) => {
                 setNotifyList([])
                 let temp = []
@@ -57,7 +57,7 @@ function NavbarNotifyComp() {
     }
 
     useEffect(() => {
-        axios.get(config["rootApiIP"] + "/data/notify_all")
+        axios.get(config["rootApiIP"] + "/data/all_notify")
         .then((res) => {
             let temp = []
             
@@ -109,7 +109,7 @@ function NavbarNotifyComp() {
                     </div>
 
                     <div className = 'col-md-4 text-center'>
-                        <a href = {config["rootApiIP"] + "/user/notify_all"}>查看全部</a>
+                        <a href = {config["rootApiIP"] + "/user/all_notify"}>查看全部</a>
                     </div>
                 </div>
 

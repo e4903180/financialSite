@@ -1,6 +1,28 @@
 const con = require('../Model/connectFinancial')
 
 exports.financial_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search financialData table.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Filter paramter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num_name: "",
+                $startDate: "2023-01-01",
+                $endDate: "2023-04-30",
+                $investmentCompany: "all",
+                $recommend: "all",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
                 FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID \
                 WHERE 1=1`
@@ -73,6 +95,28 @@ exports.financial_search = async function(req, res){
 }
 
 exports.post_board_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search post_board_memo table.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Filter paramter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num_name: "",
+                $startDate: "2023-01-01",
+                $endDate: "2023-04-30",
+                $provider: "",
+                $recommend: "",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT post_board_memo.*, ticker_list.stock_name, ticker_list.stock_num \
                 FROM post_board_memo INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
@@ -109,6 +153,26 @@ exports.post_board_search = async function(req, res){
 }
 
 exports.lineMemo_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search lineMemo table.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Filter paramter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num_name: "",
+                $startDate: "2023-01-01",
+                $endDate: "2023-04-30",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT lineMemo.*, ticker_list.stock_name, ticker_list.stock_num \
                 FROM lineMemo INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
@@ -134,13 +198,29 @@ exports.lineMemo_search = async function(req, res){
 }
 
 exports.calender_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search calender table.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Filter paramter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num_name: "",
+                $startDate: "2023-01-01",
+                $endDate: "2023-04-30",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT calender.*, ticker_list.stock_name\
                 from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
-
-    if(req.body.startDate === "" || req.body.endDate === ""){
-        return res.status(400).send("error")
-    }
 
     // if(req.body.recommend !== ""){
     //     switch(req.body.recommend){
@@ -215,6 +295,24 @@ exports.calender_search = async function(req, res){
 }
 
 exports.ticker_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search 4 number ticker.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Ticker pattern.',
+            required: true,
+            type: 'object',
+            schema: {
+                $pattern: "台積電",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     if(req.body.pattern === ""){
         res.status(200).json({})
     }
@@ -232,6 +330,54 @@ exports.ticker_search = async function(req, res){
 }
 
 exports.news_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search news table.'
+
+        #swagger.parameters['column'] = {
+            in: 'query',
+            description: 'News search column.',
+            required: true,
+            type: 'string',
+            schema: "title"
+        }
+
+        #swagger.parameters['pattern'] = {
+            in: 'query',
+            description: 'Search pattern.',
+            required: true,
+            type: 'string',
+            schema: ""
+        }
+
+        #swagger.parameters['category'] = {
+            in: 'query',
+            description: 'News caregory.',
+            required: true,
+            type: 'string',
+            schema: "all"
+        }
+
+        #swagger.parameters['startDate'] = {
+            in: 'query',
+            description: 'Strat date.',
+            required: true,
+            type: 'string',
+            schema: "2023-01-01"
+        }
+
+        #swagger.parameters['endDate'] = {
+            in: 'query',
+            description: 'End date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-30"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT * FROM news WHERE 1=1`
     let param = []
 
@@ -267,6 +413,30 @@ exports.news_search = async function(req, res){
 }
 
 exports.news_search_today = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search today news.'
+
+        #swagger.parameters['category'] = {
+            in: 'query',
+            description: 'News category.',
+            required: true,
+            type: 'string',
+            schema: "全部"
+        }
+
+        #swagger.parameters['date'] = {
+            in: 'query',
+            description: 'Date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-20"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT * FROM news WHERE date=?`
     let param = [req.query.date]
 
@@ -290,6 +460,33 @@ exports.news_search_today = async function(req, res){
 }
 
 exports.news_search_past = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search past day news.'
+
+        #swagger.parameters['category'] = {
+            in: 'body',
+            description: 'News category.',
+            required: true,
+            type: 'string',
+            schema: {
+                $category: "全部",
+                $date: "2023-04-20",
+            }
+        }
+
+        #swagger.parameters['date'] = {
+            in: 'body',
+            description: 'Date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-20"
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT * FROM news WHERE date<?`
     let param = [req.query.date]
 
@@ -315,11 +512,27 @@ exports.news_search_past = async function(req, res){
 }
 
 exports.news_summary = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search news summary.'
+
+        #swagger.parameters['date'] = {
+            in: 'query',
+            description: 'Date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-20",
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT COUNT(*) as todayQuantity FROM news WHERE date=?;\
                 SELECT category, COUNT(category) as todayQuantity FROM news WHERE date=? GROUP BY category ORDER BY category;\
                 SELECT COUNT(*) as pastQuantity FROM news WHERE date<?;\
                 SELECT category, COUNT(category) as pastQuantity FROM news WHERE date<? GROUP BY category ORDER BY category;`
-    let param = [req.query.date, req.query.date, req.query.date, req.query.date, req.query.date, req.query.date]
+    let param = [req.query.date, req.query.date, req.query.date, req.query.date]
     let result = [
         { "ID" : 0, "category" : "全部", "todayQuantity" : 0, "pastQuantity" : 0 },
         { "ID" : 1, "category" : "MoneyDj 傳產", "todayQuantity" : 0, "pastQuantity" : 0 },
@@ -363,6 +576,49 @@ exports.news_summary = async function(req, res){
 }
 
 exports.other_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search financialDataOther.'
+
+        #swagger.parameters['pattern'] = {
+            in: 'query',
+            description: 'Search pattern.',
+            required: true,
+            type: 'string',
+            schema: ""
+        }
+
+        #swagger.parameters['startDate'] = {
+            in: 'query',
+            description: 'Start date.',
+            required: true,
+            type: 'string',
+            schema: "2023-01-01",
+                $endDate: "2023-04-30",
+                $investmentCompany: "all",
+        }
+
+        #swagger.parameters['endDate'] = {
+            in: 'query',
+            description: 'End date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-30",
+                $investmentCompany: "all",
+        }
+
+        #swagger.parameters['investmentCompany'] = {
+            in: 'query',
+            description: 'Investment company.',
+            required: true,
+            type: 'string',
+            schema: "all",
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = "SELECT * FROM financialDataOther WHERE 1=1"
     let param = []
 
@@ -376,7 +632,7 @@ exports.other_search = async function(req, res){
         param.push(req.query.startDate, req.query.endDate)
     }
 
-    if(req.query.investmentCompany !== ""){
+    if(req.query.investmentCompany !== "all"){
         query += " AND investmentCompany=?"
         param.push(req.query.investmentCompany)
     }
@@ -394,6 +650,49 @@ exports.other_search = async function(req, res){
 }
 
 exports.industry_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search financialDataOther.'
+
+        #swagger.parameters['column'] = {
+            in: 'query',
+            description: 'Search column.',
+            required: true,
+            type: 'string',
+            schema: "title"
+        }
+
+        #swagger.parameters['pattern'] = {
+            in: 'query',
+            description: 'Search column pattern.',
+            required: true,
+            type: 'string',
+            schema: ""
+        }
+
+        #swagger.parameters['startDate'] = {
+            in: 'query',
+            description: 'Start date.',
+            required: true,
+            type: 'string',
+            schema: "2023-01-01",
+                $endDate: "2023-04-30",
+                $investmentCompany: "all",
+        }
+
+        #swagger.parameters['endDate'] = {
+            in: 'query',
+            description: 'End date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-30",
+                $investmentCompany: "all",
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT * FROM financialDataIndustry WHERE 1=1`
     let param = []
 

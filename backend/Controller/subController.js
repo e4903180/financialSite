@@ -1,6 +1,14 @@
 const con = require('../Model/connectFinancial')
 
 exports.handle_support_resistance_sub = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Subscribe support resistance strategy.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     var userName = req.session.userName
     var stock_num = req.body.stockNum
     var startDate = req.body.startDate
@@ -19,7 +27,7 @@ exports.handle_support_resistance_sub = async function(req, res){
     var sec = Today.getSeconds().toString().padStart(2, '0');
     var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
     let query = `SELECT COUNT(*) as dataQuantity FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID \
-    WHERE username=? AND endTime=? AND stock_num=? AND content=? AND strategy=? AND alertCondition=?`
+                WHERE username=? AND endTime=? AND stock_num=? AND content=? AND strategy=? AND alertCondition=?`
     let param = [userName, endDate, stock_num, "歷史資料起始日" + startDate + "_" + maLen + maType + "_" + method, "天花板地板線", alertCondition]
     
     try {
@@ -58,6 +66,14 @@ exports.handle_support_resistance_sub = async function(req, res){
 }
 
 exports.handle_pricing_strategy_sub = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Subscribe pricing strategy.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     var userName = req.session.userName
     var stock_num = req.body.stockNum
     var startYear = req.body.startYear
@@ -74,7 +90,7 @@ exports.handle_pricing_strategy_sub = async function(req, res){
     var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
 
     let query = `SELECT COUNT(*) as dataQuantity FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID \
-    WHERE username=? AND endTime=? AND stock_num=? AND content=? AND strategy=? AND alertCondition=?`
+                WHERE username=? AND endTime=? AND stock_num=? AND content=? AND strategy=? AND alertCondition=?`
     let param = [userName, endDate, stock_num, "歷史幾年資料" + startYear, "股票定價策略", alertCondition]
 
     try {
@@ -113,6 +129,14 @@ exports.handle_pricing_strategy_sub = async function(req, res){
 }
 
 exports.handle_per_river_sub = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Subscribe per river strategy.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     var userName = req.session.userName
     var stock_num = req.body.stockNum
     var endDate = req.body.endDate
@@ -128,7 +152,7 @@ exports.handle_per_river_sub = async function(req, res){
     var Time = `${year}-${month}-${day} ${hour}:${min}:${sec}`
 
     let query = `SELECT COUNT(*) as dataQuantity FROM subscribe INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID \
-     WHERE username=? AND endTime=? AND stock_num=? AND strategy=? AND alertCondition=?`
+                WHERE username=? AND endTime=? AND stock_num=? AND strategy=? AND alertCondition=?`
     let param = [userName, endDate, stock_num, "本益比河流圖", alertCondition]
     
     try {
@@ -167,8 +191,16 @@ exports.handle_per_river_sub = async function(req, res){
 }
 
 exports.get_sub = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Get subscribe.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT subscribe.ID, ticker_list.stock_name, subscribe.endTime, subscribe.subTime, subscribe.content, subscribe.strategy, subscribe.alertCondition FROM subscribe \
-    INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID WHERE username=?`
+                INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID WHERE username=?`
     let param = [req.session.userName]
 
     try {
@@ -180,6 +212,24 @@ exports.get_sub = async function(req, res){
 }
 
 exports.delete_sub = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Delete subscribe.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Delete subscribe parameter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $subTime: "",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `DELETE FROM subscribe WHERE username = ? AND subTime = ?`
     let param = [req.session.userName, req.body.subTime]
 
@@ -194,6 +244,14 @@ exports.delete_sub = async function(req, res){
 }
 
 exports.get_user_notify_type = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Get user notify type.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `SELECT lineNotify, emailNotify FROM user WHERE userName=?`
     let param = [req.session.userName]
 
@@ -208,6 +266,24 @@ exports.get_user_notify_type = async function(req, res){
 }
 
 exports.update_user_lineNotify_type = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Update line notify.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Switch on off.',
+            required: true,
+            type: 'object',
+            schema: {
+                $switch: "1",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `UPDATE user SET lineNotify=? WHERE userName=?`
     let param = [req.body.switch, req.session.userName]
 
@@ -222,6 +298,24 @@ exports.update_user_lineNotify_type = async function(req, res){
 }
 
 exports.update_user_emailNotify_type = async function(req, res){
+    /*
+        #swagger.tags = ['Subscribe']
+        #swagger.description = 'Update email notify.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Switch on off.',
+            required: true,
+            type: 'object',
+            schema: {
+                $switch: "1",
+            }
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
     let query = `UPDATE user SET emailNotify=? WHERE userName=?`
     let param = [req.body.switch, req.session.userName]
 

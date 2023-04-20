@@ -3,8 +3,8 @@ const con = require('../Model/connectTwStock')
 
 exports.filter_ticker = async function(req, res){
     let query = 'SELECT ticker_filter.*, ticker_list.stock_num, ticker_list.stock_name, twStock.Open, twStock.High, twStock.Low, twStock.Close, twStock.Volume \
-    FROM ticker_filter INNER JOIN twStock ON ticker_filter.ticker_id=twStock.ticker_id INNER JOIN ticker_list ON ticker_filter.ticker_id=ticker_list.ID \
-    WHERE 1=1 AND twStock.date="2017-06-30"'
+                FROM ticker_filter INNER JOIN twStock ON ticker_filter.ticker_id=twStock.ticker_id INNER JOIN ticker_list ON ticker_filter.ticker_id=ticker_list.ID \
+                WHERE 1=1 AND twStock.date="2017-06-30"'
     let conditions = req.query.conditions
 
     for(let i = 0; i < conditions.length; i++){

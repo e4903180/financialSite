@@ -32,6 +32,24 @@ exports.other_upload_middleWare = function(req, res, next){
 }
 
 exports.other_upload = async function(req, res){
+    /*
+        #swagger.tags = ['File upload']
+        #swagger.description = 'Upload other research pdf.',
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Other research parameter\n
+                                ### Middleware-This API uses multer middleware to handle upload file.',
+            required: true,
+            type: 'object',
+            schema: {
+                $date: "2023-04-19",
+                $title: "台積電...",
+                $investmentCompany: "統一投顧",
+                $filname: "台積電???.pdf"
+            }
+        }
+    */
     let query = "INSERT INTO `financialDataOther` (`date`, `title`, `investmentCompany`, \
                 `filename`) VALUES (?, ?, ?, ?)"
     let param = [req.body.date, req.body.title,

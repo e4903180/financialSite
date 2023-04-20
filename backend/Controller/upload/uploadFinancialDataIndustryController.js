@@ -32,6 +32,25 @@ exports.industry_upload_middleWare = function(req, res, next){
 }
 
 exports.industry_upload = async function(req, res){
+    /*
+        #swagger.tags = ['File upload']
+        #swagger.description = 'Upload industry research pdf.',
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Industry research parameter\n
+                                ### Middleware-This API uses multer middleware to handle upload file.',
+            required: true,
+            type: 'object',
+            schema: {
+                $date: "2023-04-19",
+                $title: "台積電...",
+                $category: "半導體",
+                $investmentCompany: "統一投顧",
+                $filname: "台積電???.pdf"
+            }
+        }
+    */
     let query = "INSERT INTO `financialDataIndustry` (`date`, `title`, `category`, \
                 `investmentCompany`, `filename`) VALUES (?, ?, ?, ?, ?)"
     let param = [req.body.date, req.body.title, req.body.category,

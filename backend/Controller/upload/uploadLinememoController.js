@@ -5,6 +5,22 @@ const { config } = require('../../constant');
 const { createCSV } = require('./createCsvController');
 
 exports.lineMemo_upload = async function(req, res){
+    /*
+        #swagger.tags = ['File upload']
+        #swagger.description = 'Upload line memo.',
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Line memo research parameter.',
+            required: true,
+            type: 'object',
+            schema: {
+                $date: "2023-04-19",
+                $stock_num_name: "2330 台積電",
+                $content: "line memo 內容",
+            }
+        }
+    */
     const temp = req.body.stock_num_name.split(" ")
     const stockNum = temp[0]
     const stockName = temp[1]

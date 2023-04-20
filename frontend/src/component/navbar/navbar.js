@@ -47,7 +47,7 @@ function NavbarComp() {
     }
 
     useEffect(() => {
-        axios.get(config["rootApiIP"] + "/data/get_notify_quantity")
+        axios.get(config["rootApiIP"] + "/data/unread_notify")
         .then((res) => {
             setBadgeNumber(res.data)
             setLoading(false)

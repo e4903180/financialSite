@@ -9,7 +9,7 @@ exports.financial_recommend_update = async function(req, res){
 
         #swagger.parameters['obj'] = {
             in: 'body',
-            description: 'Filter parameter.',
+            description: 'Update financial recommend.',
             required: true,
             type: 'object',
             schema: {

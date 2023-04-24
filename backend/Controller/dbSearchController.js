@@ -222,58 +222,6 @@ exports.calender_search = async function(req, res){
                 from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
     let param = []
 
-    // if(req.body.recommend !== ""){
-    //     switch(req.body.recommend){
-    //         case "buy":
-    //             query += " AND ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('增加持股','中立轉買進',\
-    //                     '買進','優於大盤','buy','Buy','BUY','overweight',\
-    //                     'Overweight','OVERWEIGHT','增加持股(Overweight)','買進(Buy)','買進 (維持評等)','買進 (調升評等)',\
-    //                     '買進 (重新納入研究範圍)','買進 (研究員異動)','買進  (初次報告)','買進 (初次報告)','買進（調升）',\
-    //                     '區間→買進','買進（維持）','買 進','買進(調升評等)','買進(維持評等)','強力買進(調升評等)','強力買進(維持評等)',\
-    //                     '強力買進(上調評等)','買進(初次評等)','買進(調降目標價)','強力買進(初次評等)','Upgrade to BUY','評等買進',\
-    //                     'UPGRADE TO BUY','Upgrade To BUY','買進轉強力買進','維持強力買進','STRONG BUY','Upgarde to BUY','Trading Buy',\
-    //                     '買進買進','買進(維持)','逢低買進(維持)','買進(初次)','買進 – 維持買進','買進– 維持買進','逢低買進','買進(首次評等)',\
-    //                     '買進 (首次評等)','買進-維持','逢低買進-首次','逢低買進-維持','買進-首次','Maintain OUTPERFORM','OUTPERFORM',\
-    //                     'outperform','Outperform','買進(初次報告)','買進 ', '強力買進/買進 ','買進') AND date BETWEEN ? AND ?)"
-    //             param.push(req.body.startDate, req.body.endDate)
-
-    //             break
-            
-    //         case "sell":
-    //             query += " AND ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('賣出','劣於大盤','\
-    //                     sell','Sell','SELL','Underweight','underweight','UNDERWEIGHT',\
-    //                     'reduce','Reduce','REDUCE','賣出(Sell)','降低持股','降低持股(Underweight)','賣出 (維持評等)','賣 出',\
-    //                     '降低持股(調降評等)','賣出(調降評等)','Underperform','underperform','UNDERPERFORM',\
-    //                     'MAINTAIN REDUCE') AND date BETWEEN ? AND ?)"
-    //             param.push(req.body.startDate, req.body.endDate)
-
-    //             break
-            
-    //         case "neutral":
-    //             query += " AND ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('維持中立','中立',\
-    //                     '買進轉中立','持有-超越同業(維持評等)','hold','Hold','HOLD','neutral',\
-    //                     'Nertual','NEUTRAL','中立(Neutral)','持有-落後同業','持有-落後同業 (維持評等)','持有-超越同業 (調降評等)',\
-    //                     '持有-超越同業','持有-落後同業(維持評等)','持有-超越大盤(維持評等)','持有-超越大盤 (維持評等)','持有-落後大盤',\
-    //                     '中立（調降）','長期持有','中立(維持評等)','中立(調降評等)','中立(初次評等)','中立 (維持評等)','中立(降低評等)',\
-    //                     '中立(調升評等)','中立(下修評等)','中立 (調降評等)','評等中立','Downgrade to HOLD','持有','中立中立','中立 – 維持中立',\
-    //                     '中立 – 初次評等中立','中立 – 買進轉中立','中立 – 初次評等','中性','中性 (維持評等)','中 性 (維 持 評 等 )','中性 (調降評等),\
-    //                     '中立 ','Equal-weight','未評等','未評等 ',' 中立','Downgrade to NEUTRAL') AND date BETWEEN ? AND ?)"
-    //             param.push(req.body.startDate, req.body.endDate)
-
-    //             break
-
-    //         case "interval":
-    //             query += " AND ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('區間操作','區間操作（調降）','區間','區間操作 ') AND date BETWEEN ? AND ?)"
-    //             param.push(req.body.startDate, req.body.endDate)
-
-    //             break
-
-    //         default:
-    //             break
-    //     }
-        
-    // }
-
     if(req.body.stock_num_name !== ""){
         query += ` AND stock_num=?`
         param.push(req.body.stock_num_name.split(" ")[0])
@@ -594,8 +542,6 @@ exports.other_search = async function(req, res){
             required: true,
             type: 'string',
             schema: "2023-01-01",
-                $endDate: "2023-04-30",
-                $investmentCompany: "all",
         }
 
         #swagger.parameters['endDate'] = {
@@ -604,7 +550,6 @@ exports.other_search = async function(req, res){
             required: true,
             type: 'string',
             schema: "2023-04-30",
-                $investmentCompany: "all",
         }
 
         #swagger.parameters['investmentCompany'] = {
@@ -675,10 +620,7 @@ exports.industry_search = async function(req, res){
             description: 'Start date.',
             required: true,
             type: 'string',
-            schema: "2023-01-01",
-                $endDate: "2023-04-30",
-                $investmentCompany: "all",
-        }
+            schema: "2023-01-01",        }
 
         #swagger.parameters['endDate'] = {
             in: 'query',
@@ -686,7 +628,6 @@ exports.industry_search = async function(req, res){
             required: true,
             type: 'string',
             schema: "2023-04-30",
-                $investmentCompany: "all",
         }
 
         #swagger.security = [{
@@ -714,5 +655,142 @@ exports.industry_search = async function(req, res){
         return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")
+    }
+}
+
+exports.twse_recommend_search = async function(req, res){
+    /*
+        #swagger.tags = ['Search data from db']
+        #swagger.description = 'Search calender with financialData recommend.'
+
+        #swagger.parameters['startDate'] = {
+            in: 'query',
+            description: 'Start date.',
+            required: true,
+            type: 'string',
+            schema: "2023-01-01",
+        }
+
+        #swagger.parameters['endDate'] = {
+            in: 'query',
+            description: 'End date.',
+            required: true,
+            type: 'string',
+            schema: "2023-04-30",
+        }
+
+        #swagger.parameters['category'] = {
+            in: 'query',
+            description: 'Category of ticker.',
+            required: true,
+            type: 'string',
+            schema: "半導體",
+        }
+
+        #swagger.parameters['type'] = {
+            in: 'query',
+            description: 'Type of ticker.',
+            required: true,
+            type: 'string',
+            schema: "上市",
+        }
+
+        #swagger.parameters['recommend'] = {
+            in: 'query',
+            description: 'Recommend of ticker.',
+            required: true,
+            type: 'string',
+            schema: "buy",
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
+    let query = `SELECT calender.*, ticker_list.stock_name, ticker_list.class\
+                from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1 AND calender.date BETWEEN ? AND ?`
+    let param = [req.query.startDate, req.query.endDate]
+
+    if(req.query.category != "all"){
+        query += " AND ticker_list.class=?"
+        param.push(req.query.category)
+    }
+
+    if(req.query.type != "all"){
+        switch(req.query.type){
+            case "上市":
+                query += " AND ticker_list.class NOT LIKE ?"
+                param.push("%櫃%")
+
+                break
+
+            case "上櫃":
+                query += " AND ticker_list.class LIKE ?"
+                param.push("%櫃%")
+
+                break
+
+            default:
+                break
+        }
+    }
+
+    switch(req.query.recommend){
+        case "buy":
+            query += " AND calender.ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('增加持股','中立轉買進',\
+                    '買進','優於大盤','buy','Buy','BUY','overweight',\
+                    'Overweight','OVERWEIGHT','增加持股(Overweight)','買進(Buy)','買進 (維持評等)','買進 (調升評等)',\
+                    '買進 (重新納入研究範圍)','買進 (研究員異動)','買進  (初次報告)','買進 (初次報告)','買進（調升）',\
+                    '區間→買進','買進（維持）','買 進','買進(調升評等)','買進(維持評等)','強力買進(調升評等)','強力買進(維持評等)',\
+                    '強力買進(上調評等)','買進(初次評等)','買進(調降目標價)','強力買進(初次評等)','Upgrade to BUY','評等買進',\
+                    'UPGRADE TO BUY','Upgrade To BUY','買進轉強力買進','維持強力買進','STRONG BUY','Upgarde to BUY','Trading Buy',\
+                    '買進買進','買進(維持)','逢低買進(維持)','買進(初次)','買進 – 維持買進','買進– 維持買進','逢低買進','買進(首次評等)',\
+                    '買進 (首次評等)','買進-維持','逢低買進-首次','逢低買進-維持','買進-首次','Maintain OUTPERFORM','OUTPERFORM',\
+                    'outperform','Outperform','買進(初次報告)','買進 ', '強力買進/買進 ','買進') AND date BETWEEN ? AND ?)"
+            param.push(req.query.startDate, req.query.endDate)
+
+            break
+        
+        case "sell":
+            query += " AND calender.ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('賣出','劣於大盤','\
+                    sell','Sell','SELL','Underweight','underweight','UNDERWEIGHT',\
+                    'reduce','Reduce','REDUCE','賣出(Sell)','降低持股','降低持股(Underweight)','賣出 (維持評等)','賣 出',\
+                    '降低持股(調降評等)','賣出(調降評等)','Underperform','underperform','UNDERPERFORM',\
+                    'MAINTAIN REDUCE') AND date BETWEEN ? AND ?)"
+            param.push(req.query.startDate, req.query.endDate)
+
+            break
+        
+        case "neutral":
+            query += " AND calender.ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('維持中立','中立',\
+                    '買進轉中立','持有-超越同業(維持評等)','hold','Hold','HOLD','neutral',\
+                    'Nertual','NEUTRAL','中立(Neutral)','持有-落後同業','持有-落後同業 (維持評等)','持有-超越同業 (調降評等)',\
+                    '持有-超越同業','持有-落後同業(維持評等)','持有-超越大盤(維持評等)','持有-超越大盤 (維持評等)','持有-落後大盤',\
+                    '中立（調降）','長期持有','中立(維持評等)','中立(調降評等)','中立(初次評等)','中立 (維持評等)','中立(降低評等)',\
+                    '中立(調升評等)','中立(下修評等)','中立 (調降評等)','評等中立','Downgrade to HOLD','持有','中立中立','中立 – 維持中立',\
+                    '中立 – 初次評等中立','中立 – 買進轉中立','中立 – 初次評等','中性','中性 (維持評等)','中 性 (維 持 評 等 )','中性 (調降評等),\
+                    '中立 ','Equal-weight','未評等','未評等 ',' 中立','Downgrade to NEUTRAL') AND date BETWEEN ? AND ?)"
+            param.push(req.query.startDate, req.query.endDate)
+
+            break
+
+        case "interval":
+            query += " AND calender.ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('區間操作','區間操作（調降）','區間','區間操作 ') \
+                    AND date BETWEEN ? AND ?)"
+            param.push(req.query.startDate, req.query.endDate)
+
+            break
+
+        default:
+            break
+    }
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param);
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({})
     }
 }

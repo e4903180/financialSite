@@ -127,6 +127,7 @@ dataRouter.get("/news_search_today", dbSearch.news_search_today)
 dataRouter.get("/news_search_past", dbSearch.news_search_past)
 dataRouter.get("/news_search", dbSearch.news_search)
 dataRouter.get("/news_summary", dbSearch.news_summary)
+dataRouter.get("/twse_recommend_search", dbSearch.twse_recommend_search)
 
 /* DB edit router */
 dataRouter.patch("/financial_recommend", dbUpdate.financial_recommend_update)

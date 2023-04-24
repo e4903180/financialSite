@@ -178,6 +178,21 @@ export const columns_financialDataIndustry = [
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
+export const columns_twse_recommend = [
+    { field: 'stock_name', headerName: '股票名稱', width: 200, headerAlign: 'center', align: 'center' },
+    { field: 'date', headerName: '法說會日期', width: 200, headerAlign: 'center', align: 'center' },
+    { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'chPDF', headerName: '中文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
+        renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
+    { field: 'enPDF', headerName: '英文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
+        renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
+    { field: 'More_information', headerName: '相關資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Video_address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
+];
+
 const check_single_post_board_memo_NULL = (value) => {
     if(value === "nan" || value === "NULL"){
         return <>沒有檔案</>

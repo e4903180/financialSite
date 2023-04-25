@@ -6,7 +6,7 @@ import json
 
 class GmailService():
     def __init__(self) -> None:
-        self._root_path = json.load(open("../../../root_path.json"))
+        self._root_path = json.load(open("/home/uikai/financialSite/root_path.json"))
 
     def send_mail(self, content : MIMEMultipart) -> None:
         with smtplib.SMTP(host = SMTP_HOST, port = SMTP_PORT) as smtp:  # 設定SMTP伺服器

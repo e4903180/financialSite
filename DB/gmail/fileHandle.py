@@ -7,17 +7,15 @@ from tqdm import tqdm
 from extractPdfRate import ExtractPdfRate
 from update2SQL import Update2SQL
 from typing import Dict, List
-from linebot import LineBotApi, WebhookHandler
-from linebot.models import TextSendMessage
 
 config = configparser.ConfigParser()
 config.read('../../LineBot/config.ini')
 
-line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
-handler = WebhookHandler(config.get('line-bot', 'channel_secret'))
-
 root_path = json.load(open("../../root_path.json"))
 recommend_json = json.load(open("../../recommend.json"))
+
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
 
 class FileHandle():
     """Handle pdf file
@@ -147,7 +145,6 @@ class FileHandle():
                 return
         
         print(f"{new_filename} is new", file = sys.stderr)
-        line_bot_api.push_message(self._admin_line_id, TextSendMessage(text = f"{new_filename} is new"))
 
     def run(self, mode : str) -> None:
         """Run
@@ -167,11 +164,12 @@ class FileHandle():
             self._handle_2_dir()
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/line_handle_{str(datetime.datetime.now())}.log", 'w')
-    
-    file_handle = FileHandle()
-
     if sys.argv[1] == "2":
+        log_notify_service = LogNotifyService()
+        temp = str(datetime.datetime.now())
+        sys.stderr = open(f"{root_path['GMAIL_DATA_LOG_PATH']}/line_handle_{temp}.log", 'w')
+    
+        file_handle = FileHandle()
         update_2_sql = Update2SQL()
         
         print("Handle recommend...", file = sys.stderr)
@@ -179,3 +177,5 @@ if __name__ == "__main__":
 
         print("Update data to sql...", file = sys.stderr)
         update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2")
+
+        log_notify_service.send_email("Line個股研究報告更新狀態", f"{root_path['GMAIL_DATA_LOG_PATH']}/line_handle_{temp}.log")

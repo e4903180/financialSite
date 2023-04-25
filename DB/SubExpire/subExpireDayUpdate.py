@@ -8,6 +8,9 @@ import json
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class SubExpire():
     def __init__(self) -> None:
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
@@ -26,7 +29,10 @@ class SubExpire():
             self._db.commit()
 
 if __name__ == "__main__":
+    log_notify_service = LogNotifyService()
     SE = SubExpire()
 
-    sys.stderr = open(root_path["SUBEXPIRE_LOG_PATH"] + "/" + str(date.today()) + '.log', 'w')
+    sys.stderr = open(f"{root_path['SUBEXPIRE_LOG_PATH']}/{str(date.today())}.log", 'w')
     SE.detect()
+
+    log_notify_service.send_email("訂閱更新狀態", f"{root_path['SUBEXPIRE_LOG_PATH']}/{str(date.today())}.log")

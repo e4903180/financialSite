@@ -8,6 +8,9 @@ import datetime
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class TableStatus2CSV():
     """Create csv file of some table
     """
@@ -155,7 +158,12 @@ class TableStatus2CSV():
         self._post_board_memo2csv()
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["CSV_LOG"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+
+    temp = str(datetime.datetime.now())
+    sys.stderr = open(f"{root_path['CSV_LOG']}/{temp}.log", 'w')
     table_status = TableStatus2CSV()
 
     table_status.run()
+
+    log_notify_service.send_email("資料表CSV更新狀態", f"{root_path['CSV_LOG']}/{temp}.log")

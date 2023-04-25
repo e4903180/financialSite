@@ -9,6 +9,9 @@ import json
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class DxyJnkUpdate():
     """Update yfinance data, include
         1. DXY => US Dollar/USDX - Index - Cash
@@ -104,7 +107,10 @@ class DxyJnkUpdate():
         return True
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["FRED_DAY_UPDATE_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+
+    sys.stderr = open(f"{root_path['FRED_DAY_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
 
     DJU = DxyJnkUpdate()
     DJU.update()
+    log_notify_service.send_email("Fred日更新狀態", f"{root_path['FRED_DAY_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log")

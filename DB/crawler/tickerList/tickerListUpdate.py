@@ -16,6 +16,9 @@ import os
 db_config = json.load(open("../../../db_config.json"))
 root_path = json.load(open("../../../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class TickerUpdate():
     def __init__(self) -> None:
         options = webdriver.ChromeOptions()
@@ -191,9 +194,14 @@ class UpdateLocal():
         self._update_local()
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["TICKER_UPDATE_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+    temp = str(datetime.datetime.now())
+    
+    sys.stderr = open(f"{root_path['TICKER_UPDATE_LOG_PATH']}/{temp}.log", 'w')
     TLU = TickerUpdate()
     UL = UpdateLocal()
     
     TLU.run()
     UL.run()
+
+    log_notify_service.send_email("股票清單更新狀態", f"{root_path['TICKER_UPDATE_LOG_PATH']}/{temp}.log")

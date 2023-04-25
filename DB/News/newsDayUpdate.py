@@ -13,6 +13,9 @@ import json
 
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
+
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
     
 class NewsDayUpdate():
     """Update news from some websites
@@ -47,7 +50,11 @@ class NewsDayUpdate():
         self._ctee.run()
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["NEWS_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+
+    temp = str(datetime.datetime.now())
+    sys.stderr = open(f"{root_path['NEWS_LOG_PATH']}/{temp}.log", 'w')
     news = NewsDayUpdate()
 
     news.run()
+    log_notify_service.send_email("新聞更新狀態", f"{root_path['NEWS_LOG_PATH']}/{temp}.log")

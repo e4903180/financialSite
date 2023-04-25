@@ -11,6 +11,8 @@ import json
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 warnings.filterwarnings("ignore")
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
 
 class FredUpdate():
     """Update Fed data, include
@@ -208,7 +210,10 @@ class FredUpdate():
         return True
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["FRED_MONTH_UPDATE_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+
+    sys.stderr = open(f"{root_path['FRED_MONTH_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
     fredUpdate = FredUpdate()
 
     fredUpdate.update()
+    log_notify_service.send_email("Fred月更新狀態", f"{root_path['FRED_MONTH_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log")

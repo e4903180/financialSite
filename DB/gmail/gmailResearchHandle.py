@@ -18,6 +18,8 @@ from update2SQL import Update2SQL
 from fileHandle import FileHandle
 
 root_path = json.load(open("../../root_path.json"))
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
 
 class Pattern():
     def __init__(self) -> None:
@@ -597,7 +599,9 @@ class GmailResearchHandle():
             self._modifyLabel(mail_id, "handled")
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["GMAIL_DATA_LOG_PATH"] + f"/gmail_handle_{str(datetime.datetime.now())}.log", 'w')
+    log_notify_service = LogNotifyService()
+    temp = str(datetime.datetime.now())
+    sys.stderr = open(f"{root_path['GMAIL_DATA_LOG_PATH']}/gmail_handle_{temp}.log", 'w')
     gmail_reasearch_handle = GmailResearchHandle()
     update_2_sql = Update2SQL()
 
@@ -610,3 +614,5 @@ if __name__ == "__main__":
 
     print("Update data to sql...", file = sys.stderr)
     update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1")
+
+    log_notify_service.send_email("Gmail個股研究報告更新狀態", f"{root_path['GMAIL_DATA_LOG_PATH']}/gmail_handle_{temp}.log")

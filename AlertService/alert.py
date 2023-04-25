@@ -21,6 +21,9 @@ import json
 db_config = json.load(open("../db_config.json"))
 root_path = json.load(open("../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class AlertService():
     """Create the analysis research by user's subscribe settings,
         and notify by line or email
@@ -207,7 +210,12 @@ class AlertService():
                                                         self._user_list.iloc[i]["lineId"])
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["ALTERSERVICE_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+
+    temp = str(datetime.datetime.now())
+    sys.stderr = open(f"{root_path['ALTERSERVICE_LOG_PATH']}/{temp}.log", 'w')
     AS = AlertService()
 
     AS.detect()
+
+    log_notify_service.send_email("警示更新狀態", f"{root_path['ALTERSERVICE_LOG_PATH']}/{temp}.log")

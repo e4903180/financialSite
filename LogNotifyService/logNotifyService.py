@@ -28,8 +28,10 @@ class LogNotifyService():
         content["from"] =  GMAIL_ACCOUNT
         content["to"] = ADDMIN_EMAIL
 
+        temp = ""
         with open(log_path, "r") as f:
             for line in f:
-                content.attach(MIMEText(f"{line}\n"))
+                temp += f"{line}\n"
 
+        content.attach(MIMEText(temp))
         self._gmail_service.send_mail(content)

@@ -9,6 +9,9 @@ import json
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class TWII():
     def __init__(self) -> None:
         self._TWII_table_data = None
@@ -80,9 +83,10 @@ class TWII():
 
         return True
 
-
 if __name__ == "__main__":
+    log_notify_service = LogNotifyService()
     twii = TWII()
 
-    sys.stderr = open(root_path["TWII_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
+    sys.stderr = open(f"{root_path['TWII_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
     twii.update()
+    log_notify_service.send_email("加權指數更新狀態", f"{root_path['TWII_LOG_PATH']}/{str(datetime.date.today())}.log")

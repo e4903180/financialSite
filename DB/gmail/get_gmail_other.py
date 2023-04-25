@@ -17,6 +17,9 @@ import json
 db_config = json.load(open("../../db_config.json"))
 root_path = json.load(open("../../root_path.json"))
 
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
+
 class GetGmailIndustry():
     def __init__(self) -> None:
         # Define the SCOPES. If modifying it, delete the token.pickle file.
@@ -248,7 +251,12 @@ class GetGmailIndustry():
             self._modifyLabels(message['id'])
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["GMAIL_DATA_OTHER_LOG_PATH"] + "/" + str(datetime.datetime.now()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+    temp = str(datetime.datetime.now())
+
+    sys.stderr = open(f"{root_path['GMAIL_DATA_OTHER_LOG_PATH']}/{temp}.log", 'w')
     GGI = GetGmailIndustry()
 
     GGI.run()
+
+    log_notify_service.send_email("Gmail其他研究報告更新狀態", f"{root_path['GMAIL_DATA_OTHER_LOG_PATH']}/{temp}.log")

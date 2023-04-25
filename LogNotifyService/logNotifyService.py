@@ -1,5 +1,5 @@
 import os
-from gmailService.gmailService import gmailService
+from gmailService.gmailService import GmailService
 from gmailService.constant import GMAIL_ACCOUNT, ADDMIN_EMAIL
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -8,7 +8,7 @@ class LogNotifyService():
     """Notify addmin about db update
     """
     def __init__(self) -> None:
-        self._gmail_service = gmailService()
+        self._gmail_service = GmailService()
 
     def send_email(self, subject : str, log_path : str) -> None:
         """Send db update status to addmin

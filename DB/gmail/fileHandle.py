@@ -126,9 +126,8 @@ class FileHandle():
             result = self._recommend_extract(info, 1, dir_path, filename)
             info = result["info"]
 
-            self._new_recommend_notify(result['new_rate'])
-
             new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{result['new_rate']}_NULL.pdf"
+            self._new_recommend_notify(new_filename)
 
             os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
@@ -142,12 +141,13 @@ class FileHandle():
 
         return {"info" : info, "new_rate" : new_rate}
 
-    def _new_recommend_notify(self, recommend : str) -> None:
+    def _new_recommend_notify(self, new_filename : str) -> None:
         for key in self._recommend_pattern:
-            if recommend in self._recommend_pattern[key]:
+            if new_filename in self._recommend_pattern[key]:
                 return
-            
-        line_bot_api.push_message(self._admin_line_id, TextSendMessage(text = f"{recommend} is new recommend"))
+        
+        print(f"{new_filename} is new", file = sys.stderr)
+        line_bot_api.push_message(self._admin_line_id, TextSendMessage(text = f"{new_filename} is new"))
 
     def run(self, mode : str) -> None:
         """Run

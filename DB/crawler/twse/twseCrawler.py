@@ -17,6 +17,8 @@ import json
 
 db_config = json.load(open("../../../db_config.json"))
 root_path = json.load(open("../../../root_path.json"))
+sys.path.append(root_path["PROJECT_ROOT_PATH"])
+from LogNotifyService.logNotifyService import LogNotifyService
 
 class TwseSelenium():
     """Init selenium and get table
@@ -251,7 +253,9 @@ class Twse(TwseSelenium, MySQL):
                            data_td[10].getText().replace("'", ""))
 
 if __name__ == "__main__":
-    sys.stderr = open(root_path["TWSE_LOG_PATH"] + "/" + str(datetime.date.today()) + '.log', 'w')
+    log_notify_service = LogNotifyService()
+
+    sys.stderr = open(f"{root_path['TWSE_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
     today = datetime.datetime.now()
     twse = Twse()
     current_year = today.year - 1911
@@ -276,3 +280,5 @@ if __name__ == "__main__":
         twse.run(year = str(current_year + 1), month = str(next_month))
     else:
         twse.run(year = str(current_year), month = str(next_month))
+
+    log_notify_service.send_email("法說會更新狀態", f"{root_path['TWSE_LOG_PATH']}/{str(datetime.date.today())}.log")

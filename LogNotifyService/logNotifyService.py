@@ -1,5 +1,5 @@
 import os
-from gmailService import gmailService
+from gmailService.gmailService import gmailService
 from gmailService.constant import GMAIL_ACCOUNT, ADDMIN_EMAIL
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

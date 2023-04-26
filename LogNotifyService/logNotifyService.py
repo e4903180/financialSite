@@ -33,5 +33,8 @@ class LogNotifyService():
             for line in f:
                 temp += f"{line}\n"
 
+        if temp == "":
+            return
+        
         content.attach(MIMEText(temp))
         self._gmail_service.send_mail(content)

@@ -491,12 +491,14 @@ exports.news_summary = async function(req, res){
         { "ID" : 6, "category" : "經濟日報 產業 產業熱點", "todayQuantity" : 0, "pastQuantity" : 0 },
         { "ID" : 7, "category" : "經濟日報 產業 科技產業", "todayQuantity" : 0, "pastQuantity" : 0 },
         { "ID" : 8, "category" : "經濟日報 產業 綜合產業", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 9, "category" : "經濟日報 證券 市場焦點", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 10, "category" : "經濟日報 證券 櫃買動態", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 11, "category" : "經濟日報 證券 權證特區", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 12, "category" : "經濟日報 證券 證券達人", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 13, "category" : "經濟日報 證券 集中市場", "todayQuantity" : 0, "pastQuantity" : 0 },
-        { "ID" : 14, "category" : "財報狗", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 9, "category" : "經濟日報 產業 產業達人", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 10, "category" : "經濟日報 產業 無感5G時代", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 11, "category" : "經濟日報 證券 市場焦點", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 12, "category" : "經濟日報 證券 櫃買動態", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 13, "category" : "經濟日報 證券 權證特區", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 14, "category" : "經濟日報 證券 證券達人", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 15, "category" : "經濟日報 證券 台股擂台", "todayQuantity" : 0, "pastQuantity" : 0 },
+        { "ID" : 16, "category" : "財報狗", "todayQuantity" : 0, "pastQuantity" : 0 },
     ]
     const rowNum = [1, 3]
 

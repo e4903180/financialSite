@@ -31,7 +31,7 @@ class NewsDayUpdate():
         cursor = db.cursor()
 
         self._ctee = Ctee(options, service, db, cursor)
-        self._moneydj = MoneyDj(options, service, db, cursor)
+        # self._moneydj = MoneyDj(options, service, db, cursor)
         self._money = Money(db, cursor)
         self._statementdog = StatementDog(db, cursor)
     
@@ -44,7 +44,7 @@ class NewsDayUpdate():
             Return :
                 None 
         """
-        self._moneydj.run()
+        # self._moneydj.run()
         self._money.run()
         self._statementdog.run()
         self._ctee.run()

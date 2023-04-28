@@ -134,7 +134,7 @@ function NewsItem(props) {
 
                 <div className = 'col-md-12 mx-auto'>
                     <DataGrid
-                        columns = { columns_news }
+                        columns = { columns_news(pattern) }
                         rows = { props.data }
                         page = { page }
                         onPageChange={(newPage) => setPage(newPage)}

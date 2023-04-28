@@ -1,6 +1,7 @@
 import CustomA from "../customA";
 import React from 'react';
 import { config } from "../../constant";
+import Highlighter from "react-highlight-words";
 
 export const columns_all_table_summary = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -130,13 +131,23 @@ export const columns_choose_ticker = [
         renderCell : rowData => <a href = { rowData.value } target = "_blank" rel = "noreferrer noopener">詳細資料</a> }
 ];
 
-export const columns_news = [
-    { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
-    { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },
-    { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-        rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">{rowData.value[0]}</a> },
-    { field: 'repoter', headerName: '記者', flex: 1, headerAlign: 'center', align: 'center' },
-];
+export const columns_news = (pattern) => {
+    return(
+        [
+            { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+            { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },
+            { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+                rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">
+                    <Highlighter
+                        highlightStyle={{"background-color" : "yellow"}}
+                        searchWords={[pattern]}
+                        textToHighlight={rowData.value[0]}
+                    />
+                </a> },
+            { field: 'repoter', headerName: '記者', flex: 1, headerAlign: 'center', align: 'center' },
+        ]
+    )
+}
 
 export const columns_statementdog = [
     { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },

@@ -29,10 +29,14 @@ class SubExpire():
             self._db.commit()
 
 if __name__ == "__main__":
+    log_path = f"{root_path['SUBEXPIRE_LOG_PATH']}/{str(date.today())}.log"
+    
     log_notify_service = LogNotifyService()
     SE = SubExpire()
 
-    sys.stderr = open(f"{root_path['SUBEXPIRE_LOG_PATH']}/{str(date.today())}.log", 'w')
-    SE.detect()
+    sys.stderr = open(log_path, 'w')
 
-    log_notify_service.send_email("訂閱更新狀態", f"{root_path['SUBEXPIRE_LOG_PATH']}/{str(date.today())}.log")
+    try:
+        SE.detect()
+    except:
+        log_notify_service.send_email("訂閱更新狀態", log_path)

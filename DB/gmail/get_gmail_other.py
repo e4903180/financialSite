@@ -251,12 +251,13 @@ class GetGmailIndustry():
             self._modifyLabels(message['id'])
 
 if __name__ == "__main__":
-    log_notify_service = LogNotifyService()
-    temp = str(datetime.datetime.now())
+    log_path = f"{root_path['GMAIL_DATA_OTHER_LOG_PATH']}/{str(datetime.datetime.now())}.log"
+    sys.stderr = open(log_path, 'w')
 
-    sys.stderr = open(f"{root_path['GMAIL_DATA_OTHER_LOG_PATH']}/{temp}.log", 'w')
+    log_notify_service = LogNotifyService()
     GGI = GetGmailIndustry()
 
-    GGI.run()
-
-    log_notify_service.send_email("Gmail其他研究報告更新狀態", f"{root_path['GMAIL_DATA_OTHER_LOG_PATH']}/{temp}.log")
+    try:
+        GGI.run()
+    except:
+        log_notify_service.send_email("Gmail其他研究報告更新狀態", log_path)

@@ -210,12 +210,13 @@ class AlertService():
                                                         self._user_list.iloc[i]["lineId"])
 
 if __name__ == "__main__":
-    log_notify_service = LogNotifyService()
+    log_path = f"{root_path['ALTERSERVICE_LOG_PATH']}/{str(datetime.datetime.now())}.log"
+    sys.stderr = open(log_path, 'w')
 
-    temp = str(datetime.datetime.now())
-    sys.stderr = open(f"{root_path['ALTERSERVICE_LOG_PATH']}/{temp}.log", 'w')
+    log_notify_service = LogNotifyService()
     AS = AlertService()
 
-    AS.detect()
-
-    log_notify_service.send_email("警示更新狀態", f"{root_path['ALTERSERVICE_LOG_PATH']}/{temp}.log")
+    try:
+        AS.detect()
+    except:
+        log_notify_service.send_email("警示更新狀態", log_path)

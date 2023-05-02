@@ -210,10 +210,13 @@ class FredUpdate():
         return True
 
 if __name__ == "__main__":
-    log_notify_service = LogNotifyService()
+    log_path = f"{root_path['FRED_MONTH_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log"
+    sys.stderr = open(log_path, 'w')
 
-    sys.stderr = open(f"{root_path['FRED_MONTH_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
+    log_notify_service = LogNotifyService()
     fredUpdate = FredUpdate()
 
-    fredUpdate.update()
-    log_notify_service.send_email("Fred月更新狀態", f"{root_path['FRED_MONTH_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log")
+    try:
+        fredUpdate.update()
+    except:
+        log_notify_service.send_email("Fred月更新狀態", log_path)

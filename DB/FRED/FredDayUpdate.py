@@ -107,10 +107,13 @@ class DxyJnkUpdate():
         return True
 
 if __name__ == "__main__":
+    log_path = f"{root_path['FRED_DAY_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log"
+    sys.stderr = open(log_path, 'w')
+
     log_notify_service = LogNotifyService()
-
-    sys.stderr = open(f"{root_path['FRED_DAY_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
-
     DJU = DxyJnkUpdate()
-    DJU.update()
-    log_notify_service.send_email("Fred日更新狀態", f"{root_path['FRED_DAY_UPDATE_LOG_PATH']}/{str(datetime.date.today())}.log")
+
+    try:
+        DJU.update()
+    except:
+        log_notify_service.send_email("Fred日更新狀態", log_path)

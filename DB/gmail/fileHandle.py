@@ -164,18 +164,20 @@ class FileHandle():
             self._handle_2_dir()
 
 if __name__ == "__main__":
+    # If u want to handle line research, u have to switch argv[1] to "2"
     if sys.argv[1] == "2":
+        log_path = f"{root_path['GMAIL_DATA_LOG_PATH']}/line_handle_{str(datetime.datetime.now())}.log"
+        sys.stderr = open(log_path, 'w')
+
         log_notify_service = LogNotifyService()
-        temp = str(datetime.datetime.now())
-        sys.stderr = open(f"{root_path['GMAIL_DATA_LOG_PATH']}/line_handle_{temp}.log", 'w')
-    
         file_handle = FileHandle()
         update_2_sql = Update2SQL()
         
-        print("Handle recommend...", file = sys.stderr)
-        file_handle.run(sys.argv[1])
+        try:
+            print("Handle recommend...", file = sys.stderr)
+            file_handle.run(sys.argv[1])
 
-        print("Update data to sql...", file = sys.stderr)
-        update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2")
-
-        log_notify_service.send_email("Line個股研究報告更新狀態", f"{root_path['GMAIL_DATA_LOG_PATH']}/line_handle_{temp}.log")
+            print("Update data to sql...", file = sys.stderr)
+            update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2")
+        except:
+            log_notify_service.send_email("Line個股研究報告更新狀態",log_path)

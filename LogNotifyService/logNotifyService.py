@@ -20,6 +20,7 @@ class LogNotifyService():
             Return :
                 None
         """
+        # Prevent some bugs cause log file doesn't exist
         if not os.path.exists(log_path):
             return
         
@@ -32,9 +33,6 @@ class LogNotifyService():
         with open(log_path, "r") as f:
             for line in f:
                 temp += f"{line}\n"
-
-        if temp == "":
-            return
         
         content.attach(MIMEText(temp))
-        self._gmail_service.send_mail(content)
+        self._gmail_service.create_smtp(content)

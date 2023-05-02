@@ -158,12 +158,13 @@ class TableStatus2CSV():
         self._post_board_memo2csv()
 
 if __name__ == "__main__":
-    log_notify_service = LogNotifyService()
+    log_path = f"{root_path['CSV_LOG']}/{str(datetime.datetime.now())}.log"
+    sys.stderr = open(log_path, 'w')
 
-    temp = str(datetime.datetime.now())
-    sys.stderr = open(f"{root_path['CSV_LOG']}/{temp}.log", 'w')
+    log_notify_service = LogNotifyService()
     table_status = TableStatus2CSV()
 
-    table_status.run()
-
-    log_notify_service.send_email("資料表CSV更新狀態", f"{root_path['CSV_LOG']}/{temp}.log")
+    try:
+        table_status.run()
+    except:
+        log_notify_service.send_email("資料表CSV更新狀態", log_path)

@@ -66,11 +66,12 @@ class NewsDayUpdate():
             print(f"Ctee error\n{str(e)}", file = sys.stderr)
 
 if __name__ == "__main__":
-    log_notify_service = LogNotifyService()
-
     temp = str(datetime.datetime.now())
-    sys.stderr = open(f"{root_path['NEWS_LOG_PATH']}/{temp}.log", 'w')
+    log_path = f"{root_path['NEWS_LOG_PATH']}/{temp}.log"
+    sys.stderr = open(log_path, 'w')
+
+    log_notify_service = LogNotifyService()
     news = NewsDayUpdate()
 
     news.run()
-    log_notify_service.send_email("新聞更新狀態", f"{root_path['NEWS_LOG_PATH']}/{temp}.log")
+    log_notify_service.send_email("新聞更新狀態", log_path)

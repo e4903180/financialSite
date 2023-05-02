@@ -84,9 +84,14 @@ class TWII():
         return True
 
 if __name__ == "__main__":
+    log_path = f"{root_path['TWII_LOG_PATH']}/{str(datetime.date.today())}.log"
+    
     log_notify_service = LogNotifyService()
     twii = TWII()
 
-    sys.stderr = open(f"{root_path['TWII_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
-    twii.update()
-    log_notify_service.send_email("加權指數更新狀態", f"{root_path['TWII_LOG_PATH']}/{str(datetime.date.today())}.log")
+    sys.stderr = open(log_path, 'w')
+
+    try:
+        twii.update()
+    except:
+        log_notify_service.send_email("加權指數更新狀態", log_path)

@@ -599,20 +599,22 @@ class GmailResearchHandle():
             self._modifyLabel(mail_id, "handled")
 
 if __name__ == "__main__":
+    log_path = f"{root_path['GMAIL_DATA_LOG_PATH']}/gmail_handle_{str(datetime.datetime.now())}.log"
+    sys.stderr = open(log_path, 'w')
+
     log_notify_service = LogNotifyService()
-    temp = str(datetime.datetime.now())
-    sys.stderr = open(f"{root_path['GMAIL_DATA_LOG_PATH']}/gmail_handle_{temp}.log", 'w')
     gmail_reasearch_handle = GmailResearchHandle()
     update_2_sql = Update2SQL()
 
-    print("Handle gmail pdf...", file = sys.stderr)
-    gmail_reasearch_handle.run()
+    try:
+        print("Handle gmail pdf...", file = sys.stderr)
+        gmail_reasearch_handle.run()
 
-    print("Handle recommend...", file = sys.stderr)
-    file_handle = FileHandle()
-    file_handle.run("1")
+        print("Handle recommend...", file = sys.stderr)
+        file_handle = FileHandle()
+        file_handle.run("1")
 
-    print("Update data to sql...", file = sys.stderr)
-    update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1")
-
-    log_notify_service.send_email("Gmail個股研究報告更新狀態", f"{root_path['GMAIL_DATA_LOG_PATH']}/gmail_handle_{temp}.log")
+        print("Update data to sql...", file = sys.stderr)
+        update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1")
+    except:
+        log_notify_service.send_email("Gmail個股研究報告更新狀態", log_path)

@@ -194,14 +194,15 @@ class UpdateLocal():
         self._update_local()
 
 if __name__ == "__main__":
+    log_path = f"{root_path['TICKER_UPDATE_LOG_PATH']}/{str(datetime.datetime.now())}.log"
+    sys.stderr = open(log_path, 'w')
+
     log_notify_service = LogNotifyService()
-    temp = str(datetime.datetime.now())
-    
-    sys.stderr = open(f"{root_path['TICKER_UPDATE_LOG_PATH']}/{temp}.log", 'w')
     TLU = TickerUpdate()
     UL = UpdateLocal()
     
-    TLU.run()
-    UL.run()
-
-    log_notify_service.send_email("股票清單更新狀態", f"{root_path['TICKER_UPDATE_LOG_PATH']}/{temp}.log")
+    try:
+        TLU.run()
+        UL.run()
+    except:
+        log_notify_service.send_email("股票清單更新狀態", log_path)

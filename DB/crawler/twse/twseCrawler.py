@@ -253,32 +253,34 @@ class Twse(TwseSelenium, MySQL):
                            data_td[10].getText().replace("'", ""))
 
 if __name__ == "__main__":
-    log_notify_service = LogNotifyService()
-
-    sys.stderr = open(f"{root_path['TWSE_LOG_PATH']}/{str(datetime.date.today())}.log", 'w')
+    log_path = f"{root_path['TWSE_LOG_PATH']}/{str(datetime.date.today())}.log"
+    sys.stderr = open(log_path, 'w')
     today = datetime.datetime.now()
+    
+    log_notify_service = LogNotifyService()
     twse = Twse()
     current_year = today.year - 1911
 
-    # 最後檢查上個月資料狀態
-    if today.day == 28:
-        if today.month == 1:
-            twse.run(year = str(current_year - 1), month = "12")
+    try:
+        # 最後檢查上個月資料狀態
+        if today.day == 28:
+            if today.month == 1:
+                twse.run(year = str(current_year - 1), month = "12")
+            else:
+                twse.run(year = str(current_year), month = str(today.month - 1))
+
+        current_month = today.month
+        next_month = (current_month + 1) % 12
+
+        if next_month == 0:
+            next_month = 12
+
+        twse.run(year = str(current_year), month = str(current_month))
+
+        # 判斷下個月是否跨年
+        if next_month == 1:
+            twse.run(year = str(current_year + 1), month = str(next_month))
         else:
-            twse.run(year = str(current_year), month = str(today.month - 1))
-
-    current_month = today.month
-    next_month = (current_month + 1) % 12
-
-    if next_month == 0:
-        next_month = 12
-
-    twse.run(year = str(current_year), month = str(current_month))
-
-    # 判斷下個月是否跨年
-    if next_month == 1:
-        twse.run(year = str(current_year + 1), month = str(next_month))
-    else:
-        twse.run(year = str(current_year), month = str(next_month))
-
-    log_notify_service.send_email("法說會更新狀態", f"{root_path['TWSE_LOG_PATH']}/{str(datetime.date.today())}.log")
+            twse.run(year = str(current_year), month = str(next_month))
+    except:
+        log_notify_service.send_email("法說會更新狀態", log_path)

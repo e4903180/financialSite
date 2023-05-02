@@ -145,6 +145,7 @@ class TopTicker():
             }
 
             # Calculate all recommend quantity
+            i = 0
             for recommend in temp["recommend"].to_list():
                 if recommend in self._buy_pattern:
                     recommend_distribution["buy"] += 1
@@ -159,8 +160,9 @@ class TopTicker():
                     recommend_distribution["interval"] += 1
                 
                 else:
-                    print(temp)
+                    print(temp.iloc[i])
                     print(recommend, len(recommend))
+                i += 1
             
             # Calculate the max recommed 
             recommend_distribution["result"] = max(recommend_distribution, key = recommend_distribution.get)

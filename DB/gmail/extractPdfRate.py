@@ -414,7 +414,7 @@ class ExtractPdfRate():
             Return :
                 rate : (str) recommend
         '''
-        possible_rate = ['中立', '中立', '區間操作', '買進']
+        possible_rate = ['中立', '區間操作', '買進']
         rate_1, rate_2 = 'NULL', 'NULL'
         with fitz.open(directory_path) as doc:
             page = doc.load_page(0)
@@ -440,7 +440,7 @@ class ExtractPdfRate():
         rate = self._check_rate(rate_1, rate_2, possible_rate)
         # '立'因unicode不同有時會造成無法壓縮的錯誤
         if '立' in rate:
-            rate.replace('立', '立')
+            rate = rate.replace('立', '立')
         return rate
 
     def masterlink(self, directory_path:str) -> None:

@@ -73,5 +73,7 @@ if __name__ == "__main__":
     log_notify_service = LogNotifyService()
     news = NewsDayUpdate()
 
-    news.run()
-    log_notify_service.send_email("新聞更新狀態", log_path)
+    try:
+        news.run()
+    except:
+        log_notify_service.send_email("新聞更新狀態", log_path)

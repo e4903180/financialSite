@@ -8,6 +8,7 @@ from .PythonTool.SupportResistance.SupportResistance import SupportResistance
 from .PythonTool.FRED.Inflation import Inflation
 from .PythonTool.FRED.CPI_PPI_PCE import CpiPpiPce
 from .PythonTool.TopTicker.TopTicker import TopTicker
+from .PythonTool.PopularTicker.PopularTicker import PopularTicker
 from .DataBaseManager import DataBaseManager
 import json
 
@@ -118,6 +119,20 @@ def top_ticker(request):
                                                     request.query_params.get("recommend"),
                                                     request.query_params.get("category"),
                                                     request.query_params.get("type"))
+        try:            
+            return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)
+
+    return JsonResponse({"message" : "error"}, status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def popular_ticker(request):
+    if request.method == "GET":
+        result = PopularTicker(request.query_params.get("day_delta"), request.query_params.get("top"))
+        
         try:            
             return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
 

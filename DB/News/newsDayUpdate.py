@@ -44,26 +44,10 @@ class NewsDayUpdate():
             Return :
                 None 
         """
-        try:
-            self._moneydj.run()
-
-        except Exception as e:
-            print(f"MoneyDj error\n{str(e)}", file = sys.stderr)
-
-        try:
-            self._money.run()
-        except Exception as e:
-            print(f"Money error\n{str(e)}", file = sys.stderr)
-
-        try:
-            self._statementdog.run()
-        except Exception as e:
-            print(f"StatementDog error\n{str(e)}", file = sys.stderr)
-
-        try:
-            self._ctee.run()
-        except Exception as e:
-            print(f"Ctee error\n{str(e)}", file = sys.stderr)
+        self._moneydj.run()
+        self._money.run()
+        self._statementdog.run()
+        self._ctee.run()
 
 if __name__ == "__main__":
     temp = str(datetime.datetime.now())

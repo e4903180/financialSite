@@ -1,5 +1,4 @@
 import fitz
-from typing import List
 
 class ExtractPdfRate():
     """Create handle for vary investment companies

@@ -64,6 +64,7 @@ class TopTicker():
 
             Args :
                 data : (pd.DataFrame) origin data
+                top : (int) top ticker
                 recommend : (str) recommend [buy, hold, sell, interval]
             
             Return :
@@ -175,7 +176,7 @@ class TopTicker():
         
         return {"recommend_result" : result, "row_data" : top_data.to_dict(orient = "records")}
 
-    def run(self, start_date : str, end_date : str, top : int = 10, recommend : str = "all", category : str = "all", type : str = "all") -> None:
+    def run(self, start_date : str, end_date : str, top : int = 10, recommend : str = "all", category : str = "all", type : str = "all") -> List:
         """Run
 
             Args :
@@ -187,7 +188,7 @@ class TopTicker():
                 type : (str) type of ticker ex: 上市
 
             Return :
-                None 
+                List 
         """
         data = self._get_data(start_date, end_date, category, type)
         top_ticker_list = self._filter_top(data, top, recommend)

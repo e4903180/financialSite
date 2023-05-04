@@ -23,7 +23,6 @@ class FileHandle():
     def __init__(self) -> None:
         self._unhandle_path = f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}"
         self._ER = ExtractPdfRate()
-        self._admin_line_id = "U45ee9e279e6d61434fffe46a9365b369"
 
         self._recommend_pattern = {
             "buy" : recommend_json["buy"],

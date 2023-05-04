@@ -131,7 +131,7 @@ def top_ticker(request):
 @api_view(['GET'])
 def popular_ticker(request):
     if request.method == "GET":
-        result = PopularTicker(request.query_params.get("day_delta"), request.query_params.get("top"))
+        result = PopularTicker().run(request.query_params.get("day_delta"), request.query_params.get("top"))
         
         try:            
             return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)

@@ -5,8 +5,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 from typing import Dict
 
-root_path = json.load(open("../../../root_path.json"))
-recommend_json = json.load(open("../../../recommend.json"))
+root_path = json.load(open("../../root_path.json"))
+recommend_json = json.load(open("../../recommend.json"))
 
 class PopularTicker():
     def __init__(self, db : MySQLdb, cursor) -> None:

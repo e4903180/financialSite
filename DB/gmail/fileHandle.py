@@ -55,7 +55,7 @@ class FileHandle():
             "MS" : [self._ER.morganstanley, "MS"],
             "city" : [self._ER.citi, "city"],
             "里昂" : [self._ER.clsa, "里昂"],
-            "高盛" : [self._ER.goldmansachs, "高盛"],
+            "高盛" : [self._ER.goldmansachs, "GS"],
             "HSBC" : [self._ER.hsbc, "HSBC"],
             "摩根大通" : [self._ER.jpmorgan, "摩根大通"],
             "野村" : [self._ER.nomura, "野村"],

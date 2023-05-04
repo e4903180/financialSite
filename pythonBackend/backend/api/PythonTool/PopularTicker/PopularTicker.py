@@ -56,6 +56,8 @@ class PopularTicker():
         return result
 
     def run(self, day_delta : int = 7, top : int = 10) -> None:
+        day_delta = int(day_delta)
+        top = int(top)
         data = self._get_data(day_delta)
         popular_ticker_list = self._filter_popular(data, top)
         result = self._transform_formate(data, popular_ticker_list)

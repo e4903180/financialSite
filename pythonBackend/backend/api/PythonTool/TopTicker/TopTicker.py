@@ -91,7 +91,7 @@ class TopTicker():
 
         return ele_quantity.to_dict()
 
-    def _recommend_distribution(self, top_data : pd.DataFrame, top: Dict) -> List:
+    def _recommend_distribution(self, top_data : pd.DataFrame, top: Dict) -> Dict:
         """Distribution of recommend
 
             Args :

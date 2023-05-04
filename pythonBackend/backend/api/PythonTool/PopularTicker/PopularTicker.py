@@ -60,7 +60,7 @@ class PopularTicker():
         popular_ticker_list = self._filter_popular(data, top)
         result = self._transform_formate(data, popular_ticker_list)
 
-        print(result)
+        return result
 
 if __name__ == "__main__":
     db_config = json.load(open("../../../../../db_config.json"))

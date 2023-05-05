@@ -304,7 +304,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">新聞</h4>
 
                 <DataGrid
-                    columns = { columns_news }
+                    columns = { columns_news(param.stock_num_name.split(" ")[1]) }
                     rows = { data3 }
                     page = { page3 }
                     onPageChange={(newPage) => setPage3(newPage)}

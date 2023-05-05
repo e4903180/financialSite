@@ -139,7 +139,7 @@ export const columns_news = (pattern) => {
             { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
                 rowData => <a href = { rowData.value[1] } target = "_blank" rel = "noreferrer noopener">
                     <Highlighter
-                        highlightStyle={{"background-color" : "yellow"}}
+                        highlightStyle={{"backgroundColor" : "yellow"}}
                         searchWords={[pattern]}
                         textToHighlight={rowData.value[0]}
                     />

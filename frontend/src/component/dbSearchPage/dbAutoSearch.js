@@ -29,7 +29,7 @@ function DbAutoSearch() {
     const [pageSize3, setPageSize3] = useState(20);
     const [page4, setPage4] = useState(0);
     const [pageSize4, setPageSize4] = useState(20);
-    const [ticker, setTicker] = useState("");
+    const [ticker, setTicker] = useState(param.stock_num_name);
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState(last3Month);
     const [input3, setInput3] = useState(today);
@@ -94,6 +94,7 @@ function DbAutoSearch() {
                 "category" : "all"
             }})
             .then((res) => {
+                console.log(res.data)
                 setData3(res.data)
                 setLoading(false)
                 setPage3(0)
@@ -304,7 +305,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">新聞</h4>
 
                 <DataGrid
-                    columns = { columns_news(param.stock_num_name.split(" ")[1]) }
+                    columns = { columns_news(ticker.split(" ")[1]) }
                     rows = { data3 }
                     page = { page3 }
                     onPageChange={(newPage) => setPage3(newPage)}

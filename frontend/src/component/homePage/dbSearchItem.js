@@ -70,7 +70,7 @@ function DbSearchItem() {
                 "startDate" : input2,
                 "endDate" : input3,
                 "pattern" : ticker.split(" ")[1],
-                "investmentCompany" : ""
+                "investmentCompany" : "all"
             } })
             .then((res) => {
                 setData2(res.data)
@@ -141,7 +141,7 @@ function DbSearchItem() {
             "startDate" : last3Month,
             "endDate" : today,
             "pattern" : "",
-            "investmentCompany" : ""
+            "investmentCompany" : "all"
         } })
         .then((res) => {
             setData2(res.data)
@@ -250,10 +250,11 @@ function DbSearchItem() {
                 />
             </div>
 
-            <div className = 'row mx-auto py-3' style = {{ "height" : "600px" }}>
+            <div className = 'row mx-auto py-3'>
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
+                    autoHeight
                     columns = { columns_twse }
                     rows = { data4 }
                     page = { page4 }
@@ -277,6 +278,7 @@ function DbSearchItem() {
                 <h4 className = "text-center">其他研究報告</h4>
 
                 <DataGrid
+                    autoHeight
                     columns = { columns_financialDataOther }
                     rows = { data2 }
                     page = { page2 }
@@ -293,7 +295,6 @@ function DbSearchItem() {
                     disableDensitySelector
                     disableColumnFilter
                     disableSelectionOnClick = { true }
-                    autoHeight
                 />
             </div>
 
@@ -301,7 +302,7 @@ function DbSearchItem() {
                 <h4 className = "text-center">新聞</h4>
 
                 <DataGrid
-                    columns = { columns_news }
+                    columns = { columns_news(ticker.split(" ")[1]) }
                     rows = { data3 }
                     page = { page3 }
                     onPageChange={(newPage) => setPage3(newPage)}

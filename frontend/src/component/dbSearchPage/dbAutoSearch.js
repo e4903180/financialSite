@@ -6,6 +6,7 @@ import { columns_financialData, columns_twse, columns_financialDataOther, column
 import { config } from '../../constant';
 import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
+import "./dataGrid.css"
 
 function DbAutoSearch() {
     const param = useParams();
@@ -72,7 +73,7 @@ function DbAutoSearch() {
                 "startDate" : input2,
                 "endDate" : input3,
                 "pattern" : ticker.split(" ")[1],
-                "investmentCompany" : ""
+                "investmentCompany" : "all"
             } })
             .then((res) => {
                 setData2(res.data)
@@ -94,7 +95,6 @@ function DbAutoSearch() {
                 "category" : "all"
             }})
             .then((res) => {
-                console.log(res.data)
                 setData3(res.data)
                 setLoading(false)
                 setPage3(0)
@@ -145,7 +145,7 @@ function DbAutoSearch() {
             "startDate" : last3Month,
             "endDate" : today,
             "pattern" : param.stock_num_name.split(" ")[1],
-            "investmentCompany" : ""
+            "investmentCompany" : "all"
         } })
         .then((res) => {
             setData2(res.data)
@@ -258,7 +258,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
-                    style = {{ height : "600px" }}
+                    autoHeight
                     columns = { columns_twse }
                     rows = { data4 }
                     page = { page4 }

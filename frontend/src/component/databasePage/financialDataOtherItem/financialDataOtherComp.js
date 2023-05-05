@@ -15,7 +15,7 @@ function FinancialDataOtherComp() {
    
     const [startDate, setStartDate] = useState(last3Month)
     const [endDate, setEndDate] = useState(today)
-    const [investmentCompany, setInvestmentCompany] = useState("")
+    const [investmentCompany, setInvestmentCompany] = useState("all")
     const [pattern, setPattern] = useState("")
     const [data, setData] = useState([])
     const [page, setPage] = useState(0)

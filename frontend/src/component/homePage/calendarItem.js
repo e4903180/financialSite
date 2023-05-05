@@ -73,7 +73,7 @@ function CalendarItem() {
                 
                 <div className = 'col-md-10 mx-auto'>
                     <DataGrid
-                        style = {{ height : "600px" }}
+                        autoHeight
                         columns = { columns_twse }
                         rows = { data }
                         page = { page }

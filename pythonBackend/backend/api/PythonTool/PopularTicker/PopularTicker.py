@@ -65,6 +65,7 @@ class PopularTicker():
                 "stock_name" : stock_name,
                 "financialDataQuantity" : popular_ticker_list[key],
                 "financialData" : temp_financialData.to_dict(orient = "records"),
+                "newsQuantity" : 0,
                 "news" : []
             }
         
@@ -75,6 +76,7 @@ class PopularTicker():
 
                 if stock_name in news.iloc[i]["title"]:
                     result[stock_num]["news"].append(news.iloc[i].to_dict())
+                    result[stock_num]["newsQuantity"] += 1
                     break
 
         return result

@@ -56,6 +56,8 @@ function CalendarItem() {
             <div className = 'row py-3 mx-auto'>
                 <div className = 'col-md-8 mx-auto'>
                     <FullCalendar
+                        contentHeight={"auto"}
+                        aspectRatio={1.8}
                         plugins={[ dayGridPlugin ]}
                         initialView = "dayGridMonth"
                         events = { (fetchInfo, successCallback, failureCallback) => getCalendarData(fetchInfo, successCallback, failureCallback) }

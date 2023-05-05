@@ -36,7 +36,8 @@ class PopularTicker():
         self._cursor.execute(query, param)
         self._db.commit()
 
-        return pd.DataFrame.from_dict(self._cursor.fetchall())
+        result = pd.DataFrame.from_dict(self._cursor.fetchall())
+        return result.sort_values(by = ['date', 'category'])
     
     def _filter_popular_from_financialData(self, data : pd.DataFrame, top : int) -> Dict:
         """Filter origin financial data

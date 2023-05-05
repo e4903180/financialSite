@@ -60,7 +60,7 @@ class TopTicker():
         return result.sort_values(by = ['stock_num', 'date'])
 
     def _filter_top(self, data : pd.DataFrame, top : int, recommend : str) -> Dict:
-        """Filter origin data with recommend with max quantity
+        """Filter origin financial data with recommend
 
             Args :
                 data : (pd.DataFrame) origin data

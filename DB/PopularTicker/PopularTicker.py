@@ -148,7 +148,7 @@ class PopularTicker():
         popular_ticker_list = self._filter_popular_from_financialData(financialData, top)
         result = self._calculate_popular_ticker(financialData, news, popular_ticker_list)
 
-        return [result[key] for key in result]
+        self._update_2_sql(result)
 
 if __name__ == "__main__":
     popular_ticker = PopularTicker()

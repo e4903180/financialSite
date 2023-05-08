@@ -114,6 +114,7 @@ dataRouter.post("/calender", Data.calender)
 dataRouter.post("/calenderData", Data.calenderData)
 dataRouter.get("/ticker_list", Data.ticker_list)
 dataRouter.get("/ticker_category", Data.ticker_category)
+dataRouter.get("/popular_ticker", Data.popular_ticker)
 
 /* DB search router */
 dataRouter.post("/financial_search", dbSearch.financial_search)

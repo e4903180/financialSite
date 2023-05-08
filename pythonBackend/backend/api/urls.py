@@ -10,5 +10,4 @@ urlpatterns = [
     re_path(r'^api/analysis_download$', views.analysis_download),
     re_path(r'^api/analysis_html_download$', views.analysis_html_download),
     re_path(r'^api/top_ticker$', views.top_ticker),
-    re_path(r'^api/popular_ticker$', views.popular_ticker),
 ]

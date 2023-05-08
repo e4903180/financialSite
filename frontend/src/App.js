@@ -19,7 +19,7 @@ import InflationComp from './component/inflationPage/inflationComp';
 import CpiPpiPceComp from './component/CpiPpiPcePage/CpiPpiPceComp';
 import LineComp from './component/LinePage/LineComp';
 import ChooseTickerDetail from './component/chooseTickerPage/chooseTickerDetail';
-import HomeComp1 from './component/homePage/homeComp1';
+import HomeComp from './component/homePage/homeComp';
 import SelfEditComp from './component/selfEdit/selfEditComp';
 import { config } from './constant';
 import OtherUploadComp from './component/financialDataOtherUploadPage/financialDataOtherUploadComp';
@@ -45,7 +45,7 @@ function App() {
           </Route>
           
           <Route element = { <PrivateRoute /> } >
-            <Route path = { config.rootPathPrefix + "/home" } element = { <HomeComp1 /> }></Route>
+            <Route path = { config.rootPathPrefix + "/home" } element = { <HomeComp /> }></Route>
             <Route path = { config.rootPathPrefix + "/database" } element = { <DatabaseComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/database/search/:stock_num_name" } element = { <DbAutoSearch /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/userList" } element = { <UserListComp /> } ></Route>

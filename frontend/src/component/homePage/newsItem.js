@@ -12,7 +12,7 @@ function NewsItem(props) {
                     columns = { columns_home_news }
                     rows = { props.data }
                     pageSize = { pageSize }
-                    onPageSizeChange={ (newPageSize) => setPageSize(newPageSize) }
+                    onPageSizeChange = { (newPageSize) => setPageSize(newPageSize) }
                     rowsPerPageOptions = {[5, 10, 20]}
                     getRowId = { row => row.ID }
                     pagination

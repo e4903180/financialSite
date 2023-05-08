@@ -2,6 +2,7 @@ import CustomA from "../customA";
 import React from 'react';
 import { config } from "../../constant";
 import Highlighter from "react-highlight-words";
+import { Button } from "@mui/material";
 
 export const columns_all_table_summary = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -203,6 +204,31 @@ export const columns_twse_recommend = [
     { field: 'Video_address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
 ];
+
+export const columns_popular_ticker = (setLoading, setDetailColumns, setPageDetail, setDetailData) => {
+    return (
+        [
+            { field: "stock_num", headerName : "股票代號", flex: 1, headerAlign: 'center', align: 'center' },
+            { field: "stock_name", headerName : "股票名稱", flex: 1, headerAlign: 'center', align: 'center' },
+            { field: "financialDataQuantity", headerName : "個股研究報告數量", flex: 1, headerAlign: 'center', align: 'center' },
+            { field: "financialDataAction", headerName : "個股研究報告詳細內容", flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => 
+                <Button size = "medium" onClick = {() => {
+                    setPageDetail(0)
+                    setLoading(true)
+                    setDetailColumns(columns_financialData)
+                    setDetailData(rowData.row.financialData)
+                }}>詳細資料</Button> },
+            { field: "newsQuantity", headerName : "新聞數量", flex: 1, headerAlign: 'center', align: 'center' },
+            { field: "newsAction", headerName : "新聞詳細內容", flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData =>
+                <Button size = "medium" onClick = {() => {
+                    setPageDetail(0)
+                    setLoading(true)
+                    setDetailColumns(columns_news(rowData.row.stock_name))
+                    setDetailData(rowData.row.news)
+                }}>詳細資料</Button> },
+        ]
+    )
+}
 
 const check_single_post_board_memo_NULL = (value) => {
     if(value === "nan" || value === "NULL"){

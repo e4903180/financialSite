@@ -353,3 +353,25 @@ exports.ticker_category = async function(req, res){
         return res.status(400).send("error")
     } 
 }
+
+exports.popular_ticker = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get popular ticker.'
+    */
+   let query = "SELECT popular_ticker.*, ticker_list.stock_name, ticker_list.stock_num FROM popular_ticker \
+                INNER JOIN ticker_list ON popular_ticker.ticker_id=ticker_list.ID"
+
+    try {
+        const [rows, fields] = await con.promise().query(query);
+
+        for(let i = 0; i < rows.length; i++){
+            rows[i]["financialDataQuantity"] = rows["financialData"].length
+            rows[i]["newsQuantity"] = rows["news"].length
+        }
+
+        return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+}

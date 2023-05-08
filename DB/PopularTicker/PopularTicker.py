@@ -69,7 +69,7 @@ class PopularTicker():
         for key in popular_ticker_list:
             stock_num, stock_name = key.split(" ")
 
-            temp_financialData = financialData[financialData["stock_name"] == key].sort_values(by = ['category'])
+            temp_financialData = financialData[financialData["stock_name"] == key]
 
             result[stock_num] = {
                 "stock_num" : stock_num,

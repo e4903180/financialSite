@@ -8,7 +8,7 @@ import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 function PopularTicker() {
-    const [pageSize, setPageSize] = useState(5)
+    const [pageSize, setPageSize] = useState(10)
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [pageDetail, setPageDetail] = useState(0)
@@ -36,7 +36,7 @@ function PopularTicker() {
                         rows = { data }
                         pageSize = { pageSize }
                         onPageSizeChange = { (newPageSize) => setPageSize(newPageSize) }
-                        rowsPerPageOptions = {[5]}
+                        rowsPerPageOptions = {[10]}
                         getRowId = { row => row.stock_num }
                         pagination
                         autoHeight

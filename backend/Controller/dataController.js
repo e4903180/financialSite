@@ -366,8 +366,9 @@ exports.popular_ticker = async function(req, res){
         const [rows, fields] = await con.promise().query(query);
 
         for(let i = 0; i < rows.length; i++){
-            rows[i]["financialDataQuantity"] = rows["financialData"].length
-            rows[i]["newsQuantity"] = rows["news"].length
+            rows[i]["stock_name"] = rows[i]["stock_name"].split(" ")[1]
+            rows[i]["financialDataQuantity"] = rows[i]["financialData"].length
+            rows[i]["newsQuantity"] = rows[i]["news"].length
         }
 
         return res.status(200).send(rows)

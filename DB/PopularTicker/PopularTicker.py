@@ -122,7 +122,7 @@ class PopularTicker():
     
     def _insert(self, foreign_id : int, financialData : Dict, news : Dict) -> None:
         query = "INSERT INTO popular_ticker(ticker_id, financialData, news) VALUES (%s, %s, %s)"
-        param = (foreign_id, financialData, news)
+        param = (foreign_id, json.dumps(financialData), json.dumps(news))
 
         self._cursor.execute(query, param)
         self._db.commit()

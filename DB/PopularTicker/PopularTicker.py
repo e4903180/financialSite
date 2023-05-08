@@ -31,7 +31,7 @@ class PopularTicker():
     def _get_news(self, day_delta : int) -> pd.DataFrame:
         start_date = (datetime.now() - timedelta(days = day_delta)).strftime("%Y-%m-%d")
 
-        query = "SELECT * FROM news WHERE date>=%s ORDER BY category DESC"
+        query = "SELECT * FROM news WHERE date>=%s"
         param = (start_date,)
 
         self._cursor.execute(query, param)
@@ -69,7 +69,7 @@ class PopularTicker():
         for key in popular_ticker_list:
             stock_num, stock_name = key.split(" ")
 
-            temp_financialData = financialData[financialData["stock_name"] == key]
+            temp_financialData = financialData[financialData["stock_name"] == key].sort_values(by = ['category'])
 
             result[stock_num] = {
                 "stock_num" : stock_num,

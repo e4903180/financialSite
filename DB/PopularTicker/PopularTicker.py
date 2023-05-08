@@ -31,7 +31,7 @@ class PopularTicker():
     def _get_news(self, day_delta : int) -> pd.DataFrame:
         start_date = (datetime.now() - timedelta(days = day_delta)).strftime("%Y-%m-%d")
 
-        query = "SELECT * FROM news WHERE date>=%s"
+        query = "SELECT * FROM news WHERE date>=%s ORDER BY category DESC"
         param = (start_date,)
 
         self._cursor.execute(query, param)

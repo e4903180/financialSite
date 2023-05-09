@@ -232,20 +232,26 @@ exports.calender = async function(req, res){
             "apiAuth": []
         }]
     */
-    let query = "SELECT stock_name, date FROM calender \
-                INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=?;"
-    let param = [req.body.year, req.body.month]
+    let query = "SELECT stock_name, date, Time FROM calender \
+                INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=? ORDER BY date ASC, Time ASC, stock_name ASC;"
+    let param = [req.query.year, req.query.month]
     let re = [];
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
 
         for(let i = 0; i < rows.length; i++){
-            re.push(Object.assign({"title" : rows[i]["stock_name"]}, {"date" : rows[i]["date"]}))
+            if(rows[i]["date"].includes(" 至 ")){
+                const temp = rows[i]["date"].split(" 至 ")
+                re.push(Object.assign({"title" : rows[i]["stock_name"], "start" : temp[0], "end" : temp[1], "allDay" : true}))
+            }else{
+                re.push(Object.assign({"title" : rows[i]["stock_name"], "start" : rows[i]["date"], "end" : rows[i]["date"], "allDay" : true}))
+            }
         };
 
         return res.status(200).send(re)
     } catch (error) {
+        console.log(error)
         return res.status(400).send("error")
     }
 }

@@ -1,19 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
+import React, { useEffect, useRef, useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment'
+import 'moment/locale/zh-tw';
 import axios from 'axios';
 import { config } from '../../constant';
 import { columns_twse } from '../column/column';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import "react-big-calendar/lib/css/react-big-calendar.css"
+import "./calender.css"
 
 function CalendarItem() {
+    const init_year = new Date().getFullYear()
+    const init_month = String(new Date().getMonth() + 1).padStart(2, '0')
+
+    moment.locale('zh-tw')
+    const localizer = momentLocalizer(moment)
     const [data, setData] = useState([])
-    const [year, setYear] = useState(new Date().getFullYear())
-    const [month, setMonth] = useState(new Date().getMonth() + 1)
+    const [event, setEvent] = useState([])
+
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
+        axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : init_year, "month" : init_month })
+        .then(res => {
+            setPage(0)
+            setData(res.data)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+
+        axios.get(config["rootApiIP"] + "/data/calender", {
+            params: {
+                "year" : init_year,
+                "month" : init_month
+            }
+        })
+        .then(res => {
+            setEvent(res.data)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
+    }, [])
+
+    function clickEvent(info){
+        window.open(config["rootPathPrefix"] + "/database/search/" + info.title, '_blank', 'noopener,noreferrer')
+    }
+
+    const navigateHandle = (newDate) => {
+        const year = newDate.getFullYear()
+        const month = String(newDate.getMonth() + 1).padStart(2, '0')
         axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : year, "month" : month })
         .then(res => {
             setPage(0)
@@ -21,51 +57,29 @@ function CalendarItem() {
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
-    }, [year, month])
 
-    function clickEvent(info){
-        window.open(config["rootPathPrefix"] + "/database/search/" + info.event.title, '_blank', 'noopener,noreferrer')
-    }
-
-    async function getCalendarData(fetchInfo, successCallback, failureCallback) {
-        try {
-            let temp_year = fetchInfo.start.getFullYear()
-            let temp_month = (fetchInfo.start.getMonth() + 1).toString().padStart(2, '0');
-
-            setYear(temp_year)
-            setMonth(temp_month)
-
-            const response = await axios.post(config["rootApiIP"] + "/data/calender", { "year" : temp_year, "month" : temp_month })
-
-            successCallback(
-                response.data.map(event => {
-                    return ({
-                        title: event.title,
-                        start: event.date.slice(0, 10),
-                    });
-                })
-            );
-        } catch (error) {
-            if(error.response.data === "Session expired") window.location.reload()
-            failureCallback(error)
-        }
+        axios.get(config["rootApiIP"] + "/data/calender", {
+            params: {
+                "year" : year,
+                "month" : month
+            }
+        })
+        .then(res => {
+            setEvent(res.data)
+        }).catch(res => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
     }
     
     return (
         <>
-            <div className = 'row py-3 mx-auto'>
-                <div className = 'col-md-8 mx-auto'>
-                    <FullCalendar
-                        contentHeight={"auto"}
-                        aspectRatio={1.8}
-                        plugins={[ dayGridPlugin ]}
-                        initialView = "dayGridMonth"
-                        events = { (fetchInfo, successCallback, failureCallback) => getCalendarData(fetchInfo, successCallback, failureCallback) }
-                        dayMaxEventRows = { 3 }
-                        eventClick = { clickEvent }
-                        eventMouseEnter = { info => info.el.style.cursor = "pointer" }
-                        showNonCurrentDates = { false }
-                        fixedWeekCount = { false }
+            <div className='row py-3 mx-auto'>
+                <div className = 'col-md-10 mx-auto' style = {{height:"800px"}}>
+                    <Calendar
+                        localizer = {localizer}
+                        events = {event}
+                        onSelectEvent = {clickEvent}
+                        onNavigate = {(newDate) => navigateHandle(newDate)}
                     />
                 </div>
             </div>
@@ -75,7 +89,7 @@ function CalendarItem() {
                 
                 <div className = 'col-md-10 mx-auto'>
                     <DataGrid
-                        autoHeight
+                        style = {{height : "70vh"}}
                         columns = { columns_twse }
                         rows = { data }
                         page = { page }

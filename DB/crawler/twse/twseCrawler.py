@@ -65,17 +65,18 @@ class MySQL():
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
         
-    def isDuplicate(self, key : int, date : str, time : str) -> bool:
+    def isDuplicate(self, key : int, date : str, time : str, Form : str) -> bool:
         """Check if data duplicate
 
             Args :
                 key : (int) foreign key
                 date : (str) data date
                 time : (str) data time
+                form : (str) data form
             Return:
                 bool
         """   
-        query = "SELECT * from calender WHERE `ticker_id`='%s' AND `date`='%s' AND `time`='%s';" % (key, date, time)
+        query = "SELECT * from calender WHERE `ticker_id`='%s' AND `date`='%s' AND `time`='%s' AND `Form`=%s;" % (key, date, time, Form)
 
         self._cursor.execute(query)
         self._db.commit()
@@ -226,9 +227,7 @@ class Twse(TwseSelenium, MySQL):
             data_td = result_total[i].find_all("td")
             
             row_date = data_td[2].getText().replace("/", "-")
-            newYear = str(int(row_date.split("-")[0]) + 1911)
-            row_date = row_date.replace(row_date.split("-")[0], "")
-            row_date = newYear + row_date
+            row_date = row_date.replace(row_date[:3], str(int(row_date[0:3]) + 1911))
             
             key = self._get_foreign_key_id(data_td[0].getText().replace("'", ""))
 
@@ -240,7 +239,7 @@ class Twse(TwseSelenium, MySQL):
             self._download_pdf("en", data_td[0].getText(), data_td[7].getText())
 
             # Check if data duplicate   
-            if not self.isDuplicate(key, row_date, data_td[3].getText().replace("'", "")):
+            if not self.isDuplicate(key, row_date, data_td[3].getText().replace("'", ""), data_td[4].getText().replace("'", "")):
                 self.insert(key, row_date, data_td[3].getText().replace("'", ""),
                            data_td[4].getText().replace("'", ""), data_td[5].getText().replace("'", ""), data_td[6].getText().replace("'", ""),
                            data_td[7].getText().replace("'", ""), data_td[8].getText().replace("'", ""), data_td[9].getText().replace("'", ""),

@@ -11,9 +11,11 @@ import "./dataGrid.css"
 function DbAutoSearch() {
     const param = useParams();
     var date = new Date();
+    date.setDate(0);
+    date.setMonth(date.getMonth() + 1);
     const today = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
     date.setDate(1);
-    date.setMonth(date.getMonth() - 3);
+    date.setMonth(date.getMonth() - 4);
     
     const last3Month = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')
 
@@ -258,7 +260,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
-                    autoHeight
+                    style = {{height : "70vh"}}
                     columns = { columns_twse }
                     rows = { data4 }
                     page = { page4 }

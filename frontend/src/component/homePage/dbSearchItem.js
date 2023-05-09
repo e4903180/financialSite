@@ -254,7 +254,7 @@ function DbSearchItem() {
                 <h4 className = "text-center">法說會</h4>
 
                 <DataGrid
-                    autoHeight
+                    style = {{height : "70vh"}}
                     columns = { columns_twse }
                     rows = { data4 }
                     page = { page4 }

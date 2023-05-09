@@ -236,6 +236,7 @@ exports.calender_search = async function(req, res){
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
+
         return res.status(200).send(rows)
     } catch (error) {
         return res.status(400).send("error")

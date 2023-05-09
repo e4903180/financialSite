@@ -49,7 +49,7 @@ export const columns_twse = [
     { field: 'date', headerName: '法說會日期', width: 200, headerAlign: 'center', align: 'center' },
     { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },
+    { field: 'Message', headerName: '法說會訊息', width: 800, headerAlign: 'center', sortable: false, align: 'center' },
     { field: 'chPDF', headerName: '中文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
         renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
     { field: 'enPDF', headerName: '英文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
@@ -208,18 +208,18 @@ export const columns_twse_recommend = [
 export const columns_popular_ticker = (setLoading, setDetailColumns, setPageDetail, setDetailData) => {
     return (
         [
-            { field: "stock_num", headerName : "股票代號", flex: 1, headerAlign: 'center', align: 'center' },
-            { field: "stock_name", headerName : "股票名稱", flex: 1, headerAlign: 'center', align: 'center' },
-            { field: "financialDataQuantity", headerName : "個股研究報告數量", flex: 1, headerAlign: 'center', align: 'center' },
-            { field: "financialDataAction", headerName : "個股研究報告詳細內容", flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => 
+            { field: "stock_num", headerName : "股票代號", flex: 0.5, headerAlign: 'center', align: 'center', sortable: false },
+            { field: "stock_name", headerName : "股票名稱", flex: 0.5, headerAlign: 'center', align: 'center', sortable: false },
+            { field: "financialDataQuantity", headerName : "個股研究報告數量", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+            { field: "financialDataAction", headerName : "個股研究報告詳細內容", flex: 1, headerAlign: 'center', align: 'center', sortable: false, renderCell : rowData => 
                 <Button size = "medium" onClick = {() => {
                     setPageDetail(0)
                     setLoading(true)
                     setDetailColumns(columns_financialData)
                     setDetailData(rowData.row.financialData)
                 }}>詳細資料</Button> },
-            { field: "newsQuantity", headerName : "新聞數量", flex: 1, headerAlign: 'center', align: 'center' },
-            { field: "newsAction", headerName : "新聞詳細內容", flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData =>
+            { field: "newsQuantity", headerName : "新聞數量", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
+            { field: "newsAction", headerName : "新聞詳細內容", flex: 1, headerAlign: 'center', align: 'center', sortable: false, renderCell : rowData =>
                 <Button size = "medium" onClick = {() => {
                     setPageDetail(0)
                     setLoading(true)

@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "http://cosbi5.ee.ncku.edu.tw/financial",
   "dependencies": {
+    "@daypilot/daypilot-lite-react": "^3.14.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",

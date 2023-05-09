@@ -76,9 +76,10 @@ class MySQL():
             Return:
                 bool
         """   
-        query = "SELECT * from calender WHERE `ticker_id`='%s' AND `date`='%s' AND `time`='%s' AND `Form`=%s;" % (key, date, time, Form)
+        query = "SELECT * from calender WHERE `ticker_id`=%s AND `date`=%s AND `time`=%s AND `Form`=%s;"
+        param = (key, date, time, Form)
 
-        self._cursor.execute(query)
+        self._cursor.execute(query, param)
         self._db.commit()
         
         result = pd.DataFrame.from_dict(self._cursor.fetchall())

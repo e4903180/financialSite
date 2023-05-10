@@ -12,7 +12,7 @@ function PopularTicker() {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [pageDetail, setPageDetail] = useState(0)
-    const [pageSizeDetail, setPageSizeDetail] = useState(10)
+    const [pageSizeDetail, setPageSizeDetail] = useState(15)
     const [detailColumns, setDetailColumns] = useState([])
     const [detailData, setDetailData] = useState([])
 
@@ -29,7 +29,7 @@ function PopularTicker() {
         <>
             <div className = 'row mx-auto'>
                 <div className = 'col-md-6 mx-auto py-3'>
-                    <h3 className = "display-6 text-center">一個月內熱門個股Top30</h3>
+                    <h3 className = "display-6 text-center">一個月內熱門個股Top10</h3>
 
                     <StripedDataGrid
                         autoHeight
@@ -69,7 +69,7 @@ function PopularTicker() {
                             onPageChange = {(newPage) => setPageDetail(newPage)}
                             pageSize = { pageSizeDetail }
                             onPageSizeChange = { (newPageSize) => setPageSizeDetail(newPageSize) }
-                            rowsPerPageOptions = {[5, 10, 20]}
+                            rowsPerPageOptions = {[5, 15, 20]}
                             getRowId = { row => row.ID }
                             components = {{ Toolbar: GridToolbar }}
                             componentsProps = {{ toolbar: { showQuickFilter: true },}}

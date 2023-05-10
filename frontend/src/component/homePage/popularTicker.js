@@ -29,9 +29,10 @@ function PopularTicker() {
         <>
             <div className = 'row mx-auto'>
                 <div className = 'col-md-6 mx-auto py-3'>
-                    <h3 className = "display-6 text-center">一週內熱門個股Top5</h3>
+                    <h3 className = "display-6 text-center">一個月內熱門個股Top10</h3>
 
                     <StripedDataGrid
+                        autoHeight
                         columns = { columns_popular_ticker(setLoading, setDetailColumns, setPageDetail, setDetailData) }
                         rows = { data }
                         pageSize = { pageSize }
@@ -39,7 +40,6 @@ function PopularTicker() {
                         rowsPerPageOptions = {[10]}
                         getRowId = { row => row.stock_num }
                         pagination
-                        autoHeight
                         disableColumnMenu
                         disableColumnSelector
                         disableDensitySelector

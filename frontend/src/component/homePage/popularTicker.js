@@ -29,7 +29,7 @@ function PopularTicker() {
         <>
             <div className = 'row mx-auto'>
                 <div className = 'col-md-6 mx-auto py-3'>
-                    <h3 className = "display-6 text-center">一個月內熱門個股Top10</h3>
+                    <h3 className = "display-6 text-center">一個月內熱門個股Top30</h3>
 
                     <StripedDataGrid
                         autoHeight

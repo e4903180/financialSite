@@ -138,7 +138,7 @@ class PopularTicker():
 
             self._insert(foreign_id, data[key]["financialData"], data[key]["news"])
 
-    def run(self, day_delta : int = 30, top : int = 10) -> None:
+    def run(self, day_delta : int = 30, top : int = 30) -> None:
         day_delta = int(day_delta)
         top = int(top)
 

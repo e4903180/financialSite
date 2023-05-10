@@ -8,6 +8,7 @@ import { columns_twse } from '../column/column';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import "./calender.css"
+import { Backdrop, CircularProgress } from '@mui/material';
 
 function CalendarItem() {
     const init_year = new Date().getFullYear()
@@ -17,6 +18,7 @@ function CalendarItem() {
     const localizer = momentLocalizer(moment)
     const [data, setData] = useState([])
     const [event, setEvent] = useState([])
+    const [loading, setLoading] = useState(true)
 
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
@@ -38,6 +40,7 @@ function CalendarItem() {
         })
         .then(res => {
             setEvent(res.data)
+            setLoading(false)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
@@ -48,6 +51,7 @@ function CalendarItem() {
     }
 
     const navigateHandle = (newDate) => {
+        setLoading(true)
         const year = newDate.getFullYear()
         const month = String(newDate.getMonth() + 1).padStart(2, '0')
         axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : year, "month" : month })
@@ -66,6 +70,7 @@ function CalendarItem() {
         })
         .then(res => {
             setEvent(res.data)
+            setLoading(false)
         }).catch(res => {
             if(res.response.data === "Session expired") window.location.reload()
         })
@@ -73,6 +78,14 @@ function CalendarItem() {
     
     return (
         <>
+            <Backdrop
+                sx = {{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open = { loading }
+            >
+                資料載入中&emsp;
+                <CircularProgress color = "inherit" />
+            </Backdrop>
+
             <div className='row py-3 mx-auto'>
                 <div className = 'col-md-10 mx-auto' style = {{height:"800px"}}>
                     <Calendar
@@ -80,6 +93,8 @@ function CalendarItem() {
                         events = {event}
                         onSelectEvent = {clickEvent}
                         onNavigate = {(newDate) => navigateHandle(newDate)}
+                        popup = {true}
+                        views = {["month"]}
                     />
                 </div>
             </div>

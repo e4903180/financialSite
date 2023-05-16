@@ -35,6 +35,7 @@ function DatabaseComp() {
                         columns = { columns_all_table_summary } 
                         rows = { tableStatus }
                         getRowId = { row => row.dbName }
+                        rowsPerPageOptions = {[7]}
                         autoHeight
                         disableColumnMenu
                         disableColumnSelector

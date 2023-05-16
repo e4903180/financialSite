@@ -1,65 +1,36 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { config } from '../../constant';
+import LoginItem from './loginItem';
+import RegisterItem from './registerItem';
 
 function LoginComp() {
-    const nav = useNavigate()
-    const [userName, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-    function login(){
-        axios.post(config["rootApiIP"] + "/user/login", {
-            userName : userName,
-            password : password
-        }).then(res => {
-            nav(config["rootPathPrefix"] + "/home");
-        }).catch(err => {
-            alert("Username or password error")
-        });
-    };
-
-    function submit(e){
-        e.preventDefault()
-
-        login();
-    }
+    const [type, setType] = useState("login")
 
     return (
-        <div className = 'container-fluid h-100 d-flex flex-column justify-content-center' >
-            <div className = "row justify-content-center">
-                <div className = "col-sm-4 p-3" style = {{ border : "3px solid black", borderRadius: "10px" }}>
-                    <form className = "row g-3 needs-validation" onSubmit = { submit } noValidate>
-                        <div className = "form-row">
-                            <h2 className = "text-center display-4 mt-2">Welcome</h2>
-                        </div>
+        <div className="container-fluid" style={{height: "100vh"}}>
+            <div className = 'row h-100'>
+                <div className = 'col-md-4 h-100' style = {{backgroundColor : 'black'}}>
+                    <div className = 'col-md-10 mx-auto' style={{marginTop: "35vh", color : "white"}}>
+                        <h2>Cosbi Financial</h2>
+                        <h5>登入以繼續使用</h5>
+                    </div>
+                </div>
+                <div className = "col-md-8 align-self-center">
+                    <div className = 'col-md-6 mx-auto'>
+                        <ul className = "nav nav-tabs">
+                            <li className = "nav-item">
+                                <button className = "nav-link active" data-bs-toggle = "tab" onClick = {() => setType("login")}>登入</button>
+                            </li>
 
-                        <div className = "form-row px-4">
-                            <div className = "form-group">
-                                <label htmlFor = "account">Username</label>
-                                <input type = "text" className = "form-control" id = "account" onChange = { event => setUsername(event.target.value) } required/>
+                            <li className = "nav-item">
+                                <button className = "nav-link" data-bs-toggle = "tab" onClick = {() => setType("register")}>註冊</button>
+                            </li>
+
+                            <div className = "tab-content">
+                                { type === "login" && <LoginItem />}
+                                { type === "register" && <RegisterItem />}
                             </div>
-                        </div>
-
-                        <div className = "form-row px-4">
-                            <div className = "form-group">
-                                <label htmlFor = "password">Password</label>
-                                <input type = "password" className = "form-control" id = "password" onChange = { event => setPassword(event.target.value) }/>
-                            </div>
-                        </div>
-
-                        <div className = 'form-row px-4'>
-                            <hr style = {{ color : "black" }}/>
-                        </div>
-
-                        <div className = 'd-grid px-4'>
-                            <button type = "submit" className = "btn btn-primary">Login</button>
-                        </div>
-
-                        <div className = 'd-grid px-4'>
-                            <p className = "text-center" style = {{ color : "red" }}>Don't have an account? <a href = { config["rootPathPrefix"] + '/register' }>Register</a></p>
-                        </div>
-                    </form>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

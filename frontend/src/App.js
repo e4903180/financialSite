@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import React from 'react';
 // import HomeComp from './component/homePage/homeComp';
 import LoginComp from './component/loginPage/loginComp';
-import RegisterComp from './component/registerPage/registerComp';
 import PrivateRoute from './privateRoute';
 import LoginRoute from './login_privateRoute';
 import UserListComp from './component/userListPage/userListComp';
@@ -41,7 +40,6 @@ function App() {
 
           <Route element = { <LoginRoute /> } >
             <Route exact path = { config.rootPathPrefix + "/login" } element = { <LoginComp /> }></Route>
-            <Route exact path = { config.rootPathPrefix + "/register" } element = { <RegisterComp /> }></Route>
           </Route>
           
           <Route element = { <PrivateRoute /> } >

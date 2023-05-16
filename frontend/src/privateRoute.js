@@ -83,8 +83,10 @@ function PrivateRoute() {
             </Modal>
 
             {isAuth ? <WSContext.Provider value = {ws}>
-                <NavbarComp /> 
-                <Outlet />
+                <NavbarComp />
+                <div style = {{paddingTop:"56px"}}>
+                    <Outlet />
+                </div>
             </WSContext.Provider>
             :<></>}
         </> 

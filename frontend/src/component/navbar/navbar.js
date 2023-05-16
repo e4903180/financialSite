@@ -79,18 +79,18 @@ function NavbarComp() {
         <>
             <Modal show = { show } onHide = { handleClose }>
                 <Modal.Header>
-                    <Modal.Title>Log out</Modal.Title>
+                    <Modal.Title>登出</Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body>Do you want to log out?</Modal.Body>
+                <Modal.Body>確認登出嗎?</Modal.Body>
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick = { handleClose }>
-                        No
+                        取消
                     </Button>
 
                     <Button variant = "primary" onClick = { logout }>
-                        Yes
+                        確認
                     </Button>
                 </Modal.Footer>
             </Modal>

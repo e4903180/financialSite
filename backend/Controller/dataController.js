@@ -364,6 +364,10 @@ exports.popular_ticker = async function(req, res){
     /*
         #swagger.tags = ['Get data']
         #swagger.description = 'Get popular ticker.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
     */
    let query = "SELECT popular_ticker.*, ticker_list.stock_name, ticker_list.stock_num FROM popular_ticker \
                 INNER JOIN ticker_list ON popular_ticker.ticker_id=ticker_list.ID"

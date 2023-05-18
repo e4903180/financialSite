@@ -6,11 +6,7 @@ import { config } from '../../constant';
 import { columns_twse_recommend } from '../column/column';
 
 function TwseRecommendComp() {
-    var Today = new Date()
-    const todayDate = Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0')
-
-    const [startDate, setStartDate] = useState("2023-01-01")
-    const [endDate, setEndDate] = useState(todayDate)
+    const [timeInterval, setTimeInterval] = useState("week")
     const [loading, setLoading] = useState(true)
     const [recommend, setRecommend] = useState("buy")
     const [category, setCategory] = useState("all")
@@ -45,8 +41,7 @@ function TwseRecommendComp() {
 
         axios.get(config["rootApiIP"] + "/data/twse_recommend_search", {
             params : {
-                "startDate" : startDate,
-                "endDate" : endDate,
+                "timeInterval" : timeInterval,
                 "category" : category,
                 "type" : type,
                 "recommend" : recommend
@@ -72,8 +67,7 @@ function TwseRecommendComp() {
 
             axios.get(config["rootApiIP"] + "/data/twse_recommend_search", {
                 params : {
-                    "startDate" : startDate,
-                    "endDate" : endDate,
+                    "timeInterval" : timeInterval,
                     "category" : category,
                     "type" : type,
                     "recommend" : recommend
@@ -108,18 +102,12 @@ function TwseRecommendComp() {
 
                     <form onSubmit = { submit }>
                         <div className = 'form-group row py-3'>
-                            <label htmlFor = "startDate" className = "col-md-3 col-form-label text-center">開始日期:</label>
+                            <label htmlFor = "timeInterval" className = "col-md-3 col-form-label text-center">個股研究報告時間區間:</label>
                             <div className = 'col-md-3'>
-                                <input type = "date" id = "startDate" className = "form-control" 
-                                    onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
-                            </div>
-                        </div>
-
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "endDate" className = "col-md-3 col-form-label text-center">結束日期:</label>
-                            <div className = 'col-md-3'>
-                                <input type = "date" id = "endDate" className = "form-control" 
-                                    onChange = {e => setEndDate(e.target.value)} value = { endDate }></input>
+                                <select id = "timeInterval" className = "form-select" onChange = {e => setTimeInterval(e.target.value)}>
+                                    <option value = "week">一週前</option>
+                                    <option value = "month">一個月前</option>
+                                </select>
                             </div>
                         </div>
 

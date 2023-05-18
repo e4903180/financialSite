@@ -210,22 +210,20 @@ export const columns_popular_ticker = (setLoading, setDetailColumns, setPageDeta
         [
             { field: "stock_num", headerName : "股票代號", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
             { field: "stock_name", headerName : "股票名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-            { field: "financialDataQuantity", headerName : "個股研究報告數量", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-            { field: "financialDataAction", headerName : "個股研究報告詳細內容", flex: 1.5, headerAlign: 'center', align: 'center', sortable: false, renderCell : rowData => 
+            { field: "financialDataQuantity", headerName : "個股研究報告數量", flex: 1, headerAlign: 'center', align: 'center', sortable: false, renderCell : rowData => 
                 <Button size = "medium" onClick = {() => {
                     setPageDetail(0)
                     setLoading(true)
                     setDetailColumns(columns_financialData)
                     setDetailData(rowData.row.financialData)
-                }}>詳細資料</Button> },
-            { field: "newsQuantity", headerName : "新聞數量", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
-            { field: "newsAction", headerName : "新聞詳細內容", flex: 1, headerAlign: 'center', align: 'center', sortable: false, renderCell : rowData =>
+                }}>{rowData.row.financialDataQuantity}</Button> },
+            { field: "newsQuantity", headerName : "新聞數量", flex: 1, headerAlign: 'center', align: 'center', sortable: false, renderCell : rowData =>
                 <Button size = "medium" onClick = {() => {
                     setPageDetail(0)
                     setLoading(true)
                     setDetailColumns(columns_news(rowData.row.stock_name))
                     setDetailData(rowData.row.news)
-                }}>詳細資料</Button> },
+                }}>{rowData.row.newsQuantity}</Button> },
         ]
     )
 }

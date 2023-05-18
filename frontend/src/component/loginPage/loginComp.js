@@ -8,7 +8,7 @@ function LoginComp() {
     return (
         <div className="container-fluid" style={{height: "100vh"}}>
             <div className = 'row h-100'>
-                <div className = 'col-md-4 h-100' style = {{backgroundColor : 'black'}}>
+                <div className = 'col-md-4' style = {{backgroundColor : 'black'}}>
                     <div className = 'col-md-10 mx-auto' style={{marginTop: "35vh", color : "white"}}>
                         <h2>Cosbi Financial</h2>
                         <h5>登入以繼續使用</h5>

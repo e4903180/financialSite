@@ -675,12 +675,12 @@ exports.twse_recommend_search = async function(req, res){
             schema: "2023-01-01",
         }
 
-        #swagger.parameters['endDate'] = {
+        #swagger.parameters['interval'] = {
             in: 'query',
-            description: 'End date.',
+            description: 'Time interval.',
             required: true,
             type: 'string',
-            schema: "2023-04-30",
+            schema: "week",
         }
 
         #swagger.parameters['category'] = {
@@ -712,8 +712,21 @@ exports.twse_recommend_search = async function(req, res){
         }]
     */
     let query = `SELECT calender.*, ticker_list.stock_name, ticker_list.class\
-                from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1 AND calender.date BETWEEN ? AND ?`
-    let param = [req.query.startDate, req.query.endDate]
+                from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1 AND calender.date>=?`
+    let today = new Date()
+    let param = [today.toISOString().slice(0, 10)]
+    let startDate = new Date()
+
+    if(req.query.timeInterval === "week"){
+        startDate.setDate(startDate.getDate() - 7)
+    }else if(req.query.timeInterval === "month"){
+        startDate.setDate(1)
+        startDate.setMonth(startDate.getMonth() - 1)
+    }
+
+    startDate = startDate.toISOString().slice(0, 10)
+
+    console.log(startDate)
 
     if(req.query.category != "all"){
         query += " AND ticker_list.class=?"
@@ -750,8 +763,8 @@ exports.twse_recommend_search = async function(req, res){
                     'UPGRADE TO BUY','Upgrade To BUY','買進轉強力買進','維持強力買進','STRONG BUY','Upgarde to BUY','Trading Buy',\
                     '買進買進','買進(維持)','逢低買進(維持)','買進(初次)','買進 – 維持買進','買進– 維持買進','逢低買進','買進(首次評等)',\
                     '買進 (首次評等)','買進-維持','逢低買進-首次','逢低買進-維持','買進-首次','Maintain OUTPERFORM','OUTPERFORM',\
-                    'outperform','Outperform','買進(初次報告)','買進 ', '強力買進/買進 ','買進') AND date BETWEEN ? AND ?)"
-            param.push(req.query.startDate, req.query.endDate)
+                    'outperform','Outperform','買進(初次報告)','買進 ', '強力買進/買進 ','買進') AND date>=?)"
+            param.push(startDate)
 
             break
         
@@ -760,8 +773,8 @@ exports.twse_recommend_search = async function(req, res){
                     sell','Sell','SELL','Underweight','underweight','UNDERWEIGHT',\
                     'reduce','Reduce','REDUCE','賣出(Sell)','降低持股','降低持股(Underweight)','賣出 (維持評等)','賣 出',\
                     '降低持股(調降評等)','賣出(調降評等)','Underperform','underperform','UNDERPERFORM',\
-                    'MAINTAIN REDUCE') AND date BETWEEN ? AND ?)"
-            param.push(req.query.startDate, req.query.endDate)
+                    'MAINTAIN REDUCE') AND date>=?)"
+            param.push(startDate)
 
             break
         
@@ -773,21 +786,23 @@ exports.twse_recommend_search = async function(req, res){
                     '中立（調降）','長期持有','中立(維持評等)','中立(調降評等)','中立(初次評等)','中立 (維持評等)','中立(降低評等)',\
                     '中立(調升評等)','中立(下修評等)','中立 (調降評等)','評等中立','Downgrade to HOLD','持有','中立中立','中立 – 維持中立',\
                     '中立 – 初次評等中立','中立 – 買進轉中立','中立 – 初次評等','中性','中性 (維持評等)','中 性 (維 持 評 等 )','中性 (調降評等),\
-                    '中立 ','Equal-weight','未評等','未評等 ',' 中立','Downgrade to NEUTRAL') AND date BETWEEN ? AND ?)"
-            param.push(req.query.startDate, req.query.endDate)
+                    '中立 ','Equal-weight','未評等','未評等 ',' 中立','Downgrade to NEUTRAL') AND date>=?)"
+            param.push(startDate)
 
             break
 
         case "interval":
             query += " AND calender.ticker_id IN (SELECT ticker_id FROM financialData WHERE recommend IN ('區間操作','區間操作（調降）','區間','區間操作 ') \
-                    AND date BETWEEN ? AND ?)"
-            param.push(req.query.startDate, req.query.endDate)
+                    AND date>=?)"
+            param.push(startDate)
 
             break
 
         default:
             break
     }
+
+    query += " ORDER BY calender.date ASC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

@@ -8,11 +8,11 @@ import { StripedDataGrid } from '../stripedDataGrid/stripedDataGrid';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 function PopularTicker() {
-    const [pageSize, setPageSize] = useState(10)
+    const [pageSize, setPageSize] = useState(5)
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [pageDetail, setPageDetail] = useState(0)
-    const [pageSizeDetail, setPageSizeDetail] = useState(15)
+    const [pageSizeDetail, setPageSizeDetail] = useState(10)
     const [detailColumns, setDetailColumns] = useState([])
     const [detailData, setDetailData] = useState([])
 
@@ -29,7 +29,7 @@ function PopularTicker() {
         <>
             <div className = 'row mx-auto'>
                 <div className = 'col-md-6 mx-auto py-3'>
-                    <h3 className = "display-6 text-center">一個月內熱門個股Top10</h3>
+                    <h3 className = "display-6 text-center">一個月內熱門個股研究報告Top10</h3>
 
                     <StripedDataGrid
                         autoHeight
@@ -37,7 +37,7 @@ function PopularTicker() {
                         rows = { data }
                         pageSize = { pageSize }
                         onPageSizeChange = { (newPageSize) => setPageSize(newPageSize) }
-                        rowsPerPageOptions = {[10]}
+                        rowsPerPageOptions = {[5]}
                         getRowId = { row => row.stock_num }
                         pagination
                         disableColumnMenu
@@ -69,7 +69,7 @@ function PopularTicker() {
                             onPageChange = {(newPage) => setPageDetail(newPage)}
                             pageSize = { pageSizeDetail }
                             onPageSizeChange = { (newPageSize) => setPageSizeDetail(newPageSize) }
-                            rowsPerPageOptions = {[5, 15, 20]}
+                            rowsPerPageOptions = {[10]}
                             getRowId = { row => row.ID }
                             components = {{ Toolbar: GridToolbar }}
                             componentsProps = {{ toolbar: { showQuickFilter: true },}}

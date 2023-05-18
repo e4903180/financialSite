@@ -5,7 +5,7 @@ function ToolNavComp() {
     return (
         <>
             <div className = 'row mx-auto py-3'>
-                <div className = 'col-md-8 mx-auto'>
+                <div className = 'col-md-6 mx-auto'>
                     <div className = "card h-100 p-0">
                         <div className = "card-header text-center">
                             基本面分析
@@ -38,7 +38,7 @@ function ToolNavComp() {
             </div>
 
             <div className = 'row mx-auto py-3'>
-                <div className = 'col-md-8 mx-auto'>
+                <div className = 'col-md-6 mx-auto'>
                     <div className = "card h-100 p-0">
                         <div className = "card-header text-center">
                             技術面分析
@@ -71,7 +71,7 @@ function ToolNavComp() {
             </div>
 
             <div className = 'row mx-auto py-3'>
-                <div className = 'col-md-8 mx-auto'>
+                <div className = 'col-md-6 mx-auto'>
                     <div className = "card h-100 p-0">
                         <div className = "card-header text-center">
                             其他分析

@@ -114,8 +114,15 @@ function RegisterItem() {
         <>
             <form className = "row g-3 needs-validation px-4" onSubmit = { submit } noValidate>
                 <div className = "form-row">
-                    <h2 className = "text-center display-4">Register</h2>
+                    <h2 className = "text-center display-4">註冊</h2>
                 </div>
+
+                { result["success"] ? <div className = 'd-grid py-3'>
+                                        <Alert severity="success">註冊成功!</Alert>
+                                        </div> : <></>}
+                { result["failure"] ? <div className = 'd-grid py-3'>
+                                        <Alert severity="error">帳號已經註冊過請重新登入</Alert>
+                                        </div> : <></>}
 
                 <div className = "form-row">
                     <p style = {{ color : "red" }}>* 表示必填欄位</p>
@@ -123,8 +130,8 @@ function RegisterItem() {
                         <label htmlFor = "name">名字 <span style = {{ color : "red" }}>*</span></label>
                         <input type = "text" className = "form-control" id = "name" 
                             onChange = { event => nameChangeHandle(event.target.value) } required/>
-                        <div className = "form-text">長度不能超過20</div>
-                        { nameError ? <div className = "item"> <p style = {{ color : "red" }}>Name is too long</p> </div> : <div></div> }
+                        <div className = "form-text">長度不能超過20字元</div>
+                        { nameError ? <div className = "item"> <p style = {{ color : "red" }}>長度超過20個字元</p> </div> : <div></div> }
                     </div>
                 </div>
 
@@ -133,8 +140,8 @@ function RegisterItem() {
                         <label htmlFor = "account">使用者名稱 <span style = {{ color : "red" }}>*</span></label>
                         <input type = "text" className = "form-control" id = "account" 
                             onChange = { event => usernameChangeHandle(event.target.value) } required/>
-                        <div className = "form-text">長度不能超過20</div>
-                        { usernameError ? <div className = "item"> <p style = {{ color : "red" }}>username is too long</p> </div> : <div></div> }
+                        <div className = "form-text">長度不能超過20字元</div>
+                        { usernameError ? <div className = "item"> <p style = {{ color : "red" }}>長度超過20個字元</p> </div> : <div></div> }
                     </div>
                 </div>
 
@@ -143,7 +150,7 @@ function RegisterItem() {
                         <label htmlFor = "email">Email <span style = {{ color : "red" }}>*</span></label>
                         <input type = "text" className = "form-control" id = "email" 
                             onChange = { event => emailChangeHandle(event.target.value) } required/>
-                        { emailError ? <div className = "item"> <p style = {{ color : "red" }}>Email format error</p> </div> : <div></div> }
+                        { emailError ? <div className = "item"> <p style = {{ color : "red" }}>Email格式錯誤</p> </div> : <div></div> }
                     </div>
                 </div>
 
@@ -183,13 +190,6 @@ function RegisterItem() {
                         <button type = "submit" className = "btn btn-primary" disabled>註冊</button>
                     }
                 </div>
-
-                { result["success"] ? <div className = 'd-grid py-3'>
-                                        <Alert severity="success">註冊成功!</Alert>
-                                        </div> : <></>}
-                { result["failure"] ? <div className = 'd-grid py-3'>
-                                        <Alert severity="error">帳號已經註冊過請重新登入</Alert>
-                                        </div> : <></>}
             </form>
         </>
     );

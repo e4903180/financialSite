@@ -16,15 +16,17 @@ import urllib
 from urllib.parse import urlparse, parse_qs, quote
 from update2SQL import Update2SQL
 from fileHandle import FileHandle
+import MySQLdb
+import MySQLdb.cursors
 
 root_path = json.load(open("../../root_path.json"))
+db_config = json.load(open("../../db_config.json"))
 sys.path.append(root_path["PROJECT_ROOT_PATH"])
 from LogNotifyService.logNotifyService import LogNotifyService
 
 class Pattern():
     def __init__(self) -> None:
-        self.investment_companys = pd.read_excel(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx", sheet_name = 1)
-        self.investment_companys = self.investment_companys['中文名稱'].to_list()
+        self.investment_companys = ["統一投顧", "CTBC", "國票投顧", "永豐投顧", "元富"]
 
     def find_stock_nums(self, info : Dict) -> List:
         """Find stock nums in subject
@@ -211,9 +213,20 @@ class GmailResearchHandle():
                               f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2"]
         self._check_unhandle_dir()
 
-        self.stock_num2name = pd.read_excel(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx", sheet_name = 0)
-        self.stock_num2name = dict(zip(self.stock_num2name["股票代號"], self.stock_num2name["股票名稱"]))
         self.pattern = Pattern()
+        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
+                                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+        self._cursor = self._db.cursor()
+
+    def _find_stock_name(self, stock_num : str) -> str:
+        query = 'SELECT stock_name FROM ticker_list WHERE stock_num=%s'
+        param = (stock_num,)
+
+        self._cursor.execute(query, param)
+        self._db.commit()
+        result = pd.DataFrame.from_dict(self._cursor.fetchall())
+
+        return result["stock_name"][0].split(" ")[1]
 
     def _check_unhandle_dir(self) -> None:
         """Check if unhandle dir exist
@@ -400,16 +413,14 @@ class GmailResearchHandle():
                     ('attachmentId' in payload['parts'][file_ptr]['body'])):
                 field = payload['parts'][file_ptr]['filename'].split(" ")
 
-                if field[0][:4] not in self.stock_num2name.keys():
-                    continue
-
                 att = self._service.users().messages().attachments().get(userId = 'me', messageId = mail_id, 
                     id = payload['parts'][file_ptr]['body']['attachmentId']).execute()
 
                 file = att['data']
                 file_data = base64.urlsafe_b64decode(file.encode('UTF-8'))
 
-                with open(f"{self.unhandle_dir[0]}/{field[0][:4]}_{self.stock_num2name[field[0][:4]]}_{info['date']}_{field[-1][:-4]}_NULL_NULL.pdf",
+                stock_name = self._find_stock_name(field[0][:4])
+                with open(f"{self.unhandle_dir[0]}/{field[0][:4]}_{stock_name}_{info['date']}_{field[-1][:-4]}_NULL_NULL.pdf",
                         'wb') as f:
                     f.write(file_data)
 
@@ -425,7 +436,7 @@ class GmailResearchHandle():
                 None
         """
         for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
-            stock_name = self.stock_num2name[stock_num]
+            stock_name = self._find_stock_name(stock_num)
             
             if f"{stock_num}_{stock_name}_{mail_pattern['date']}_{mail_pattern['investment_company']}_{recommend}_{remark}.pdf" in os.listdir(self.unhandle_dir[0]):
                 continue
@@ -485,7 +496,7 @@ class GmailResearchHandle():
                 for stock_num, recommend, remark in zip(mail_pattern["stock_nums"], mail_pattern["recommend"], mail_pattern["remark"]):
                     date_mail = soup.find_all('td')[1].getText()[:10].replace(".", "")
                     origin_url = urlparse(a_tag["href"])
-                    stock_name = self.stock_num2name[stock_num]
+                    stock_name = self._find_stock_name(stock_num)
                     param_name = stock_name.replace("*", "")
 
                     pdfurl = "https://www.ibfs.com.tw/Support/EpaperConsulting/" + \

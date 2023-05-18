@@ -153,7 +153,6 @@ class UpdateLocal():
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
-        self._investment_company_chinese = ["統一投顧", "CTBC", "國票投顧", "永豐投顧", "元富"]
         self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CH"], root_path["TWSEDATA_EN"]]
 
     def _get_ticker_list(self) -> pd.DataFrame:
@@ -178,12 +177,6 @@ class UpdateLocal():
             for dir_path in self._dir_paths:
                 if not os.path.isdir(f"{dir_path}/{temp[0]}"):
                     os.mkdir(f"{dir_path}/{temp[0]}")
-
-        with pd.ExcelWriter(f"{root_path['TICKER_LIST_DIR_PATH']}/24932_個股代號及券商名稱.xlsx") as writer:
-            pd.DataFrame({"股票代號" : stock_num, "股票名稱" : stock_name}).to_excel(writer, 
-                                                                            sheet_name = '股票代號', index = False)
-            pd.DataFrame({"中文名稱" : self._investment_company_chinese}).to_excel(writer, 
-                                                                            sheet_name = '券商名稱', index = False)
     
     def run(self) -> None:
         self._update_local()

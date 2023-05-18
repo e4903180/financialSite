@@ -2,14 +2,10 @@ import json
 import datetime
 import os
 import sys
-import configparser
 from tqdm import tqdm
 from extractPdfRate import ExtractPdfRate
 from update2SQL import Update2SQL
 from typing import Dict, List
-
-config = configparser.ConfigParser()
-config.read('../../LineBot/config.ini')
 
 root_path = json.load(open("../../root_path.json"))
 recommend_json = json.load(open("../../recommend.json"))

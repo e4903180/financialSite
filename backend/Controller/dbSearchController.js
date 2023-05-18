@@ -726,8 +726,6 @@ exports.twse_recommend_search = async function(req, res){
 
     startDate = startDate.toISOString().slice(0, 10)
 
-    console.log(startDate)
-
     if(req.query.category != "all"){
         query += " AND ticker_list.class=?"
         param.push(req.query.category)

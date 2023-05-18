@@ -802,7 +802,7 @@ exports.twse_recommend_search = async function(req, res){
             break
     }
 
-    query += " ORDER BY calender.date ASC"
+    query += " ORDER BY calender.date ASC AND calender.date DESC"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

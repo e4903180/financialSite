@@ -800,7 +800,55 @@ exports.twse_recommend_search = async function(req, res){
             break
     }
 
-    query += " ORDER BY calender.date ASC, calender.time DESC"
+    query += " ORDER BY calender.date ASC, calender.time DESC;\
+            SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
+            FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID \
+            WHERE 1=1 AND date>=? AND financialData.ticker_id IN (SELECT ticker_id \
+            from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1 AND calender.date>=?)"
+    param.push(startDate, today.toISOString().slice(0, 10))
+
+    switch(req.query.recommend){
+        case "buy":
+            query += " AND recommend IN ('增加持股','中立轉買進',\
+                    '買進','優於大盤','buy','Buy','BUY','overweight',\
+                    'Overweight','OVERWEIGHT','增加持股(Overweight)','買進(Buy)','買進 (維持評等)','買進 (調升評等)',\
+                    '買進 (重新納入研究範圍)','買進 (研究員異動)','買進  (初次報告)','買進 (初次報告)','買進（調升）',\
+                    '區間→買進','買進（維持）','買 進','買進(調升評等)','買進(維持評等)','強力買進(調升評等)','強力買進(維持評等)',\
+                    '強力買進(上調評等)','買進(初次評等)','買進(調降目標價)','強力買進(初次評等)','Upgrade to BUY','評等買進',\
+                    'UPGRADE TO BUY','Upgrade To BUY','買進轉強力買進','維持強力買進','STRONG BUY','Upgarde to BUY','Trading Buy',\
+                    '買進買進','買進(維持)','逢低買進(維持)','買進(初次)','買進 – 維持買進','買進– 維持買進','逢低買進','買進(首次評等)',\
+                    '買進 (首次評等)','買進-維持','逢低買進-首次','逢低買進-維持','買進-首次','Maintain OUTPERFORM','OUTPERFORM',\
+                    'outperform','Outperform','買進(初次報告)','買進 ', '強力買進/買進 ','買進')"
+            break
+        
+        case "sell":
+            query += " AND recommend IN ('賣出','劣於大盤','\
+                    sell','Sell','SELL','Underweight','underweight','UNDERWEIGHT',\
+                    'reduce','Reduce','REDUCE','賣出(Sell)','降低持股','降低持股(Underweight)','賣出 (維持評等)','賣 出',\
+                    '降低持股(調降評等)','賣出(調降評等)','Underperform','underperform','UNDERPERFORM',\
+                    'MAINTAIN REDUCE')"
+            break
+        
+        case "neutral":
+            query += " AND recommend IN ('維持中立','中立',\
+                    '買進轉中立','持有-超越同業(維持評等)','hold','Hold','HOLD','neutral',\
+                    'Nertual','NEUTRAL','中立(Neutral)','持有-落後同業','持有-落後同業 (維持評等)','持有-超越同業 (調降評等)',\
+                    '持有-超越同業','持有-落後同業(維持評等)','持有-超越大盤(維持評等)','持有-超越大盤 (維持評等)','持有-落後大盤',\
+                    '中立（調降）','長期持有','中立(維持評等)','中立(調降評等)','中立(初次評等)','中立 (維持評等)','中立(降低評等)',\
+                    '中立(調升評等)','中立(下修評等)','中立 (調降評等)','評等中立','Downgrade to HOLD','持有','中立中立','中立 – 維持中立',\
+                    '中立 – 初次評等中立','中立 – 買進轉中立','中立 – 初次評等','中性','中性 (維持評等)','中 性 (維 持 評 等 )','中性 (調降評等),\
+                    '中立 ','Equal-weight','未評等','未評等 ',' 中立','Downgrade to NEUTRAL')"
+            break
+
+        case "interval":
+            query += " AND recommend IN ('區間操作','區間操作（調降）','區間','區間操作 ')"
+            break
+
+        default:
+            break
+    }
+
+    query += " ORDER BY stock_name ASC, date ASC, investmentCompany ASC, recommend ASC;"
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

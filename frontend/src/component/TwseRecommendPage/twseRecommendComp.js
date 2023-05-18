@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { config } from '../../constant';
-import { columns_twse_recommend } from '../column/column';
+import { columns_financialData, columns_twse_recommend } from '../column/column';
 
 function TwseRecommendComp() {
     const [timeInterval, setTimeInterval] = useState("week")
@@ -12,9 +12,12 @@ function TwseRecommendComp() {
     const [category, setCategory] = useState("all")
     const [categoryList, setCategoryList] = useState([])
     const [type, setType] = useState("all")
-    const [data, setData] = useState([])
-    const [page, setPage] = useState(0)
-    const [pageSize, setPageSize] = useState(10)
+    const [twseData, setTwseData] = useState([])
+    const [financialData, setFinancialData] = useState([])
+    const [pageTwse, setPageTwse] = useState(0)
+    const [pageSizeTwse, setPageSizeTwse] = useState(10)
+    const [pageFinancialData, setPageFinancialData] = useState(0)
+    const [pageSizeFinancialData, setPageSizeFinancialData] = useState(10)
 
     const typeChangeHandler = (value) => {
         setType(value)
@@ -36,7 +39,8 @@ function TwseRecommendComp() {
 
     const submit = (e) => {
         e.preventDefault()
-        setPage(0)
+        setPageTwse(0)
+        setPageFinancialData(0)
         setLoading(true)
 
         axios.get(config["rootApiIP"] + "/data/twse_recommend_search", {
@@ -48,7 +52,8 @@ function TwseRecommendComp() {
             }
         })
         .then((res) => {
-            setData(res.data)
+            setTwseData(res.data[0])
+            setFinancialData(res.data[1])
             setLoading(false)
         })
         .catch((res) => {
@@ -74,7 +79,8 @@ function TwseRecommendComp() {
                 }
             })
             .then((res) => {
-                setData(res.data)
+                setTwseData(res.data[0])
+                setFinancialData(res.data[1])
                 setLoading(false)
             })
             .catch((res) => {
@@ -157,19 +163,43 @@ function TwseRecommendComp() {
                 </div>
             </div>
 
-            <div className = 'row mx-auto py-3'>
+            <div className = 'row mx-auto py-3 px-3'>
                 <h3 className = "text-center">查詢結果</h3>
                 
-                <div className = 'col-md-10 mx-auto'>
-                    <hr className = 'mx-auto'/>
+                <div className = 'col-md-6 mx-auto'>
+                    <h4 className = "text-center">法說會</h4>
 
                     <DataGrid
                         columns = { columns_twse_recommend }
-                        rows = { data }
-                        page = { page }
-                        onPageChange = {(newPage) => setPage(newPage)}
-                        pageSize = { pageSize }
-                        onPageSizeChange = { (newPageSize) => setPageSize(newPageSize) }
+                        rows = { twseData }
+                        page = { pageTwse }
+                        onPageChange = {(newPage) => setPageTwse(newPage)}
+                        pageSize = { pageSizeTwse }
+                        onPageSizeChange = { (newPageSize) => setPageSizeTwse(newPageSize) }
+                        rowsPerPageOptions = {[5, 10, 20]}
+                        getRowId = { row => row.ID }
+                        components = {{ Toolbar: GridToolbar }}
+                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                        pagination
+                        disableColumnMenu
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableColumnFilter
+                        disableSelectionOnClick = { true }
+                        autoHeight
+                    />
+                </div>
+
+                <div className = 'col-md-6 mx-auto'>
+                    <h4 className = "text-center">個股研究報告</h4>
+
+                    <DataGrid
+                        columns = { columns_financialData }
+                        rows = { financialData }
+                        page = { pageFinancialData }
+                        onPageChange = {(newPage) => setPageFinancialData(newPage)}
+                        pageSize = { pageSizeFinancialData }
+                        onPageSizeChange = { (newPageSize) => setPageSizeFinancialData(newPageSize) }
                         rowsPerPageOptions = {[5, 10, 20]}
                         getRowId = { row => row.ID }
                         components = {{ Toolbar: GridToolbar }}

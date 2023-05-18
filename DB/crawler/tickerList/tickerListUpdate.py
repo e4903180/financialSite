@@ -153,12 +153,7 @@ class UpdateLocal():
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
-        self._investment_company_chinese = ["元富", "統一投顧", "CTBC", "國票投顧", "台新投顧", "富邦", "元大",
-                                            "第一金", "兆豐", "永豐投顧", "宏遠", "康和", "群益", "國泰", "MS",
-                                            "玉山投顧", "福邦", "GS", "Daiwa", "HSBC", "瑞信", "摩根大通", "citi",
-                                            "NMR", "麥格理", "NMR", "ubs", "凱基", "合庫", "大和國泰",
-                                            "KGI", "capital", "里昂", "一銀", "HTI", "MR", "dw", "野村",
-                                            "華南"]
+        self._investment_company_chinese = ["統一投顧", "CTBC", "國票投顧", "永豐投顧", "元富"]
         self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CH"], root_path["TWSEDATA_EN"]]
 
     def _get_ticker_list(self) -> pd.DataFrame:

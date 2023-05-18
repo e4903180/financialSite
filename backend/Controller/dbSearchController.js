@@ -803,9 +803,36 @@ exports.twse_recommend_search = async function(req, res){
     query += " ORDER BY calender.date ASC, calender.time DESC;\
             SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
             FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID \
-            WHERE 1=1 AND date>=? AND financialData.ticker_id IN (SELECT ticker_id \
-            from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1 AND calender.date>=?)"
-    param.push(startDate, today.toISOString().slice(0, 10))
+            WHERE 1=1 AND date>=?"
+    param.push(startDate)
+
+    if(req.query.category != "all"){
+        query += " AND ticker_list.class=?"
+        param.push(req.query.category)
+    }
+
+    if(req.query.type != "all"){
+        switch(req.query.type){
+            case "上市":
+                query += " AND ticker_list.class NOT LIKE ?"
+                param.push("%櫃%")
+
+                break
+
+            case "上櫃":
+                query += " AND ticker_list.class LIKE ?"
+                param.push("%櫃%")
+
+                break
+
+            default:
+                break
+        }
+    }
+
+    query += " AND financialData.ticker_id IN (SELECT ticker_id \
+        from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1 AND calender.date>=?)"
+    param.push(today.toISOString().slice(0, 10))
 
     switch(req.query.recommend){
         case "buy":

@@ -163,10 +163,11 @@ function TwseRecommendComp() {
                 </div>
             </div>
 
-            <div className = 'row mx-auto py-3 px-3'>
+            <div className = 'row mx-auto py-3 px-5' style = {{ height : "70vh" }}>
                 <h3 className = "text-center">查詢結果</h3>
-                
-                <div className = 'col-md-6 mx-auto'>
+                <hr className = 'mx-auto'/>
+
+                <div className = 'col-md-6 mx-auto h-100'>
                     <h4 className = "text-center">法說會</h4>
 
                     <DataGrid
@@ -186,11 +187,10 @@ function TwseRecommendComp() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
-                        autoHeight
                     />
                 </div>
 
-                <div className = 'col-md-6 mx-auto'>
+                <div className = 'col-md-6 mx-auto h-100'>
                     <h4 className = "text-center">個股研究報告</h4>
 
                     <DataGrid
@@ -210,7 +210,6 @@ function TwseRecommendComp() {
                         disableDensitySelector
                         disableColumnFilter
                         disableSelectionOnClick = { true }
-                        autoHeight
                     />
                 </div>
             </div>

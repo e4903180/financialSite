@@ -218,5 +218,6 @@ if __name__ == "__main__":
 
     try:
         AS.detect()
-    except:
+    except Exception as e:
+        print(e, file = sys.stderr)
         log_notify_service.send_email("警示更新狀態", log_path)

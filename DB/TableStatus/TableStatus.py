@@ -166,5 +166,6 @@ if __name__ == "__main__":
 
     try:
         table_status.run()
-    except:
+    except Exception as e:
+        print(e, file = sys.stderr)
         log_notify_service.send_email("資料表CSV更新狀態", log_path)

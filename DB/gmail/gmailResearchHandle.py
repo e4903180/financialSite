@@ -627,5 +627,6 @@ if __name__ == "__main__":
 
         print("Update data to sql...", file = sys.stderr)
         update_2_sql.run(f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1")
-    except:
+    except Exception as e:
+        print(e, file = sys.stderr)
         log_notify_service.send_email("Gmail個股研究報告更新狀態", log_path)

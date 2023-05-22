@@ -37,11 +37,13 @@ class RealTimePrice():
         self.lose_val = False
     
     def get_real_time_price(self, ticker) -> float:
-        try:
-            stock_info = twstock.realtime.get(ticker)
-            self.price_now = round(float(stock_info["realtime"]["latest_trade_price"]), 2)
-        except:
-            self.lose_val = True
+        while True:
+            try:
+                stock_info = twstock.realtime.get(ticker)
+                self.price_now = round(float(stock_info["realtime"]["latest_trade_price"]), 2)
+                break
+            except:
+                time.sleep(0.1)
         
         return self.price_now
 

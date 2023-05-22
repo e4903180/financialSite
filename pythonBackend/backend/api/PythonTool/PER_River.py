@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from typing import Dict
+import time
 
 class PerRiver():
     def __init__(self) -> None:
@@ -25,11 +26,13 @@ class PerRiver():
         self.evaluate = {"evaluate" : "", "cheap" : 0.0, "reasonable" : 0.0, "expensive" : 0.0}
 
     def _get_realtime_price(self, ticker : str) -> None:
-        result = twstock.realtime.get(ticker)
-
-        if result["realtime"]["latest_trade_price"] == "-":
-            self.realtime_price = 0.0
-        else: self.realtime_price = round(float(result["realtime"]["latest_trade_price"]), 2)
+        while True:
+            try:
+                result = twstock.realtime.get(ticker)
+                self.realtime_price = round(float(result["realtime"]["latest_trade_price"]), 2)
+                break
+            except:
+                time.sleep(0.1)
 
     def _get_EPS(self, ticker : str, period : str) -> None:
         self.chrome.get("https://goodinfo.tw/tw/ShowK_ChartFlow.asp?RPT_CAT=PER&STOCK_ID=%s&CHT_CAT=%s" % (ticker, period))

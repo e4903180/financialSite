@@ -28,6 +28,7 @@ import DbAutoSearch from './component/dbSearchPage/dbAutoSearch';
 import DatabaseComp from './component/databasePage/databaseComp';
 import TopTickerComp from './component/topTickerPage/topTickerComp';
 import TwseRecommendComp from './component/TwseRecommendPage/twseRecommendComp';
+import TopNewsComp from './component/TopNewsPage/topNewsComp';
 
 axios.defaults.withCredentials = true;
 
@@ -63,6 +64,7 @@ function App() {
             <Route exact path = { config.rootPathPrefix + "/cpi_ppi_pce" } element = { <CpiPpiPceComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/Line" } element = { <LineComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/top_ticker" } element = { <TopTickerComp /> } ></Route>
+            <Route exact path = { config.rootPathPrefix + "/top_news" } element = { <TopNewsComp /> } ></Route>
             <Route exact path = { config.rootPathPrefix + "/twse_recommend" } element = { <TwseRecommendComp /> } ></Route>
           </Route>
         </Routes>

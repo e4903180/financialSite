@@ -28,4 +28,5 @@ export const baseAna = [{method: "股票定價策略", url : config["rootPathPre
                         {method: "CPI, PPI, PCE, 密大指數", url : config["rootPathPrefix"] + "/cpi_ppi_pce"}]
 export const techAna = [{method: "天花板地板線", url : config["rootPathPrefix"] + "/support_resistance"}]
 export const elseAna = [{method: "熱門個股研究報告", url : config["rootPathPrefix"] + "/top_ticker"},
+                        {method: "熱門個股新聞", url : config["rootPathPrefix"] + "/top_news"},
                         {method: "法說會與投資建議", url : config["rootPathPrefix"] + "/twse_recommend"}]

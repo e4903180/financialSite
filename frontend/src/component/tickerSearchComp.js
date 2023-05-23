@@ -33,7 +33,7 @@ function TickerSearchComp(props) {
                 onSearch = { handleSearch }
                 options = { options }
                 placeholder = "搜尋股票代號及名稱"
-                minLength = {3}
+                minLength = {1}
 
                 renderMenuItemChildren={(option) => (
                     <>

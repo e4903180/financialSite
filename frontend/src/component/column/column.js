@@ -228,6 +228,20 @@ export const columns_popular_ticker = (setLoading, setDetailColumns, setPageDeta
     )
 }
 
+export const columns_popular_news = [
+        { field: "stock_num", headerName : "股票代號", flex: 0.25, headerAlign: 'center', align: 'center', sortable: false },
+        { field: "stock_name", headerName : "股票名稱", flex: 0.25, headerAlign: 'center', align: 'center', sortable: false },
+        { field: "date", headerName : "日期", flex: 0.25, headerAlign: 'center', align: 'center' },
+        { field: "action", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
+            rowData => <a href = { rowData.row.link } target = "_blank" rel = "noreferrer noopener">
+                <Highlighter
+                    highlightStyle={{"backgroundColor" : "yellow"}}
+                    searchWords={[rowData.row.stock_name]}
+                    textToHighlight={rowData.row.title}
+                />
+            </a> },
+    ]
+
 const check_single_post_board_memo_NULL = (value) => {
     if(value === "nan" || value === "NULL"){
         return <>沒有檔案</>

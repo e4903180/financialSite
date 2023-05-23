@@ -37,15 +37,12 @@ class RealTimePrice():
         self.lose_val = False
     
     def get_real_time_price(self, ticker) -> float:
-        while True:
-            try:
-                stock_info = twstock.realtime.get(ticker)
-                self.price_now = round(float(stock_info["realtime"]["latest_trade_price"]), 2)
-                break
-            except:
-                time.sleep(0.1)
-        
-        return self.price_now
+        stock_info = twstock.realtime.get(ticker)
+        bid = stock_info["realtime"]["best_bid_price"][-1]
+        ask = stock_info["realtime"]["best_ask_price"][-1]
+
+        price = (bid + ask) / 2
+        return round(price, 2)
 
 
 class CrawlerData(Selenium):

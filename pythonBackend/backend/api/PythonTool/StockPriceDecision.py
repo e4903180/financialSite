@@ -38,8 +38,8 @@ class RealTimePrice():
     
     def get_real_time_price(self, ticker) -> float:
         stock_info = twstock.realtime.get(ticker)
-        bid = stock_info["realtime"]["best_bid_price"][-1]
-        ask = stock_info["realtime"]["best_ask_price"][-1]
+        bid = int(stock_info["realtime"]["best_bid_price"][-1])
+        ask = int(stock_info["realtime"]["best_ask_price"][-1])
 
         price = (bid + ask) / 2
         return round(price, 2)

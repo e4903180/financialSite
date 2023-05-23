@@ -26,8 +26,8 @@ class PerRiver():
 
     def _get_realtime_price(self, ticker : str) -> None:
         stock_info = twstock.realtime.get(ticker)
-        bid = int(stock_info["realtime"]["best_bid_price"][-1])
-        ask = int(stock_info["realtime"]["best_ask_price"][-1])
+        bid = float(stock_info["realtime"]["best_bid_price"][-1])
+        ask = float(stock_info["realtime"]["best_ask_price"][-1])
 
         price = (bid + ask) / 2
         self.realtime_price = round(price, 2)

@@ -8,10 +8,14 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 function TopNewsComp() {
     const [loading, setLoading] = useState(true)
-    const [interval, setInterval] = useState("3days")
     const [data, setData] = useState([])
     const [page, setPage] = useState(0)
     const [pageSize, setPageSize] = useState(10)
+    const chineseMap = {
+        "3days" : "3天",
+        "week" : "一週",
+        "month" : "一個月"
+    }
 
     const [options, setOptions] = useState({
         chart: {
@@ -19,21 +23,47 @@ function TopNewsComp() {
             height : 500
         },
         title: {
-            text: `熱門個股新聞Top10`
+            text: `3天內熱門個股新聞Top10`
         },
         accessibility: {
             enabled: false
         },
         yAxis: {
             title: {
-                text: '投資建議分佈'
+                text: '新聞數量'
             }
         }
     })
 
-    const submit = (e) => {
-        e.preventDefault()
-
+    const intervalChangeHandle = (e) => {
+        setLoading(true)
+        
+        axios.get(config["rootApiIP"] + "/data/popular_news", {
+            params : {
+                "interval" : e.target.value
+            }
+        })
+        .then((res) => {
+            setData(res.data["table"])
+            setOptions({
+                title : {
+                    text: `${chineseMap[e.target.value]}內熱門個股新聞Top10`
+                },
+                xAxis : {
+                    categories : res.data["highchart"]["category"]
+                },
+                series : [
+                    {
+                        name: '新聞數量',
+                        data: res.data["highchart"]["data"],
+                    },
+                ]
+            })
+            setLoading(false)
+        })
+        .catch((res) => {
+            if(res.response.data === "Session expired") window.location.reload()
+        })
     }
 
     useEffect(() => {
@@ -43,7 +73,18 @@ function TopNewsComp() {
             }
         })
         .then((res) => {
-            setData(res.data)
+            setData(res.data["table"])
+            setOptions({
+                xAxis : {
+                    categories : res.data["highchart"]["category"]
+                },
+                series : [
+                    {
+                        name: '新聞數量',
+                        data: res.data["highchart"]["data"],
+                    },
+                ]
+            })
             setLoading(false)
         })
         .catch((res) => {
@@ -65,19 +106,15 @@ function TopNewsComp() {
                 <div className = 'col-md-8 mx-auto'>
                     <h3 className = "display-6 text-center">熱門個股新聞</h3>
 
-                    <form onSubmit = { submit }>
+                    <form>
                         <div className = 'form-group row py-3'>
                             <label htmlFor = "interval" className = "col-md-3 col-form-label text-center">時間區間:</label>
                             <div className = 'col-md-3'>
-                                <select id = "interval" className = "form-select" onChange = {e => { setInterval(e.target.value)}}>
+                                <select id = "interval" className = "form-select" onChange = {e => intervalChangeHandle(e)}>
                                     <option value = "3days">3天</option>
                                     <option value = "week">一週</option>
                                     <option value = "month">一個月</option>
                                 </select>
-                            </div>
-
-                            <div className = 'col-md-4 text-center'>
-                                <button type = "submit" className = "btn btn-primary" style = {{ width : "100px" }}>搜尋</button>
                             </div>
                         </div>
                     </form>

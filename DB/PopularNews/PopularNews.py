@@ -26,8 +26,11 @@ class PopularNews():
         self._cursor.execute(query, param)
         self._db.commit()
 
-    def _get_news(self, interval : str = "week") -> pd.DataFrame:
-        if interval == "week":
+    def _get_news(self, interval : str = "3days") -> pd.DataFrame:
+        if interval == "3days":
+            start_date = (datetime.now() - timedelta(days = 3)).strftime("%Y-%m-%d")
+
+        elif interval == "week":
             start_date = (datetime.now() - timedelta(days = 7)).strftime("%Y-%m-%d")
 
         elif interval == "month":
@@ -55,6 +58,9 @@ class PopularNews():
         stock_name = [element[5:] for element in stock_name]
 
         result["stock_name"] = stock_name
+
+        result = result.sort_values(by = ["stock_name"], ascending = False, key = lambda x: x.str.len())
+
         return result
     
     def _get_ticker_id(self, stock_num : str):
@@ -78,6 +84,7 @@ class PopularNews():
             for index_ticker_list in range(len(ticker_list)):
                 if ticker_list.iloc[index_ticker_list]["stock_name"] in news.iloc[index_news]["title"]:
                     result[ticker_list.iloc[index_ticker_list]["ID"]].append(news.iloc[index_news]["ID"])
+                    break
 
         result = {key : value for key, value in sorted(result.items(), key = lambda item : len(item[1]), reverse = True)}
 
@@ -93,6 +100,7 @@ class PopularNews():
 
     def run(self):
         self._init_table()
+        self._handle_news(interval = "3days")
         self._handle_news(interval = "week")
         self._handle_news(interval = "month")
 

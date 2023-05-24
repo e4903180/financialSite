@@ -119,6 +119,9 @@ class TickerUpdate():
 
             print(category)
             for a_tag in tqdm(a_tags):
+                if "冠軍" in a_tag.text:
+                    continue
+                
                 if self._isDuplicate(a_tag.text):
                     continue
 
@@ -147,51 +150,15 @@ class TickerUpdate():
             # 更新每個產業類別
             self._update(categorys, key)
 
-
-class UpdateLocal():
-    def __init__(self) -> None:
-        self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
-                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
-        self._cursor = self._db.cursor()
-        self._dir_paths = [root_path["GMAIL_DATA_DATA_PATH"], root_path["TWSEDATA_CH"], root_path["TWSEDATA_EN"]]
-
-    def _get_ticker_list(self) -> pd.DataFrame:
-        query = 'SELECT stock_name FROM ticker_list'
-
-        self._cursor.execute(query)
-        self._db.commit()
-
-        return pd.DataFrame.from_dict(self._cursor.fetchall())
-    
-    def _update_local(self) -> None:
-        result = self._get_ticker_list()
-
-        stock_num = []
-        stock_name = []
-
-        for i in tqdm(result["stock_name"].to_list()):
-            temp = i.split(" ")
-            stock_num.append(temp[0])
-            stock_name.append(temp[1])
-
-            for dir_path in self._dir_paths:
-                if not os.path.isdir(f"{dir_path}/{temp[0]}"):
-                    os.mkdir(f"{dir_path}/{temp[0]}")
-    
-    def run(self) -> None:
-        self._update_local()
-
 if __name__ == "__main__":
     log_path = f"{root_path['TICKER_UPDATE_LOG_PATH']}/{str(datetime.datetime.now())}.log"
     sys.stderr = open(log_path, 'w')
 
     log_notify_service = LogNotifyService()
     TLU = TickerUpdate()
-    UL = UpdateLocal()
     
     try:
         TLU.run()
-        UL.run()
     except Exception as e:
         print(e, file = sys.stderr)
         log_notify_service.send_email("股票清單更新狀態", log_path)

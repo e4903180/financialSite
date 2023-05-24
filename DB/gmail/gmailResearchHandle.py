@@ -226,6 +226,10 @@ class GmailResearchHandle():
         self._db.commit()
         result = pd.DataFrame.from_dict(self._cursor.fetchall())
 
+        if result.empty:
+            print(f"{stock_num} doesn't exist", file = sys.stderr)
+
+            sys.exit()
         return result["stock_name"][0].split(" ")[1]
 
     def _check_unhandle_dir(self) -> None:

@@ -369,7 +369,7 @@ exports.popular_ticker = async function(req, res){
             "apiAuth": []
         }]
     */
-   let query = "SELECT popular_ticker.*, ticker_list.stock_name, ticker_list.stock_num FROM popular_ticker \
+    let query = "SELECT popular_ticker.*, ticker_list.stock_name, ticker_list.stock_num FROM popular_ticker \
                 INNER JOIN ticker_list ON popular_ticker.ticker_id=ticker_list.ID"
 
     try {
@@ -382,6 +382,57 @@ exports.popular_ticker = async function(req, res){
         }
 
         return res.status(200).send(rows)
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+}
+
+exports.popular_news = async function(req, res){
+    /*
+        #swagger.tags = ['Get data']
+        #swagger.description = 'Get popular news.'
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
+    let result = {"table" : [], "highchart" : []}
+
+    let query = "SELECT popular_news.*, ticker_list.stock_name, ticker_list.stock_num, news.title, news.date, news.link FROM popular_news \
+                INNER JOIN ticker_list ON popular_news.ticker_id=ticker_list.ID \
+                INNER JOIN news ON popular_news.news_id=news.ID \
+                WHERE time_interval=?"
+    let param = [req.query.interval]
+
+    try {
+        const [rows, fields] = await con.promise().query(query, param)
+        
+        for(let i = 0; i < rows.length; i++){
+            rows[i]["stock_name"] = rows[i]["stock_name"].slice(5,)
+        }
+
+        result["table"] = rows
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+
+    query = "SELECT stock_name, COUNT(*) as quantity FROM popular_news \
+            INNER JOIN ticker_list ON popular_news.ticker_id=ticker_list.ID WHERE time_interval=? \
+            GROUP BY stock_name ORDER BY quantity DESC, stock_name ASC"
+    
+    try {
+        const [rows, fields] = await con.promise().query(query, param)
+
+        let category = []
+        let data = []
+
+        for(let i = 0; i < rows.length; i++){
+            category.push(rows[i]["stock_name"])
+            data.push(rows[i]["quantity"])
+        }
+        result["highchart"] = {"category" : category, "data" : data}
+
+        return res.status(200).send(result)
     } catch (error) {
         return res.status(400).send(error)
     }

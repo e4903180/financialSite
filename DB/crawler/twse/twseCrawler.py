@@ -283,5 +283,5 @@ if __name__ == "__main__":
         else:
             twse.run(year = str(current_year), month = str(next_month))
     except Exception as e:
-        print(e, file = sys.stderr)
+        print(str(e), file = sys.stderr)
         log_notify_service.send_email("法說會更新狀態", log_path)

@@ -128,7 +128,7 @@ class GetGmailIndustry():
         
         self._investment_company = pd.DataFrame.from_dict(self._cursor.fetchall())
 
-    def _find_investment_company_in_string(self, subject : str) -> str:
+    def _find_investment_company_in_subject(self, subject : str) -> str:
         """Find the investment company from subject
 
             Args :
@@ -231,7 +231,7 @@ class GetGmailIndustry():
         headers = payload['headers']
 
         result_subject_date = self._get_date_subject(headers)
-        investmentCompany = self._get_investment_company(result_subject_date["subject"])
+        investmentCompany = self._find_investment_company_in_subject(result_subject_date["subject"])
 
         if ((investmentCompany == "not found") or
             ("parts" not in payload)):

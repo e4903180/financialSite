@@ -381,14 +381,11 @@ class GmailResearchHandle():
             Return :
                 bool
         """
-        skip = False
-
         for skip_subject in self.skip_subjects:
             if skip_subject in subject:
-                skip = True
-                break
+                return True
         
-        return skip
+        return False
 
     def _if_specific_sender(self, info : Dict) -> bool:
         """Check if sender is "辜睿齊"

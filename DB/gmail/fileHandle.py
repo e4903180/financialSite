@@ -120,8 +120,7 @@ class FileHandle():
             info = result["info"]
 
             new_filename = f"{info[0][:4]}_{info[0][4:]}_{datetime.datetime.now().strftime('%Y%m%d')}_{info[1]}_{result['new_rate']}_NULL.pdf"
-            self._new_recommend_notify(new_filename)
-
+            
             os.rename(f"{dir_path}/{filename}", f"{dir_path}/{new_filename}")
     
     def _recommend_extract(self, info : List, investment_company_ptr : int, dir_path : str, filename : str) -> Dict:
@@ -134,27 +133,19 @@ class FileHandle():
 
         return {"info" : info, "new_rate" : new_rate}
 
-    def _new_recommend_notify(self, new_filename : str) -> None:
-        for key in self._recommend_pattern:
-            if new_filename in self._recommend_pattern[key]:
-                return
-        
-        print(f"{new_filename} is new", file = sys.stderr)
-
-    def run(self, mode : str) -> None:
+    def run(self, dir : str) -> None:
         """Run
-
             Args :
-                mode : (int) handle which dir
+                dir : (int) handle which dir
 
             Return :
                 None
         """        
-        if mode == "1":
+        if dir == "1":
             print("Handle 1 dir ...", file = sys.stderr)
             self._handle_1_dir()
 
-        elif mode == "2":
+        elif dir == "2":
             print("Handle 2 dir ...", file = sys.stderr)
             self._handle_2_dir()
 

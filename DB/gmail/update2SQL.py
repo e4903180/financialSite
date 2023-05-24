@@ -16,7 +16,7 @@ class Update2SQL():
                                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
-    def _find_key(self, stock_num : str):
+    def _find_key(self, stock_num : str) -> str:
         query = 'SELECT ID FROM ticker_list WHERE stock_num=%s'
         param = (stock_num,)
 
@@ -43,7 +43,7 @@ class Update2SQL():
                     bool
         """
         query = "SELECT * from financialData WHERE ticker_id=%s AND date=%s AND \
-            investmentCompany=%s AND filename=%s AND recommend=%s AND remark=%s;"
+                investmentCompany=%s AND filename=%s AND recommend=%s AND remark=%s;"
         param = tuple(info)
 
         self._cursor.execute(query, param)
@@ -89,16 +89,9 @@ class Update2SQL():
                 None
         """
         destination_path = f"{root_path['GMAIL_DATA_DATA_PATH']}/{stock_num}/{fileanme}"
-
-        if os.path.isfile(destination_path):
-            return
-        
         os.rename(origin_path, destination_path)
 
-    def run(self, dir : str) -> None:
-        if not os.path.isdir(dir):
-            print(f"{dir} is not exist")
-        
+    def run(self, dir : str) -> None:        
         for filename in tqdm(os.listdir(dir)):
             # 2886_兆豐金_20230322_CTBC_中立_兆豐銀資本相對充足，尚無AT1直接衝擊影響.pdf
             info = filename.split("_")
@@ -111,16 +104,15 @@ class Update2SQL():
 
             # find foreign key id
             key = self._find_key(info[0])
-            stock_num = info[0]
 
             if key == -1:
-                print(f"{key} not exist in foreign key")
                 continue
+
+            stock_num = info[0]
             
             info = [key] + info[2:4] + [filename] + info[4:]
 
             if self._isDuplicate(info):
-                print(f"{filename} is existed")
                 os.remove(f"{dir}/{filename}")
                 continue
             

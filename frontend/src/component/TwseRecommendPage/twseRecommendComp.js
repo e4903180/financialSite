@@ -122,7 +122,7 @@ function TwseRecommendComp() {
                             <div className = 'col-md-3'>
                                 <select id = "recommend" className = "form-select" onChange = {e => setRecommend(e.target.value)}>
                                     <option value = "buy">買進</option>
-                                    <option value = "hold">持有</option>
+                                    <option value = "neutral">持有</option>
                                     <option value = "sell">賣出</option>
                                     <option value = "interval">區間操作</option>
                                 </select>

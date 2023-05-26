@@ -227,7 +227,7 @@ class GmailResearchHandle():
         result = pd.DataFrame.from_dict(self._cursor.fetchall())
 
         if result.empty:
-            raise Exception
+            raise Exception(f"{stock_num} doesn't exist")
             
         return result["stock_name"][0].split(" ")[1]
 

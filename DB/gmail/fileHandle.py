@@ -84,8 +84,6 @@ class FileHandle():
 
             result = self._recommend_extract(info, 3, dir_path, filename)
             info = result["info"]
-
-            self._new_recommend_notify(result['new_rate'])
             
             new_filename = f"{info[0]}_{info[1]}_{info[2]}_{info[3]}_{result['new_rate']}_{info[5]}.pdf"
 

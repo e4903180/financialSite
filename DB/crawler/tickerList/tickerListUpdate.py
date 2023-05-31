@@ -25,6 +25,7 @@ class TickerUpdate():
         options.add_argument("--disable-notifications")
         options.add_argument("--start-maximized")
         options.add_argument("headless")
+        options.add_argument("--remote-debugging-port=9222")
         s = Service(ChromeDriverManager().install())
         self._chrome = webdriver.Chrome(options = options, service = s)
 

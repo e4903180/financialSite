@@ -26,6 +26,7 @@ class TwseSelenium():
     def __init__(self) -> None:
         _options = webdriver.ChromeOptions()
         _options.add_argument('--headless')
+        _options.add_argument("--remote-debugging-port=9222")
         _s = Service(ChromeDriverManager().install())
         
         self.driver = webdriver.Chrome(options = _options, service = _s)

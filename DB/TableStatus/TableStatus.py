@@ -63,7 +63,7 @@ class TableStatus2CSV():
                 None
         """
         query = "SELECT ticker_list.stock_num, ticker_list.stock_name, financialData.date, financialData.investmentCompany, \
-                financialData.filename, financialData.recommend FROM financialData INNER JOIN ticker_list ON \
+                financialData.filename, financialData.recommend, financialData.remark FROM financialData INNER JOIN ticker_list ON \
                 financialData.ticker_id=ticker_list.ID ORDER BY date DESC"
 
         self._cursor.execute(query)

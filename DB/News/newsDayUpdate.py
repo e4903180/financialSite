@@ -24,7 +24,6 @@ class NewsDayUpdate():
     def __init__(self) -> None:
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
-        options.add_argument("--remote-debugging-port=9222")
         service = Service(ChromeDriverManager().install())
 
         db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],

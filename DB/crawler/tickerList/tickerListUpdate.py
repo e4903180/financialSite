@@ -22,10 +22,7 @@ from LogNotifyService.logNotifyService import LogNotifyService
 class TickerUpdate():
     def __init__(self) -> None:
         options = webdriver.ChromeOptions()
-        options.add_argument("--disable-notifications")
-        options.add_argument("--start-maximized")
-        options.add_argument("headless")
-        options.add_argument("--remote-debugging-port=9222")
+        options.add_argument("--headless")
         s = Service(ChromeDriverManager().install())
         self._chrome = webdriver.Chrome(options = options, service = s)
 

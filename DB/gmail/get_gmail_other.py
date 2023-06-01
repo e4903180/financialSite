@@ -30,7 +30,7 @@ class GetGmailIndustry():
         self._monthMap = { "Jan" : "01", "Feb" : "02", "Mar" : "03", "Apr" : "04", "May" : "05", "Jun" : "06",
            "Jul" : "07", "Aug" : "08", "Sep" : "09", "Oct" : "10", "Nov" : "11", "Dec" : "12" }
         self._rootPath = root_path["GMAIL_DATA_OTHER_DATA_PATH"]
-        self._investment_company = []
+        self._investment_company = ["統一投顧", "CTBC", "國票投顧", "永豐投顧", "元富"]
         self._db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                                      db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
@@ -112,21 +112,6 @@ class GetGmailIndustry():
         temp = origin_date.split(" ")
 
         return f"{temp[2]}-{self._monthMap[temp[1]]}-{temp[0].zfill(2)}"
-
-    def _get_investment_company(self) -> None:
-        """Get the investment company
-
-            Args :
-                None
-            Return :
-                None
-        """
-        query = "SELECT investmentCompany FROM financialData GROUP BY investmentCompany"
-
-        self._cursor.execute(query)
-        self._db.commit()
-        
-        self._investment_company = pd.DataFrame.from_dict(self._cursor.fetchall())
 
     def _find_investment_company_in_subject(self, subject : str) -> str:
         """Find the investment company from subject
@@ -250,8 +235,6 @@ class GetGmailIndustry():
             Return :
                 None
         """
-        self._get_investment_company()
-
         # request a list of all the messages
         result = self._service.users().messages().list(userId = 'me', maxResults = 500, labelIds = ["Label_3"]).execute()
         messages = result.get('messages')

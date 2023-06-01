@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'financial',
         'USER': 'financialSite',
         'PASSWORD': '624001479',
-        'HOST': '140.116.214.134',
+        'HOST': 'localhost',
     }
 }
 

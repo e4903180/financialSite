@@ -62,6 +62,14 @@ function TopTickerComp() {
         })
         .then((res) => {
             if(res.data == []){
+                setOptions({
+                    xAxis: {
+                        categories : []
+                    },
+                    series : []
+                })
+    
+                setData([])
                 setLoading(false)
                 return
             }
@@ -157,6 +165,14 @@ function TopTickerComp() {
         })
         .then((res) => {
             if(res.data == []){
+                setOptions({
+                    xAxis: {
+                        categories : []
+                    },
+                    series : []
+                })
+    
+                setData([])
                 setLoading(false)
                 return
             }

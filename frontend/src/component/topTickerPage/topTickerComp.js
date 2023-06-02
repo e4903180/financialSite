@@ -62,9 +62,10 @@ function TopTickerComp() {
         })
         .then((res) => {
             if(res.data == []){
+                setLoading(false)
                 return
             }
-            
+
             let categories = []
             let series = {
                 "buy" : [],
@@ -156,6 +157,7 @@ function TopTickerComp() {
         })
         .then((res) => {
             if(res.data == []){
+                setLoading(false)
                 return
             }
 

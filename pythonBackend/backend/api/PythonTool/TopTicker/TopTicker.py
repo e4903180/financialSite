@@ -37,7 +37,7 @@ class TopTicker():
         query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.ID, \
                 financialData.date, financialData.investmentCompany, financialData.filename, financialData.recommend,\
                 financialData.remark FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID \
-                WHERE date BETWEEN %s AND %s"
+                WHERE date BETWEEN %s AND %s ORDER BY date"
         param = (start_date, end_date)
 
         if category != "all":

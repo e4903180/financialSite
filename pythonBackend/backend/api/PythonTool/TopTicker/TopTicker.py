@@ -57,9 +57,6 @@ class TopTicker():
 
         result = pd.DataFrame.from_dict(self._cursor.fetchall())
 
-        if result.empty:
-            return result
-
         return result.sort_values(by = ['stock_num', 'date'])
 
     def _filter_top(self, data : pd.DataFrame, top : int, recommend : str) -> Dict:
@@ -194,6 +191,10 @@ class TopTicker():
                 List 
         """
         data = self._get_data(start_date, end_date, category, type)
+
+        if data.empty:
+            return
+
         top_ticker_list = self._filter_top(data, top, recommend)
         data = data[data["stock_num"].isin(top_ticker_list.keys())]
 

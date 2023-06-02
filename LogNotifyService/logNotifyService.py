@@ -10,7 +10,7 @@ class LogNotifyService():
     def __init__(self) -> None:
         self._gmail_service = GmailService()
 
-    def send_email(self, subject : str, log_path : str) -> None:
+    def send_email(self, subject : str, error_message : str) -> None:
         """Send db update status to addmin
 
             Args :
@@ -20,19 +20,10 @@ class LogNotifyService():
             Return :
                 None
         """
-        # Prevent some bugs cause log file doesn't exist
-        if not os.path.exists(log_path):
-            return
-        
         content = MIMEMultipart()
         content["subject"] = subject
         content["from"] =  GMAIL_ACCOUNT
         content["to"] = ADDMIN_EMAIL
-
-        temp = ""
-        with open(log_path, "r") as f:
-            for line in f:
-                temp += f"{line}\n"
         
-        content.attach(MIMEText(temp))
+        content.attach(MIMEText(error_message))
         self._gmail_service.create_smtp(content)

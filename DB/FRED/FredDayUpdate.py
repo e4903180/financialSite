@@ -116,5 +116,4 @@ if __name__ == "__main__":
     try:
         DJU.update()
     except Exception as e:
-        print(str(e), file = sys.stderr)
-        log_notify_service.send_email("Fred日更新狀態", log_path)
+        log_notify_service.send_email("Fred日更新狀態", str(e))

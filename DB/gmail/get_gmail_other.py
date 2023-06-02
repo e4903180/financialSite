@@ -259,5 +259,4 @@ if __name__ == "__main__":
     try:
         GGI.run()
     except Exception as e:
-        print(str(e), file = sys.stderr)
-        log_notify_service.send_email("Gmail其他研究報告更新狀態", log_path)
+        log_notify_service.send_email("Gmail其他研究報告更新狀態", str(e))

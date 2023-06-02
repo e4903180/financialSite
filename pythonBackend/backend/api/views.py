@@ -61,7 +61,7 @@ def pricing_strategy(request):
 @api_view(['GET'])
 def per_river_strategy(request):
     if request.method == "GET":
-        try:            
+        try:        
             return JsonResponse(PerRiver().run(request.query_params.get("stockNum"), "MONTH"), status = status.HTTP_200_OK)
 
         except Exception as e:
@@ -101,7 +101,7 @@ def inflation(request):
 @api_view(['GET'])
 def cpi_ppi_pce(request):
     if request.method == "GET":
-        try:            
+        try:
             return JsonResponse(CpiPpiPce(DB.db, DB.cursor).get_data(), status = status.HTTP_200_OK)
 
         except Exception as e:
@@ -118,7 +118,7 @@ def top_ticker(request):
                                                     request.query_params.get("recommend"),
                                                     request.query_params.get("category"),
                                                     request.query_params.get("type"))
-        try:            
+        try:
             return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
 
         except Exception as e:

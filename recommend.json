@@ -26,6 +26,6 @@
             "Underweight", "underweight", "UNDERWEIGHT", "REDUCE", "reduce",
             "Reduce", "賣出(Sell)", "降低持股", "降低持股(Underweight)", "賣出 (維持評等)",
             "賣 出","降低持股(調降評等)", "賣出(調降評等)", "Underperform", "underperform",
-            "UNDERPERFORM", "MAINTAIN REDUCE"],
+            "UNDERPERFORM", "MAINTAIN REDUCE", "More volatile than peers"],
     "interval" : ["區間操作", "區間操作（調降）", "區間", "區間操作 "]
 }

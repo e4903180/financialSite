@@ -208,7 +208,7 @@ class GmailResearchHandle():
         self._service = build('gmail', 'v1', credentials = self._verify_gmail_api())
         self.monthMap = { "Jan" : 1, "Feb" : 2, "Mar" : 3, "Apr" : 4, "May" : 5, "Jun" : 6,
            "Jul" : 7, "Aug" : 8, "Sep" : 9, "Oct" : 10, "Nov" : 11, "Dec" : 12 }
-        self.skip_subjects = ["CTBC-台股晨報", "CTBC-前日"]
+        self.skip_subjects = ["-台股晨報", "CTBC-前日"]
         self.unhandle_dir = [f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/1",
                               f"{root_path['UNZIP_PATH']}/{datetime.datetime.now().strftime('%Y%m%d')}/2"]
         self._check_unhandle_dir()

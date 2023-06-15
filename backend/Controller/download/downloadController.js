@@ -1,4 +1,3 @@
-const con = require('../../Model/connectFinancial')
 const { config } = require('../../constant');
 
 exports.single_financialData_download = async function(req, res){
@@ -20,7 +19,11 @@ exports.single_financialData_download = async function(req, res){
     */
     const stock_num = req.query.filename.split("_")[0]
     
-    res.download(config["FINANCIALDATA_PATH"] + stock_num + "/" + filename)
+    try {
+        res.download(config["FINANCIALDATA_PATH"] + stock_num + "/" + req.query.filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_financialDataOther_download = function(req, res){
@@ -40,7 +43,12 @@ exports.single_financialDataOther_download = function(req, res){
             "apiAuth": []
         }]
     */
-    res.download(config["FINANCIALDATAOTHER_PATH"] + req.query.filename)
+
+    try {
+        res.download(config["FINANCIALDATAOTHER_PATH"] + req.query.filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_financialDataIndustry_download = function(req, res){
@@ -60,7 +68,11 @@ exports.single_financialDataIndustry_download = function(req, res){
             "apiAuth": []
         }]
     */
-    res.download(config["FINANCIALDATAINDUSTRY_PATH"] + req.query.filename)
+    try {
+        res.download(config["FINANCIALDATAINDUSTRY_PATH"] + req.query.filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_post_board_memo_download = function(req, res){
@@ -80,7 +92,11 @@ exports.single_post_board_memo_download = function(req, res){
             "apiAuth": []
         }]
     */
-    res.download(config["POST_BOARD_MEMO_PATH"] + req.query.filename)
+    try {
+        res.download(config["POST_BOARD_MEMO_PATH"] + req.query.filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_line_memo_download = function(req, res){
@@ -100,7 +116,11 @@ exports.single_line_memo_download = function(req, res){
             "apiAuth": []
         }]
     */
-    res.download(config["LINE_MEMO_PATH"] + req.query.filename)
+    try {
+        res.download(config["LINE_MEMO_PATH"] + req.query.filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.table_status = async function(req, res){
@@ -120,7 +140,11 @@ exports.table_status = async function(req, res){
             "apiAuth": []
         }]
     */
-    res.download(config["CSV_PATH"] + req.query.table_name)
+    try {
+        res.download(config["CSV_PATH"] + req.query.table_name)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_twse_chPDF_download = function(req, res){
@@ -141,8 +165,12 @@ exports.single_twse_chPDF_download = function(req, res){
         }]
     */
     const filename = req.query.filename;
-
-    res.download(config["TWSE_CHPDF_PATH"] + filename.slice(0, 4) + "/" + filename)
+    
+    try {
+        res.download(config["TWSE_CHPDF_PATH"] + filename.slice(0, 4) + "/" + filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };
 
 exports.single_twse_enPDF_download = function(req, res){
@@ -163,6 +191,10 @@ exports.single_twse_enPDF_download = function(req, res){
         }]
     */
     const filename = req.query.filename;
-
-    res.download(config["TWSE_ENPDF_PATH"] + filename.slice(0, 4) + "/" + filename)
+    
+    try {
+        res.download(config["TWSE_ENPDF_PATH"] + filename.slice(0, 4) + "/" + filename)
+    } catch (error) {
+        return res.status(400).send("error")
+    }
 };

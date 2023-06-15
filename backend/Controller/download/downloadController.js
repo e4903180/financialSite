@@ -18,18 +18,9 @@ exports.single_financialData_download = async function(req, res){
             "apiAuth": []
         }]
     */
-    const filename = req.query.filename;
-    let query = `SELECT ticker_list.stock_num FROM financialData \
-                INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID WHERE filename=?`
-    let param = [filename]
-
-    try {
-        const [rows, fields] = await con.promise().query(query, param);
-
-        res.download(config["FINANCIALDATA_PATH"] + rows[0].stock_num + "/" + filename)
-    } catch (error) {
-        return res.status(400).send(error)
-    }
+    const stock_num = req.query.filename.split("_")[0]
+    
+    res.download(config["FINANCIALDATA_PATH"] + stock_num + "/" + filename)
 };
 
 exports.single_financialDataOther_download = function(req, res){

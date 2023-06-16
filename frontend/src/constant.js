@@ -7,8 +7,8 @@ const dev = {
 }
 
 const prod = {
-    rootApiIP : "http://cosbi5.ee.ncku.edu.tw/api",
-    WebSocketIP : "http://cosbi5.ee.ncku.edu.tw/?username=",
+    rootApiIP : "https://cosbi5.ee.ncku.edu.tw/api",
+    WebSocketIP : "https://cosbi5.ee.ncku.edu.tw/?username=",
     rootPathPrefix : "/financial"
 }
 

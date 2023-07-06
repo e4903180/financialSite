@@ -52,6 +52,9 @@ class Money(NewsBase):
             # Get all news <a> tags
             a_tags = soup.find_all('a')
 
+            if len(a_tags) == 0:
+                break
+
             # Traverse all <a> tags
             for tag in tqdm(a_tags):
                 # Get article attributes title, href, date, repoter

@@ -660,7 +660,7 @@ class ExtractPdfRate():
         with fitz.open(directory_path) as doc:   
             page = doc.load_page(0)
             rect = page.rect
-            print(rect)
+
             page_check_source = doc.load_page(-1)
             text_check_source = page_check_source.get_text()
             if '國泰金融控股公司' in text_check_source:

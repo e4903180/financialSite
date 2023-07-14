@@ -660,19 +660,20 @@ class ExtractPdfRate():
         with fitz.open(directory_path) as doc:   
             page = doc.load_page(0)
             rect = page.rect
+            print(rect)
             page_check_source = doc.load_page(-1)
             text_check_source = page_check_source.get_text()
-            if '國泰金融控股公司' in text_check_source :
+            if '國泰金融控股公司' in text_check_source:
                 # 檢查版本                
                 clip_check_report = fitz.Rect(rect.width/2, 0, rect.width, 150)
                 text_check_report = page.get_text(clip=clip_check_report)
                 if any(keyword in text_check_report for keyword in ['個股報告']):
                     # 提取評價的第一種方法
-                    clip_old_report_1 = fitz.Rect(350, 80, rect.width, 160)
+                    clip_old_report_1 = fitz.Rect(350, 90, rect.width, 160)
                     text_old_report_1 = page.get_text(clip=clip_old_report_1, sort=True).strip()
                     rate_1 = text_old_report_1.split('\n')[0].strip()
                     # 提取評價的第二種方法
-                    clip_old_report_2 = fitz.Rect(350, 80, 550, 130)
+                    clip_old_report_2 = fitz.Rect(350, 90, 550, 130)
                     rate_2 = page.get_text(clip=clip_old_report_2).strip()
         return self._check_rate(rate_1, rate_2, possible_rate)
 

@@ -100,7 +100,6 @@ exports.table_status = async function(req, res){
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM calender;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM financialData;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM financialDataOther;\
-                SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM financialDataIndustry;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM lineMemo;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM post_board_memo;"
 

@@ -83,6 +83,10 @@ class PopularNews():
         for index_news in trange(len(news)):
             for index_ticker_list in range(len(ticker_list)):
                 if ticker_list.iloc[index_ticker_list]["stock_name"] in news.iloc[index_news]["title"]:
+                    if ticker_list.iloc[index_ticker_list]["stock_name"] == "冠軍":
+                        if "隱形冠軍" in news.iloc[index_news]["title"]:
+                            continue
+                    
                     result[ticker_list.iloc[index_ticker_list]["ID"]].append(news.iloc[index_news]["ID"])
                     break
 

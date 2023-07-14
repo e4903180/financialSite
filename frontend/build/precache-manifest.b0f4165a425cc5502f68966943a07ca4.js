@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "2b0720345d179f4ee772",
+    "revision": "6f999b18535539f595f5",
     "url": "/financial/static/css/main.1b335528.chunk.css"
   },
   {
-    "revision": "2b0720345d179f4ee772",
-    "url": "/financial/static/js/main.2b072034.chunk.js"
+    "revision": "6f999b18535539f595f5",
+    "url": "/financial/static/js/main.6f999b18.chunk.js"
   },
   {
     "revision": "093177959de5bf99fe25",
@@ -72,7 +72,7 @@ self.__precacheManifest = [
     "url": "/financial/static/js/runtime~main.9314d0ea.js"
   },
   {
-    "revision": "06f64de219a26513be9a8bfb4fbdf8fc",
+    "revision": "8f22d633b655695e37d9ed1700a35f1d",
     "url": "/financial/index.html"
   }
 ];

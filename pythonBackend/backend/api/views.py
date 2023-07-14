@@ -54,6 +54,7 @@ def pricing_strategy(request):
                                 status = status.HTTP_200_OK)
         
         except Exception as e:
+            print(e)
             return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)
     
     return JsonResponse({"message" : "error"}, status = status.HTTP_400_BAD_REQUEST)

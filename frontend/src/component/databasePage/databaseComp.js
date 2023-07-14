@@ -77,7 +77,7 @@ function DatabaseComp() {
                             { type === "calender" && <CalenderComp /> }
                             { type === "financialData" && <FinancialDataComp /> }
                             { type === "financialDataOther" && <FinancialDataOtherComp /> }
-                            { type === "financialDataIndustry" && <FinancialDataIndustryComp /> }
+                            {/* { type === "financialDataIndustry" && <FinancialDataIndustryComp /> } */}
                             { type === "lineMemo" && <LineMemoComp /> }
                             { type === "postBoardMemo" && <PostBoardComp /> }
                         </div>

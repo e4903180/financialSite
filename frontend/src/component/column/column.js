@@ -150,6 +150,26 @@ export const columns_news = (pattern) => {
     )
 }
 
+export const columns_financialDataOther_highlight = (pattern) => {
+    return (
+        [
+            { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
+            { field: "investmentCompany", headerName : "投顧公司", flex: 1, headerAlign: 'center', align: 'center' },
+            { field: "title", headerName : "標題", flex: 1, headerAlign: 'center', align: 'center', renderCell :
+                rowData => <>
+                    <Highlighter
+                        highlightStyle={{"backgroundColor" : "yellow"}}
+                        searchWords={[pattern]}
+                        textToHighlight={rowData.value}
+                    />
+                </> },
+            { field: 'filename', headerName: '檔案下載', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
+                renderCell : rowData => <a href = { config["rootApiIP"] + "/data/download/single_financialDataOther?filename=" + rowData.value } 
+            target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
+        ]
+    )
+}
+
 export const columns_statementdog = [
     { field: "date", headerName : "日期", flex: 0.5, headerAlign: 'center', align: 'center' },
     { field: "title", headerName : "新聞標題", flex: 1, headerAlign: 'center', align: 'center', renderCell : 

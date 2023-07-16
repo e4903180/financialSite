@@ -86,22 +86,6 @@ class TableStatus2CSV():
         self._db.commit()
 
         pd.DataFrame.from_dict(self._cursor.fetchall()).to_csv(root_path["CSV_PATH"] + "/financialDataOther.csv", index = False)
-    
-    def _financial_data_industry2csv(self) -> None:
-        """Create financialDataIndustry csv file
-
-            Args : 
-                None
-                
-            Return :
-                None
-        """
-        query = "SELECT * FROM financialDataIndustry ORDER BY date DESC"
-
-        self._cursor.execute(query)
-        self._db.commit()
-
-        pd.DataFrame.from_dict(self._cursor.fetchall()).to_csv(root_path["CSV_PATH"] + "/financialDataIndustry.csv", index = False)
 
     def _linememo2csv(self) -> None:
         """Create lineMemo csv file
@@ -153,7 +137,6 @@ class TableStatus2CSV():
         self._news2csv()
         self._financial_data2csv()
         self._financial_data_other2csv()
-        self._financial_data_industry2csv()
         self._linememo2csv()
         self._post_board_memo2csv()
 

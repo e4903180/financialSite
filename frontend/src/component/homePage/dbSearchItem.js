@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { AutoCom } from '../../autoCom';
 import { config } from '../../constant';
-import { columns_financialData, columns_twse, columns_financialDataOther, columns_news } from '../column/column';
+import { columns_financialData, columns_twse, columns_news, columns_financialDataOther_highlight } from '../column/column';
 import TickerSearchComp from '../tickerSearchComp';
 
 function DbSearchItem() {
@@ -279,7 +279,7 @@ function DbSearchItem() {
 
                 <DataGrid
                     autoHeight
-                    columns = { columns_financialDataOther }
+                    columns = { columns_financialDataOther_highlight(ticker.split(" ")[1]) }
                     rows = { data2 }
                     page = { page2 }
                     onPageChange={(newPage) => setPage2(newPage)}

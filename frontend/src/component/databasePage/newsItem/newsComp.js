@@ -15,16 +15,22 @@ function NewsComp() {
     const [pageSize0, setPageSize0] = useState(10)
     const [startDate, setStartDate] = useState("")
     const [category, setCategory] = useState("all")
-
+    const [pattern, setPattern] = useState("")
     const [dataNews, setDataNews] = useState([])
 
     const columns_summary_news = [
         { field: "category", headerName : "新聞類別", flex: 1, headerAlign: 'center', align: 'center' },
         { field: "todayQuantity", headerName : todayDate + "新聞數量", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-            rowData => <Button variant = "text" onClick = { () => buttonNewsHandle("today", rowData["row"]["category"]) }>{rowData.value}</Button>
+            rowData => <Button variant = "text" onClick = { () => {
+                buttonNewsHandle("today", rowData["row"]["category"])
+                setPattern("")
+            } }>{rowData.value}</Button>
         },
         { field: "pastQuantity", headerName : todayDate + "前新聞數量", flex: 1, headerAlign: 'center', align: 'center', renderCell : 
-            rowData => <Button variant = "text" onClick = { () => buttonNewsHandle("past", rowData["row"]["category"]) }>{rowData.value}</Button>
+            rowData => <Button variant = "text" onClick = { () => {
+                buttonNewsHandle("past", rowData["row"]["category"])
+                setPattern("")
+            } }>{rowData.value}</Button>
         }
     ];
 
@@ -37,8 +43,12 @@ function NewsComp() {
             setStartDate("2023-01-01")
         }
 
-        if(buttonCategory === "全部") setCategory("all")
-        setCategory(buttonCategory)
+        if(buttonCategory === "全部"){
+            setCategory("all")
+        }
+        else{
+            setCategory(buttonCategory)
+        }     
 
         axios.get(config["rootApiIP"] + `/data/news_search_${date}`, { params : {
             "date" : todayDate,
@@ -117,6 +127,8 @@ function NewsComp() {
                         startDate = { startDate } 
                         endDate = { todayDate }
                         category = { category }
+                        pattern = { pattern }
+                        setPattern = { setPattern }
                     />
                 </div>
             </div>

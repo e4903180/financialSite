@@ -13,9 +13,9 @@ function NewsItem(props) {
     const [pageSize, setPageSize] = useState(10)
     const [column, setColumn] = useState("title")
     const [category, setCategory] = useState("all")
-    const [pattern, setPattern] = useState("")
     const [startDate, setStartDate] = useState(todayDate)
     const [endDate, setEndDate] = useState(todayDate)
+    const [highlightWord, setHightlightWord] = useState("")
 
     const submit = (e) => {
         e.preventDefault()
@@ -26,11 +26,12 @@ function NewsItem(props) {
             "startDate" : startDate,
             "endDate" : endDate,
             "column" : column,
-            "pattern" : pattern,
+            "pattern" : props.pattern,
             "category" : category
         }})
         .then((res) => {
             props.setData(res.data)
+            setHightlightWord(props.pattern)
             props.setLoading(false)
         })
         .catch((res) => {
@@ -44,7 +45,7 @@ function NewsItem(props) {
             "startDate" : startDate,
             "endDate" : endDate,
             "column" : column,
-            "pattern" : pattern,
+            "pattern" : props.pattern,
             "category" : category
         }})
         .then((res) => {
@@ -87,7 +88,8 @@ function NewsItem(props) {
                         
                         <div className = 'col-md-6'>
                             <input type = "text" className = "form-control" onChange = { e => 
-                                setPattern(e.target.value) }></input>
+                                props.setPattern(e.target.value) }
+                                value = { props.pattern }></input>
                         </div>
                     </div>
 
@@ -96,8 +98,13 @@ function NewsItem(props) {
                         <div className = 'col-md-4'>
                             <select id = "category" className = "form-select" value = { category } onChange = {e => setCategory(e.target.value)}>
                                 { 
-                                    categoryList.map((ele, idx) => 
-                                        <option value = { ele } key = { idx }>{ele}</option>) 
+                                    categoryList.map((ele, idx) => {
+                                        if(ele === "全部"){
+                                            return <option value = { "all" } key = { idx }>{ele}</option>
+                                        }else{
+                                            return <option value = { ele } key = { idx }>{ele}</option>
+                                        }
+                                    })
                                 }
                             </select>
                         </div>
@@ -134,7 +141,7 @@ function NewsItem(props) {
 
                 <div className = 'col-md-12 mx-auto'>
                     <DataGrid
-                        columns = { columns_news(pattern) }
+                        columns = { columns_news(highlightWord) }
                         rows = { props.data }
                         page = { page }
                         onPageChange={(newPage) => setPage(newPage)}

@@ -2,7 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { columns_financialData, columns_twse, columns_financialDataOther, columns_news } from '../column/column';
+import { columns_financialData, columns_twse, columns_news, columns_financialDataOther_highlight } from '../column/column';
 import { config } from '../../constant';
 import TickerSearchComp from '../tickerSearchComp';
 import { AutoCom } from '../../autoCom';
@@ -284,7 +284,7 @@ function DbAutoSearch() {
                 <h4 className = "text-center">其他研究報告</h4>
 
                 <DataGrid
-                    columns = { columns_financialDataOther }
+                    columns = { columns_financialDataOther_highlight(ticker.split(" ")[1]) }
                     rows = { data2 }
                     page = { page2 }
                     onPageChange={(newPage) => setPage2(newPage)}

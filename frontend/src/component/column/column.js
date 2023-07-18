@@ -3,6 +3,7 @@ import React from 'react';
 import { config } from "../../constant";
 import Highlighter from "react-highlight-words";
 import { Button } from "@mui/material";
+import HighchartBarComp from "../highchart/highchartBarComp";
 
 export const columns_all_table_summary = [
     { field: "dbName", headerName : "資料表名稱", flex: 1, headerAlign: 'center', align: 'center', sortable: false },
@@ -210,20 +211,41 @@ export const columns_financialDataIndustry = [
     target = "_blank" rel = "noreferrer noopener" download = { rowData.value }>Download</a> },
 ];
 
-export const columns_twse_recommend = [
-    { field: 'stock_name', headerName: '股票名稱', width: 200, headerAlign: 'center', align: 'center' },
-    { field: 'date', headerName: '法說會日期', width: 200, headerAlign: 'center', align: 'center' },
-    { field: 'Time', headerName: '法說會時間', width: 100, headerAlign: 'center', align: 'center' },
-    { field: 'Form', headerName: '法說會形式', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Message', headerName: '法說會訊息', width: 500, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'chPDF', headerName: '中文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
+export const columns_twse_detail = [
+    { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'date', headerName: '法說會日期', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'Time', headerName: '法說會時間', flex: 1, headerAlign: 'center', align: 'center' },
+    { field: 'chPDF', headerName: '中文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
         renderCell : rowData => check_single_twse_chPDF_NULL(rowData.value) },
-    { field: 'enPDF', headerName: '英文檔案', width: 100, headerAlign: 'center', sortable: false, align: 'center', 
+    { field: 'enPDF', headerName: '英文檔案', flex: 1, headerAlign: 'center', sortable: false, align: 'center', 
         renderCell : rowData => check_single_twse_enPDF_NULL(rowData.value) },
-    { field: 'More_information', headerName: '相關資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Video_address', headerName: '影音連結資訊', width: 300, headerAlign: 'center', sortable: false, align: 'center' },
-    { field: 'Attention', headerName: '其他應敘明事項', width: 300, headerAlign: 'center', sortable: false, align: 'center'},
 ];
+
+export const columns_twse_recommend = (setDetailClick, setDetailColumns, setPageDetail, setDetailData) => {
+    return (
+        [
+            { field: 'stock_name', headerName: '股票名稱', flex: 1, headerAlign: 'center', align: 'center' },
+            { field: 'twse', headerName: '法說會資料', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData =>
+                <Button size = "medium" onClick = {() => {
+                    setPageDetail(0)
+                    setDetailClick(true)
+                    setDetailColumns(columns_twse_detail)
+                    setDetailData(rowData.row.twse)
+                }}>詳細資料</Button> , sortable: false},
+            { field: 'financialData', headerName: '個股研究報告資料', flex: 1, headerAlign: 'center', align: 'center', renderCell : rowData => 
+                <Button size = "medium" onClick = {() => {
+                    setPageDetail(0)
+                    setDetailClick(true)
+                    setDetailColumns(columns_financialData)
+                    setDetailData(rowData.row.financialData)
+                }}>詳細資料</Button> , sortable: false},
+            { field: 'buy', headerName: '買進', flex: 1, headerAlign: 'center', align: 'center'},
+            { field: 'interval', headerName: '區間操作', flex: 1, headerAlign: 'center', align: 'center'},
+            { field: 'hold', headerName: '持有', flex: 1, headerAlign: 'center', align: 'center'},
+            { field: 'sell', headerName: '賣出', flex: 1, headerAlign: 'center', align: 'center'},
+        ]
+    )
+}
 
 export const columns_popular_ticker = (setLoading, setDetailColumns, setPageDetail, setDetailData) => {
     return (

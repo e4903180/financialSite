@@ -3,57 +3,47 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { config } from '../../constant';
-import { columns_financialData, columns_twse_recommend } from '../column/column';
+import { columns_twse_recommend } from '../column/column';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 function TwseRecommendComp() {
-    const [timeInterval, setTimeInterval] = useState("week")
+    var Today = new Date()
+    const todayDate = Today.getFullYear() + "-" + String(Today.getMonth()+1).padStart(2, '0') + "-" + String(Today.getDate()).padStart(2, '0')
+    const startDate = todayDate.slice(0, -2) + "01"
+
+    const [startDateTwse, setStartDateTwse] = useState(startDate)
+    const [endDateTwse, setEndDateTwse] = useState(todayDate)
+
+    const [startDateResearch, setStartDateResearch] = useState(startDate)
+    const [endDateResearch, setEndDateResearch] = useState(todayDate)
+
     const [loading, setLoading] = useState(true)
-    const [recommend, setRecommend] = useState("buy")
-    const [category, setCategory] = useState("all")
-    const [categoryList, setCategoryList] = useState([])
-    const [type, setType] = useState("all")
-    const [twseData, setTwseData] = useState([])
-    const [financialData, setFinancialData] = useState([])
+    const [data, setData] = useState([])
     const [pageTwse, setPageTwse] = useState(0)
     const [pageSizeTwse, setPageSizeTwse] = useState(10)
-    const [pageFinancialData, setPageFinancialData] = useState(0)
-    const [pageSizeFinancialData, setPageSizeFinancialData] = useState(10)
 
-    const typeChangeHandler = (value) => {
-        setType(value)
-        setCategory("all")
-
-        axios.get(config["rootApiIP"] + "/data/ticker_category", {
-            params : {
-                "type" : value
-            }
-        })
-        .then((res) => {
-            setCategoryList([])
-            setCategoryList(res.data)
-        })
-        .catch((res) => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-    }
+    const [detailClick, setDetailClick] = useState(false)
+    const [pageDetail, setPageDetail] = useState(0)
+    const [pageSizeDetail, setPageSizeDetail] = useState(10)
+    const [detailColumns, setDetailColumns] = useState([])
+    const [detailData, setDetailData] = useState([])
 
     const submit = (e) => {
         e.preventDefault()
         setPageTwse(0)
-        setPageFinancialData(0)
+
         setLoading(true)
 
-        axios.get(config["rootApiIP"] + "/data/twse_recommend_search", {
+        axios.get(config["rootApiIP"] + "/data/twse_financialData", {
             params : {
-                "timeInterval" : timeInterval,
-                "category" : category,
-                "type" : type,
-                "recommend" : recommend
+                "startDateTwse" : startDateTwse,
+                "endDateTwse" : endDateTwse,
+                "startDateResearch" : startDateResearch,
+                "endDateResearch" : endDateResearch
             }
         })
         .then((res) => {
-            setTwseData(res.data[0])
-            setFinancialData(res.data[1])
+            setData(res.data)
             setLoading(false)
         })
         .catch((res) => {
@@ -62,30 +52,18 @@ function TwseRecommendComp() {
     }
 
     useEffect(() => {
-        axios.get(config["rootApiIP"] + "/data/ticker_category", {
+        axios.get(config["rootApiIP"] + "/data/twse_financialData", {
             params : {
-                "type" : "all"
+                "startDateTwse" : startDateTwse,
+                "endDateTwse" : endDateTwse,
+                "startDateResearch" : startDateResearch,
+                "endDateResearch" : endDateResearch
             }
         })
         .then((res) => {
-            setCategoryList(res.data)
-
-            axios.get(config["rootApiIP"] + "/data/twse_recommend_search", {
-                params : {
-                    "timeInterval" : timeInterval,
-                    "category" : category,
-                    "type" : type,
-                    "recommend" : recommend
-                }
-            })
-            .then((res) => {
-                setTwseData(res.data[0])
-                setFinancialData(res.data[1])
-                setLoading(false)
-            })
-            .catch((res) => {
-                if(res.response.data === "Session expired") window.location.reload()
-            })
+            setData(res.data)
+            console.log(res.data)
+            setLoading(false)
         })
         .catch((res) => {
             if(res.response.data === "Session expired") window.location.reload()
@@ -102,55 +80,69 @@ function TwseRecommendComp() {
                 <CircularProgress color = "inherit" />
             </Backdrop>
 
+            <Backdrop
+                sx = {{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open = { detailClick }
+            >
+                <div className = 'row mx-auto py-2' style = {{backgroundColor : "white", width : "90vw"}}>
+                    <div className = 'col-md-1 offset-11 py-1 text-center'>
+                        <HighlightOffIcon onClick = {() => setDetailClick(false)} style = {{ cursor : "pointer"}}/>
+                    </div>
+
+                    <div>
+                        <DataGrid
+                            columns = { detailColumns }
+                            rows = { detailData }
+                            page = { pageDetail }
+                            onPageChange = {(newPage) => setPageDetail(newPage)}
+                            pageSize = { pageSizeDetail }
+                            onPageSizeChange = { (newPageSize) => setPageSizeDetail(newPageSize) }
+                            rowsPerPageOptions = {[10]}
+                            getRowId = { row => row.ID }
+                            components = {{ Toolbar: GridToolbar }}
+                            componentsProps = {{ toolbar: { showQuickFilter: true },}}
+                            pagination
+                            disableColumnMenu
+                            disableColumnSelector
+                            disableDensitySelector
+                            disableColumnFilter
+                            disableSelectionOnClick = { true }
+                            autoHeight
+                        />
+                    </div>
+                </div>
+            </Backdrop>
+
             <div className = 'row mx-auto py-3'>
                 <div className = 'col-md-8 mx-auto'>
-                    <h3 className = "display-6 text-center">法說會與投資建議</h3>
+                    <h3 className = "display-6 text-center">法說會與個股研究報告</h3>
 
                     <form onSubmit = { submit }>
                         <div className = 'form-group row py-3'>
-                            <label htmlFor = "timeInterval" className = "col-md-3 col-form-label text-center">個股研究報告時間區間:</label>
+                            <label htmlFor = "startDate" className = "col-md-3 col-form-label text-center">法說會開始日期:</label>
                             <div className = 'col-md-3'>
-                                <select id = "timeInterval" className = "form-select" onChange = {e => setTimeInterval(e.target.value)}>
-                                    <option value = "week">一週前</option>
-                                    <option value = "month">一個月前</option>
-                                </select>
+                                <input type = "date" id = "startDateTwse" className = "form-control" 
+                                    onChange = {e => setStartDateTwse(e.target.value)} value = { startDateTwse }></input>
+                            </div>
+
+                            <label htmlFor = "endDate" className = "col-md-3 col-form-label text-center">法說會結束日期:</label>
+                            <div className = 'col-md-3'>
+                                <input type = "date" id = "endDateTwse" className = "form-control" 
+                                    onChange = {e => setEndDateTwse(e.target.value)} value = { endDateTwse }></input>
                             </div>
                         </div>
 
                         <div className = 'form-group row py-3'>
-                            <label htmlFor = "recommend" className = "col-md-3 col-form-label text-center">投資建議:</label>
+                            <label htmlFor = "startDate" className = "col-md-3 col-form-label text-center">個股研究報告開始日期:</label>
                             <div className = 'col-md-3'>
-                                <select id = "recommend" className = "form-select" onChange = {e => setRecommend(e.target.value)}>
-                                    <option value = "buy">買進</option>
-                                    <option value = "neutral">持有</option>
-                                    <option value = "sell">賣出</option>
-                                    <option value = "interval">區間操作</option>
-                                </select>
+                                <input type = "date" id = "startDateResearch" className = "form-control" 
+                                    onChange = {e => setStartDateResearch(e.target.value)} value = { startDateResearch }></input>
                             </div>
-                        </div>
 
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "type" className = "col-md-3 col-form-label text-center">上市櫃:</label>
+                            <label htmlFor = "endDate" className = "col-md-3 col-form-label text-center">個股研究報告結束日期:</label>
                             <div className = 'col-md-3'>
-                                <select id = "type" className = "form-select" onChange = {e => typeChangeHandler(e.target.value)}>
-                                    <option value = "all">全部</option>
-                                    <option value = "上市">上市</option>
-                                    <option value = "上櫃">上櫃</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className = 'form-group row py-3'>
-                            <label htmlFor = "category" className = "col-md-3 col-form-label text-center">產業類別:</label>
-                            <div className = 'col-md-3'>
-                                <select id = "category" className = "form-select" onChange = {e => setCategory(e.target.value)}>
-                                    <option value = "all">全部</option>
-                                    {
-                                        categoryList.map(function(ele, idx){
-                                            return <option key = {idx} value = {ele["class"]}>{ele["class"]}</option>
-                                        })
-                                    }
-                                </select>
+                                <input type = "date" id = "endDateResearch" className = "form-control" 
+                                    onChange = {e => setEndDateResearch(e.target.value)} value = { endDateResearch }></input>
                             </div>
                         </div>
 
@@ -167,12 +159,10 @@ function TwseRecommendComp() {
                 <h3 className = "text-center">查詢結果</h3>
                 <hr className = 'mx-auto'/>
 
-                <div className = 'col-md-6 mx-auto h-100'>
-                    <h4 className = "text-center">法說會</h4>
-
+                <div className = 'col-md-8 mx-auto h-100'>
                     <DataGrid
-                        columns = { columns_twse_recommend }
-                        rows = { twseData }
+                        columns = { columns_twse_recommend(setDetailClick, setDetailColumns, setPageDetail, setDetailData) }
+                        rows = { data }
                         page = { pageTwse }
                         onPageChange = {(newPage) => setPageTwse(newPage)}
                         pageSize = { pageSizeTwse }
@@ -182,29 +172,7 @@ function TwseRecommendComp() {
                         components = {{ Toolbar: GridToolbar }}
                         componentsProps = {{ toolbar: { showQuickFilter: true },}}
                         pagination
-                        disableColumnMenu
-                        disableColumnSelector
-                        disableDensitySelector
-                        disableColumnFilter
-                        disableSelectionOnClick = { true }
-                    />
-                </div>
-
-                <div className = 'col-md-6 mx-auto h-100'>
-                    <h4 className = "text-center">個股研究報告</h4>
-
-                    <DataGrid
-                        columns = { columns_financialData }
-                        rows = { financialData }
-                        page = { pageFinancialData }
-                        onPageChange = {(newPage) => setPageFinancialData(newPage)}
-                        pageSize = { pageSizeFinancialData }
-                        onPageSizeChange = { (newPageSize) => setPageSizeFinancialData(newPageSize) }
-                        rowsPerPageOptions = {[5, 10, 20]}
-                        getRowId = { row => row.ID }
-                        components = {{ Toolbar: GridToolbar }}
-                        componentsProps = {{ toolbar: { showQuickFilter: true },}}
-                        pagination
+                        autoHeight
                         disableColumnMenu
                         disableColumnSelector
                         disableDensitySelector

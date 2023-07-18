@@ -21,7 +21,7 @@
             "Downgrade to HOLD", "持有", "中立中立", "中立 – 維持中立", "中立 – 初次評等中立",
             "中立 – 買進轉中立", "中立 – 初次評等", "中性", "中性 (維持評等)", "中 性 (維 持 評 等 )",
             "中性 (調降評等)", "中立 ", "Equal-weight", "未評等", "未評等 ",
-	    " 中立", "Downgrade to NEUTRAL", "持有-超越同業(研究員異動)"],
+	    " 中立", "Downgrade to NEUTRAL", "持有-超越同業(研究員異動)", "MAINTAIN HOLD"],
     "sell" : ["賣出", "劣於大盤", "sell", "Sell", "SELL",
             "Underweight", "underweight", "UNDERWEIGHT", "REDUCE", "reduce",
             "Reduce", "賣出(Sell)", "降低持股", "降低持股(Underweight)", "賣出 (維持評等)",

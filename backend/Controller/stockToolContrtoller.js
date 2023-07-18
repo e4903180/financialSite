@@ -271,3 +271,61 @@ exports.top_ticker = async function(req, res){
 
     return res.status(200).send(result.data)
 }
+
+exports.twse_financialData = async function(req, res){
+    /*
+        #swagger.tags = ['Python tool']
+        #swagger.description = 'Search calender with financialData recommend.'
+
+        #swagger.parameters['startDateTwse'] = {
+            in: 'query',
+            description: 'Twse start date.',
+            required: true,
+            type: 'string',
+            schema: "2023-07-01",
+        }
+
+        #swagger.parameters['endDateTwse'] = {
+            in: 'query',
+            description: 'Twse end date.',
+            required: true,
+            type: 'string',
+            schema:"2023-07-18",
+        }
+
+        #swagger.parameters['startDateResearch'] = {
+            in: 'query',
+            description: 'FinancialData start date.',
+            required: true,
+            type: 'string',
+            schema: "2023-07-01",
+        }
+
+        #swagger.parameters['endDateResearch'] = {
+            in: 'query',
+            description: 'FinancialData end date.',
+            required: true,
+            type: 'string',
+            schema: "2023-07-18",
+        }
+
+        #swagger.security = [{
+            "apiAuth": []
+        }]
+    */
+
+    try {
+        result = await axios.get(config["DJANGO_REST_IP"] + "/twse_financial_data", {
+            params : {
+                "start_date_twse" : req.query.startDateTwse,
+                "end_date_twse" : req.query.endDateTwse,
+                "start_date_research" : req.query.startDateResearch,
+                "end_date_research" : req.query.endDateResearch,
+            }
+        })
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+    
+    return res.status(200).send(result.data)
+}

@@ -8,6 +8,7 @@ from .PythonTool.SupportResistance.SupportResistance import SupportResistance
 from .PythonTool.FRED.Inflation import Inflation
 from .PythonTool.FRED.CPI_PPI_PCE import CpiPpiPce
 from .PythonTool.TopTicker.TopTicker import TopTicker
+from .PythonTool.TwseFinancialData.TwseFinancialData import TwseFinancialData
 from .DataBaseManager import DataBaseManager
 import json
 
@@ -113,14 +114,14 @@ def cpi_ppi_pce(request):
 @api_view(['GET'])
 def top_ticker(request):
     if request.method == "GET":
-        result = TopTicker(DB.db, DB.cursor).run(request.query_params.get("start_date"),
+        try:
+            result = TopTicker(DB.db, DB.cursor).run(request.query_params.get("start_date"),
                                                     request.query_params.get("end_date"),
                                                     int(request.query_params.get("top")),
                                                     request.query_params.get("recommend"),
                                                     request.query_params.get("category"),
                                                     request.query_params.get("type"),
                                                     int(request.query_params.get("th")))
-        try:
             return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
 
         except Exception as e:
@@ -128,3 +129,17 @@ def top_ticker(request):
             return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)
 
     return JsonResponse({"message" : "error"}, status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def twse_financial_data(request):
+    if request.method == "GET":
+        try:
+            result = TwseFinancialData(DB.db, DB.cursor).run(request.query_params.get("start_date_twse"),
+                                                            request.query_params.get("end_date_twse"),
+                                                            request.query_params.get("start_date_research"),
+                                                            request.query_params.get("end_date_research"))
+            return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({"message" : str(e)}, status = status.HTTP_400_BAD_REQUEST)

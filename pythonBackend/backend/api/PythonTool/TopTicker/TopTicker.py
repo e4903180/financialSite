@@ -103,40 +103,9 @@ class TopTicker():
             Args :
                 top_data : (pd.DataFrame) origin data
                 top : (Dict) top ticker
-                    ex :
-                        {'1102': 4, '1101': 3, '1103': 1, '1104': 1, '1109': 1}
 
             Return :
                 result : (Dict)
-                    ex:
-                        {
-                            '1102': {
-                                'stock_num': '1102',
-                                'stock_name': '1102 亞泥',
-                                'category': '水泥',
-                                'quantity': 4,
-                                'recommend_distribution': {
-                                    'buy': 0,
-                                    'hold': 4,
-                                    'sell': 0,
-                                    'interval': 0,
-                                    'result': 'hold'
-                                }
-                            },
-                            '1101': {
-                                'stock_num': '1101',
-                                'stock_name': '1101 台泥',
-                                'quantity': 3,
-                                'category': '水泥',
-                                'recommend_distribution': {
-                                    'buy': 2,
-                                    'hold': 1,
-                                    'sell': 0,
-                                    'interval': 0,
-                                    'result': 'buy'
-                                }
-                            }
-                        } 
         """
         result = []
 

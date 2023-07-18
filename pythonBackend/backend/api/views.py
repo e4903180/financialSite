@@ -118,7 +118,8 @@ def top_ticker(request):
                                                     int(request.query_params.get("top")),
                                                     request.query_params.get("recommend"),
                                                     request.query_params.get("category"),
-                                                    request.query_params.get("type"))
+                                                    request.query_params.get("type"),
+                                                    int(request.query_params.get("th")))
         try:
             return JsonResponse(result, status = status.HTTP_200_OK, json_dumps_params = {'ensure_ascii': False}, safe = False)
 

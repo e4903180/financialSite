@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Slider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { config } from '../../constant';
@@ -21,6 +21,7 @@ function TopTickerComp() {
     const [data, setData] = useState([])
     const [page, setPage] = useState(0)
     const [pageSize, setPageSize] = useState(10)
+    const [th, setTh] = useState(0)
 
     const [options, setOptions] = useState({
         chart: {
@@ -57,7 +58,8 @@ function TopTickerComp() {
                 "top" : top,
                 "recommend" : recommend,
                 "category" : category,
-                "type" : type
+                "type" : type,
+                "th" : th
             }
         })
         .then((res) => {
@@ -160,7 +162,8 @@ function TopTickerComp() {
                 "top" : top,
                 "recommend" : recommend,
                 "category" : category,
-                "type" : type
+                "type" : type,
+                "th" : th
             }
         })
         .then((res) => {
@@ -246,9 +249,7 @@ function TopTickerComp() {
                                 <input type = "date" id = "startDate" className = "form-control" 
                                     onChange = {e => setStartDate(e.target.value)} value = { startDate }></input>
                             </div>
-                        </div>
 
-                        <div className = 'form-group row py-3'>
                             <label htmlFor = "endDate" className = "col-md-3 col-form-label text-center">結束日期:</label>
                             <div className = 'col-md-3'>
                                 <input type = "date" id = "endDate" className = "form-control" 
@@ -276,7 +277,10 @@ function TopTickerComp() {
                         <div className = 'form-group row py-3'>
                             <label htmlFor = "recommend" className = "col-md-3 col-form-label text-center">投資建議:</label>
                             <div className = 'col-md-3'>
-                                <select id = "recommend" className = "form-select" onChange = {e => setRecommend(e.target.value)}>
+                                <select id = "recommend" className = "form-select" onChange = {e => {
+                                        setTh(0)
+                                        setRecommend(e.target.value)
+                                    }}>
                                     <option value = "all">全部</option>
                                     <option value = "buy">買進</option>
                                     <option value = "hold">持有</option>
@@ -284,6 +288,20 @@ function TopTickerComp() {
                                     <option value = "interval">區間操作</option>
                                 </select>
                             </div>
+
+                            {recommend !== "all" && <>
+                                <label htmlFor = "th" className = "col-md-3 col-form-label text-center">投資建議最低數量:</label>
+                                <div className = 'col-md-3'>
+                                    <Slider
+                                        onChange = {e => setTh(e.target.value)}
+                                        defaultValue={th}
+                                        step = {1}
+                                        min = {0}
+                                        max = {50}
+                                        valueLabelDisplay = "on"
+                                    />
+                                </div>
+                            </>}
                         </div>
 
                         <div className = 'form-group row py-3'>
@@ -295,9 +313,7 @@ function TopTickerComp() {
                                     <option value = "上櫃">上櫃</option>
                                 </select>
                             </div>
-                        </div>
 
-                        <div className = 'form-group row py-3'>
                             <label htmlFor = "category" className = "col-md-3 col-form-label text-center">產業類別:</label>
                             <div className = 'col-md-3'>
                                 <select id = "category" className = "form-select" onChange = {e => setCategory(e.target.value)}>

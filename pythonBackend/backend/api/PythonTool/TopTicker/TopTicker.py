@@ -62,7 +62,7 @@ class TopTicker():
             
         return result.sort_values(by = ['stock_num', 'date'])
 
-    def _filter_top(self, data : pd.DataFrame, top : int, recommend : str) -> Dict:
+    def _filter_top(self, data : pd.DataFrame, top : int, recommend : str, th : int) -> Dict:
         """Filter origin financial data with recommend
 
             Args :
@@ -89,10 +89,13 @@ class TopTicker():
         
         elif recommend == "interval":
             temp = data[data["recommend"].isin(self._interval_pattern)]
-        
-        ele_quantity = temp["stock_num"].value_counts()[:top]
 
-        return ele_quantity.to_dict()
+        ele_quantity = temp["stock_num"].value_counts()
+
+        if recommend != "all":
+            ele_quantity = ele_quantity[ele_quantity > th]
+        
+        return ele_quantity[:top].to_dict()
 
     def _recommend_distribution(self, top_data : pd.DataFrame, top: Dict) -> Dict:
         """Distribution of recommend
@@ -179,7 +182,7 @@ class TopTicker():
         
         return {"recommend_result" : result, "row_data" : top_data.to_dict(orient = "records")}
 
-    def run(self, start_date : str, end_date : str, top : int = 10, recommend : str = "all", category : str = "all", type : str = "all") -> List:
+    def run(self, start_date : str, end_date : str, top : int = 10, recommend : str = "all", category : str = "all", type : str = "all", th : int = 0) -> List:
         """Run
 
             Args :
@@ -189,6 +192,7 @@ class TopTicker():
                 recommend : (str) recommend [buy, hold, sell, interval]
                 category : (str) class of ticker ex: 水泥
                 type : (str) type of ticker ex: 上市
+                th : (int) threshold
 
             Return :
                 List 
@@ -198,7 +202,7 @@ class TopTicker():
         if data.empty:
             return
 
-        top_ticker_list = self._filter_top(data, top, recommend)
+        top_ticker_list = self._filter_top(data, top, recommend, th)
         data = data[data["stock_num"].isin(top_ticker_list.keys())]
 
         return self._recommend_distribution(data, top_ticker_list)
@@ -212,4 +216,4 @@ if __name__ == "__main__":
 
     top_ticker = TopTicker(db, cursor)
 
-    top_ticker.run("2023-01-01", "2023-04-10", 10, "all", "all", "上市")
+    top_ticker.run("2023-01-01", "2023-04-10", 10, "all", "all", "上市", 0)

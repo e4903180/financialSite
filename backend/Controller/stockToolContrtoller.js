@@ -241,6 +241,14 @@ exports.top_ticker = async function(req, res){
             schema: "all"
         }
 
+        #swagger.parameters['th'] = {
+            in: 'query',
+            description: 'Top ticker parameter.',
+            required: true,
+            type: 'string',
+            schema: "all"
+        }
+
         #swagger.security = [{
             "apiAuth": []
         }]
@@ -254,6 +262,7 @@ exports.top_ticker = async function(req, res){
                 "recommend" : req.query.recommend,
                 "category" : req.query.category,
                 "type" : req.query.type,
+                "th" : req.query.th
             }
         })
     } catch (error) {

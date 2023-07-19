@@ -17,12 +17,12 @@ class ExtractPdfRate():
                 rate : (str) recommend
         '''
         if rate_1 == rate_2:
-            return rate_1 if rate_1 != 'NULL' else 'NULL'
+            return rate_1.replace(" ", "") if rate_1 != 'NULL' else 'NULL'
         for rate in possible_rate:
             if rate == rate_1:
-                return rate
+                return rate.replace(" ", "")
             elif rate == rate_2:
-                return rate
+                return rate.replace(" ", "")
         return 'NULL'
 
     def sinopac(self, directory_path:str) -> None:
@@ -438,8 +438,9 @@ class ExtractPdfRate():
                     rate_2 = page.get_text(clip=clip_new_report_2, sort=True).strip()
         rate = self._check_rate(rate_1, rate_2, possible_rate)
         # '立'因unicode不同有時會造成無法壓縮的錯誤
-        if '立' in rate:
-            rate = rate.replace('立', '立')
+        if ((type(rate[-1]) == "unicode") and
+            ("中" in rate)):
+            rate = "中立"
         return rate
 
     def masterlink(self, directory_path:str) -> None:

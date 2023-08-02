@@ -109,7 +109,10 @@ class AlertService():
         content["from"] =  GMAIL_ACCOUNT
         content["to"] = email
         content.attach(MIMEText(f"附件為您在我們網站訂閱的內容\n可互動圖表連結在此，連結有效時間為一天\n"))
-        content.attach(MIMEText(f'<a href="http://140.116.214.134:3847/api/analysis_html_download?filename={username}.html" target="_blank" rel="noreferrer noopener" download="{username}.html">http://140.116.214.134:3847/api/analysis_html_download?filename={username}.html</a>', _subtype = "html"))
+        content.attach(MIMEText(f'<a href="https://cosbi5.ee.ncku.edu.tw/api2/analysis_html_download?filename={username}.html" \
+                                target="_blank" rel="noreferrer noopener" download="{username}.html">\
+                                https://cosbi5.ee.ncku.edu.tw/api2/analysis_html_download?filename={username}.html\
+                                </a>', _subtype = "html"))
         content.attach(MIMEText(f"\n如遇到連結無法正常開啟，請複製連結到新分頁再開啟"))
 
         with open(f"{root_path['ALTERSERVICE_PDF_PATH']}/{username}-分析報告.pdf", "rb") as f:
@@ -133,10 +136,10 @@ class AlertService():
         """
 
         content = "FinancialCosbi 分析報告通知\n詳情請下載分析報告\n檔案只會保持一天請下載以保留\n"
-        content += f"http://140.116.214.134:3847/api/analysis_download?filename={filename}"
+        content += f"https://cosbi5.ee.ncku.edu.tw/api2/analysis_download?filename={filename}"
         self._line_bot_api.push_message(userId, TextSendMessage(text = content))
 
-        content = f"可互動圖表下載\nhttp://140.116.214.134:3847/api/analysis_html_download?filename={username}.html"
+        content = f"可互動圖表下載\nhttps://cosbi5.ee.ncku.edu.tw/api2/analysis_html_download?filename={username}.html"
         self._line_bot_api.push_message(userId, TextSendMessage(text = content))
 
     def detect(self) -> None:

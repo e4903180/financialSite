@@ -6,6 +6,7 @@ const outputFile = './swagger.json';
 const endpointsFiles = ['./router.js'];
 
 const options = {
+    schemes: ['https'],
     withCredentials: true,
     info: {
         title: "API for cosbi financial site",

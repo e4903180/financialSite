@@ -1,7 +1,9 @@
 from fpdf import FPDF
 from typing import List, Dict
 import warnings
+import json
 warnings.filterwarnings("ignore")
+root_path = json.load(open("../root_path.json"))
 
 class FPDF(FPDF):
     def footer(self) -> None:
@@ -38,7 +40,7 @@ class PdfMaker():
         for i in range(1, len(datas), 1):
             self.pdf.cell(190, 12, txt = datas[i]["sentence"], ln = 1, align = datas[i]["align"], fill = True)
 
-        self.pdf.image("./image/" + image, x = 5, y = 130, w = 200, h = 130, type = "png")
+        self.pdf.image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{image}", x = 5, y = 130, w = 200, h = 130, type = "png")
 
     def make_per_river(self, datas : List[Dict], filenameKline : str, filenameBar : str) -> None:
         """Create per river page
@@ -61,8 +63,8 @@ class PdfMaker():
         for i in range(1, len(datas), 1):
             self.pdf.cell(190, 12, txt = datas[i]["sentence"], ln = 1, align = datas[i]["align"], fill = True)
 
-        self.pdf.image(f"./image/{filenameBar}", x = 5, y = 100, w = 200, h = 120, type = "png")
-        self.pdf.image(f"./image/{filenameKline}", x = 5, y = 160, w = 200, h = 120, type = "png")
+        self.pdf.image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{filenameBar}", x = 5, y = 100, w = 200, h = 120, type = "png")
+        self.pdf.image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{filenameKline}", x = 5, y = 160, w = 200, h = 120, type = "png")
 
     def make_stock_price_decision(self, datas : List[Dict], filename : str) -> None:
         """Create stock price decision page
@@ -84,7 +86,7 @@ class PdfMaker():
         for i in range(1, len(datas), 1):
             self.pdf.cell(190, 12, txt = datas[i]["sentence"], ln = 1, align = datas[i]["align"], fill = True)
 
-        self.pdf.image(f"./image/{filename}", x = 5, y = 130, w = 200, h = 130, type = "png")
+        self.pdf.image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{filename}", x = 5, y = 130, w = 200, h = 130, type = "png")
         
     def output(self) -> None:
         """Output pdf
@@ -94,4 +96,4 @@ class PdfMaker():
             Return :
                 None
         """
-        self.pdf.output(f"./pdf/{self.username}-分析報告.pdf")
+        self.pdf.output(f"{root_path['ALTERSERVICE_PDF_PATH']}/{self.username}-分析報告.pdf")

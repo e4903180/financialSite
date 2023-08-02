@@ -112,7 +112,7 @@ class AlertService():
         content.attach(MIMEText(f'<a href="http://140.116.214.134:3847/api/analysis_html_download?filename={username}.html" target="_blank" rel="noreferrer noopener" download="{username}.html">http://140.116.214.134:3847/api/analysis_html_download?filename={username}.html</a>', _subtype = "html"))
         content.attach(MIMEText(f"\n如遇到連結無法正常開啟，請複製連結到新分頁再開啟"))
 
-        with open(f"./pdf/{username}-分析報告.pdf", "rb") as f:
+        with open(f"{root_path['ALTERSERVICE_PDF_PATH']}/{username}-分析報告.pdf", "rb") as f:
             pdf_attach = MIMEApplication(f.read(), _subtype = "pdf", Name = username + '-分析報告.pdf')
 
         content.add_header('content-disposition', 'attachment')
@@ -174,8 +174,12 @@ class AlertService():
                 SPDH = StockPriceDecisionHandler(pdfMaker)
 
                 # Create research html
-                f = open(f"./html/{username}.html", "w")
-                f.write('<html><head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script></head><body>')
+                f = open(f"{root_path['ALTERSERVICE_HTML_PATH']}/{username}.html", "w")
+                f.write('<html><head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" \
+                        rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" \
+                        crossorigin="anonymous"><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" \
+                        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" \
+                        crossorigin="anonymous"></script></head><body>')
 
                 # Traverse user's subscribe
                 for j in range(len(subsribe)):
@@ -196,7 +200,7 @@ class AlertService():
 
                 # Create research
                 pdfMaker.output()
-                
+
                 # If email notify is true, using gmail service
                 if self._user_list.iloc[i]["emailNotify"]:
                     self._send_by_mail("FinancialCosbi 分析報告通知",

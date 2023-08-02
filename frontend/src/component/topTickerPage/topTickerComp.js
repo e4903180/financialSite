@@ -270,6 +270,8 @@ function TopTickerComp() {
                                 }}>
                                     <option value = "5">5</option>
                                     <option value = "10">10</option>
+                                    <option value = "15">15</option>
+                                    <option value = "20">20</option>
                                 </select>
                             </div>
                         </div>
@@ -294,7 +296,8 @@ function TopTickerComp() {
                                 <div className = 'col-md-3'>
                                     <Slider
                                         onChange = {e => setTh(e.target.value)}
-                                        defaultValue={th}
+                                        value = {th}
+                                        defaultValue = {0}
                                         step = {1}
                                         min = {0}
                                         max = {50}

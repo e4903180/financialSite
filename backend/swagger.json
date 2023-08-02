@@ -5,7 +5,7 @@
     "description": "API document for cosbi financial site made by express",
     "version": "1.0.0"
   },
-  "host": "140.116.214.154:3000",
+  "host": "cosbi5.ee.ncku.edu.tw",
   "basePath": "/api",
   "tags": [
     {
@@ -58,7 +58,7 @@
     }
   ],
   "schemes": [
-    "http"
+    "https"
   ],
   "securityDefinitions": {
     "apiAuth": {
@@ -247,12 +247,7 @@
           "400": {
             "description": "Bad Request"
           }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
+        }
       }
     },
     "/data/download/single_financialData": {
@@ -1065,7 +1060,7 @@
       }
     },
     "/data/calender": {
-      "post": {
+      "get": {
         "tags": [
           "Get data"
         ],
@@ -1098,6 +1093,16 @@
                 "month"
               ]
             }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -1233,6 +1238,67 @@
         ]
       }
     },
+    "/data/popular_ticker": {
+      "get": {
+        "tags": [
+          "Get data"
+        ],
+        "description": "Get popular ticker.",
+        "parameters": [
+          {
+            "name": "swagger_token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    },
+    "/data/popular_news": {
+      "get": {
+        "tags": [
+          "Get data"
+        ],
+        "description": "Get popular news.",
+        "parameters": [
+          {
+            "name": "swagger_token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    },
     "/data/financial_search": {
       "post": {
         "tags": [
@@ -1328,9 +1394,7 @@
             "schema": {
               "type": "string",
               "example": "2023-01-01"
-            },
-            "$endDate": "2023-04-30",
-            "$investmentCompany": "all"
+            }
           },
           {
             "name": "endDate",
@@ -1341,8 +1405,7 @@
             "schema": {
               "type": "string",
               "example": "2023-04-30"
-            },
-            "$investmentCompany": "all"
+            }
           },
           {
             "name": "investmentCompany",
@@ -1635,9 +1698,7 @@
             "schema": {
               "type": "string",
               "example": "2023-01-01"
-            },
-            "$endDate": "2023-04-30",
-            "$investmentCompany": "all"
+            }
           },
           {
             "name": "endDate",
@@ -1648,8 +1709,7 @@
             "schema": {
               "type": "string",
               "example": "2023-04-30"
-            },
-            "$investmentCompany": "all"
+            }
           }
         ],
         "responses": {
@@ -1731,9 +1791,10 @@
           },
           {
             "name": "category",
-            "in": "body",
+            "in": "query",
             "description": "News category.",
             "required": true,
+            "type": "string",
             "schema": {
               "type": "object",
               "properties": {
@@ -1754,23 +1815,14 @@
           },
           {
             "name": "date",
-            "in": "body",
+            "in": "query",
             "description": "Date.",
             "required": true,
+            "type": "string",
             "schema": {
               "type": "string",
               "example": "2023-04-20"
             }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "category",
-            "in": "query",
-            "type": "string"
           }
         ],
         "responses": {
@@ -1922,7 +1974,7 @@
           {
             "name": "obj",
             "in": "body",
-            "description": "Filter parameter.",
+            "description": "Update financial recommend.",
             "required": true,
             "schema": {
               "type": "object",
@@ -2328,10 +2380,7 @@
     },
     "/data/cpi_ppi": {
       "get": {
-        "tags": [
-          "Python tool"
-        ],
-        "description": "cpi ppi pce.",
+        "description": "",
         "parameters": [
           {
             "name": "swagger_token",
@@ -2346,12 +2395,7 @@
           "400": {
             "description": "Bad Request"
           }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
+        }
       }
     },
     "/data/top_ticker": {
@@ -2430,6 +2474,89 @@
             "schema": {
               "type": "string",
               "example": "all"
+            }
+          },
+          {
+            "name": "th",
+            "in": "query",
+            "description": "Top ticker parameter.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "all"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    },
+    "/data/twse_financialData": {
+      "get": {
+        "tags": [
+          "Python tool"
+        ],
+        "description": "Search calender with financialData recommend.",
+        "parameters": [
+          {
+            "name": "swagger_token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "startDateTwse",
+            "in": "query",
+            "description": "Twse start date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-07-01"
+            }
+          },
+          {
+            "name": "endDateTwse",
+            "in": "query",
+            "description": "Twse end date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-07-18"
+            }
+          },
+          {
+            "name": "startDateResearch",
+            "in": "query",
+            "description": "FinancialData start date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-07-01"
+            }
+          },
+          {
+            "name": "endDateResearch",
+            "in": "query",
+            "description": "FinancialData end date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-07-18"
             }
           }
         ],

@@ -69,10 +69,6 @@ dataRouter.get("/isAuth", function(req, res){
     /*
         #swagger.tags = ['Authenticate check']
         #swagger.description = 'Check if user have auth.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     if("swagger_token" in req.headers){
         return res.status(200).send("Token available")

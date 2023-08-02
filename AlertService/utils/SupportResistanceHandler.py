@@ -9,6 +9,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+root_path = json.load(open("../root_path.json"))
+
 class SupportResistanceHandler():
     """Handle support resistance method
     """
@@ -239,7 +241,7 @@ class SupportResistanceHandler():
         fileStream.write(container)
 
         fig.update_layout(xaxis_rangeslider_visible = False)
-        fig.write_image("./image/" + image_filename)
+        fig.write_image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{image_filename}")
 
     def _add_page(self, table_content : Dict) -> None:
         """Add new page to pdf

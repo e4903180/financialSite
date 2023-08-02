@@ -9,6 +9,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+root_path = json.load(open("../root_path.json"))
+
 class StockPriceDecisionHandler():
     """Handle stock price decision method
     """
@@ -84,7 +86,7 @@ class StockPriceDecisionHandler():
         fig.update_layout(barmode = 'stack')
         fig.add_vline(x = result["NewPrice"], line_width = 3, line_color = "black", annotation_text = "現在價格")
         
-        fig.write_image("./image/" + filename)
+        fig.write_image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{filename}")
 
         container = f'<div class="row mx-auto py-3" style="width:70vw"><div class="card p-0 mt-3"><div class="card-header text-center">{title}</div><div class="card-body">'
         container += f'<p class="card-text">股票代號: {table_content["stock_num"]}</p>'
@@ -120,5 +122,3 @@ class StockPriceDecisionHandler():
             sentence.append({"sentence" : f"        {result_content['alert']}", "align" : "C"})
 
         self._pdfMaker.make_stock_price_decision(sentence, filename)
-
-

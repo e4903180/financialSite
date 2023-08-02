@@ -171,14 +171,6 @@ exports.inflation = async function(req, res){
 }
 
 exports.cpi_ppi = async function(req, res){
-    /*
-        #swagger.tags = ['Python tool']
-        #swagger.description = 'cpi ppi pce.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
-    */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/cpi_ppi_pce")
     } catch (error) {

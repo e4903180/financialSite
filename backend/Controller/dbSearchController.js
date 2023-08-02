@@ -414,7 +414,7 @@ exports.news_search_past = async function(req, res){
         #swagger.description = 'Search past day news.'
 
         #swagger.parameters['category'] = {
-            in: 'body',
+            in: 'query',
             description: 'News category.',
             required: true,
             type: 'string',
@@ -425,7 +425,7 @@ exports.news_search_past = async function(req, res){
         }
 
         #swagger.parameters['date'] = {
-            in: 'body',
+            in: 'query',
             description: 'Date.',
             required: true,
             type: 'string',

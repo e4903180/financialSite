@@ -33,7 +33,7 @@ const prod = {
     API_BASE_IP : "127.0.0.1",
     API_PORT : 3000,
     CORS_ORIGIN : ["https://cosbi5.ee.ncku.edu.tw"],
-    SWAGGER_HOST : "https://cosbi5.ee.ncku.edu.tw",
+    SWAGGER_HOST : "cosbi5.ee.ncku.edu.tw",
     CLIENT_IP : "https://cosbi5.ee.ncku.edu.tw",
     DJANGO_REST_IP : "http://127.0.0.1:3847/api",
     FINANCIALDATA_PATH : "/home/uikai/financialData/gmailData/data/",

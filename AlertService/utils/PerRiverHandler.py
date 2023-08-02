@@ -4,11 +4,13 @@ sys.path.append(json.load(open("../root_path.json"))["PROJECT_ROOT_PATH"])
 
 from pdfMaker import PdfMaker
 from pythonBackend.backend.api.PythonTool.PER_River import PerRiver
-from typing import Dict, List, TextIO
+from typing import Dict, TextIO
 import pandas as pd
 from datetime import datetime
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+root_path = json.load(open("../root_path.json"))
 
 class PerRiverHandler():
     """Handle per river method
@@ -116,7 +118,7 @@ class PerRiverHandler():
         fileStream.write(container)
 
         fig.update_layout(xaxis_rangeslider_visible = False)
-        fig.write_image("./image/" + filenameKline)
+        fig.write_image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{filenameKline}")
 
     def _create_image_bar_html(self, title : str, result : Dict, filenameBar : str, fileStream : TextIO):
         """Create bar image
@@ -139,7 +141,7 @@ class PerRiverHandler():
         container = fig.to_html(full_html = False, include_plotlyjs = 'cdn') + "</div></div>"
         fileStream.write(container)
         
-        fig.write_image("./image/" + filenameBar)
+        fig.write_image(f"{root_path['ALTERSERVICE_IMAGE_PATH']}/{filenameBar}")
 
     def _add_page(self, ticker : str, result_content : Dict, filenameKline : str, filenameBar : str):
         """Add new page to pdf

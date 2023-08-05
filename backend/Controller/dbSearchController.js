@@ -679,13 +679,18 @@ exports.popular_news = async function(req, res){
             "apiAuth": []
         }]
     */
+    let mapping = {
+        "3days" : 3,
+        "week" : 7,
+        "month" : 30
+    }
     let result = {"table" : [], "highchart" : []}
 
     let query = "SELECT popular_news.*, ticker_list.stock_name, ticker_list.stock_num, news.title, news.date, news.link FROM popular_news \
                 INNER JOIN ticker_list ON popular_news.ticker_id=ticker_list.ID \
                 INNER JOIN news ON popular_news.news_id=news.ID \
                 WHERE time_interval=?"
-    let param = [req.query.interval]
+    let param = [mapping[req.query.interval]]
 
     try {
         const [rows, fields] = await con.promise().query(query, param)

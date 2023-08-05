@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from tqdm import trange
 from collections import defaultdict
+from typing import List, Dict
 
 class PopularNews():
     def __init__(self) -> None:
@@ -26,15 +27,8 @@ class PopularNews():
         self._cursor.execute(query, param)
         self._db.commit()
 
-    def _get_news(self, interval : str = "3days") -> pd.DataFrame:
-        if interval == "3days":
-            start_date = (datetime.now() - timedelta(days = 3)).strftime("%Y-%m-%d")
-
-        elif interval == "week":
-            start_date = (datetime.now() - timedelta(days = 7)).strftime("%Y-%m-%d")
-
-        elif interval == "month":
-            start_date = (datetime.now() - relativedelta(months = 1)).strftime("%Y-%m-%d")
+    def _get_news(self, interval : int = 3) -> pd.DataFrame:
+        start_date = (datetime.now() - timedelta(days = interval)).strftime("%Y-%m-%d")
 
         query = "SELECT * FROM news WHERE date>=%s"
         param = (start_date,)
@@ -62,40 +56,59 @@ class PopularNews():
         result = result.sort_values(by = ["stock_name"], ascending = False, key = lambda x: x.str.len())
 
         return result
+    
+    def _detect_title_overlap(self, title : str, stock_name : str) -> bool:
+        overlap = {
+            "冠軍" : ["隱形冠軍"]
+        }
 
-    def _handle_news(self, interval : str) -> None:
+        if stock_name not in overlap:
+            return False
+        
+        for text in overlap[stock_name]:
+            if text in title:
+                return True
+        
+        return False
+
+    def _detect_stock_name_in_title(self, ticker_list : List, news : List, result : defaultdict(list)) -> Dict:
+        for index_ticker_list in range(len(ticker_list)):
+            if ticker_list.iloc[index_ticker_list]["stock_name"] not in news["title"]:
+                continue
+
+            if self._detect_title_overlap(news["title"], ticker_list.iloc[index_ticker_list]["stock_name"]):
+                continue
+            
+            result[ticker_list.iloc[index_ticker_list]["ID"]].append(news["ID"])
+            break
+        
+        return result
+
+    def _handle_news(self, interval : int, ticker_list : List = [], top : int = 10) -> None:
         result = defaultdict(list)
 
         news = self._get_news(interval = interval)
-        ticker_list = self._get_ticker_list()
+
+        if len(ticker_list) == 0:
+            ticker_list = self._get_ticker_list()
 
         for index_news in trange(len(news)):
-            for index_ticker_list in range(len(ticker_list)):
-                if ticker_list.iloc[index_ticker_list]["stock_name"] in news.iloc[index_news]["title"]:
-                    if ticker_list.iloc[index_ticker_list]["stock_name"] == "冠軍":
-                        if "隱形冠軍" in news.iloc[index_news]["title"]:
-                            continue
-                    
-                    result[ticker_list.iloc[index_ticker_list]["ID"]].append(news.iloc[index_news]["ID"])
-                    break
+            self._detect_stock_name_in_title(ticker_list, news.iloc[index_news], result)
 
         result = {key : value for key, value in sorted(result.items(), key = lambda item : len(item[1]), reverse = True)}
 
-        limit = 0
-        for ticker_id in result:
-            if limit == 10:
+        for idx, ticker_id in enumerate(result):
+            if idx == top:
                 break
             
             for news_id in result[ticker_id]:
                 self._insert(ticker_id, news_id, interval)
 
-            limit +=1
-
     def run(self):
         self._init_table()
-        self._handle_news(interval = "3days")
-        self._handle_news(interval = "week")
-        self._handle_news(interval = "month")
+        self._handle_news(interval = 3)
+        self._handle_news(interval = 7)
+        self._handle_news(interval = 30)
 
 if __name__ == "__main__":
     popular_news = PopularNews()

@@ -24,7 +24,11 @@ function CalendarItem() {
     const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : init_year, "month" : init_month })
+        axios.get(config["rootApiIP"] + "/data/calender_search", { params: {
+            "stock_num_name" : "", 
+            "startDate" : `${init_year}-${init_month}-01`,
+            "endDate" : `${init_year}-${init_month}-31` 
+        }})
         .then(res => {
             setPage(0)
             setData(res.data)
@@ -54,7 +58,12 @@ function CalendarItem() {
         setLoading(true)
         const year = newDate.getFullYear()
         const month = String(newDate.getMonth() + 1).padStart(2, '0')
-        axios.post(config["rootApiIP"] + "/data/calenderData", { "year" : year, "month" : month })
+
+        axios.get(config["rootApiIP"] + "/data/calender_search", { params: {
+            "stock_num_name" : "", 
+            "startDate" : `${year}-${month}-01`,
+            "endDate" : `${year}-${month}-31` 
+        }})
         .then(res => {
             setPage(0)
             setData(res.data)

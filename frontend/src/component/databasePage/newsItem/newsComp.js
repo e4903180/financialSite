@@ -13,7 +13,8 @@ function NewsComp() {
     const [data0, setData0] = useState([])
     const [page0, setPage0] = useState(0)
     const [pageSize0, setPageSize0] = useState(10)
-    const [startDate, setStartDate] = useState("")
+    const [startDate, setStartDate] = useState(todayDate)
+    const [endDate, setEndDate] = useState(todayDate)
     const [category, setCategory] = useState("all")
     const [pattern, setPattern] = useState("")
     const [dataNews, setDataNews] = useState([])
@@ -36,23 +37,36 @@ function NewsComp() {
 
     const buttonNewsHandle = (date, buttonCategory) => {
         setLoading(true)
+        let temp_startDate = todayDate
+        let temp_endtDate = todayDate
+        let temp_category = "all"
 
         if (date === "today"){
             setStartDate(todayDate)
+            setEndDate(todayDate)
         }else if (date === "past"){
+            temp_startDate = "2019-06-03"
+            var tempToday = new Date()
+            tempToday.setDate(tempToday.getDate() - 1)
+            temp_endtDate = tempToday.getFullYear() + "-" + String(tempToday.getMonth()+1).padStart(2, '0') + "-" + String(tempToday.getDate()).padStart(2, '0')
             setStartDate("2023-01-01")
+            setEndDate(temp_endtDate)
         }
 
         if(buttonCategory === "全部"){
             setCategory("all")
         }
         else{
+            temp_category = buttonCategory
             setCategory(buttonCategory)
         }     
-
-        axios.get(config["rootApiIP"] + `/data/news_search_${date}`, { params : {
-            "date" : todayDate,
-            "category" : buttonCategory
+        
+        axios.get(config["rootApiIP"] + "/data/news_search", { params :{
+            "startDate" : temp_startDate,
+            "endDate" : temp_endtDate,
+            "column" : "title",
+            "pattern" : "",
+            "category" : temp_category
         }})
         .then((res) => {
             setDataNews(res.data)
@@ -125,7 +139,7 @@ function NewsComp() {
                         data = { dataNews } 
                         setData = { setDataNews } 
                         startDate = { startDate } 
-                        endDate = { todayDate }
+                        endDate = { endDate }
                         category = { category }
                         pattern = { pattern }
                         setPattern = { setPattern }

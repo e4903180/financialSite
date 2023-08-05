@@ -1,10 +1,11 @@
 import json
+
 import sys
 sys.path.append(json.load(open("../root_path.json"))["PROJECT_ROOT_PATH"])
-
 from pdfMaker import PdfMaker
 from pythonBackend.backend.api.PythonTool.StockPriceDecision import PricingStrategy
-from typing import Dict, List, TextIO
+
+from typing import Dict, TextIO
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots

@@ -54,13 +54,13 @@ function DbAutoSearch() {
         }else{
             set_input1Error(false)
 
-            axios.post(config["rootApiIP"] + "/data/financial_search", {
+            axios.get(config["rootApiIP"] + "/data/financial_search", {params:{
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
                 "investmentCompany" : "all",
-                "remark" : "all"
-            }).then(res => {
+                "recommend" : "all"
+            }}).then(res => {
                 setData1(res.data)
                 setLoading(false)
                 setPage1(0)
@@ -108,11 +108,11 @@ function DbAutoSearch() {
                 setPage3(0)
             })
 
-            axios.post(config["rootApiIP"] + "/data/calender_search", {
+            axios.get(config["rootApiIP"] + "/data/calender_search", { params : {
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
-            }).then(res => {
+            }}).then(res => {
                 setData4(res.data)
                 setLoading(false)
                 setPage4(0)
@@ -126,13 +126,13 @@ function DbAutoSearch() {
     }
 
     useEffect(() => {
-        axios.post(config["rootApiIP"] + "/data/financial_search", {
+        axios.get(config["rootApiIP"] + "/data/financial_search", {params:{
             "stock_num_name" : param.stock_num_name,
             "startDate" : last3Month,
             "endDate" : today,
             "investmentCompany" : "all",
-            "remark" : "all"
-        }).then(res => {
+            "recommend" : "all"
+        }}).then(res => {
             setData1(res.data)
             setLoading(false)
             setPage1(0)
@@ -180,11 +180,11 @@ function DbAutoSearch() {
             setPage3(0)
         })
 
-        axios.post(config["rootApiIP"] + "/data/calender_search", {
+        axios.get(config["rootApiIP"] + "/data/calender_search", { params : {
             "stock_num_name" : param.stock_num_name,
             "startDate" : last3Month,
             "endDate" : today,
-        }).then(res => {
+        }}).then(res => {
             setData4(res.data)
             setLoading(false)
             setPage4(0)

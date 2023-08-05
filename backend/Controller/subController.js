@@ -5,6 +5,22 @@ exports.handle_support_resistance_sub = async function(req, res){
         #swagger.tags = ['Subscribe']
         #swagger.description = 'Subscribe support resistance strategy.'
 
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Support resistance strategy param.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num: "2330",
+                $startDate: "2023-08-05",
+                $endDate: "2023-08-06",
+                $maLen: "20",
+                $maType: "sma",
+                $method: "method1",
+                $alertCondition: "突破天花板線",
+            }
+        }
+
         #swagger.security = [{
             "apiAuth": []
         }]
@@ -70,6 +86,19 @@ exports.handle_pricing_strategy_sub = async function(req, res){
         #swagger.tags = ['Subscribe']
         #swagger.description = 'Subscribe pricing strategy.'
 
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Pricing strategy param.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num: "2330",
+                $startYear: "10",
+                $endDate: "2023-08-06",
+                $alertCondition: "低於便宜價",
+            }
+        }
+
         #swagger.security = [{
             "apiAuth": []
         }]
@@ -132,6 +161,18 @@ exports.handle_per_river_sub = async function(req, res){
     /*
         #swagger.tags = ['Subscribe']
         #swagger.description = 'Subscribe per river strategy.'
+
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            description: 'Per river strategy param.',
+            required: true,
+            type: 'object',
+            schema: {
+                $stock_num: "2330",
+                $endDate: "2023-08-06",
+                $alertCondition: "低於便宜價",
+            }
+        }
 
         #swagger.security = [{
             "apiAuth": []

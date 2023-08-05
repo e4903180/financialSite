@@ -8,7 +8,7 @@ import NewsComp from './newsItem/newsComp';
 import CalenderComp from './calendarItem/calendarComp';
 import FinancialDataComp from './financialDataItem/financialDataComp';
 import FinancialDataOtherComp from './financialDataOtherItem/financialDataOtherComp';
-import FinancialDataIndustryComp from './financialDataIndustryItem/finanicalDataIndustryComp';
+// import FinancialDataIndustryComp from './financialDataIndustryItem/finanicalDataIndustryComp';
 import LineMemoComp from './lineMemoItem/lineMemoComp';
 import PostBoardComp from './postBoardItem/postBoardComp';
 

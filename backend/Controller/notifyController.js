@@ -1,9 +1,17 @@
 const con = require('../Model/connectFinancial')
 
-exports.get_all_notify = async function(req, res){
+exports.get_notify = async function(req, res){
     /*
         #swagger.tags = ['Notify']
-        #swagger.description = 'Get user all notify.'
+        #swagger.description = 'Get user notify.'
+
+        #swagger.parameters['readed'] = {
+            in: 'query',
+            description: 'Readed.',
+            required: true,
+            type: 'string',
+            schema: "1"
+        }
 
         #swagger.security = [{
             "apiAuth": []
@@ -12,27 +20,10 @@ exports.get_all_notify = async function(req, res){
     let query = "SELECT * FROM notify WHERE username=?"
     let param = [req.session.userName]
 
-    try {
-        const [rows, fields] = await con.promise().query(query, param);
-
-        return res.status(200).send(rows)
-    } catch (error) {
-        return res.status(400).send("error")
+    if (req.query.readed != "-1"){
+        query += " AND read=?"
+        param.push(req.query.readed)
     }
-}
-
-
-exports.get_readed_notify = async function(req, res){
-    /*
-        #swagger.tags = ['Notify']
-        #swagger.description = 'Get user all readed notify.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
-    */
-    let query = "SELECT * FROM notify WHERE username=? AND `read`=?"
-    let param = [req.session.userName, 1]
 
     try {
         const [rows, fields] = await con.promise().query(query, param);
@@ -42,7 +33,6 @@ exports.get_readed_notify = async function(req, res){
         return res.status(400).send("error")
     }
 }
-
 
 exports.notify_handle_read = async function(req, res){
     /*
@@ -74,7 +64,6 @@ exports.notify_handle_read = async function(req, res){
         return res.status(400).send("error")
     }
 }
-
 
 exports.notify_handle_unread = async function(req, res){
     /*

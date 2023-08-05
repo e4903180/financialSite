@@ -74,6 +74,14 @@ class TwseFinancialData:
         return result
     
     def _recommend_distribution(self, recommends : List) -> Dict:
+        """Calculate recommend distribution
+
+            Args :
+                recommends : (List) recommends list
+
+            Return :
+                Dict
+        """
         recommend_distribution = {
             "buy" : 0,
             "sell" : 0,
@@ -97,6 +105,16 @@ class TwseFinancialData:
         return recommend_distribution
     
     def _calculate(self, twse : pd.DataFrame, financialData : pd.DataFrame, stock_name : List) -> List:
+        """Calculate result
+
+            Args :
+                twse : (pd.DataFrame) twse data
+                financialData : (pd.DataFrame) financialData
+                stock_name : (List) twse unique stock name
+
+            Return :
+                List
+        """
         result = []
 
         for idx, stock in enumerate(stock_name):
@@ -110,11 +128,23 @@ class TwseFinancialData:
                 "financialData" : financialData[financialData["stock_name"] == stock].to_dict(orient = "records"),
             }
 
+            # combine two dict
             result.append(temp | distribution_result)
         
         return result
 
-    def run(self, start_date_twse : str, end_date_twse : str, start_date_research : str, end_date_research : str):
+    def run(self, start_date_twse : str, end_date_twse : str, start_date_research : str, end_date_research : str) -> List:
+        """Run
+
+            Args :
+                start_date_twse : (str) twse start date
+                end_date_twse : (str) twse end date
+                start_date_research : (str) research start date
+                end_date_research : (str) research end date
+            
+            Return :
+                List
+        """
         twse = self._get_twse(start_date_twse, end_date_twse)
         
         if twse.empty:

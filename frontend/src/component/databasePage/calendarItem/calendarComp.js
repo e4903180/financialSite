@@ -35,11 +35,11 @@ function CalenderComp() {
             setTickerError(true)
             setLoading(false)
         }else{
-            axios.post(config["rootApiIP"] + "/data/calender_search", {
+            axios.get(config["rootApiIP"] + "/data/calender_search", {params : {
                 "stock_num_name" : ticker,
                 "startDate" : startDate,
                 "endDate" : endDate,
-            }).then(res => {
+            }}).then(res => {
                 setData(res.data)
                 setLoading(false)
             }).catch(res => {
@@ -54,11 +54,11 @@ function CalenderComp() {
     useEffect(() => {
         setLoading(true)
 
-        axios.post(config["rootApiIP"] + "/data/calender_search", {
+        axios.get(config["rootApiIP"] + "/data/calender_search", { params : {
             "stock_num_name" : ticker,
             "startDate" : thisMonth,
             "endDate" : nextMoth,
-        })
+        }})
         .then(res => {
             setData(res.data)
             setLoading(false)

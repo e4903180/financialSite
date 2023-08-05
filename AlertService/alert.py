@@ -35,19 +35,17 @@ class AlertService():
                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
         self._cursor = self._db.cursor()
 
-        self._user_list = None
-        self._subscribe_list = None
-
         config = configparser.ConfigParser()
         config.read('../LineBot/config.ini')
 
         self._line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token'))
     
-    def init_dir(self) -> None:
+    def _init_dir(self) -> None:
         """Clear the image, pdf and html directory
 
             Args :
                 None
+
             Return :
                 None
         """
@@ -60,11 +58,12 @@ class AlertService():
         for file in os.listdir(root_path["ALTERSERVICE_PDF_PATH"]):
             os.remove(root_path["ALTERSERVICE_PDF_PATH"] + "/" + file)
 
-    def _get_sub_list(self) -> None:
+    def _get_sub_list(self) -> pd.DataFrame:
         """Get subscribe list from DB
 
             Args :
                 None
+
             Return :
                 None
         """
@@ -75,13 +74,14 @@ class AlertService():
         self._cursor.execute(sql)
         self._db.commit()
 
-        self._subscribe_list =  pd.DataFrame.from_dict(self._cursor.fetchall())
+        return pd.DataFrame.from_dict(self._cursor.fetchall())
     
-    def _get_user(self) -> None:
+    def _get_user(self) -> pd.DataFrame:
         """Get user list from DB
 
             Args :
                 None
+
             Return :
                 None
         """
@@ -90,7 +90,7 @@ class AlertService():
         self._cursor.execute(sql)
         self._db.commit()
 
-        self._user_list = pd.DataFrame.from_dict(self._cursor.fetchall())
+        return pd.DataFrame.from_dict(self._cursor.fetchall())
 
     def _send_by_mail(self, subject : str, username : str, email : str) -> None:
         """Send the analysis research through gmail service
@@ -142,42 +142,45 @@ class AlertService():
         content = f"可互動圖表下載\nhttps://cosbi5.ee.ncku.edu.tw/api2/analysis_html_download?filename={username}.html"
         self._line_bot_api.push_message(userId, TextSendMessage(text = content))
 
-    def detect(self) -> None:
+    def run(self) -> None:
         """Traverse subscribe list, creating analysis research and send to the user
 
             Args :
                 None
+
             Return :
                 None
         """
 
-        # Init image and pdf directory
-        self.init_dir()
-
-        # Get user list
-        self._get_user()
+        # Init html, image and pdf directory
+        self._init_dir()
 
         # Get subscribe list
-        self._get_sub_list()
+        sub_list = self._get_sub_list()
         
         # If suscribe list is empty, then return
-        if len(self._subscribe_list) == 0:
+        if sub_list.empty:
             return
 
+        # Get user list
+        user_list = self._get_user()
+
         # Traverse all user
-        for i in range(len(self._user_list)):
-            username = self._user_list.iloc[i]["userName"]
-            subsribe = self._subscribe_list[self._subscribe_list["username"] == username]
+        for i in range(len(user_list)):
+            username = user_list.iloc[i]["userName"]
+            subsribe = sub_list[sub_list["username"] == username]
+
+            if len(subsribe) == 0:
+                continue
             
             # Check if user subscribe exist
-            if len(subsribe) > 0:
-                pdfMaker = PdfMaker(username)
-                SRH = SupportResistanceHandler(pdfMaker)
-                PRH = PerRiverHandler(pdfMaker)
-                SPDH = StockPriceDecisionHandler(pdfMaker)
+            pdfMaker = PdfMaker(username)
+            support_resistance_handler = SupportResistanceHandler(pdfMaker)
+            per_river_handler = PerRiverHandler(pdfMaker)
+            stock_price_decision_handler = StockPriceDecisionHandler(pdfMaker)
 
-                # Create research html
-                f = open(f"{root_path['ALTERSERVICE_HTML_PATH']}/{username}.html", "w")
+            # Create research html
+            with open(f"{root_path['ALTERSERVICE_HTML_PATH']}/{username}.html", "w") as f:
                 f.write('<html><head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" \
                         rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" \
                         crossorigin="anonymous"><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" \
@@ -189,41 +192,40 @@ class AlertService():
                     temp = subsribe.iloc[j]
                 
                     if temp["strategy"] == "天花板地板線":
-                        SRH.handle_support_resistance(temp, f)
+                        support_resistance_handler.handle_support_resistance(temp, f)
 
                     elif temp["strategy"] == "本益比河流圖":
-                        PRH.handle_per_river(temp, f)
+                        per_river_handler.handle_per_river(temp, f)
 
                     elif temp["strategy"] == "股票定價策略":
-                        SPDH.handle_stock_pricing_decision(temp, f)
+                        stock_price_decision_handler.handle_stock_pricing_decision(temp, f)
 
                 # Add html end
                 f.write("</body></html>")
-                f.close()
 
-                # Create research
-                pdfMaker.output()
+            # Create research pdf
+            pdfMaker.output()
 
-                # If email notify is true, using gmail service
-                if self._user_list.iloc[i]["emailNotify"]:
-                    self._send_by_mail("FinancialCosbi 分析報告通知",
-                                                        username,
-                                                        self._user_list.iloc[i]["email"])
+            # If email notify is true, using gmail service
+            if user_list.iloc[i]["emailNotify"]:
+                self._send_by_mail("FinancialCosbi 分析報告通知",
+                                    username,
+                                    user_list.iloc[i]["email"])
 
-                # If line notify is true, using line service
-                if self._user_list.iloc[i]["lineNotify"]:
-                    self._send_by_line(username + '-分析報告.pdf',
-                                                        username,
-                                                        self._user_list.iloc[i]["lineId"])
+            # If line notify is true, using line service
+            if user_list.iloc[i]["lineNotify"]:
+                self._send_by_line(username + '-分析報告.pdf',
+                                    username,
+                                    user_list.iloc[i]["lineId"])
 
 if __name__ == "__main__":
     log_path = f"{root_path['ALTERSERVICE_LOG_PATH']}/{str(datetime.datetime.now())}.log"
     sys.stderr = open(log_path, 'w')
 
     log_notify_service = LogNotifyService()
-    AS = AlertService()
+    alert_service = AlertService()
 
     try:
-        AS.detect()
+        alert_service.run()
     except Exception as e:
         log_notify_service.send_email("警示更新狀態", str(e))

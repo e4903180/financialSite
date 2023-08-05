@@ -37,13 +37,13 @@ function FinancialDataComp() {
             setTickerError(true)
             setLoading(false)
         }else{
-            axios.post(config["rootApiIP"] + "/data/financial_search", {
+            axios.get(config["rootApiIP"] + "/data/financial_search", { params:{
                 "stock_num_name" : ticker,
                 "startDate" : startDate,
                 "endDate" : endDate,
                 "investmentCompany" : investmentCompany,
                 "recommend" : recommend
-            }).then(res => {
+            }}).then(res => {
                 setData(res.data)
                 setLoading(false)
             }).catch(res => {
@@ -56,13 +56,13 @@ function FinancialDataComp() {
     }
 
     useEffect(() => {
-        axios.post(config["rootApiIP"] + "/data/financial_search", {
+        axios.get(config["rootApiIP"] + "/data/financial_search", {params:{
             "stock_num_name" : "",
             "startDate" : last3Month,
             "endDate" : today,
             "investmentCompany" : "all",
             "recommend" : "all"
-        }).then(res => {
+        }}).then(res => {
             setData(res.data)
             setLoading(false)
             setPage(0)

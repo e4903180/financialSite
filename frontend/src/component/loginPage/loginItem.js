@@ -11,10 +11,10 @@ function LoginItem() {
     const [loginError, setLoginError] = useState(false)
 
     function login(){
-        axios.post(config["rootApiIP"] + "/user/login", {
+        axios.get(config["rootApiIP"] + "/user/login", { params : {
             userName : userName,
             password : password
-        }).then(res => {
+        }}).then(res => {
             nav(config["rootPathPrefix"] + "/home");
         }).catch(err => {
             setLoginError(true)

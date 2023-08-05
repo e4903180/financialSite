@@ -51,30 +51,6 @@ exports.single_financialDataOther_download = function(req, res){
     }
 };
 
-exports.single_financialDataIndustry_download = function(req, res){
-    /*
-        #swagger.tags = ['File download']
-        #swagger.description = 'Download industry research pdf.'
-
-        #swagger.parameters['filename'] = {
-            in: 'query',
-            description: 'Filename about industry research pdf.',
-            required: true,
-            type: 'string',
-            schema: "投資快訊03092023-半導體產業-存貨沒意外地續揚.pdf"
-        }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
-    */
-    try {
-        res.download(config["FINANCIALDATAINDUSTRY_PATH"] + req.query.filename)
-    } catch (error) {
-        return res.status(400).send("error")
-    }
-};
-
 exports.single_post_board_memo_download = function(req, res){
     /*
         #swagger.tags = ['File download']
@@ -152,7 +128,7 @@ exports.single_twse_chPDF_download = function(req, res){
         #swagger.tags = ['File download']
         #swagger.description = 'Download twse ch pdf.'
 
-        #swagger.parameters['table_name'] = {
+        #swagger.parameters['filename'] = {
             in: 'query',
             description: 'Filename about twse ch pdf',
             required: true,
@@ -178,7 +154,7 @@ exports.single_twse_enPDF_download = function(req, res){
         #swagger.tags = ['File download']
         #swagger.description = 'Download twse en pdf.'
 
-        #swagger.parameters['table_name'] = {
+        #swagger.parameters['filename'] = {
             in: 'query',
             description: 'Filename about twse en pdf',
             required: true,

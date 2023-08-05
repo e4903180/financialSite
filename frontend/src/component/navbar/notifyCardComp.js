@@ -11,7 +11,7 @@ function NotifyCardComp(props) {
     const handleUnreadClick = useCallback((e, time) => {
         e.preventDefault()
 
-        axios.patch(config["rootApiIP"] + "/data/notify_handle_unread", {
+        axios.put(config["rootApiIP"] + "/data/notify_handle_unread", {
             time : time
         })
         .then((res) => {
@@ -25,7 +25,7 @@ function NotifyCardComp(props) {
     const handleReadClick = useCallback((e, time) => {
         e.preventDefault()
 
-        axios.patch(config["rootApiIP"] + "/data/notify_handle_read", {
+        axios.put(config["rootApiIP"] + "/data/notify_handle_read", {
             time : time
         })
         .then((res) => {

@@ -1,14 +1,12 @@
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import TickerSearchComp from '../../tickerSearchComp';
 import { AutoCom } from '../../../autoCom';
 import { config } from '../../../constant';
 import { columns_post_board_memo } from '../../column/column';
 
 function SearchBlockComp() {
-    const [dataQuantity, set_dataQuantity] = useState(0)
-    const [newestDate, set_newestDate] = useState("")
     const [input1Error, set_input1Error] = useState(false);
     const [input2, setInput2] = useState("");
     const [input3, setInput3] = useState("");
@@ -34,13 +32,13 @@ function SearchBlockComp() {
         }else{
             set_input1Error(false)
 
-            axios.post(config["rootApiIP"] + "/data/post_board_search", {
+            axios.get(config["rootApiIP"] + "/data/post_board_search", {params : {
                 "stock_num_name" : ticker,
                 "startDate" : input2,
                 "endDate" : input3,
                 "recommend" : input4,
                 "provider" : input5
-            }).then(res => {
+            }}).then(res => {
                 setData(res.data)
                 setLoading(false)
                 setPage(0)
@@ -53,20 +51,9 @@ function SearchBlockComp() {
         }
     }
 
-    useEffect(() => {
-        axios.get(config["rootApiIP"] + "/data/post_board_state")
-        .then(res => {
-            set_dataQuantity(res.data.dataQuantity)
-            set_newestDate(res.data.newestDate)
-        }).catch(res => {
-            if(res.response.data === "Session expired") window.location.reload()
-        })
-    }, [])
-
     return (
         <>
             <form className = 'mx-auto' onSubmit = { submit } style = {{ width : "70%" }}>
-                <p className = 'mt-2'>資料總筆數:{dataQuantity} 最新資料日期: {newestDate} 資料總表下載: <a href = {config["rootApiIP"] + '/data/download/post_board_memo'} download = {"post_board_memo.csv"}>點此</a></p>
 
                 <div className = 'form-group row my-2'>
                     <label htmlFor = "stockNum_or_Name" className = "col-md-2 col-form-label text-center">股票代號&名稱:</label>

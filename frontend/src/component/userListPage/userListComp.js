@@ -7,7 +7,7 @@ function UserListComp() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        axios.get(config["rootApiIP"] + "/api/data/userList")
+        axios.get(config["rootApiIP"] + "/data/userList")
         .then((res) => {
             setUsers(res.data)
         }).catch((res) => {

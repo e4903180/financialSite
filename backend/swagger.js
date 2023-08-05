@@ -44,14 +44,6 @@ const options = {
             description: "Search data from db(auth required)"
         },
         {
-            name: "Update data",
-            description: "Update data from frontend(auth required)"
-        },
-        {
-            name: "Delete data from table",
-            description: "Delete data from frontend(auth required)"
-        },
-        {
             name: "Python tool",
             description: "Controll python tool behavior(auth required)"
         },

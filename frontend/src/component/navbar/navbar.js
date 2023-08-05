@@ -125,12 +125,10 @@ function NavbarComp() {
                                     { superUser && <>
                                         <DropdownSubmenu href = "#" title = '個股研究報告編輯' alignRight>
                                             <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_upload"}>個股研究報告上傳</NavDropdown.Item>
-                                            <NavDropdown.Item href = {config["rootPathPrefix"] + "/self_edit"}>個股研究報告修改</NavDropdown.Item>
                                         </DropdownSubmenu>
 
                                         <DropdownSubmenu href = "#" title = '其他研究報告編輯' alignRight>
-                                            <NavDropdown.Item href = {config["rootPathPrefix"] + "/other_upload"}>其他產業研究報告上傳</NavDropdown.Item>
-                                            <NavDropdown.Item href = {config["rootPathPrefix"] + "/other_edit"}>其他產業研究報告修改</NavDropdown.Item>
+                                            <NavDropdown.Item href = {config["rootPathPrefix"] + "/other_upload"}>其他研究報告上傳</NavDropdown.Item>
                                         </DropdownSubmenu>
                                     </> }
     

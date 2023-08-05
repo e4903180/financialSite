@@ -69,6 +69,7 @@ class TopTicker():
                 data : (pd.DataFrame) origin data
                 top : (int) top ticker
                 recommend : (str) recommend [buy, hold, sell, interval]
+                th : (int) threshold
             
             Return :
                 ticker quantity : (Dict) 
@@ -92,8 +93,7 @@ class TopTicker():
 
         ele_quantity = temp["stock_num"].value_counts()
 
-        if recommend != "all":
-            ele_quantity = ele_quantity[ele_quantity > th]
+        ele_quantity = ele_quantity[ele_quantity > th]
         
         return ele_quantity[:top].to_dict()
 

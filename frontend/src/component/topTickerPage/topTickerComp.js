@@ -291,20 +291,18 @@ function TopTickerComp() {
                                 </select>
                             </div>
 
-                            {recommend !== "all" && <>
-                                <label htmlFor = "th" className = "col-md-3 col-form-label text-center">投資建議最低數量:</label>
-                                <div className = 'col-md-3'>
-                                    <Slider
-                                        onChange = {e => setTh(e.target.value)}
-                                        value = {th}
-                                        defaultValue = {0}
-                                        step = {1}
-                                        min = {0}
-                                        max = {50}
-                                        valueLabelDisplay = "on"
-                                    />
-                                </div>
-                            </>}
+                            <label htmlFor = "th" className = "col-md-3 col-form-label text-center">投資建議最低數量:</label>
+                            <div className = 'col-md-3'>
+                                <Slider
+                                    onChange = {e => setTh(e.target.value)}
+                                    value = {th}
+                                    defaultValue = {0}
+                                    step = {1}
+                                    min = {0}
+                                    max = {50}
+                                    valueLabelDisplay = "on"
+                                />
+                            </div>
                         </div>
 
                         <div className = 'form-group row py-3'>

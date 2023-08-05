@@ -37,14 +37,6 @@
       "description": "Search data from db(auth required)"
     },
     {
-      "name": "Update data",
-      "description": "Update data from frontend(auth required)"
-    },
-    {
-      "name": "Delete data from table",
-      "description": "Delete data from frontend(auth required)"
-    },
-    {
       "name": "Python tool",
       "description": "Controll python tool behavior(auth required)"
     },
@@ -116,33 +108,32 @@
       }
     },
     "/user/login": {
-      "post": {
+      "get": {
         "tags": [
           "User"
         ],
         "description": "User login.",
         "parameters": [
           {
-            "name": "obj",
-            "in": "body",
-            "description": "Username and password.",
+            "name": "userName",
+            "in": "query",
+            "description": "Username.",
             "required": true,
+            "type": "string",
             "schema": {
-              "type": "object",
-              "properties": {
-                "userName": {
-                  "type": "string",
-                  "example": "example_username"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "example_passord"
-                }
-              },
-              "required": [
-                "userName",
-                "password"
-              ]
+              "type": "string",
+              "example": "example_username"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Password.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "example_passord"
             }
           }
         ],
@@ -368,7 +359,7 @@
             "type": "string"
           },
           {
-            "name": "table_name",
+            "name": "filename",
             "in": "query",
             "description": "Filename about twse ch pdf",
             "required": true,
@@ -377,11 +368,6 @@
               "type": "string",
               "example": "247220230418M001.pdf"
             }
-          },
-          {
-            "name": "filename",
-            "in": "query",
-            "type": "string"
           }
         ],
         "responses": {
@@ -409,7 +395,7 @@
             "type": "string"
           },
           {
-            "name": "table_name",
+            "name": "filename",
             "in": "query",
             "description": "Filename about twse en pdf",
             "required": true,
@@ -418,11 +404,6 @@
               "type": "string",
               "example": "247220230418E001.pdf"
             }
-          },
-          {
-            "name": "filename",
-            "in": "query",
-            "type": "string"
           }
         ],
         "responses": {
@@ -458,42 +439,6 @@
             "schema": {
               "type": "string",
               "example": "SinoPac股市重大事件行事曆-04182023.PDF"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/download/single_financialDataIndustry": {
-      "get": {
-        "tags": [
-          "File download"
-        ],
-        "description": "Download industry research pdf.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "filename",
-            "in": "query",
-            "description": "Filename about industry research pdf.",
-            "required": true,
-            "type": "string",
-            "schema": {
-              "type": "string",
-              "example": "投資快訊03092023-半導體產業-存貨沒意外地續揚.pdf"
             }
           }
         ],
@@ -774,67 +719,6 @@
         }
       }
     },
-    "/data/upload/industry": {
-      "post": {
-        "tags": [
-          "File upload"
-        ],
-        "description": "Upload industry research pdf.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Industry research parameter\n   ### Middleware-This API uses multer middleware to handle upload file.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "date": {
-                  "type": "string",
-                  "example": "2023-04-19"
-                },
-                "title": {
-                  "type": "string",
-                  "example": "台積電..."
-                },
-                "category": {
-                  "type": "string",
-                  "example": "半導體"
-                },
-                "investmentCompany": {
-                  "type": "string",
-                  "example": "統一投顧"
-                },
-                "filname": {
-                  "type": "string",
-                  "example": "台積電???.pdf"
-                }
-              },
-              "required": [
-                "date",
-                "title",
-                "category",
-                "investmentCompany",
-                "filname"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/data/newestNews20": {
       "get": {
         "tags": [
@@ -897,62 +781,6 @@
           "Get data"
         ],
         "description": "Get table status.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/post_board_state": {
-      "get": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "Get post board memo table status.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/lineMemo_state": {
-      "get": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "Get line memo table status.",
         "parameters": [
           {
             "name": "swagger_token",
@@ -1059,185 +887,6 @@
         ]
       }
     },
-    "/data/calender": {
-      "get": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "Get twse data and transorm to calender type.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Twse year and month.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "year": {
-                  "type": "string",
-                  "example": "2023"
-                },
-                "month": {
-                  "type": "string",
-                  "example": "04"
-                }
-              },
-              "required": [
-                "year",
-                "month"
-              ]
-            }
-          },
-          {
-            "name": "year",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "month",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/calenderData": {
-      "post": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "Get twse data.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Twse year and month.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "year": {
-                  "type": "string",
-                  "example": "2023"
-                },
-                "month": {
-                  "type": "string",
-                  "example": "04"
-                }
-              },
-              "required": [
-                "year",
-                "month"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/ticker_list": {
-      "get": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "4 number ticker list.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/ticker_category": {
-      "get": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "Get ticker category.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "Type of ticker.",
-            "required": true,
-            "type": "string",
-            "schema": {
-              "type": "string",
-              "example": "上市"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
     "/data/popular_ticker": {
       "get": {
         "tags": [
@@ -1266,41 +915,8 @@
         ]
       }
     },
-    "/data/popular_news": {
-      "get": {
-        "tags": [
-          "Get data"
-        ],
-        "description": "Get popular news.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "interval",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
     "/data/financial_search": {
-      "post": {
+      "get": {
         "tags": [
           "Search data from db"
         ],
@@ -1312,41 +928,58 @@
             "type": "string"
           },
           {
-            "name": "obj",
-            "in": "body",
-            "description": "Filter paramter.",
+            "name": "stock_num_name",
+            "in": "query",
+            "description": "Stock num and name.",
             "required": true,
+            "type": "string",
             "schema": {
-              "type": "object",
-              "properties": {
-                "stock_num_name": {
-                  "type": "string",
-                  "example": ""
-                },
-                "startDate": {
-                  "type": "string",
-                  "example": "2023-01-01"
-                },
-                "endDate": {
-                  "type": "string",
-                  "example": "2023-04-30"
-                },
-                "investmentCompany": {
-                  "type": "string",
-                  "example": "all"
-                },
-                "recommend": {
-                  "type": "string",
-                  "example": "all"
-                }
-              },
-              "required": [
-                "stock_num_name",
-                "startDate",
-                "endDate",
-                "investmentCompany",
-                "recommend"
-              ]
+              "type": "string",
+              "example": "2330 台積電"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-04-30"
+            }
+          },
+          {
+            "name": "investmentCompany",
+            "in": "query",
+            "description": "Investment company.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "all"
+            }
+          },
+          {
+            "name": "recommend",
+            "in": "query",
+            "description": "Recommend.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "all"
             }
           }
         ],
@@ -1434,8 +1067,58 @@
         ]
       }
     },
+    "/data/calender": {
+      "get": {
+        "tags": [
+          "Search data from db"
+        ],
+        "description": "Get twse data and transorm to calender type.",
+        "parameters": [
+          {
+            "name": "swagger_token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Twse year.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "Twse month.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "04"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    },
     "/data/calender_search": {
-      "post": {
+      "get": {
         "tags": [
           "Search data from db"
         ],
@@ -1447,247 +1130,15 @@
             "type": "string"
           },
           {
-            "name": "obj",
-            "in": "body",
-            "description": "Filter paramter.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "stock_num_name": {
-                  "type": "string",
-                  "example": ""
-                },
-                "startDate": {
-                  "type": "string",
-                  "example": "2023-01-01"
-                },
-                "endDate": {
-                  "type": "string",
-                  "example": "2023-04-30"
-                }
-              },
-              "required": [
-                "stock_num_name",
-                "startDate",
-                "endDate"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/post_board_search": {
-      "post": {
-        "tags": [
-          "Search data from db"
-        ],
-        "description": "Search post_board_memo table.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Filter paramter.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "stock_num_name": {
-                  "type": "string",
-                  "example": ""
-                },
-                "startDate": {
-                  "type": "string",
-                  "example": "2023-01-01"
-                },
-                "endDate": {
-                  "type": "string",
-                  "example": "2023-04-30"
-                },
-                "provider": {
-                  "type": "string",
-                  "example": ""
-                },
-                "recommend": {
-                  "type": "string",
-                  "example": ""
-                }
-              },
-              "required": [
-                "stock_num_name",
-                "startDate",
-                "endDate",
-                "provider",
-                "recommend"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/lineMemo_search": {
-      "post": {
-        "tags": [
-          "Search data from db"
-        ],
-        "description": "Search lineMemo table.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Filter paramter.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "stock_num_name": {
-                  "type": "string",
-                  "example": ""
-                },
-                "startDate": {
-                  "type": "string",
-                  "example": "2023-01-01"
-                },
-                "endDate": {
-                  "type": "string",
-                  "example": "2023-04-30"
-                }
-              },
-              "required": [
-                "stock_num_name",
-                "startDate",
-                "endDate"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/ticker_search": {
-      "post": {
-        "tags": [
-          "Search data from db"
-        ],
-        "description": "Search 4 number ticker.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Ticker pattern.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pattern": {
-                  "type": "string",
-                  "example": "台積電"
-                }
-              },
-              "required": [
-                "pattern"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/industry_search": {
-      "get": {
-        "tags": [
-          "Search data from db"
-        ],
-        "description": "Search financialDataOther.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "column",
+            "name": "stock_num_name",
             "in": "query",
-            "description": "Search column.",
+            "description": "Stock num and name.",
             "required": true,
             "type": "string",
             "schema": {
               "type": "string",
-              "example": "title"
+              "example": "2330 台積電"
             }
-          },
-          {
-            "name": "pattern",
-            "in": "query",
-            "description": "Search column pattern.",
-            "required": true,
-            "type": "string",
-            "schema": ""
           },
           {
             "name": "startDate",
@@ -1727,12 +1178,12 @@
         ]
       }
     },
-    "/data/news_search_today": {
+    "/data/post_board_search": {
       "get": {
         "tags": [
           "Search data from db"
         ],
-        "description": "Search today news.",
+        "description": "Search post_board_memo table.",
         "parameters": [
           {
             "name": "swagger_token",
@@ -1740,25 +1191,113 @@
             "type": "string"
           },
           {
-            "name": "category",
+            "name": "stock_num_name",
             "in": "query",
-            "description": "News category.",
+            "description": "Stock num and name.",
             "required": true,
             "type": "string",
             "schema": {
               "type": "string",
-              "example": "全部"
+              "example": "2330 台積電"
             }
           },
           {
-            "name": "date",
+            "name": "startDate",
             "in": "query",
-            "description": "Date.",
+            "description": "Start date.",
             "required": true,
             "type": "string",
             "schema": {
               "type": "string",
-              "example": "2023-04-20"
+              "example": "2023-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-04-30"
+            }
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "description": "Provider.",
+            "required": true,
+            "type": "string",
+            "schema": ""
+          },
+          {
+            "name": "recommend",
+            "in": "query",
+            "description": "Recommend.",
+            "required": true,
+            "type": "string",
+            "schema": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    },
+    "/data/lineMemo_search": {
+      "get": {
+        "tags": [
+          "Search data from db"
+        ],
+        "description": "Search lineMemo table.",
+        "parameters": [
+          {
+            "name": "swagger_token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "stock_num_name",
+            "in": "query",
+            "description": "Stock num and name.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2330 台積電"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "2023-04-30"
             }
           }
         ],
@@ -1777,12 +1316,12 @@
         ]
       }
     },
-    "/data/news_search_past": {
+    "/data/ticker_search": {
       "get": {
         "tags": [
           "Search data from db"
         ],
-        "description": "Search past day news.",
+        "description": "Search 4 number ticker.",
         "parameters": [
           {
             "name": "swagger_token",
@@ -1790,38 +1329,14 @@
             "type": "string"
           },
           {
-            "name": "category",
+            "name": "pattern",
             "in": "query",
-            "description": "News category.",
-            "required": true,
-            "type": "string",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "category": {
-                  "type": "string",
-                  "example": "全部"
-                },
-                "date": {
-                  "type": "string",
-                  "example": "2023-04-20"
-                }
-              },
-              "required": [
-                "category",
-                "date"
-              ]
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "description": "Date.",
+            "description": "Ticker pattern.",
             "required": true,
             "type": "string",
             "schema": {
               "type": "string",
-              "example": "2023-04-20"
+              "example": "台積電"
             }
           }
         ],
@@ -1959,12 +1474,12 @@
         ]
       }
     },
-    "/data/financial_recommend": {
-      "patch": {
+    "/data/ticker_category": {
+      "get": {
         "tags": [
-          "Update data"
+          "Search data from db"
         ],
-        "description": "Update financialData recommend.",
+        "description": "Get ticker category.",
         "parameters": [
           {
             "name": "swagger_token",
@@ -1972,41 +1487,14 @@
             "type": "string"
           },
           {
-            "name": "obj",
-            "in": "body",
-            "description": "Update financial recommend.",
+            "name": "type",
+            "in": "query",
+            "description": "Type of ticker.",
             "required": true,
+            "type": "string",
             "schema": {
-              "type": "object",
-              "properties": {
-                "ticker_id": {
-                  "type": "string",
-                  "example": "1"
-                },
-                "filename": {
-                  "type": "string",
-                  "example": "2201_裕隆_20230420_統一投顧_買進_NULL.pdf"
-                },
-                "recommend": {
-                  "type": "string",
-                  "example": "中立"
-                },
-                "date": {
-                  "type": "string",
-                  "example": "2023-04-20"
-                },
-                "investmentCompany": {
-                  "type": "string",
-                  "example": "統一投顧"
-                }
-              },
-              "required": [
-                "ticker_id",
-                "filename",
-                "recommend",
-                "date",
-                "investmentCompany"
-              ]
+              "type": "string",
+              "example": "上市"
             }
           }
         ],
@@ -2025,12 +1513,12 @@
         ]
       }
     },
-    "/data/financial": {
-      "delete": {
+    "/data/popular_news": {
+      "get": {
         "tags": [
-          "Delete data from table"
+          "Search data from db"
         ],
-        "description": "Delete data from financialData.",
+        "description": "Get popular news.",
         "parameters": [
           {
             "name": "swagger_token",
@@ -2038,129 +1526,9 @@
             "type": "string"
           },
           {
-            "name": "obj",
-            "in": "body",
-            "description": "Ticker id.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ID": {
-                  "type": "string",
-                  "example": "1"
-                }
-              },
-              "required": [
-                "ID"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/financialDataIndustry_title": {
-      "patch": {
-        "tags": [
-          "Update data"
-        ],
-        "description": "Update financialDataOther title.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
+            "name": "interval",
+            "in": "query",
             "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Filter parameter.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "【永豐投顧】Netflix（NFLX US）：延遲打擊共享帳戶全面推出時間_20230419"
-                },
-                "date": {
-                  "type": "string",
-                  "example": "2023-04-18"
-                },
-                "investmentCompany": {
-                  "type": "string",
-                  "example": "永豐投顧"
-                },
-                "filename": {
-                  "type": "string",
-                  "example": "歐美個股點評04192023-Netflix（NFLX US ).pdf"
-                }
-              },
-              "required": [
-                "title",
-                "date",
-                "investmentCompany",
-                "filename"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/financialDataIndustry": {
-      "delete": {
-        "tags": [
-          "Delete data from table"
-        ],
-        "description": "Delete data from financialDataOther.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Ticker id.",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ID": {
-                  "type": "string",
-                  "example": "1"
-                }
-              },
-              "required": [
-                "ID"
-              ]
-            }
           }
         ],
         "responses": {
@@ -2782,33 +2150,51 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Support resistance strategy param.",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "stockNum": {
-                  "example": "any"
+                "stock_num": {
+                  "type": "string",
+                  "example": "2330"
                 },
                 "startDate": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2023-08-05"
                 },
                 "endDate": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2023-08-06"
                 },
                 "maLen": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "20"
                 },
                 "maType": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "sma"
                 },
                 "method": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "method1"
                 },
                 "alertCondition": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "突破天花板線"
                 }
-              }
+              },
+              "required": [
+                "stock_num",
+                "startDate",
+                "endDate",
+                "maLen",
+                "maType",
+                "method",
+                "alertCondition"
+              ]
             }
           }
         ],
@@ -2843,24 +2229,36 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Pricing strategy param.",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "stockNum": {
-                  "example": "any"
+                "stock_num": {
+                  "type": "string",
+                  "example": "2330"
                 },
                 "startYear": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "10"
                 },
                 "endDate": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2023-08-06"
                 },
                 "alertCondition": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "低於便宜價"
                 }
-              }
+              },
+              "required": [
+                "stock_num",
+                "startYear",
+                "endDate",
+                "alertCondition"
+              ]
             }
           }
         ],
@@ -2895,21 +2293,31 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Per river strategy param.",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "stockNum": {
-                  "example": "any"
+                "stock_num": {
+                  "type": "string",
+                  "example": "2330"
                 },
                 "endDate": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2023-08-06"
                 },
                 "alertCondition": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "低於便宜價"
                 }
-              }
+              },
+              "required": [
+                "stock_num",
+                "endDate",
+                "alertCondition"
+              ]
             }
           }
         ],
@@ -2931,45 +2339,28 @@
         ]
       }
     },
-    "/data/all_notify": {
+    "/data/notify": {
       "get": {
         "tags": [
           "Notify"
         ],
-        "description": "Get user all notify.",
+        "description": "Get user notify.",
         "parameters": [
           {
             "name": "swagger_token",
             "in": "header",
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
           {
-            "apiAuth": []
-          }
-        ]
-      }
-    },
-    "/data/readed_notify": {
-      "get": {
-        "tags": [
-          "Notify"
-        ],
-        "description": "Get user all readed notify.",
-        "parameters": [
-          {
-            "name": "swagger_token",
-            "in": "header",
-            "type": "string"
+            "name": "readed",
+            "in": "query",
+            "description": "Readed.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
           }
         ],
         "responses": {
@@ -2988,7 +2379,7 @@
       }
     },
     "/data/notify_handle_read": {
-      "patch": {
+      "put": {
         "tags": [
           "Notify"
         ],
@@ -3034,7 +2425,7 @@
       }
     },
     "/data/notify_handle_unread": {
-      "patch": {
+      "put": {
         "tags": [
           "Notify"
         ],

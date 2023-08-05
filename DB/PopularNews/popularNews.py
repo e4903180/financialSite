@@ -62,17 +62,6 @@ class PopularNews():
         result = result.sort_values(by = ["stock_name"], ascending = False, key = lambda x: x.str.len())
 
         return result
-    
-    def _get_ticker_id(self, stock_num : str):
-        query = "SELECT ID FROM ticker_list WHERE stock_num=%s"
-        param = (stock_num,)
-
-        self._cursor.execute(query, param)
-        self._db.commit()
-
-        result = pd.DataFrame.from_dict(self._cursor.fetchall())
-        
-        return result["ID"][0]
 
     def _handle_news(self, interval : str) -> None:
         result = defaultdict(list)

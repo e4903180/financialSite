@@ -438,7 +438,7 @@ class ExtractPdfRate():
                     rate_2 = page.get_text(clip=clip_new_report_2, sort=True).strip()
         rate = self._check_rate(rate_1, rate_2, possible_rate)
         # '立'因unicode不同有時會造成無法壓縮的錯誤
-        if ((type(rate[-1]) == "unicode") and
+        if ((type(rate) == "unicode") and
             ("中" in rate)):
             rate = "中立"
         return rate

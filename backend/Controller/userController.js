@@ -6,19 +6,24 @@ exports.login = async function(req, res){
         #swagger.tags = ['User']
         #swagger.description = 'User login.'
 
-        #swagger.parameters['obj'] = {
-            in: 'body',
-            description: 'Username and password.',
+        #swagger.parameters['userName'] = {
+            in: 'query',
+            description: 'Username.',
             required: true,
-            type: 'object',
-            schema: {
-                $userName: "example_username",
-                $password: "example_passord",
-            }
+            type: 'string',
+            schema: "example_username"
+        }
+
+        #swagger.parameters['password'] = {
+            in: 'query',
+            description: 'Password.',
+            required: true,
+            type: 'string',
+            schema: "example_passord"
         }
     */
-    var userName = req.body.userName
-    var password = req.body.password
+    var userName = req.query.userName
+    var password = req.query.password
     let query = `SELECT password FROM user WHERE userName=?`
     let param = [userName]
 

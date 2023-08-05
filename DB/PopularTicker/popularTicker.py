@@ -15,6 +15,14 @@ class PopularTicker():
         self._cursor = self._db.cursor()
 
     def _get_financialData(self, day_delta : int) -> pd.DataFrame:
+        """Get financialData
+
+            Args :
+                day_delta : (int) time interval
+            
+            Return :
+                pd.DataFrame
+        """
         start_date = (datetime.now() - timedelta(days = day_delta)).strftime("%Y-%m-%d")
 
         query = "SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.ID, \
@@ -29,6 +37,14 @@ class PopularTicker():
         return result.sort_values(by = ['stock_num', 'date'])
     
     def _get_news(self, day_delta : int) -> pd.DataFrame:
+        """Get news data
+
+            Args :
+                day_delta : (int) time interval
+            
+            Return :
+                pd.DataFrame
+        """
         start_date = (datetime.now() - timedelta(days = day_delta)).strftime("%Y-%m-%d")
 
         query = "SELECT * FROM news WHERE date>=%s"
@@ -52,7 +68,7 @@ class PopularTicker():
         """Filter origin financial data
 
             Args :
-                data : (pd.DataFrame) origin data
+                data : (pd.DataFrame) origin financial data
                 top : (int) top ticker
             
             Return :
@@ -63,6 +79,16 @@ class PopularTicker():
         return data["stock_name"].value_counts()[:top].to_dict()
     
     def _calculate_popular_ticker(self, financialData : pd.DataFrame, news : pd.DataFrame, popular_ticker_list : Dict) -> Dict:
+        """Calculate popular ticker
+
+            Args :
+                financialData : (pd.DataFrame) financialData
+                news : (pd.DataFrame) news data
+                popular_ticker_list : (Dict) popular ticker
+            
+            Return :
+                Dict
+        """
         result = {}
 
         # Filter raw financialData about popular ticker
@@ -116,20 +142,44 @@ class PopularTicker():
         return result["ID"][0]
 
     def _truncate_table(self) -> None:
+        """Clear table
+
+            Args :
+                None
+
+            Return :
+                None
+        """
         query = "TRUNCATE TABLE popular_ticker"
         self._cursor.execute(query)
         self._db.commit()
     
-    def _insert(self, foreign_id : int, financialData : Dict, news : Dict) -> None:
+    def _insert(self, ticker_id : int, financialData : Dict, news : Dict) -> None:
+        """Insert data to db
+
+            Args :
+                ticker_id : (int) ticker id
+                financialData : (Dict) financialData
+                news : (Dict) news data
+
+            Return :
+                None
+        """
         query = "INSERT INTO popular_ticker(ticker_id, financialData, news) VALUES (%s, %s, %s)"
-        param = (foreign_id, json.dumps(financialData), json.dumps(news))
+        param = (ticker_id, json.dumps(financialData), json.dumps(news))
 
         self._cursor.execute(query, param)
         self._db.commit()
 
-    def _update_2_sql(self, data : Dict) -> None:
-        self._truncate_table()
+    def _update_2_db(self, data : Dict) -> None:
+        """Update data to db
 
+            Args :
+                data : (Dict) result
+            
+            Return :
+                None
+        """
         for key in data:
             foreign_id = self._get_foreign_key_id(key)
 
@@ -139,6 +189,17 @@ class PopularTicker():
             self._insert(foreign_id, data[key]["financialData"], data[key]["news"])
 
     def run(self, day_delta : int = 30, top : int = 10) -> None:
+        """Run
+
+            Args :
+                day_delta : (int) time interval
+                top : (int) top ticker
+            
+            Return :
+                None
+        """
+        self._truncate_table()
+        
         day_delta = int(day_delta)
         top = int(top)
 
@@ -148,7 +209,7 @@ class PopularTicker():
         popular_ticker_list = self._filter_popular_from_financialData(financialData, top)
         result = self._calculate_popular_ticker(financialData, news, popular_ticker_list)
 
-        self._update_2_sql(result)
+        self._update_2_db(result)
 
 if __name__ == "__main__":
     popular_ticker = PopularTicker()

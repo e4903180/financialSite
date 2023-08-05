@@ -1,5 +1,4 @@
 import pandas as pd
-import sys
 import twstock
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service

@@ -1,0 +1,1 @@
+exports.HandleNotifyQuantityTimeInterval = 1 * 0.5 * 1000

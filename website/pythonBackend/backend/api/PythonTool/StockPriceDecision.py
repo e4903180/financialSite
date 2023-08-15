@@ -8,18 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
-
-class Selenium():
-    """Create selenium object
-
-    """
-    def __init__(self) -> None:
-        options = webdriver.ChromeOptions()
-        options.add_argument("--disable-notifications")
-        options.add_argument("headless")
-        s = Service(ChromeDriverManager().install())
-        self.chrome = webdriver.Chrome(options = options,service = s)
-
+from abc import abstractmethod
 
 class TableDataBase():
     """Data type
@@ -29,9 +18,14 @@ class TableDataBase():
         self.cheap = 0.0
         self.reasonable = 0.0
         self.expensive = 0.0
-
+    
+    @abstractmethod
+    def run(self) -> None:
+        raise NotImplementedError("run not implement")
 
 class RealTimePrice():
+    """Get realtime price
+    """
     def __init__(self) -> None:
         self.price_now = 0.0
         self.lose_val = False
@@ -45,9 +39,17 @@ class RealTimePrice():
         return round(price, 2)
 
 
-class CrawlerData(Selenium):
+class CrawlerData():
+    """Crawler data throw 
+        https://goodinfo.tw/StockInfo/StockBzPerformance.asp
+    """
     def __init__(self, ticker) -> None:
-        super().__init__()
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-notifications")
+        options.add_argument("headless")
+        s = Service(ChromeDriverManager().install())
+        self.chrome = webdriver.Chrome(options = options, service = s)
+
         self.per_pbr = None
         self.dividend = None
         self.ticker = ticker
@@ -57,9 +59,7 @@ class CrawlerData(Selenium):
         select_form = Select(self.chrome.find_element(by = By.CSS_SELECTOR, value = 'body > table:nth-child(8) > tbody > tr > td:nth-child(3) > table.b1.r10_0 > tbody > tr > td > table > tbody > tr > td:nth-child(1) > nobr:nth-child(1) > select'))
         select_form.select_by_index(3)
         time.sleep(2)
-        self._dividend_preprocessing()
 
-    def _dividend_preprocessing(self) -> None:
         form = self.chrome.find_element(by = By.ID, value = 'txtFinDetailData')
         self.dividend = pd.read_html(form.get_attribute('innerHTML'), header = 3)[0]
 
@@ -69,16 +69,13 @@ class CrawlerData(Selenium):
                 self.dividend.drop(i, inplace = True)
 
         self.dividend.reset_index(drop = True, inplace = True)
-
+        
     def _get_per_pbr(self) -> None:
         self.chrome.get("https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID=%s"%(self.ticker))
         select_form = Select(self.chrome.find_element(by = By.CSS_SELECTOR, value = 'body > table:nth-child(8) > tbody > tr > td:nth-child(3) > table.b1.r10_0 > tbody > tr > td > table > tbody > tr > td:nth-child(1) > nobr:nth-child(1) > select'))
         select_form.select_by_index(2)
         time.sleep(2)
 
-        self._per_pbr_preprocessing()
-
-    def _per_pbr_preprocessing(self) -> None:
         form = self.chrome.find_element(by = By.ID, value = 'txtFinDetailData')
         self.per_pbr = pd.read_html(form.get_attribute('innerHTML'), header = 1)[0]
 
@@ -99,23 +96,11 @@ class Dividend(TableDataBase):
         self.dividend = None
         self.dividend_table_json = None
         self.year = int(year)
-    
-    def _dividend_preprocessing(self) -> None:
+
+    def run(self) -> None:
         self.dividend = self.dividend_table["股利 合計"][2:self.year+1]
         self.dividend.reset_index(drop = True, inplace = True)
 
-    def _calculate(self) -> None:
-        if "-" in self.dividend.to_list():
-            self.lose_val = True
-        else:
-            self.dividend = self.dividend.astype(float)
-            dividend_avg = self.dividend.mean()
-
-            self.cheap = round(dividend_avg * 16, 2)
-            self.reasonable = round(dividend_avg * 20, 2)
-            self.expensive = round(dividend_avg * 32, 2)
-
-    def _handle_table_data(self) -> None:
         dividend_table_name = []
         dividend_table_name.append("ID")
         dividend_table_name.extend([str(x) for x in range(1, 8)])
@@ -125,11 +110,16 @@ class Dividend(TableDataBase):
         temp_dividend_table.reset_index(drop = True, inplace = True)
         temp_dividend_table = temp_dividend_table.set_axis(dividend_table_name, axis = 1, inplace = False)
         self.dividend_table_json = temp_dividend_table[:self.year].to_dict(orient = 'records')
-    
-    def run(self):
-        self._dividend_preprocessing()
-        self._handle_table_data()
-        self._calculate()
+
+        if "-" in self.dividend.to_list():
+            self.lose_val = True
+        else:
+            self.dividend = self.dividend.astype(float)
+            dividend_avg = self.dividend.mean()
+
+            self.cheap = round(dividend_avg * 16, 2)
+            self.reasonable = round(dividend_avg * 20, 2)
+            self.expensive = round(dividend_avg * 32, 2)
 
 
 class Price(TableDataBase):
@@ -142,7 +132,7 @@ class Price(TableDataBase):
         self.price_avg = None
         self.year = int(year)
 
-    def _price_preprocessing(self) -> None:
+    def run(self):
         self.price_high = self.price_table["最高"][2:self.year+1]
         self.price_high.reset_index(drop = True, inplace = True)
 
@@ -151,8 +141,7 @@ class Price(TableDataBase):
 
         self.price_avg = self.price_table["平均"][2:self.year+1]
         self.price_avg.reset_index(drop = True, inplace = True)
-    
-    def _handle_table_data(self) -> None:
+
         price_table_name = []
         price_table_name.append("ID")
         price_table_name.extend([str(x) for x in range(1, 5)])
@@ -163,7 +152,6 @@ class Price(TableDataBase):
         temp_price_table = temp_price_table.set_axis(price_table_name, axis = 1, inplace = False)
         self.price_table_json = temp_price_table[:self.year].to_dict(orient = 'records')
 
-    def _calculate(self) -> None:
         if ("-" in self.price_high.to_list()) or ("-" in self.price_low.to_list()) or ("-" in self.price_avg.to_list()):
             self.lose_val = True
         else:
@@ -174,11 +162,6 @@ class Price(TableDataBase):
             self.cheap = round(self.price_low.mean(), 2)
             self.reasonable = round(self.price_avg.mean(), 2)
             self.expensive = round(self.price_high.mean(), 2)
-
-    def run(self):
-        self._price_preprocessing()
-        self._handle_table_data()
-        self._calculate()
 
 
 class Per(TableDataBase):
@@ -192,7 +175,7 @@ class Per(TableDataBase):
         self.EPS = None
         self.year = int(year)
     
-    def _per_preprocessing(self) -> None:
+    def run(self):
         self.PER_high = self.PER_table["最高 PER"][2:self.year+1]
         self.PER_high.reset_index(drop = True, inplace = True)
 
@@ -205,7 +188,6 @@ class Per(TableDataBase):
         self.EPS = self.PER_table["EPS (元)"][2:self.year+1]
         self.EPS.reset_index(drop = True, inplace = True)
 
-    def _handle_table_data(self) -> None:
         PER_table_name = []
         PER_table_name.append("ID")
         PER_table_name.extend([str(x) for x in range(1, 5)])
@@ -216,7 +198,6 @@ class Per(TableDataBase):
         temp_PER_table = temp_PER_table.set_axis(PER_table_name, axis = 1, inplace = False)
         self.PER_table_json = temp_PER_table[:self.year].to_dict(orient = 'records')
 
-    def _calculate(self) -> None:
         if (("-" in self.EPS.to_list()) or ("-" in self.PER_high.to_list()) or
             ("-" in self.PER_low.to_list()) or ("-" in self.PER_avg.to_list())):
             self.lose_val = True
@@ -230,11 +211,6 @@ class Per(TableDataBase):
             self.cheap = round(self.PER_low.mean() * ((EPS_1year + EPS_xyear) / 2), 2)
             self.reasonable = round(self.PER_avg.mean() * ((EPS_1year + EPS_xyear) / 2), 2)
             self.expensive = round(self.PER_high.mean() * ((EPS_1year + EPS_xyear) / 2), 2)
-    
-    def run(self):
-        self._per_preprocessing()
-        self._handle_table_data()
-        self._calculate()
 
 
 class Pbr(TableDataBase):
@@ -249,7 +225,7 @@ class Pbr(TableDataBase):
         self.PBR_avg = None
         self.year = int(year)
     
-    def _pbr_preprocessing(self) -> None:
+    def run(self) -> None:
         self.PBR_high = self.PBR_table["最高 PBR"][2:self.year+1]
         self.PBR_high.reset_index(drop = True, inplace = True)
 
@@ -263,7 +239,6 @@ class Pbr(TableDataBase):
         self.BPS_now = self.PBR_table["BPS (元)"][1]
         self.BPS.reset_index(drop = True, inplace = True)
 
-    def _handle_table_data(self) -> None:
         PBR_table_name = []
         PBR_table_name.append("ID")
         PBR_table_name.extend([str(x) for x in range(1, 5)])
@@ -273,7 +248,6 @@ class Pbr(TableDataBase):
         temp_PBR_table = temp_PBR_table.set_axis(PBR_table_name, axis = 1, inplace = False)
         self.PBR_table_json = temp_PBR_table[:self.year].to_dict(orient = 'records')
 
-    def _calculate(self) -> None:
         if ((self.BPS_now == "-") or ("-" in self.PBR_high.to_list()) or
             ("-" in self.PBR_low.to_list()) or ("-" in self.PBR_avg.to_list())):
             self.lose_val = True
@@ -286,20 +260,31 @@ class Pbr(TableDataBase):
             self.reasonable = round(self.PBR_avg.mean() * self.BPS_now, 2)
             self.expensive = round( self.PBR_high.mean() * self.BPS_now, 2)
 
-    def run(self):
-        self._pbr_preprocessing()
-        self._handle_table_data()
-        self._calculate()
 
+class PricingStrategy():
+    """Pricing strategy
 
-class PricingStrategy(RealTimePrice, CrawlerData, Dividend, Price, Per, Pbr):
+        Args :
+            ticker : (str) ticker
+            year : (str) year
+    """
     def __init__(self, ticker : str, year : str) -> None:
         self.ticker = ticker
         self.year = year
         self.RTP = RealTimePrice()
         self.CD = CrawlerData(ticker)
 
-    def _handle_interval(self, result : Dict, strategy_object, max_value : float) -> None:
+    def _handle_interval(self, result : Dict, strategy_object : object, max_value : float) -> None:
+        """Handle result to bar type
+
+            Args :
+                result : (Dict) result
+                strategy_object : (object) strategy object
+                max_value : (float) max value
+
+            Return:
+                None
+        """
         if(strategy_object.lose_val):
             result["down_cheap"].append(0.0)
             result["cheap_reasonable"].append(0.0)
@@ -312,8 +297,17 @@ class PricingStrategy(RealTimePrice, CrawlerData, Dividend, Price, Per, Pbr):
             result["up_expensive"].append(round(max_value - strategy_object.expensive, 2))
 
     def run(self) -> Dict:
+        """Run
+
+            Args :
+                None
+            Return :
+                Dict
+        """
+        # crawler data
         self.CD.get_data()
         
+        # run different strategy
         dividend_strategy = Dividend(self.CD.dividend, self.year)
         price_strategy = Price(self.CD.per_pbr, self.year)
         per_strategy = Per(self.CD.per_pbr, self.year)

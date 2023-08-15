@@ -34,7 +34,7 @@ class TopTicker():
             Return :
                 result : (pd.DataFrame) result of query 
         """
-        query = f"SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.ID, \
+        query = "SELECT ticker_list.stock_num, ticker_list.stock_name, ticker_list.class, financialData.ID, \
                 financialData.date, financialData.investmentCompany, financialData.filename, financialData.recommend,\
                 financialData.remark FROM financialData INNER JOIN ticker_list ON financialData.ticker_id = ticker_list.ID \
                 WHERE date BETWEEN %s AND %s ORDER BY date"
@@ -177,10 +177,10 @@ class TopTicker():
         return self._recommend_distribution(data, top_ticker_list)
 
 if __name__ == "__main__":
-    db_config = json.load(open("../../../db_config.json"))
+    db_config = json.load(open("../../../../../../db_config.json"))
 
     db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
-                                    db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
+                            db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)
     cursor = db.cursor()
 
     top_ticker = TopTicker(db, cursor)

@@ -160,7 +160,7 @@ class TwseFinancialData:
         return self._calculate(twse, financialData, twse["stock_name"].unique())
 
 if __name__ == "__main__":
-    db_config = json.load(open("../../db_config.json"))
+    db_config = json.load(open("../../../../../../db_config.json"))
 
     db = MySQLdb.connect(host = db_config["HOST"], user = db_config["USER"], passwd = db_config["PASSWD"],
                                     db = "financial", charset = "utf8", cursorclass = MySQLdb.cursors.DictCursor)

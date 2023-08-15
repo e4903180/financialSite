@@ -79,8 +79,6 @@ def support_resistance_strategy(request):
                                    request.query_params.get("ma_type"),
                                    int(request.query_params.get("maLen")))
             
-            SR.get_data_yfinance()
-            
             return JsonResponse(SR.run(request.query_params.get("method")), status = status.HTTP_200_OK)
         except Exception as e:
             print("error: " + str(e))

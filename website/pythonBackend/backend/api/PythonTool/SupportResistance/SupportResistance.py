@@ -213,9 +213,18 @@ class Method3(MethodBase):
         }
 
 
-class SupportResistance(Method1, Method2, Method3):
+class SupportResistance():
     """Calculate support resistance
 
+        Args :
+            stock_num : (str) ticker
+            start_date : (str) start date
+            ma_type : (str) ma type
+            ma_len : (int) ma len
+            method : (str) method
+
+        Return:
+            Dict
     """
 
     def __init__(self, stock_num : str, start_date : str, ma_type : str, ma_len : int) -> None:
@@ -230,16 +239,16 @@ class SupportResistance(Method1, Method2, Method3):
         self._start_date = start_date
         self._ma_type = ma_type
 
-    def get_data_yfinance(self) -> None:
+    def _get_data_yfinance(self) -> None:
         """Get data from yahoo finance
 
-        Use yahoo finance api to get data.
+            Use yahoo finance api to get data.
 
-        Args:
-            None
-        
-        Returns:
-            None
+            Args:
+                None
+            
+            Returns:
+                None
         """
 
         self._row_data = yf.download(self._stock_num + ".TWO", start = self._start_date, progress = False, show_errors = False)
@@ -274,10 +283,11 @@ class SupportResistance(Method1, Method2, Method3):
 
             Args:
                 method : (str) method
-                type : (str) highcart or alert
             Retuen:
                 result : (Dict) result of the support resistance
         """
+        self._get_data_yfinance()
+
         if method == "method1":
             result = Method1.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 

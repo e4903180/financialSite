@@ -31,7 +31,6 @@ class SupportResistanceHandler():
         content = row_data["content"].split("_")
         SR = SupportResistance(row_data["stock_num"], content[0][7:], content[1][2:], int(content[1][:2]))
 
-        SR.get_data_yfinance()
         result = SR.run(content[-1])
 
         if content[-1] == "method1":

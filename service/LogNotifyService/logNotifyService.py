@@ -14,7 +14,7 @@ class LogNotifyService():
 
             Args :
                 subject : (str) subject of email
-                log_path : (str) log path
+                error_message : (str) error message
 
             Return :
                 None

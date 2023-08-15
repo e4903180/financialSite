@@ -102,6 +102,15 @@ class PerRiver():
             self.evaluate["evaluate"] = "評價: 目前價格(" + str(self.realtime_price) + ") > 昂貴價(" + str(self.evaluate["expensive"]) + ")"
 
     def run(self, ticker : str, period : str) -> Dict:
+        """Run
+
+            Args :
+                ticker : (str) ticker
+                period : (str) interval
+                
+            Return:
+                Dict
+        """
         self._get_realtime_price(ticker)
         self._get_EPS(ticker, period)
         self._get_Kline(ticker, period)

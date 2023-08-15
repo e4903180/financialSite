@@ -121,7 +121,7 @@ class AlertService():
         content.add_header('content-disposition', 'attachment')
         content.attach(pdf_attach)
 
-        self._GS.send_mail(content)
+        self._GS.create_smtp(content)
 
     def _send_by_line(self, filename : str, username : str, userId : str) -> None:
         """Send the analysis research through line service

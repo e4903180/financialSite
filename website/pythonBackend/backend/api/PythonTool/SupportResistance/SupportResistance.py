@@ -228,8 +228,6 @@ class SupportResistance():
     """
 
     def __init__(self, stock_num : str, start_date : str, ma_type : str, ma_len : int) -> None:
-        super().__init__()
-
         self._ma, self._volume = [[] for i in range(2)]
         self._table_data = {}
         self._row_data = None
@@ -289,12 +287,12 @@ class SupportResistance():
         self._get_data_yfinance()
 
         if method == "method1":
-            result = Method1.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
+            result = Method1().detect(self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 
         elif method == "method2":
-            result = Method2.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
+            result = Method2().detect(self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 
         elif method == "method3":
-            result = Method3.detect(self, self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
+            result = Method3().detect(self._row_data, self._volume, self._ma, self._ma_len, self._table_data)
 
         return result

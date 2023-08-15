@@ -87,10 +87,6 @@ exports.single_line_memo_download = function(req, res){
             type: 'string',
             schema: "8210_勤誠_2023-02-07_16_59_11.txt"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     try {
         res.download(config["LINE_MEMO_PATH"] + req.query.filename)
@@ -111,10 +107,6 @@ exports.table_status = async function(req, res){
             type: 'string',
             schema: "news.csv"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     try {
         res.download(config["CSV_PATH"] + req.query.table_name)
@@ -135,10 +127,6 @@ exports.single_twse_chPDF_download = function(req, res){
             type: 'string',
             schema: "247220230418M001.pdf"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     const filename = req.query.filename;
     
@@ -161,10 +149,6 @@ exports.single_twse_enPDF_download = function(req, res){
             type: 'string',
             schema: "247220230418E001.pdf"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     const filename = req.query.filename;
     

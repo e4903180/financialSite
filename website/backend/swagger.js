@@ -59,10 +59,15 @@ const options = {
     securityDefinitions : {
         apiAuth: {
             type : "apiKey",
-            in : "header",
+            in : "query",
             name : "swagger_token"
         }
-    }
+    },
+    security : [
+        {
+            apiAuth : []
+        }
+    ]
 }
 
 swaggerAutogen(outputFile, endpointsFiles, options);

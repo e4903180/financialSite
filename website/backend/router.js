@@ -12,7 +12,7 @@ const Notify = require('./Controller/notifyController');
 const Sub = require('./Controller/subController');
 const dbSearch = require('./Controller/dbSearchController');
 const FilterTicker = require('./Controller/filterTickerController');
-const StockTool = require('./Controller/stockToolContrtoller');
+const StockTool = require('./Controller/stockToolController');
 const PostUp = require('./Controller/upload/uploadPostBoardMemoController');
 const LineMemoUp = require('./Controller/upload/uploadLinememoController');
 const SelfUp = require('./Controller/upload/uploadFinancialDataController');
@@ -43,12 +43,16 @@ userRouter.post('/register', User.register)
 userRouter.get("/logout", User.logout)
 
 dataRouter.use(function (req, res, next) {
-    if("swagger_token" in req.headers){
-        const decoded = jwt.verify(req.headers["swagger_token"], "secret")
+    if("swagger_token" in req.query){
+        try {
+            const decoded = jwt.verify(req.query["swagger_token"], "secret")
 
-        if((decoded["username"] !== "swagger") ||
-            (!bcrypt.compareSync(decoded["password"], swagger_password))){
+            if((decoded["username"] !== "swagger") ||
+                (!bcrypt.compareSync(decoded["password"], swagger_password))){
 
+                return res.status(400).send('Token expired')
+            }
+        } catch (error) {
             return res.status(400).send('Token expired')
         }
         
@@ -68,8 +72,20 @@ dataRouter.get("/isAuth", function(req, res){
         #swagger.tags = ['Authenticate check']
         #swagger.description = 'Check if user have auth.'
     */
-    if("swagger_token" in req.headers){
-        return res.status(200).send("Token available")
+    if("swagger_token" in req.query){
+        try {
+            const decoded = jwt.verify(req.query["swagger_token"], "secret")
+
+            if((decoded["username"] !== "swagger") ||
+                (!bcrypt.compareSync(decoded["password"], swagger_password))){
+
+                return res.status(400).send('Token expired')
+            }
+
+            return res.status(200).send('Token available')
+        } catch (error) {
+            return res.status(400).send('Token expired')
+        }
     }
 
     return res.status(200).send(req.session.userName)

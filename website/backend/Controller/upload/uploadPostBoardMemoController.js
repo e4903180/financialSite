@@ -71,8 +71,7 @@ exports.post_board_upload = async function(req, res){
     
     query = "INSERT INTO `post_board_memo` (`ticker_id`, `username`, `date`, `evaluation`, \
             `price`, `reason`, `filename`) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    param = [key, username, date, evaluation,
-            price, reason, filename]
+    param = [key, username, date, evaluation, price, reason, filename]
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

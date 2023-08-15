@@ -22,10 +22,6 @@ exports.pricingData = async function(req, res){
             type: 'string',
             schema: "10"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */  
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/PricingStrategy", {
@@ -53,10 +49,6 @@ exports.PER_river_Data = async function(req, res){
             type: 'string',
             schema: "2330"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/PER_River", {
@@ -116,10 +108,6 @@ exports.support_resistance_data = async function(req, res){
             type: 'string',
             schema: "method1"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/SupportResistanceStrategy", {
@@ -155,10 +143,6 @@ exports.inflation = async function(req, res){
     /*
         #swagger.tags = ['Python tool']
         #swagger.description = 'Inflation.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/inflation")
@@ -238,12 +222,8 @@ exports.top_ticker = async function(req, res){
             description: 'Top ticker parameter.',
             required: true,
             type: 'string',
-            schema: "all"
+            schema: "10"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     try {
         result = await axios.get(config["DJANGO_REST_IP"] + "/top_ticker", {
@@ -300,10 +280,6 @@ exports.twse_financialData = async function(req, res){
             type: 'string',
             schema: "2023-07-18",
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
 
     try {

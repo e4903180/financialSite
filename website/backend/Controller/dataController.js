@@ -5,10 +5,6 @@ exports.newestResearch20 = async function(req, res){
     /*
         #swagger.tags = ['Get data']
         #swagger.description = 'Get newest 20 ticker research.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = "SELECT financialData.*, ticker_list.stock_name \
                 FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID ORDER BY \
@@ -30,10 +26,6 @@ exports.newestNews20 = async function(req, res){
     /*
         #swagger.tags = ['Get data']
         #swagger.description = 'Get newest 20 news.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT date, title, link FROM news WHERE category LIKE "%工商時報%" ORDER BY date DESC LIMIT 20;\
                 SELECT date, title, link FROM news WHERE category LIKE "%MoneyDj%" ORDER BY date DESC LIMIT 20;\
@@ -91,10 +83,6 @@ exports.table_status = async function(req, res){
     /*
         #swagger.tags = ['Get data']
         #swagger.description = 'Get table status.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = "SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM news;\
                 SELECT COUNT(*) as dataQuantity, MAX(date) as newestDate FROM calender;\
@@ -127,10 +115,6 @@ exports.superUser = async function(req, res){
     /*
         #swagger.tags = ['Get data']
         #swagger.description = 'Check if user is super user.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = "SELECT superUser FROM user WHERE userName=?"
     let param = [req.session.userName]
@@ -148,10 +132,6 @@ exports.userList = async function(req, res){
     /*
         #swagger.tags = ['Get data']
         #swagger.description = 'Get user list.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = "SELECT name, userName, email FROM user"
 
@@ -176,9 +156,7 @@ exports.username = async function(req, res){
         #swagger.tags = ['Get data']
         #swagger.description = 'Get username.'
 
-        #swagger.security = [{
-            "apiAuth": []
-        }]
+        
     */
     return res.status(200).send(req.session.userName)
 }
@@ -188,9 +166,7 @@ exports.popular_ticker = async function(req, res){
         #swagger.tags = ['Get data']
         #swagger.description = 'Get popular ticker.'
 
-        #swagger.security = [{
-            "apiAuth": []
-        }]
+        
     */
     let query = "SELECT popular_ticker.*, ticker_list.stock_name, ticker_list.stock_num FROM popular_ticker \
                 INNER JOIN ticker_list ON popular_ticker.ticker_id=ticker_list.ID"

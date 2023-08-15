@@ -44,10 +44,6 @@ exports.financial_search = async function(req, res){
             type: 'string',
             schema: "all"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT financialData.*, ticker_list.stock_name, ticker_list.stock_num \
                 FROM financialData INNER JOIN ticker_list ON financialData.ticker_id=ticker_list.ID \
@@ -164,7 +160,6 @@ exports.post_board_search = async function(req, res){
         #swagger.parameters['provider'] = {
             in: 'query',
             description: 'Provider.',
-            required: true,
             type: 'string',
             schema: ""
         }
@@ -172,14 +167,9 @@ exports.post_board_search = async function(req, res){
         #swagger.parameters['recommend'] = {
             in: 'query',
             description: 'Recommend.',
-            required: true,
             type: 'string',
             schema: ""
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT post_board_memo.*, ticker_list.stock_name, ticker_list.stock_num \
                 FROM post_board_memo INNER JOIN ticker_list ON post_board_memo.ticker_id=ticker_list.ID WHERE 1=1`
@@ -244,10 +234,6 @@ exports.lineMemo_search = async function(req, res){
             type: 'string',
             schema: "2023-04-30"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT lineMemo.*, ticker_list.stock_name, ticker_list.stock_num \
                 FROM lineMemo INNER JOIN ticker_list ON lineMemo.ticker_id=ticker_list.ID WHERE 1=1`
@@ -293,10 +279,6 @@ exports.calender = async function(req, res){
             type: 'string',
             schema: "04"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = "SELECT stock_name, date, Time FROM calender \
                 INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE year(date)=? AND month(date)=? ORDER BY date ASC, Time ASC, stock_name ASC;"
@@ -350,10 +332,6 @@ exports.calender_search = async function(req, res){
             type: 'string',
             schema: "2023-04-30"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT calender.*, ticker_list.stock_name\
                 from calender INNER JOIN ticker_list ON calender.ticker_id=ticker_list.ID WHERE 1=1`
@@ -392,10 +370,6 @@ exports.ticker_search = async function(req, res){
             type: 'string',
             schema: "台積電"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     if(req.query.pattern === ""){
         res.status(200).json({})
@@ -457,10 +431,6 @@ exports.news_search = async function(req, res){
             type: 'string',
             schema: "2023-04-30"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT * FROM news WHERE 1=1`
     let param = []
@@ -508,10 +478,6 @@ exports.news_summary = async function(req, res){
             type: 'string',
             schema: "2023-04-20",
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT COUNT(*) as todayQuantity FROM news WHERE date=?;\
                 SELECT category, COUNT(category) as todayQuantity FROM news WHERE date=? GROUP BY category ORDER BY category;\
@@ -599,10 +565,6 @@ exports.other_search = async function(req, res){
             type: 'string',
             schema: "all",
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = "SELECT * FROM financialDataOther WHERE 1=1"
     let param = []
@@ -646,10 +608,6 @@ exports.ticker_category = async function(req, res){
             type: 'string',
             schema: "上市"
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = ""
 
@@ -674,10 +632,6 @@ exports.popular_news = async function(req, res){
     /*
         #swagger.tags = ['Search data from db']
         #swagger.description = 'Get popular news.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let mapping = {
         "3days" : 3,

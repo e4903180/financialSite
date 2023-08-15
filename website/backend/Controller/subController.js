@@ -20,10 +20,6 @@ exports.handle_support_resistance_sub = async function(req, res){
                 $alertCondition: "突破天花板線",
             }
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     var userName = req.session.userName
     var stock_num = req.body.stockNum
@@ -98,10 +94,6 @@ exports.handle_pricing_strategy_sub = async function(req, res){
                 $alertCondition: "低於便宜價",
             }
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     var userName = req.session.userName
     var stock_num = req.body.stockNum
@@ -173,10 +165,6 @@ exports.handle_per_river_sub = async function(req, res){
                 $alertCondition: "低於便宜價",
             }
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     var userName = req.session.userName
     var stock_num = req.body.stockNum
@@ -235,10 +223,6 @@ exports.get_sub = async function(req, res){
     /*
         #swagger.tags = ['Subscribe']
         #swagger.description = 'Get subscribe.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT subscribe.ID, ticker_list.stock_name, subscribe.endTime, subscribe.subTime, subscribe.content, subscribe.strategy, subscribe.alertCondition FROM subscribe \
                 INNER JOIN ticker_list ON subscribe.ticker_id=ticker_list.ID WHERE username=?`
@@ -266,10 +250,6 @@ exports.delete_sub = async function(req, res){
                 $subTime: "",
             }
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `DELETE FROM subscribe WHERE username = ? AND subTime = ?`
     let param = [req.session.userName, req.body.subTime]
@@ -288,10 +268,6 @@ exports.get_user_notify_type = async function(req, res){
     /*
         #swagger.tags = ['Subscribe']
         #swagger.description = 'Get user notify type.'
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `SELECT lineNotify, emailNotify FROM user WHERE userName=?`
     let param = [req.session.userName]
@@ -320,10 +296,6 @@ exports.update_user_lineNotify_type = async function(req, res){
                 $switch: "1",
             }
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `UPDATE user SET lineNotify=? WHERE userName=?`
     let param = [req.body.switch, req.session.userName]
@@ -352,10 +324,6 @@ exports.update_user_emailNotify_type = async function(req, res){
                 $switch: "1",
             }
         }
-
-        #swagger.security = [{
-            "apiAuth": []
-        }]
     */
     let query = `UPDATE user SET emailNotify=? WHERE userName=?`
     let param = [req.body.switch, req.session.userName]

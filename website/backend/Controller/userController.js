@@ -82,6 +82,7 @@ exports.register = async function(req, res){
 
     let query = `SELECT * FROM user WHERE userName=?`
     let param = [userName]
+    
     try {
         const [rows, fields] = await con.promise().query(query, param);
 

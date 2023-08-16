@@ -23,6 +23,7 @@ class TableDataBase():
     def run(self) -> None:
         raise NotImplementedError("run not implement")
 
+
 class RealTimePrice():
     """Get realtime price
     """

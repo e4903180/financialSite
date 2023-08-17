@@ -22,7 +22,8 @@ class LogNotifyService():
         content = MIMEMultipart()
         content["subject"] = subject
         content["from"] =  GMAIL_ACCOUNT
-        content["to"] = ADDMIN_EMAIL
-        
         content.attach(MIMEText(error_message))
-        self._gmail_service.create_smtp(content)
+        
+        for email in ADDMIN_EMAIL:
+            content["to"] = email
+            self._gmail_service.create_smtp(content)

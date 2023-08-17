@@ -285,7 +285,7 @@ export const columns_popular_news = [
     ]
 
 const check_single_post_board_memo_NULL = (value) => {
-    if(value === "nan" || value === "NULL"){
+    if(value === "nan" || value === "NULL" || value === ""){
         return <>沒有檔案</>
     }else{
         return <CustomA value = { config["rootApiIP"] + "/data/download/single_post_board_memo?filename=" + value } />
@@ -293,7 +293,7 @@ const check_single_post_board_memo_NULL = (value) => {
 }
 
 const check_single_lineMemo_memo_NULL = (value) => {
-    if(value === "nan" || value === "NULL"){
+    if(value === "nan" || value === "NULL" || value === ""){
         return <>沒有檔案</>
     }else{
         return <CustomA value = { config["rootApiIP"] + "/data/download/single_line_memo?filename=" + value } />
@@ -301,7 +301,7 @@ const check_single_lineMemo_memo_NULL = (value) => {
 }
 
 const check_single_twse_chPDF_NULL = (value) => {
-    if(value === "nan" || value === "NULL"){
+    if(value === "nan" || value === "NULL" || value === ""){
         return <> </>
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value
@@ -312,7 +312,7 @@ const check_single_twse_chPDF_NULL = (value) => {
 }
 
 const check_single_twse_enPDF_NULL = (value) => {
-    if(value === "nan" || value === "NULL"){
+    if(value === "nan" || value === "NULL" || value === ""){
         return <> </>
     }else if(value === "內容檔案於當日會後公告於公開資訊觀測站"){
         return value

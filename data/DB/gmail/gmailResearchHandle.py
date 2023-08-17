@@ -550,10 +550,7 @@ class GmailResearchHandle():
             for attachmentId in mimeType["pdf"]:
                 self._download_pdf(mail_id, attachmentId, mail_pattern)
         else:
-            if mimeType["html"] != "":
-                self._download_from_href(mimeType["html"], mail_pattern)
-            else:
-                print(f"subject: {info['subject']} failed download", file = sys.stderr)
+            self._download_from_href(mimeType["html"], mail_pattern)
 
     def run(self) -> None:
         """Run

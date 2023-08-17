@@ -1,8 +1,8 @@
 import { createContext } from "react"
 
 const dev = {
-    rootApiIP : "http://140.116.214.154:3000/api",
-    WebSocketIP : "http://140.116.214.154:3000?username=",
+    rootApiIP : "http://127.0.0.1:3000/api",
+    WebSocketIP : "http://127.0.0.1:3000?username=",
     rootPathPrefix : ""
 }
 

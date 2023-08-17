@@ -5,11 +5,11 @@ const sessionMaxAge = 15 * 60 * 1000
 const API_ROUTE_IP = "/api"
 
 const dev = {
-    API_BASE_IP : "0.0.0.0",
+    API_BASE_IP : "127.0.0.1",
     API_PORT : 3000,
-    CORS_ORIGIN : ["http://140.116.214.154:8080", "http://140.116.214.154:3000"],
-    SWAGGER_HOST : "140.116.214.154:3000",
-    CLIENT_IP : "http://140.116.214.154:8080",
+    CORS_ORIGIN : ["http://127.0.0.1:8080", "http://127.0.0.1:3000"],
+    SWAGGER_HOST : "127.0.0.1:3000",
+    CLIENT_IP : "http://127.0.0.1:8080",
     DJANGO_REST_IP : "http://127.0.0.1:3847/api",
     FINANCIALDATA_PATH : "/home/cosbi/桌面/financialData/gmailData/data/",
     FINANCIALDATAOTHER_PATH : "/home/cosbi/桌面/financialData/gmailDataOther/data/",

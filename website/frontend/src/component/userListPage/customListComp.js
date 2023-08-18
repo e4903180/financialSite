@@ -5,7 +5,6 @@ import { makeStyles } from '@mui/styles';
 function CustomListComp(props) {
     const [page, setPage] = useState(1);
     const [data, setData] = useState(props.data.slice(0, 8));
-
     useEffect(() => {
         setData(props.data.slice(0, 8));
     }, [props.data]);
@@ -35,6 +34,7 @@ function CustomListComp(props) {
                                 <hr />
                                 <p className = "card-text">Username: { d.userName }</p>
                                 <p className = "card-text">Email: { d.email }</p>
+                                <p className = "card-text">Last Login Time: { d.loginTime }</p>
                             </div>
                         </div>
                     </div>
@@ -50,6 +50,7 @@ function CustomListComp(props) {
                                 <hr />
                                 <p className = "card-text">Username: { d.userName }</p>
                                 <p className = "card-text">Email: { d.email }</p>
+                                <p className = "card-text">Last Login Time: { d.loginTime }</p>
                             </div>
                         </div>
                     </div>

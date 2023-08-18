@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const con = require('../Model/connectFinancial')
 
-exports.login = async function(req, res){
+exports.login = async function(req, res) {
     /*
         #swagger.tags = ['User']
         #swagger.description = 'User login.'
@@ -19,27 +19,37 @@ exports.login = async function(req, res){
             description: 'Password.',
             required: true,
             type: 'string',
-            schema: "example_passord"
+            schema: "example_password"
         }
     */
-    var userName = req.query.userName
-    var password = req.query.password
-    let query = `SELECT password FROM user WHERE userName=?`
-    let param = [userName]
+   
+    var userName = req.query.userName;
+    var password = req.query.password;
+    let time = new Date();
+    let loginTime = time.toString()
+    let query = `SELECT password FROM user WHERE userName=?;`;
+    let param = [userName];
 
     try {
-        const [row, field] = await con.promise().query(query, param)
-
-        if(bcrypt.compareSync(password, row[0].password)){
+        const [row, field] = await con.promise().query(query, param);
+        if (row.length === 1 && bcrypt.compareSync(password, row[0].password)) {
             req.session.userName = userName;
-            let time = new Date()
-            console.log("Login time: ", time.toString())
-            return res.status(200).send("success");
-        }else{
+            console.log("Login time: ", loginTime);
+        } else {
             return res.status(400).send("Username or password error");
         }
     } catch (error) {
-        return res.status(400).send("error");
+        return res.status(400).send("Error");
+    }
+
+    query = `UPDATE user SET loginTime = ? WHERE userName = ?`;
+    param = [loginTime, userName];
+
+    try {
+    await con.promise().query(query, param);
+    return res.status(200).send("success");
+    } catch (error) {
+        return res.status(400).send("Error");
     }
 }
 
@@ -93,8 +103,8 @@ exports.register = async function(req, res){
         return res.status(400).send("error")
     }
 
-    query = `INSERT INTO user (name, userName, password, superUser, email) VALUES (?, ?, ?, ?, ?)`
-    param = [name, userName, hash_password, 0, email]
+    query = `INSERT INTO user (name, userName, password, superUser, email, loginTime) VALUES (?, ?, ?, ?, ?, ?)`
+    param = [name, userName, hash_password, 0, email, null]
 
     try {
         const [rows, fields] = await con.promise().query(query, param);

@@ -133,7 +133,7 @@ exports.userList = async function(req, res){
         #swagger.tags = ['Get data']
         #swagger.description = 'Get user list.'
     */
-    let query = "SELECT name, userName, email FROM user"
+    let query = "SELECT name, userName, email, loginTime FROM user"
 
     try {
         const [rows, fields] = await con.promise().query(query);

@@ -5,7 +5,6 @@ import CustomListComp from './customListComp';
 
 function UserListComp() {
     const [users, setUsers] = useState([]);
-
     useEffect(() => {
         axios.get(config["rootApiIP"] + "/data/userList")
         .then((res) => {
@@ -14,7 +13,7 @@ function UserListComp() {
             if(res.response.data === "Session expired") window.location.reload()
         })
     }, [])
-    
+
     return (
         <>
             <div className = 'text-center mt-2'>

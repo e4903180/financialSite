@@ -365,10 +365,6 @@ class GmailResearchHandle():
         # 手動處理
         elif label == "manual":
             Body = { "addLabelIds": ["Label_3480553467383697550"], "removeLabelIds" : ["INBOX"] }
-
-        # 無法分類
-        elif label == "Label_6440152670261486487":
-            Body = { "addLabelIds": ["Label_6440152670261486487"], "removeLabelIds" : ["INBOX"] }
             
         self._service.users().messages().modify(userId = 'me', id = mail_id, body = Body).execute()
     
@@ -487,7 +483,7 @@ class GmailResearchHandle():
         downloaded_href = []
         a_tags = soup.find_all('a')
 
-        for a_tag in a_tags:                    
+        for a_tag in a_tags:
             if "https://www.ibfs.com.tw/CancelConsulting" in a_tag["href"]:
                 if a_tag["href"] in downloaded_href:
                     continue

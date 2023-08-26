@@ -58,10 +58,10 @@ class FredUpdate():
             self._update_month_data(last_6_month, name, month_data_name[name])
 
         for name in year_delta_data_name:
-            self._update_year_delta_data(last_year, name, month_data_name[name])
+            self._update_year_delta_data(last_year, name, year_delta_data_name[name])
 
     def _update_year_delta_data(self, start_date : str, table_name : str, data_name : str) -> None:
-        """Update CPI
+        """Update year delta data
 
             Args:
                 start_date : (str) start date
@@ -142,4 +142,5 @@ if __name__ == "__main__":
     try:
         fred_update.update()
     except Exception as e:
+        print(e)
         log_notify_service.send_email("Fred月更新狀態", str(e))

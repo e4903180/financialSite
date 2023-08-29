@@ -1,5 +1,5 @@
 import React from 'react';
-import LineQRcode from "../../image/760eyprv.png"
+import LineQRcode from "../../image/186euapq.png"
 
 function LineComp() {
     return (
@@ -9,7 +9,7 @@ function LineComp() {
                     <div className = 'row'>
                         <div className = 'col-md-4 text-center'>
                             <img alt = {"lineQRcode"} src = {LineQRcode} className = "img-fluid"></img>
-                            <a href = 'https://line.me/R/ti/p/%40760eyprv'>點此加入</a>
+                            <a href = 'https://line.me/R/ti/p/%40186euapq'>點此加入</a>
                         </div>
 
                         <div className = 'col-md-8'>

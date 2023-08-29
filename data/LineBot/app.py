@@ -7,6 +7,7 @@ from utils.DataBaseManager import DataBaseManager
 from utils.bind import Bind
 import configparser
 from utils.FileHandler.FileHandler import FileHandler
+from linebot.models import MessageEvent, TextSendMessage
 
 app = Flask(__name__)
 db_obj = DataBaseManager()
@@ -39,6 +40,7 @@ def callback():
 
 @handler.add(MessageEvent)
 def handle_message(event):
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text = f'收到'))
     if event.message.type == "text":
         if "/綁定帳號 " in event.message.text:
             db_obj.db.ping(True)
